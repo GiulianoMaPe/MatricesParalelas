@@ -1,0 +1,680 @@
+Guía de multiplicación de matrices en C y Go
+Entorno nativo de Windows 11 y planificación de diez sprints
+Equipo de 8 integrantes · Cuatro versiones · Repositorio único en GitHub
+Propósito y resultado esperado
+Construir y evaluar cuatro ejecutables que resuelvan la misma multiplicación de matrices: C secuencial, C paralelo con MPI y OpenMP, Go secuencial y Go paralelo con goroutines. Esta guía define la instalación, la estructura de carpetas, el contrato común de los programas, las pruebas y un plan de trabajo equilibrado hasta obtener resultados reproducibles.
+El desarrollo y las mediciones principales se realizarán en Windows 11 de 64 bits sobre procesadores Intel o AMD. No se requiere WSL, una máquina virtual ni Linux. La adaptación a Linux se describe únicamente al final como posibilidad futura.
+Versión
+Tecnología
+Función
+c_secuencial
+C con MSVC
+Referencia de C con un hilo de cálculo y sin MPI.
+c_paralelo
+C con MS-MPI y OpenMP
+Procesos MPI y varios hilos OpenMP por proceso.
+go_secuencial
+Go
+Referencia de Go con un único flujo de cálculo.
+go_paralelo
+Go con goroutines
+Trabajadores limitados que calculan bloques de filas.
+
+Acuerdos de planificación
+Se proponen 10 sprints de una semana, sin fechas fijas. Cada integrante dispone de 8 horas por sprint: 6 horas de tarea principal, 1 hora de revisión de otro integrante y 1 hora de coordinación. Son 64 horas de equipo por sprint, 80 horas por persona y 640 horas de equipo en total. Las estimaciones se revisan al cerrar cada semana.
+La versión C secuencial será independiente: ejecutar el híbrido con un proceso y un hilo sirve para medir su sobrecoste, pero no sustituye la referencia secuencial.
+Edición de la guía: 17 de septiembre de 2026. Las referencias oficiales están reunidas antes del apartado final de Linux.
+
+1 Ruta de lectura y decisiones técnicas
+Bloque
+Contenido
+Preparación
+Apartados 2 a 5: instalaciones, verificación y ejemplos mínimos.
+Repositorio
+Apartados 6 a 9: carpetas, compilación, Git y GitHub.
+Diseño y resultados
+Apartados 10 y 11: algoritmo, pruebas y mediciones.
+Plan de trabajo
+Apartado 12 y sprints 1 a 10: calendario y 80 asignaciones individuales.
+Cierre
+Entregables, fuentes oficiales y adaptación futura a Linux.
+
+Entorno común del equipo
+Utilizar la misma versión estable de MSVC, del SDK de Windows, de MS-MPI y de Go. No es imprescindible instalar la versión más reciente: sí es imprescindible registrar y mantener las mismas versiones durante la campaña de medición. Los ejemplos usan el compilador cl y el lanzador mpiexec de MS-MPI.
+La ruta recomendada es C:\proyectos\matrices-paralelas. Evitar directorios de instalación, carpetas sincronizadas durante las pruebas y nombres de rutas innecesariamente largos. Los comandos se ejecutan desde la raíz del repositorio salvo indicación explícita.
+Terminales sin ambigüedad
+Para compilar C se utilizará x64 Native Tools Command Prompt, que es una consola CMD preparada por Visual Studio. Desde esa consola se puede ejecutar powershell -NoProfile para abrir PowerShell conservando el entorno x64. Todos los bloques de comandos de esta guía usan esa sesión de PowerShell, excepto la línea que indica cómo abrirla.
+En PowerShell las variables se escriben como $env:MSMPI_INC; en CMD serían %MSMPI_INC%. No mezclar ambas sintaxis. Las líneas de compilación que terminan en acento grave (`) continúan en la línea siguiente; no agregar espacios después de ese carácter.
+Capacidad y alcance de la primera entrega
+Un equipo de cuatro o más núcleos y 8 GB de RAM permite desarrollar y probar tamaños moderados; 16 GB ofrecen más margen. Comenzar con matrices pequeñas. Reservar matrices de 4096 o más para el piloto de capacidad: el consumo del sistema, los procesos MPI y las copias de datos también cuentan.
+Go paralelo trabajará dentro de una sola PC. La demostración distribuida, cuando se requiera por la rúbrica, corresponderá al híbrido C. Ejecutar varios procesos MPI en una PC demuestra MPI, pero no demuestra distribución entre varias computadoras.
+Relación con la rúbrica
+El híbrido MPI y OpenMP cubre la combinación de paradigmas. Las cuatro versiones permiten comparar resultados y tiempos. El equipo deberá seleccionar al menos un artículo IEEE proporcionado por el curso o equivalente y documentar una decisión técnica respaldada por él; las páginas de instalación no sustituyen ese respaldo académico.
+
+2 Instalar C y OpenMP en Windows 11
+Puedes trabajar completamente en Visual Studio Code. Instala las extensiones C/C++ de Microsoft y Go. VS Code es el editor: también necesitas Build Tools para compilar C con OpenMP, MS-MPI Runtime y SDK para MPI, y Go para sus dos versiones. No necesitas el IDE completo de Visual Studio; puedes compilar y ejecutar desde la terminal integrada de VS Code. [1]
+Paso 1 Instalar las herramientas de compilación
+Abrir la página oficial de Visual Studio y descargar Build Tools para Visual Studio. Si ya se tiene Visual Studio con las herramientas de C y C++, usar el instalador para modificar esa instalación. No es necesario instalar una segunda copia. [1]
+En Visual Studio Installer, marcar Desarrollo para el escritorio con C++. Confirmar que estén seleccionadas las herramientas MSVC para x64 y x86 y un SDK de Windows compatible. Instalar y cerrar las terminales que estuvieran abiertas antes de la instalación.
+Aunque la carga de trabajo diga C++, también instala el compilador de C. Los archivos del proyecto tendrán extensión .c y se compilarán con /TC para hacer explícito el lenguaje. El equipo utilizará C estándar compatible con MSVC y evitará arreglos de longitud variable en la pila.
+Paso 2 Abrir una consola x64
+En Inicio, buscar x64 Native Tools Command Prompt de la versión instalada. Abrirla y escribir la siguiente línea. La nueva sesión de PowerShell heredará la configuración del compilador. [1]
+powershell -NoProfile
+ 
+En la sesión resultante, comprobar:
+where.exe cl
+cl
+$env:VSCMD_ARG_TGT_ARCH
+ 
+Debe encontrarse cl.exe y la arquitectura debe ser x64. Invocar cl sin archivos muestra la información del compilador y puede terminar con un aviso de falta de archivo; eso no es una prueba de compilación fallida.
+Paso 3 Activar OpenMP al compilar
+OpenMP se habilita con /openmp. No se descarga como un programa independiente para esta ruta de MSVC. Usar únicamente construcciones compatibles con el soporte clásico, como parallel for, private, reduction y schedule(static). El soporte de /openmp se basa en OpenMP 2.0; no basar el proyecto en task, collapse ni funciones de versiones más nuevas. [2]
+New-Item -ItemType Directory -Force C:\proyectos | Out-Null
+Set-Location C:\proyectos
+ 
+Paso 4 Editor y runtime
+Visual Studio puede servir como editor y depurador. Si prefieren VS Code, instalarlo desde su página oficial y añadir las extensiones C/C++ de Microsoft y Go. Las extensiones no reemplazan los compiladores. Abrir VS Code desde la consola preparada permite heredar el entorno.
+Si se ejecuta un binario C en otra PC sin herramientas de desarrollo, instalar el Microsoft Visual C++ Redistributable x64 compatible con la versión del compilador, además del runtime de MS-MPI cuando corresponda. Verificar la dependencia de OpenMP con la prueba del siguiente apartado, sin copiar DLL de páginas no oficiales. [3]
+
+3 Instalar MS MPI y comprobar C paralelo
+Descargar MS-MPI desde Microsoft e instalar los dos componentes: msmpisetup.exe para ejecutar programas MPI y msmpisdk.msi para compilar con mpi.h y msmpi.lib. En la página consultada se ofrece MS-MPI 10.1.3. Cerrar y volver a abrir la consola x64 y PowerShell después de instalar. [4]
+where.exe mpiexec
+$env:MSMPI_INC
+$env:MSMPI_LIB64
+Test-Path "$env:MSMPI_INC\mpi.h"
+Test-Path "$env:MSMPI_LIB64\msmpi.lib"
+mpiexec /?
+ 
+Ambos Test-Path deben devolver True. Si no aparecen las variables, revisar que se instaló el SDK. Las ubicaciones habituales son Microsoft SDKs\MPI\Include y Microsoft SDKs\MPI\Lib\x64 dentro de Program Files (x86); verificar la instalación real antes de cambiar rutas.
+Prueba mínima del compilador y los hilos
+Guardar el siguiente contenido en smoke_hibrido.c dentro de una carpeta temporal. Es una prueba de instalación, no una de las cuatro versiones finales.
+#include <stdio.h>
+#include <mpi.h>
+#include <omp.h>
+int main(int argc, char **argv) {
+    int rank, provided, total = 0;
+    MPI_Init_thread(&argc, &argv,
+                    MPI_THREAD_FUNNELED, &provided);
+    if (provided < MPI_THREAD_FUNNELED) {
+        MPI_Abort(MPI_COMM_WORLD, 1);
+        return 1;
+    }
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    #pragma omp parallel reduction(+:total)
+    {
+        total += 1;
+    }
+    printf("Proceso %d: %d hilos\n", rank, total);
+    MPI_Finalize();
+    return 0;
+}
+ 
+cl /nologo /TC /W4 /O2 /openmp `
+  /I "$env:MSMPI_INC" smoke_hibrido.c `
+  /Fe:smoke_hibrido.exe /link `
+  /LIBPATH:"$env:MSMPI_LIB64" msmpi.lib
+$env:OMP_NUM_THREADS = "2"
+$env:OMP_DYNAMIC = "FALSE"
+mpiexec -n 2 .\smoke_hibrido.exe
+ 
+Resultado esperado: dos mensajes, de los procesos 0 y 1, indicando dos hilos cada uno. El orden puede variar. FUNNELED exige que las llamadas MPI permanezcan en el hilo que inicializó MPI; en el proyecto se harán fuera de las regiones OpenMP. [5]
+
+4 Instalar Go y comprobar el entorno
+Paso 1 Instalar Go para Windows
+Abrir go.dev/dl, elegir el instalador .msi estable para Windows amd64 y seguir el asistente. La arquitectura amd64 corresponde a Intel y AMD de 64 bits. Mantener la ruta predeterminada salvo necesidad concreta. Cerrar las terminales y volver a abrir la consola de trabajo. [6]
+go version
+go env GOOS GOARCH GOROOT
+where.exe go
+ 
+Se espera GOOS=windows y GOARCH=amd64. No configurar GOROOT manualmente. Todos los integrantes deben acordar una versión exacta de Go y registrar la salida de go version antes de medir.
+Paso 2 Prueba mínima
+En una carpeta temporal distinta de la prueba de C, guardar main.go con el siguiente contenido:
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+func main() {
+    var wg sync.WaitGroup
+    for i := 0; i < 2; i++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+            fmt.Println("Trabajador", id)
+        }(i)
+    }
+    wg.Wait()
+}
+ 
+go mod init smoke-go
+go fmt ./...
+go build -o smoke_go.exe .
+.\smoke_go.exe
+ 
+Deben aparecer los trabajadores 0 y 1, posiblemente en distinto orden. Esta prueba confirma que Go compila y sincroniza goroutines; no mide rendimiento.
+Paso 3 Herramientas de trabajo
+La implementación Go usará únicamente la biblioteca estándar: flag para argumentos, sync para esperar trabajadores, time para tiempos, encoding/csv para resultados y runtime para el paralelismo del runtime. No necesita enlaces con MS-MPI, OpenMP ni cgo.
+Usar go fmt, go vet y go test en cada módulo. El detector go test -race es una comprobación adicional: en Windows exige un compilador C compatible con cgo, que MSVC por sí solo no proporciona. No se incluye esa instalación en el entorno básico ni se ejecutan benchmarks con -race. [7]
+La variable GOMAXPROCS limita cuántos hilos del runtime pueden ejecutar código Go simultáneamente; no fija por sí sola la cantidad de goroutines. El programa recibirá también --workers para controlar el número de trabajadores de cálculo.
+
+5 Verificación y solución de problemas
+Problema
+Comprobación y solución
+cl no se reconoce
+Abrir x64 Native Tools Command Prompt y desde allí PowerShell. No añadir solo cl.exe al PATH: también hacen falta INCLUDE y LIB.
+No encuentra mpi.h
+Instalar el SDK y revisar MSMPI_INC. Pasar /I con la ruta entre comillas.
+No encuentra msmpi.lib
+Revisar MSMPI_LIB64 y /LIBPATH. Utilizar biblioteca y compilador x64.
+LNK1112 o mezcla de arquitecturas
+Eliminar los objetos del build afectado y recompilar todo con x64. No mezclar librerías x86 y x64.
+mpiexec no se reconoce
+Instalar el runtime MS-MPI, reabrir la terminal y comprobar su carpeta Bin en PATH.
+Solo se observa un hilo
+Confirmar /openmp, OMP_NUM_THREADS y OMP_DYNAMIC=FALSE. Recompilar y repetir la prueba mínima.
+Go no se reconoce
+Reabrir la terminal y revisar que la carpeta bin de Go esté en PATH.
+MPI se queda esperando
+Comprobar que todos los procesos llaman las colectivas en el mismo orden y que ninguno termina antes por un error local.
+El paralelo tarda más
+Probar tamaños mayores y menos trabajadores. Revisar comunicación, copias, creación de tareas y exceso de hilos.
+Falta una DLL al ejecutar
+Instalar los runtimes oficiales MS-MPI y Visual C++ x64 requeridos. No subir DLL del sistema al repositorio.
+
+Registro del entorno
+Cada integrante guardará un archivo docs/entorno/integrante-NN.md con Windows y su compilación, modelo de CPU, núcleos físicos, procesadores lógicos, RAM, versiones de MSVC, Go y MS-MPI. Añadir la PC usada para la campaña oficial y la configuración de energía.
+Get-CimInstance Win32_Processor | Select-Object `
+  Name, NumberOfCores, NumberOfLogicalProcessors
+Get-CimInstance Win32_OperatingSystem | Select-Object `
+  Caption, Version, TotalVisibleMemorySize
+go version
+git --version
+ 
+Criterio para dar el entorno por preparado
+Los ocho integrantes compilan la prueba C híbrida y la prueba Go. Una segunda persona puede repetir cada resultado con las instrucciones escritas. Los tiempos de las pruebas mínimas no se usan como resultados del proyecto.
+
+6 Estructura del repositorio único
+La carpeta matrices-paralelas será la raíz del repositorio. Las cuatro versiones estarán directamente dentro de ella. Cada versión tiene código, pruebas y un README propios; los datos de prueba, resultados y documentos comunes se mantienen al mismo nivel.
+Ruta relativa
+Contenido y finalidad
+README.md
+Objetivo, versiones, requisitos y comandos para empezar.
+.gitignore y .gitattributes
+Exclusiones y reglas de fin de línea.
+c_secuencial/src/
+main.c y futuros módulos .c del algoritmo secuencial.
+c_secuencial/include/ y tests/
+Cabeceras y pruebas de C secuencial.
+c_secuencial/build/
+Ejecutable y objetos locales; no se versiona.
+c_paralelo/src/
+main.c y módulos MPI, particionado y OpenMP.
+c_paralelo/include/ y tests/
+Cabeceras y pruebas del híbrido.
+c_paralelo/build/
+Ejecutable y objetos locales; no se versiona.
+go_secuencial/
+go.mod, main.go, matrix.go, matrix_test.go y README.md.
+go_paralelo/
+go.mod, main.go, workers.go, matrix_test.go y README.md.
+go_secuencial/build/ y go_paralelo/build/
+Ejecutables locales; no se versionan.
+tests/fixtures/
+Matrices pequeñas y productos esperados para las cuatro versiones.
+scripts/
+build_windows.ps1, test_windows.ps1 y bench_windows.ps1.
+resultados/raw/ y resultados/resumen/
+CSV originales y tablas agregadas, respectivamente.
+resultados/graficos/
+Gráficos finales y archivos para reproducirlos.
+docs/entorno/ y docs/sprints/
+Configuración de PCs, tareas y evidencias semanales.
+docs/
+Diseño, protocolo, bibliografía, informe y guía de uso.
+
+Los nombres de módulos adicionales son orientativos. No crear copias divergentes del generador de entradas sin pruebas de equivalencia. Un formato de datos común y fixtures compartidos permitirán validar C contra Go aunque cada versión sea independiente.
+Git no guarda carpetas vacías. Añadir un README.md o .gitkeep a las carpetas que deban existir antes de recibir contenido. Los build se crearán durante la compilación.
+
+7 Crear carpetas y conectar GitHub
+Instalar Git y crear la estructura
+Instalar Git for Windows desde la página oficial y conservar Git Credential Manager para autenticación HTTPS. Reabrir la terminal y ejecutar git --version. [8]
+New-Item -ItemType Directory -Force `
+  C:\proyectos\matrices-paralelas | Out-Null
+Set-Location C:\proyectos\matrices-paralelas
+$carpetas = @(
+  "c_secuencial/src", "c_secuencial/include",
+  "c_secuencial/tests", "c_secuencial/build",
+  "c_paralelo/src", "c_paralelo/include",
+  "c_paralelo/tests", "c_paralelo/build",
+  "go_secuencial/build", "go_paralelo/build",
+  "tests/fixtures", "scripts", "docs/entorno",
+  "docs/sprints", "resultados/raw",
+  "resultados/resumen", "resultados/graficos"
+)
+$carpetas | ForEach-Object {
+  New-Item -ItemType Directory -Force $_ | Out-Null
+}
+git init -b main
+git config user.name "Nombre Apellido"
+git config user.email "correo-asociado-a-github"
+Push-Location go_secuencial
+go mod init matrices/go_secuencial
+Pop-Location
+Push-Location go_paralelo
+go mod init matrices/go_paralelo
+Pop-Location
+ 
+Archivos que se deben excluir
+Crear .gitignore con el siguiente contenido. Mantener los CSV pequeños de resultados, fuentes, scripts y documentos. Las matrices grandes se regeneran; no se suben binarios ni credenciales.
+**/build/
+.vs/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.log
+.env
+datos_generados/
+ 
+Crear README.md antes del primer commit. En .gitattributes usar las líneas * text=auto, *.ps1 text eol=crlf y *.go text eol=lf, cada una en su propia línea. El generador de CSV fijará UTF-8 y punto decimal.
+
+8 Publicar y colaborar en GitHub
+Primer envío del repositorio
+En GitHub, crear un repositorio vacío llamado matrices-paralelas, sin inicializar README, licencia ni .gitignore porque ya se crearán localmente. Elegir la visibilidad del equipo y añadir a los otros siete integrantes como colaboradores. Reemplazar USUARIO en el comando por el propietario real.
+git add .
+git status
+git commit -m "Crear estructura del proyecto"
+git remote add origin https://github.com/USUARIO/matrices-paralelas.git
+git push -u origin main
+ 
+Completar el inicio de sesión que ofrezca Git Credential Manager. No usar la contraseña de GitHub como contraseña de Git por HTTPS ni incluir tokens en las URL. Si se emplea SSH en lugar de HTTPS, seguir la guía oficial de claves y registrar únicamente la clave pública. [9]
+Trabajo de los demás integrantes
+Set-Location C:\proyectos
+git clone https://github.com/USUARIO/matrices-paralelas.git
+Set-Location matrices-paralelas
+git switch -c feature/s01-i02-entorno
+# Realizar la tarea y comprobar los cambios
+git add docs
+git commit -m "Documentar entorno de desarrollo"
+git push -u origin feature/s01-i02-entorno
+ 
+Abrir un pull request hacia main. La persona revisora comprueba el cambio, ejecuta la prueba relevante y deja evidencia. Tras integrar, actualizar main mediante git pull --ff-only antes de iniciar una nueva rama. Si se produce un conflicto, resolverlo en la rama de trabajo y repetir las pruebas.
+Normas de colaboración
+Una tarea principal por integrante y sprint, expresada como issue con objetivo, estimación, archivos afectados y criterio de aceptación. Evitar que dos personas modifiquen simultáneamente el mismo archivo sin acordarlo. Cada pull request debe explicar qué cambia y cómo se verificó.
+El rol de coordinación rota: I1 en S1, I2 en S2, hasta I8 en S8, luego I1 en S9 e I2 en S10. La coordinación ocupa la hora ya presupuestada; no asigna al coordinador todas las integraciones ni todos los problemas de otros módulos.
+Automatización mínima que se construirá
+build_windows.ps1 compilará las cuatro carpetas y fallará ante un código de salida distinto de cero. test_windows.ps1 ejecutará los fixtures, revisará equivalencia y comprobará errores esperados. bench_windows.ps1 hará las repeticiones en serie, guardará configuración y no incluirá compilación en las mediciones.
+Estas son especificaciones de los scripts que se desarrollarán durante los sprints. Esta guía no entrega implementaciones finales del multiplicador ni ejecuta publicaciones en GitHub.
+
+9 Compilar y ejecutar las cuatro versiones
+Los comandos siguientes se usarán cuando exista el código indicado. Ejecutarlos desde la raíz, en PowerShell heredado de la consola x64. Cada main debe implementar el contrato de argumentos del apartado siguiente. Las rutas build ya fueron creadas.
+C secuencial
+Push-Location c_secuencial\build
+cl /nologo /TC /std:c11 /W4 /O2 /fp:precise `
+  /I ..\include ..\src\*.c /Fe:c_secuencial.exe
+Pop-Location
+.\c_secuencial\build\c_secuencial.exe --n 512 --seed 42
+ 
+No añadir /openmp ni enlazar MPI en la referencia secuencial. /O2 optimiza la compilación; mantener el mismo nivel en ambas versiones de C.
+C paralelo con MPI y OpenMP
+Push-Location c_paralelo\build
+cl /nologo /TC /std:c11 /W4 /O2 /fp:precise /openmp `
+  /I ..\include /I "$env:MSMPI_INC" ..\src\*.c `
+  /Fe:c_paralelo.exe /link `
+  /LIBPATH:"$env:MSMPI_LIB64" msmpi.lib
+Pop-Location
+$env:OMP_NUM_THREADS = "2"
+$env:OMP_DYNAMIC = "FALSE"
+mpiexec -n 2 .\c_paralelo\build\c_paralelo.exe `
+  --n 512 --seed 42
+ 
+Este ejemplo utiliza dos procesos y dos hilos por proceso: cuatro trabajadores de cálculo nominales. Elegir una configuración que quepa en los núcleos disponibles. Evitar que la afinidad de MPI encierre los hilos de cada proceso en un solo núcleo; registrar cualquier cambio de afinidad.
+Go secuencial y paralelo
+Push-Location go_secuencial
+go fmt ./...
+go vet ./...
+go test ./...
+go build -o build/go_secuencial.exe .
+Pop-Location
+Push-Location go_paralelo
+go fmt ./...
+go vet ./...
+go test ./...
+go build -o build/go_paralelo.exe .
+Pop-Location
+$env:GOMAXPROCS = "1"
+.\go_secuencial\build\go_secuencial.exe --n 512 --seed 42
+$env:GOMAXPROCS = "4"
+.\go_paralelo\build\go_paralelo.exe `
+  --n 512 --seed 42 --workers 4
+ 
+No medir con go run: compilar primero y medir los ejecutables. Al automatizar, comprobar $LASTEXITCODE inmediatamente después de cada compilación o ejecución.
+
+10 Contrato común y diseño de los programas
+Entradas y salidas acordadas
+La primera entrega multiplicará matrices cuadradas densas de dimensión N, con double en C y float64 en Go. Almacenamiento contiguo por filas. Argumentos obligatorios del contrato: --n y --seed; Go paralelo añade --workers. Los errores se escriben en stderr, los resultados de medición en stdout y las ejecuciones fallidas devuelven un código distinto de cero.
+Añadir --input para cargar un fixture de texto común y --output para guardar C cuando se comprueben casos pequeños. Definir el formato en docs/formato-datos.md: primera línea N, luego N filas de A y N filas de B, números separados por espacios y punto decimal. El archivo de salida contiene N y las N filas de C. No imprimir matrices grandes durante el benchmark.
+Para generar datos equivalentes, especificar un único generador entero portable o una fórmula determinista de índices y semilla. No asumir que rand de C y math/rand de Go producen la misma secuencia con la misma semilla. Validar con hashes de las entradas o comparación de fixtures.
+Núcleo secuencial y Go paralelo
+Comenzar con el mismo orden de bucles i, k, j en las cuatro versiones. Cada fila de C se inicializa a cero antes de acumular productos. En Go paralelo, repartir intervalos de filas a un conjunto fijo de workers mediante un canal de tareas; esperar con WaitGroup. A y B serán de solo lectura. Un único trabajador será dueño de cada fila de C. No crear una goroutine por celda.
+Híbrido C con MPI y OpenMP
+El proceso 0 prepara A y B. MPI_Bcast distribuye B, MPI_Scatterv reparte filas de A y MPI_Gatherv reúne las filas de C. Dentro de cada proceso, parallel for con schedule(static) reparte las filas locales. Mantener MPI fuera de esa región y comprobar el nivel MPI_THREAD_FUNNELED. [5]
+Para repartir N filas entre P procesos: q es N dividido enteramente entre P y r es su resto. Los primeros r procesos reciben q+1 filas, los demás q. Los counts de Scatterv y Gatherv se expresan en elementos double: filas locales por N. Los desplazamientos son acumulados de esos counts. Probar también N no divisible entre P y P mayor que N.
+Memoria y errores
+Reservar matrices en el heap, comprobar fallos y usar size_t para tamaños de memoria. El proceso raíz conserva matrices completas; cada proceso necesita B y sus bloques locales. No estimar el consumo distribuido solo como tres matrices. Validar que counts y desplazamientos quepan en los enteros de las API MPI usadas.
+Si un proceso detecta un fallo irrecuperable, evitar que los demás esperen indefinidamente: usar una decisión colectiva de error o MPI_Abort. Liberar los buffers y terminar MPI en el camino normal. En MSVC clásico, usar un índice entero con signo para el bucle OpenMP y declarar las variables de trabajo dentro de su alcance privado.
+
+11 Pruebas y protocolo de medición
+Corrección antes de rendimiento
+Incluir: N=1; identidad; matriz cero; valores negativos; producto conocido 2 por 2; N impar; particiones no divisibles; más procesos o workers que filas; argumentos inválidos y capacidad insuficiente. Para A=[1 2; 3 4] y B=[5 6; 7 8], el producto esperado es [19 22; 43 50].
+Comparar cada elemento con una referencia de confianza: error absoluto menor o igual que atol más rtol por el valor absoluto esperado. Usar inicialmente atol=1e-9 y rtol=1e-9 y justificar ajustes según magnitud y dimensión. Rechazar NaN e infinitos inesperados. Un checksum no sustituye una comparación completa en los fixtures.
+Qué se medirá
+Registrar kernel_s para el cálculo puro y total_s para el trabajo algorítmico. En total_s las entradas ya están preparadas; incluir el vaciado de C, el reparto, la sincronización de trabajadores, el cálculo y la reunión. Excluir lectura de disco, generación de datos, validación y escritura del CSV. Aplicar límites equivalentes en las cuatro versiones.
+En C secuencial usar QueryPerformanceCounter y QueryPerformanceFrequency; en Go, time.Now y time.Since. En MPI usar MPI_Wtime, sincronizar el inicio y obtener con MPI_Reduce y MPI_MAX el mayor tiempo de los procesos. El cronómetro total MPI incluye Bcast, Scatterv, cálculo y Gatherv. Registrar por separado el arranque del lanzador si se desea evaluar latencia de extremo a extremo. [10]
+Campaña base
+Ejecutar primero un piloto con N=256, 512 y 1024. Para la campaña proponer N=512, 1024 y 2048; añadir 4096 solo si hay memoria y tiempo. Hacer una repetición de calentamiento descartada y cinco repeticiones medidas por configuración. Alternar el orden de las configuraciones entre rondas. No ejecutar dos benchmarks a la vez en una PC.
+Probar presupuestos de 1, 2 y 4 trabajadores, y 8 solo si el hardware lo permite. En C explorar combinaciones P por T como 1 por 4, 2 por 2 y 4 por 1 con el mismo presupuesto. En Go usar workers y GOMAXPROCS coherentes. Registrar CPU, RAM, versiones, commit, N, semilla, P, T, workers, GOMAXPROCS, repetición, kernel_s, total_s y estado de validación.
+Interpretación y gráficos
+Calcular speedup como tiempo secuencial dividido entre tiempo paralelo del mismo lenguaje, usando la mediana de total_s. Eficiencia: speedup dividido entre P por T para C o entre workers para Go, declarando el recurso nominal. Añadir dispersión mediante mínimo y máximo o intervalo intercuartílico. Comparar C y Go mediante tiempos absolutos; no atribuir toda diferencia únicamente al lenguaje.
+Entregar gráficos de tiempo frente a N, speedup frente a trabajadores y efecto de P y T. Si el paralelo no mejora, conservar los datos y explicar el sobrecoste. No fijar una aceleración mínima inventada para aprobar el trabajo.
+
+12 Cronograma y distribución equitativa
+Cada sprint dura una semana. Días 1 y 2: acuerdo de interfaces y avance inicial; días 3 y 4: implementación y pruebas; día 5: revisión, integración y cierre. Las tareas siguientes asignan una responsabilidad principal a cada persona sin impedir colaboración.
+Sprint
+Resultado de la semana
+Dependencia
+1
+Entorno Windows y repositorio preparados
+Inicio
+2
+Diseño, contratos y fixtures acordados
+S1
+3
+C y Go secuenciales correctos
+S2
+4
+Primeras versiones paralelas correctas
+S3
+5
+Integración y validación de cuatro versiones
+S4
+6
+Optimización medida y estabilidad
+S5
+7
+Automatización y piloto de benchmarks
+S6
+8
+Campaña oficial y datos completos
+S7
+9
+Análisis, gráficos e informe
+S8
+10
+Reproducción independiente y entrega
+S9
+
+Carga por persona y por equipo
+Unidad
+Tarea principal
+Revisión
+Coordinación
+Total
+Cada persona por sprint
+6 h
+1 h
+1 h
+8 h
+Equipo por sprint
+48 h
+8 h
+8 h
+64 h
+Cada persona en 10 sprints
+60 h
+10 h
+10 h
+80 h
+Equipo en 10 sprints
+480 h
+80 h
+80 h
+640 h
+
+I1 a I8 son identificadores que se reemplazarán por nombres. Cada asignación tiene dos subtareas de 3 horas y un entregable. La hora de revisión se aplica a la persona siguiente: I1 revisa I2, I2 revisa I3 y así hasta I8, que revisa I1. Si cambia la complejidad real, se reduce o redistribuye alcance; no se oculta trabajo extra bajo coordinación.
+Durante la hora de coordinación se realizará una planificación breve, una actualización de bloqueos y una revisión de cierre. Las esperas de benchmarks no equivalen a horas activas; se reserva por separado la disponibilidad de la PC. Nadie queda asignado solo a diapositivas o solo a tareas administrativas durante todo el proyecto.
+Definición de terminado
+Una tarea termina cuando su entregable está en el repositorio, pasa la prueba correspondiente, otra persona lo revisa y el README o documento afectado queda actualizado. No cerrar un sprint con datos sin configuración, código sin compilar o una validación pendiente que invalide el trabajo posterior.
+
+Sprint 1 Preparar el entorno y el repositorio
+Semana 1 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Conseguir que los ocho integrantes puedan compilar y ejecutar C híbrido y Go en Windows 11.
+Aceptación: Los ocho registros de entorno y las dos pruebas mínimas están revisados. La estructura está en GitHub.
+Asignaciones individuales
+Integrante 1  Instalar MSVC y OpenMP y ejecutar la prueba C (3 h). Redactar los pasos de instalación y recopilar versiones de MSVC del equipo (3 h). Entregable: Guía C y evidencia de compilación.
+Integrante 2  Instalar runtime y SDK MS-MPI y verificar variables (3 h). Probar dos procesos con dos hilos y documentar errores de instalación (3 h). Entregable: Guía MPI con salida de la prueba.
+Integrante 3  Instalar Go y comprobar goroutines en su equipo (3 h). Documentar instalación y acordar versión común con los ocho integrantes (3 h). Entregable: Guía Go y registro de versiones.
+Integrante 4  Instalar Git y crear el repositorio y sus cuatro carpetas (3 h). Configurar exclusiones, permisos y procedimiento de ramas y pull requests (3 h). Entregable: Repositorio inicial y normas de colaboración.
+Integrante 5  Inventariar CPU, núcleos y RAM de las PCs disponibles (3 h). Elegir PC de medición y estimar tamaños iniciales y disponibilidad (3 h). Entregable: Inventario de hardware y propuesta de capacidad.
+Integrante 6  Repetir desde cero las instrucciones C en otra PC (3 h). Registrar diferencias y corregir pasos que no sean reproducibles (3 h). Entregable: Acta de reproducción de C.
+Integrante 7  Repetir desde cero las instrucciones Go y Git en otra PC (3 h). Comprobar clonación y ejecutar los ejemplos sin ayuda del autor (3 h). Entregable: Acta de reproducción de Go y Git.
+Integrante 8  Convertir requisitos de la rúbrica en una lista de aceptación (3 h). Crear las tareas del backlog y localizar los artículos IEEE del curso (3 h). Entregable: Backlog y matriz de requisitos.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 2 Definir interfaces y casos de prueba
+Semana 2 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Fijar el mismo problema, entradas, representación y mediciones antes de programar las versiones.
+Aceptación: Hay un contrato único aprobado, fixtures con resultados conocidos y diseños que otros integrantes pueden explicar.
+Asignaciones individuales
+Integrante 1  Diseñar estructuras de datos y funciones de C secuencial (3 h). Especificar asignación de memoria, validación de N y liberación de buffers (3 h). Entregable: Diseño C secuencial y cabeceras propuestas.
+Integrante 2  Diseñar reparto de filas y counts y desplazamientos MPI (3 h). Resolver en papel N no divisible entre P y procesos sin filas (3 h). Entregable: Diseño MPI con ejemplos verificables.
+Integrante 3  Diseñar datos y funciones de Go secuencial (3 h). Definir manejo de errores y lectura de argumentos coherente con C (3 h). Entregable: Diseño Go secuencial e interfaz de funciones.
+Integrante 4  Diseñar workers, canal de tareas y propiedad de las filas (3 h). Definir cierre del canal y espera sin bloqueos ni escritura compartida (3 h). Entregable: Diseño Go paralelo con invariantes.
+Integrante 5  Construir fixtures de cero, identidad y producto conocido (3 h). Definir comparación numérica y política para NaN e infinitos (3 h). Entregable: Fixtures y especificación del comparador.
+Integrante 6  Definir formato común de matrices y generador determinista (3 h). Preparar entradas de referencia para verificar igualdad entre C y Go (3 h). Entregable: Contrato de entradas y datos de control.
+Integrante 7  Definir límites de kernel_s y total_s y campos del CSV (3 h). Diseñar matriz de experimentos y criterios de repetición (3 h). Entregable: Protocolo de medición versión inicial.
+Integrante 8  Leer y resumir dos candidatos de literatura científica (3 h). Seleccionar al menos uno y asociar sus hallazgos al reparto por filas (3 h). Entregable: Bibliografía verificada y decisión de diseño.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 3 Implementar las referencias secuenciales
+Semana 3 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Obtener C secuencial y Go secuencial correctos y comparables con las mismas entradas.
+Aceptación: Ambos programas pasan todos los fixtures pequeños y producen mediciones con el contrato acordado.
+Asignaciones individuales
+Integrante 1  Implementar el núcleo C con almacenamiento contiguo y bucles i k j (3 h). Comprobar identidad, ceros y producto conocido con salidas completas (3 h). Entregable: Núcleo C secuencial probado.
+Integrante 2  Implementar argumentos, reserva de memoria y errores de C (3 h). Integrar compilación y timer de Windows sin incluir impresión (3 h). Entregable: Ejecutable C secuencial integrado.
+Integrante 3  Implementar el núcleo Go con float64 y almacenamiento por filas (3 h). Añadir pruebas unitarias del producto con los fixtures (3 h). Entregable: Núcleo Go secuencial probado.
+Integrante 4  Implementar argumentos, lectura y escritura en Go (3 h). Integrar timer y salida CSV sin incluir generación ni validación (3 h). Entregable: Ejecutable Go secuencial integrado.
+Integrante 5  Construir comparador de salidas y errores numéricos (3 h). Ejecutar comparación completa entre C, Go y resultados esperados (3 h). Entregable: Comparador y reporte de equivalencia.
+Integrante 6  Implementar el generador determinista en C (3 h). Verificar sus primeras entradas y archivos frente al contrato (3 h). Entregable: Generador C con vectores de prueba.
+Integrante 7  Implementar el mismo generador en Go (3 h). Comparar con C para varias semillas y dimensiones pequeñas (3 h). Entregable: Generador Go y evidencia cruzada.
+Integrante 8  Crear un primer script de compilación de las referencias (3 h). Reproducir ambos ejecutables desde un clon y actualizar instrucciones (3 h). Entregable: Compilación repetible y guía de uso.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 4 Construir las versiones paralelas
+Semana 4 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Implementar el híbrido C y el conjunto de trabajadores Go usando las referencias existentes.
+Aceptación: Las cuatro versiones coinciden en los fixtures. C usa MPI y OpenMP y Go espera correctamente a todos sus trabajadores.
+Asignaciones individuales
+Integrante 1  Implementar Scatterv y Gatherv con el reparto acordado (3 h). Probar P igual a uno y particiones no divisibles con el núcleo secuencial (3 h). Entregable: Comunicación MPI funcional.
+Integrante 2  Integrar OpenMP en las filas locales del híbrido (3 h). Verificar FUNNELED, variables privadas y ausencia de llamadas MPI en hilos secundarios (3 h). Entregable: Híbrido MPI y OpenMP funcional.
+Integrante 3  Implementar workers Go y distribución de bloques de filas (3 h). Comprobar que cada fila tiene un solo escritor y todas son calculadas (3 h). Entregable: Núcleo Go paralelo funcional.
+Integrante 4  Integrar flags, cierre del canal y WaitGroup en Go paralelo (3 h). Probar workers igual a uno, varios workers y más workers que filas (3 h). Entregable: Ejecutable Go paralelo integrado.
+Integrante 5  Crear pruebas del reparto MPI y bloques vacíos (3 h). Ejecutar casos impares y revisar errores de counts y desplazamientos (3 h). Entregable: Reporte de particionado C.
+Integrante 6  Crear pruebas de concurrencia Go por repetición y tamaños variados (3 h). Verificar terminación, resultados estables y no pérdida de tareas (3 h). Entregable: Reporte de concurrencia Go.
+Integrante 7  Incorporar las versiones paralelas al script de compilación (3 h). Crear lanzamientos de prueba con variables de entorno explícitas (3 h). Entregable: Script para las cuatro versiones.
+Integrante 8  Documentar los flujos de datos y sincronización de ambos paralelos (3 h). Relacionar los mecanismos reales con el diseño y la rúbrica (3 h). Entregable: Descripción de arquitectura actualizada.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 5 Integrar y fortalecer la corrección
+Semana 5 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Eliminar diferencias de formato, manejo de errores y validación entre las cuatro carpetas.
+Aceptación: La batería común pasa en las cuatro versiones, los fallos esperados terminan sin bloqueos y existe un reporte reproducible.
+Asignaciones individuales
+Integrante 1  Revisar desbordamientos y errores de asignación en C secuencial (3 h). Corregir límites de dimensión y asegurar limpieza en cada error (3 h). Entregable: C secuencial robusto y casos negativos.
+Integrante 2  Revisar errores colectivos y finalización del híbrido (3 h). Probar procesos sin filas y fallos controlados sin esperas indefinidas (3 h). Entregable: C paralelo robusto y registro de fallos.
+Integrante 3  Revisar formatos, índices y errores en Go secuencial (3 h). Corregir compatibilidad de entrada y salida frente a C (3 h). Entregable: Go secuencial consistente.
+Integrante 4  Revisar límites de workers y propiedad de buffers Go (3 h). Probar repeticiones largas y corregir bloqueos o resultados variables (3 h). Entregable: Go paralelo estable.
+Integrante 5  Completar casos negativos del comparador y tolerancias (3 h). Calcular error máximo por versión y documentar el criterio numérico (3 h). Entregable: Informe de validación numérica.
+Integrante 6  Implementar test_windows.ps1 con códigos de salida (3 h). Integrar compilación y pruebas desde una terminal limpia (3 h). Entregable: Validación automatizada en Windows.
+Integrante 7  Verificar que las cuatro mediciones usan límites equivalentes (3 h). Separar validación y escritura de los intervalos medidos (3 h). Entregable: Auditoría del protocolo de tiempo.
+Integrante 8  Reproducir todo en una segunda PC de Windows 11 (3 h). Registrar incidencias, resolver instrucciones incompletas y preparar la versión estable (3 h). Entregable: Acta de integración y versión candidata.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 6 Optimizar con evidencia
+Semana 6 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Mejorar el rendimiento sin cambiar la corrección ni introducir comparaciones injustas.
+Aceptación: Cada cambio conservado tiene medición antes y después y pasa la batería común; se fija el algoritmo para la campaña.
+Asignaciones individuales
+Integrante 1  Medir localidad y accesos del núcleo C secuencial (3 h). Aplicar como máximo una mejora justificada y documentar su efecto (3 h). Entregable: Comparativa de una optimización C.
+Integrante 2  Medir reparto OpenMP y configuraciones iniciales de P y T (3 h). Ajustar granularidad o copias y verificar que no se fuerce un único núcleo (3 h). Entregable: Comparativa del híbrido C.
+Integrante 3  Medir asignaciones y acceso a slices del Go secuencial (3 h). Reducir asignaciones evitables y comprobar equivalencia numérica (3 h). Entregable: Comparativa de una optimización Go.
+Integrante 4  Medir tamaño de bloque y coste del canal de Go paralelo (3 h). Ajustar bloques y cantidad de workers sin crear tareas por celda (3 h). Entregable: Comparativa de granularidad Go.
+Integrante 5  Estimar memoria del proceso raíz y del resto de procesos (3 h). Medir el pico en tamaños piloto y fijar límites seguros para la campaña (3 h). Entregable: Tabla de memoria y capacidad.
+Integrante 6  Ejecutar pruebas de regresión después de cada cambio aceptado (3 h). Revisar diferencias de orden de bucles y oportunidades de optimización desigual (3 h). Entregable: Informe de equidad algorítmica.
+Integrante 7  Recopilar mediciones del piloto con metadatos completos (3 h). Descartar cambios sin mejora consistente o mantenerlos como experimento separado (3 h). Entregable: Registro de decisiones de rendimiento.
+Integrante 8  Actualizar diseño y relación de decisiones con literatura (3 h). Preparar una etiqueta de código candidata y criterios de congelación (3 h). Entregable: Diseño final y plan de congelación.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 7 Automatizar los experimentos
+Semana 7 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Dejar preparada una campaña que se pueda ejecutar sin editar manualmente cada comando.
+Aceptación: El piloto genera CSV válidos, repite correctamente, detecta fallos y conserva la configuración completa.
+Asignaciones individuales
+Integrante 1  Automatizar ejecución de C secuencial con varios tamaños (3 h). Verificar calentamiento, cinco repeticiones y códigos de retorno (3 h). Entregable: Lanzador de C secuencial.
+Integrante 2  Automatizar combinaciones MPI y OpenMP del híbrido (3 h). Registrar P, T, hilos observados y configuración de afinidad (3 h). Entregable: Lanzador del híbrido C.
+Integrante 3  Automatizar Go secuencial usando el binario compilado (3 h). Fijar GOMAXPROCS y registrar versión y opciones de ejecución (3 h). Entregable: Lanzador de Go secuencial.
+Integrante 4  Automatizar workers y GOMAXPROCS de Go paralelo (3 h). Validar combinaciones y evitar ejecutar campañas simultáneas (3 h). Entregable: Lanzador de Go paralelo.
+Integrante 5  Integrar los lanzadores en bench_windows.ps1 (3 h). Validar esquema CSV y separar resultados parciales de completos (3 h). Entregable: Script de campaña y validación de datos.
+Integrante 6  Realizar un piloto completo en la PC oficial (3 h). Estimar duración total y revisar temperatura, carga y memoria disponible (3 h). Entregable: Piloto y reserva de tiempo de máquina.
+Integrante 7  Preparar agregación de medianas, dispersión y speedup (3 h). Comprobar los cálculos con un pequeño CSV manual de control (3 h). Entregable: Procedimiento de análisis verificado.
+Integrante 8  Ensayar el procedimiento desde un clon limpio (3 h). Congelar commit, parámetros y checklist previo a la campaña (3 h). Entregable: Versión experimental congelada.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+La demostración entre dos PCs, si se exige, debe quedar acordada y operativa antes de S8. Reservar su puesta a punto sustituyendo una mejora opcional de S6; no añadir horas ocultas.
+
+Sprint 8 Ejecutar la campaña oficial
+Semana 8 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Reunir todos los datos medidos con una versión fija y condiciones registradas.
+Aceptación: Cada configuración prevista tiene cinco observaciones válidas o una exclusión justificada; los CSV originales están preservados.
+Asignaciones individuales
+Integrante 1  Ejecutar y supervisar los lotes de C secuencial (3 h). Revisar integridad y metadatos y repetir solo fallos justificados (3 h). Entregable: CSV originales de C secuencial.
+Integrante 2  Ejecutar y supervisar las combinaciones del híbrido C (3 h). Verificar participación de procesos e hilos y registrar anomalías (3 h). Entregable: CSV originales de C paralelo.
+Integrante 3  Ejecutar y supervisar la campaña Go secuencial (3 h). Revisar equivalencia de entradas y condiciones de ejecución (3 h). Entregable: CSV originales de Go secuencial.
+Integrante 4  Ejecutar y supervisar los lotes de Go paralelo (3 h). Revisar workers efectivos y estabilidad de las repeticiones (3 h). Entregable: CSV originales de Go paralelo.
+Integrante 5  Auditar completitud y validez numérica de los cuatro lotes (3 h). Clasificar fallos sin borrar datos y generar inventario de observaciones (3 h). Entregable: Reporte de calidad de datos.
+Integrante 6  Registrar hardware, carga del sistema y configuración de cada sesión (3 h). Repetir un subconjunto de control en otra PC con etiqueta separada (3 h). Entregable: Metadatos y control independiente.
+Integrante 7  Generar resúmenes provisionales y detectar dispersión anormal (3 h). Proponer y documentar repeticiones justificadas sin seleccionar solo los mejores tiempos (3 h). Entregable: Resumen provisional auditado.
+Integrante 8  Verificar trazabilidad desde commit hasta cada archivo CSV (3 h). Congelar la carpeta raw y actualizar bitácora de experimentos (3 h). Entregable: Manifiesto de resultados y bitácora.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 9 Analizar y redactar los resultados
+Semana 9 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Transformar datos en conclusiones verificables y preparar el informe técnico.
+Aceptación: Los gráficos derivan de los CSV preservados y cada conclusión identifica los datos y las condiciones que la sostienen.
+Asignaciones individuales
+Integrante 1  Analizar tiempos y escalabilidad de la referencia C (3 h). Redactar el apartado de implementación y límites de la base C (3 h). Entregable: Sección C secuencial del informe.
+Integrante 2  Analizar speedup y eficiencia del híbrido según P y T (3 h). Explicar comunicación, localidad y saturación observadas (3 h). Entregable: Sección de rendimiento C paralelo.
+Integrante 3  Analizar tiempos y asignaciones relevantes de Go secuencial (3 h). Redactar decisiones de implementación y límites del runtime (3 h). Entregable: Sección Go secuencial del informe.
+Integrante 4  Analizar speedup de Go según workers y dimensión (3 h). Explicar granularidad, sincronización y posibles sobrecostes (3 h). Entregable: Sección de rendimiento Go paralelo.
+Integrante 5  Generar gráficos finales con unidades y dispersión (3 h). Comprobar que etiquetas y ejes no exageren diferencias (3 h). Entregable: Gráficos reproducibles y pies explicativos.
+Integrante 6  Comparar C y Go en tiempos absolutos con condiciones equivalentes (3 h). Redactar amenazas a la validez y separar PCs o configuraciones distintas (3 h). Entregable: Discusión comparativa y limitaciones.
+Integrante 7  Integrar metodología, tablas y anexos en el informe (3 h). Comprobar referencias y vínculo con al menos un artículo IEEE (3 h). Entregable: Informe técnico integrado.
+Integrante 8  Preparar demostración y guion repartido entre ocho personas (3 h). Revisar trazabilidad de afirmaciones del informe a los datos originales (3 h). Entregable: Guion de exposición y lista de correcciones.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+Sprint 10 Reproducir y entregar el proyecto
+Semana 10 · 64 horas de equipo · 8 horas por integrante
+Objetivo y cierre
+Cerrar el repositorio, verificar la reproducción y demostrar las cuatro versiones.
+Aceptación: Un clon limpio compila, valida y reproduce un subconjunto de resultados; la entrega contiene informe, datos y comandos completos.
+Asignaciones individuales
+Integrante 1  Reproducir C secuencial desde un clon limpio siguiendo solo README (3 h). Corregir instrucciones y ensayar su explicación y resultados (3 h). Entregable: Acta final de C secuencial.
+Integrante 2  Reproducir el híbrido desde un clon y verificar MPI y OpenMP (3 h). Ensayar la demostración y documentar errores recuperables de operación (3 h). Entregable: Acta final de C paralelo.
+Integrante 3  Reproducir Go secuencial desde un clon limpio (3 h). Corregir instrucciones y ensayar la explicación del algoritmo (3 h). Entregable: Acta final de Go secuencial.
+Integrante 4  Reproducir Go paralelo y comprobar sincronización y trabajadores (3 h). Ensayar la demostración de escalabilidad sin depender de tiempos exactos (3 h). Entregable: Acta final de Go paralelo.
+Integrante 5  Auditar que tablas y gráficos coincidan con resultados preservados (3 h). Revisar tolerancias, exclusiones y conclusiones numéricas finales (3 h). Entregable: Auditoría final de resultados.
+Integrante 6  Revisar compilación, scripts y documentación de entorno completa (3 h). Preparar un procedimiento corto de recuperación para la exposición (3 h). Entregable: Guía final de reproducción.
+Integrante 7  Corregir informe y referencias después de la revisión del equipo (3 h). Comprobar que la explicación de Linux sea solo una propuesta futura (3 h). Entregable: Informe final revisado.
+Integrante 8  Revisar permisos, README y archivos incluidos en el repositorio (3 h). Crear etiqueta de entrega y coordinar ensayo completo con los ocho integrantes (3 h). Entregable: Versión final etiquetada y acta de entrega.
+Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+
+13 Cierre y ejecución entre computadoras
+Entregables finales del repositorio
+Entregable
+Condición de aceptación
+Cuatro versiones
+Cada carpeta compila y dispone de README con argumentos y ejemplo.
+Pruebas comunes
+Fixtures y comparación completa con tolerancias documentadas.
+Scripts de Windows
+Compilación, validación y medición reproducibles desde PowerShell.
+Resultados originales
+CSV sin alteración manual y configuración asociada a cada ejecución.
+Resultados resumidos
+Medianas, dispersión, speedup y eficiencia calculados de forma verificable.
+Informe y gráficos
+Método, arquitectura, resultados, limitaciones y referencias científicas.
+Evidencia de equipo
+Diez cierres de sprint, pull requests revisados y aportes de ocho integrantes.
+Entrega identificable
+Etiqueta de versión final y hash del commit usado para medir.
+
+Alcance distribuido en Windows
+La campaña base funciona en una sola PC con Windows 11. Si el docente exige varios nodos físicos, el híbrido C debe ejecutarse en dos o más PCs Windows de la misma arquitectura. Instalar el mismo runtime MS-MPI y el runtime de Visual C++ en cada una, distribuir el mismo ejecutable y usar una red local autorizada.
+MS-MPI entre equipos necesita configuración adicional del servicio o administrador de procesos, autenticación y reglas de red. Consultar mpiexec /? y smpd -help de la versión instalada; las opciones y políticas del laboratorio determinan el mecanismo de arranque. Verificar primero un programa que imprima el nombre del equipo y el rank, antes de intentar multiplicar matrices. No asumir que la ejecución local valida el despliegue remoto.
+Registrar el número de núcleos de cada nodo y no sobreasignar hilos. Incluir latencia de red y comunicación en total_s. Mantener esta campaña separada de la de una PC. Si no se dispone de varios equipos, declarar la limitación en el informe en vez de afirmar que los procesos locales constituyen un clúster físico.
+Riesgos de planificación que se deben resolver pronto
+En S1 se confirma disponibilidad de PCs y si la rúbrica acepta el alcance local. En S2 se fija el formato y el generador para evitar discrepancias entre lenguajes. En S6 se decide si alguna optimización merece seguir; en S7 se congela el código. Cualquier arreglo posterior que modifique el cálculo obliga a repetir los lotes afectados.
+Las 640 horas son una estimación inicial de trabajo activo. Si una tarea excede sus 6 horas principales, dividirla y reducir alcance opcional, manteniendo corrección, mediciones y documentación. La distribución será equitativa por esfuerzo real registrado, además de por horas previstas.
+
+14 Fuentes oficiales de consulta
+Documentación consultada el 17 de septiembre de 2026. Las referencias respaldan instalación y comportamiento de herramientas. El artículo IEEE específico del proyecto se seleccionará y registrará en el sprint 2.
+[1] Microsoft Learn — Herramientas MSVC desde la línea de comandoshttps://learn.microsoft.com/en-us/cpp/build/building-on-the-command-line
+[2] Microsoft Learn — Opción openmp y alcance del soportehttps://learn.microsoft.com/en-us/cpp/build/reference/openmp-enable-openmp-2-0-support
+[3] Microsoft Learn — Redistribuibles de Visual C++https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+[4] Microsoft — MS-MPI y descarga de runtime y SDKhttps://learn.microsoft.com/en-us/message-passing-interface/microsoft-mpi
+[4a] Microsoft Download Center — Descarga de MS-MPI 10.1.3https://www.microsoft.com/en-us/download/details.aspx?id=105289
+[5] Microsoft Learn — MPI_Init_threadhttps://learn.microsoft.com/en-us/message-passing-interface/mpi-init-thread-function
+[6] Go — Instalación oficialhttps://go.dev/doc/install
+[7] Go — Requisitos y uso del detector de carrerashttps://go.dev/doc/articles/race_detector
+[8] Git — Instalación de Git for Windowshttps://git-scm.com/install/windows
+[9] GitHub Docs — Creación y registro de claves SSHhttps://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+[10] Microsoft Learn — Cronometría de alta resolución en Windowshttps://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps
+[11] GCC — Activación de OpenMP en GCChttps://gcc.gnu.org/onlinedocs/libgomp/Enabling-OpenMP.html
+[12] Open MPI — Inicio rápido para ejecutar aplicaciones MPIhttps://docs.open-mpi.org/en/main/launching-apps/quickstart.html
+
+15 Posible adaptación futura a Linux
+Sí, las cuatro versiones pueden adaptarse a una distribución Linux, por ejemplo Ubuntu, Debian o Fedora. La mayor parte del algoritmo, el reparto de filas MPI y el código de goroutines puede conservarse si desde el inicio se separan los detalles del sistema operativo. Esta sección describe cambios posibles; no instala ni implementa nada para Linux.
+Componente
+Cambio que sería necesario
+Compilador de C
+Sustituir MSVC por GCC o Clang. Cambiar las opciones de compilación y generar binarios Linux; un .exe de Windows no es el binario nativo que se entregaría allí.
+MPI
+Sustituir MS-MPI por Open MPI o MPICH. Recompilar contra las cabeceras y bibliotecas de la implementación elegida y adaptar las opciones del lanzador.
+OpenMP
+Conservar las directivas compatibles. Con GCC se habilita mediante -fopenmp, en lugar de /openmp. Revisar opciones de afinidad y número de hilos. [11]
+Cronómetro C secuencial
+Reemplazar QueryPerformanceCounter por un reloj monotónico disponible en Linux, detrás de una función de cronometraje común. El núcleo matemático no debería incluir windows.h.
+Go
+Instalar Go para Linux y recompilar ambos módulos. Con biblioteca estándar y rutas portables, el núcleo secuencial y los workers no deberían requerir cambios funcionales.
+Scripts y rutas
+Adaptar los scripts de compilación y medición a Bash, Make o PowerShell multiplataforma. Cambiar rutas, separadores y asignación de variables de entorno.
+Despliegue MPI
+Configurar comunicación y arranque de procesos según Open MPI o MPICH, por ejemplo con SSH y un archivo de hosts cuando corresponda. No reutilizar reglas específicas de MS-MPI. [12]
+Validación y mediciones
+Volver a ejecutar fixtures, revisar tolerancias y repetir la campaña completa registrando sistema, compilador y runtime. No combinar tiempos Windows y Linux como si fueran una misma condición.
+
+Decisiones actuales que facilitan esa adaptación
+Mantener el núcleo de matrices independiente del cronómetro, usar memoria contigua y tipos de tamaño apropiado, construir rutas con funciones del lenguaje y no invocar comandos de Windows desde el algoritmo. MPI y OpenMP deben limitarse al módulo paralelo; Go debe mantener separados el cálculo y la lectura de archivos.
+El repositorio seguiría conservando las mismas cuatro carpetas. En una etapa futura se añadirían instrucciones y scripts específicos para Linux junto con nuevos resultados etiquetados por plataforma. No sería necesario convertir este proyecto en ocho versiones del algoritmo.

@@ -1,0 +1,321 @@
+{
+    "version":  "2.0.0",
+    "tasks":  [
+                  {
+                      "label":  "Build all Debug",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "all",
+                                   "-Configuration",
+                                   "Debug"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build c_secuencial Debug",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "c_secuencial",
+                                   "-Configuration",
+                                   "Debug"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build c_paralelo Debug",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "c_paralelo",
+                                   "-Configuration",
+                                   "Debug"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build go_secuencial Debug",
+                      "problemMatcher":  "$go",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "go_secuencial",
+                                   "-Configuration",
+                                   "Debug"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build go_paralelo Debug",
+                      "problemMatcher":  "$go",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "go_paralelo",
+                                   "-Configuration",
+                                   "Debug"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build all Release",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "all",
+                                   "-Configuration",
+                                   "Release"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build c_secuencial Release",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "c_secuencial",
+                                   "-Configuration",
+                                   "Release"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build c_paralelo Release",
+                      "problemMatcher":  "$msCompile",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "c_paralelo",
+                                   "-Configuration",
+                                   "Release"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build go_secuencial Release",
+                      "problemMatcher":  "$go",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "go_secuencial",
+                                   "-Configuration",
+                                   "Release"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Build go_paralelo Release",
+                      "problemMatcher":  "$go",
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/build_windows.ps1",
+                                   "-Version",
+                                   "go_paralelo",
+                                   "-Configuration",
+                                   "Release"
+                               ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "Test all",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/test_windows.ps1",
+                                   "-Version",
+                                   "all"
+                               ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Test c_secuencial",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/test_windows.ps1",
+                                   "-Version",
+                                   "c_secuencial"
+                               ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Test c_paralelo",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/test_windows.ps1",
+                                   "-Version",
+                                   "c_paralelo"
+                               ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Test go_secuencial",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/test_windows.ps1",
+                                   "-Version",
+                                   "go_secuencial"
+                               ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Test go_paralelo",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "type":  "process",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/test_windows.ps1",
+                                   "-Version",
+                                   "go_paralelo"
+                               ],
+                      "group":  "test"
+                  },
+                  {
+                      "label":  "Diagnostico",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/check_env_windows.ps1"
+                               ],
+                      "type":  "process"
+                  },
+                  {
+                      "label":  "Limpiar build",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell.exe",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/clean_windows.ps1"
+                               ],
+                      "type":  "process"
+                  },
+                  {
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}/scripts/run_hybrid_windows.ps1"
+                               ],
+                      "problemMatcher":  [
+
+                                         ],
+                      "type":  "process",
+                      "label":  "MPI 2 procesos x 2 hilos",
+                      "command":  "powershell.exe",
+                      "dependsOn":  "Build c_paralelo Debug"
+                  }
+              ]
+}

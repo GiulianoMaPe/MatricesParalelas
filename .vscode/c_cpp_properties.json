@@ -1,0 +1,20 @@
+{
+    "version":  4,
+    "configurations":  [
+                           {
+                               "name":  "MSVC x64",
+                               "includePath":  [
+                                                   "${workspaceFolder}/c_secuencial/include",
+                                                   "${workspaceFolder}/c_paralelo/include",
+                                                   "${env:MSMPI_INC}"
+                                               ],
+                               "defines":  [
+                                               "_WIN32",
+                                               "_WIN64"
+                                           ],
+                               "compilerPath":  "cl.exe",
+                               "intelliSenseMode":  "windows-msvc-x64",
+                               "cStandard":  "c11"
+                           }
+                       ]
+}

@@ -1,0 +1,53 @@
+{
+    "version":  "0.2.0",
+    "configurations":  [
+                           {
+                               "request":  "launch",
+                               "program":  "${workspaceFolder}/c_secuencial/build/Debug/c_secuencial.exe",
+                               "preLaunchTask":  "Build c_secuencial Debug",
+                               "cwd":  "${workspaceFolder}",
+                               "name":  "C secuencial: instalacion",
+                               "type":  "cppvsdbg",
+                               "stopAtEntry":  false,
+                               "args":  [
+                                            "--smoke-test"
+                                        ]
+                           },
+                           {
+                               "mode":  "debug",
+                               "type":  "go",
+                               "cwd":  "${workspaceFolder}/go_secuencial",
+                               "args":  [
+                                            "--smoke-test"
+                                        ],
+                               "preLaunchTask":  "Build go_secuencial Debug",
+                               "name":  "go_secuencial : instalacion",
+                               "env":  {
+                                           "GOTOOLCHAIN":  "local",
+                                           "GOMODCACHE":  "${workspaceFolder}/.cache/go-mod",
+                                           "GOCACHE":  "${workspaceFolder}/.cache/go-build",
+                                           "GOWORK":  "off"
+                                       },
+                               "program":  "${workspaceFolder}/go_secuencial",
+                               "request":  "launch"
+                           },
+                           {
+                               "mode":  "debug",
+                               "type":  "go",
+                               "cwd":  "${workspaceFolder}/go_paralelo",
+                               "args":  [
+                                            "--smoke-test"
+                                        ],
+                               "preLaunchTask":  "Build go_paralelo Debug",
+                               "name":  "go_paralelo : instalacion",
+                               "env":  {
+                                           "GOTOOLCHAIN":  "local",
+                                           "GOMODCACHE":  "${workspaceFolder}/.cache/go-mod",
+                                           "GOCACHE":  "${workspaceFolder}/.cache/go-build",
+                                           "GOWORK":  "off"
+                                       },
+                               "program":  "${workspaceFolder}/go_paralelo",
+                               "request":  "launch"
+                           }
+                       ]
+}

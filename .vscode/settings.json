@@ -1,0 +1,9 @@
+{
+    "files.insertFinalNewline":  true,
+    "files.exclude":  {
+                          "**/build":  true,
+                          ".cache":  true
+                      },
+    "go.useLanguageServer":  true,
+    "files.trimTrailingWhitespace":  true
+}
