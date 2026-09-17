@@ -1,36 +1,34 @@
-# Sprint 1 Preparar el entorno y el repositorio
+# Sprint 1 Revisar la base y acordar requisitos
 
-Estado: pendiente de ejecucion y revision por el equipo. Plan extraido de la guia original; no es evidencia de tareas realizadas.
+Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
 
 Semana 1 · 64 horas de equipo · 8 horas por integrante
 
-Objetivo y cierre
+## Objetivo y aceptación
 
-Conseguir que los ocho integrantes puedan compilar y ejecutar C híbrido y Go en Windows 11.
+Comprender lo que ya funciona, identificar funciones pendientes y definir el alcance matemático.
 
-Aceptación: Los ocho registros de entorno y las dos pruebas mínimas están revisados. La estructura está en GitHub.
+Cierre: Existe un diagnóstico por versión, una lista priorizada de pendientes y casos de referencia comprobados.
 
-Asignaciones individuales
+## Trabajo de cada integrante
 
-Integrante 1  Instalar MSVC y OpenMP y ejecutar la prueba C (3 h). Redactar los pasos de instalación y recopilar versiones de MSVC del equipo (3 h). Entregable: Guía C y evidencia de compilación.
+Integrante 1  Leer el flujo funcional y los módulos de C secuencial (3 h). Identificar funciones pendientes, supuestos y puntos de validación (3 h). Entregable: Diagnóstico funcional C secuencial. Ubicación: docs/diagnostico_c_secuencial.md.
 
-Integrante 2  Instalar runtime y SDK MS-MPI y verificar variables (3 h). Probar dos procesos con dos hilos y documentar errores de instalación (3 h). Entregable: Guía MPI con salida de la prueba.
+Integrante 2  Analizar el flujo MPI y OpenMP disponible en C paralelo (3 h). Distinguir demostraciones de hilos del producto real y enumerar faltantes (3 h). Entregable: Diagnóstico funcional C paralelo. Ubicación: docs/diagnostico_c_paralelo.md.
 
-Integrante 3  Instalar Go y comprobar goroutines en su equipo (3 h). Documentar instalación y acordar versión común con los ocho integrantes (3 h). Entregable: Guía Go y registro de versiones.
+Integrante 3  Leer los módulos de Go secuencial y sus pruebas existentes (3 h). Identificar operaciones reales, funciones pendientes y errores no cubiertos (3 h). Entregable: Diagnóstico funcional Go secuencial. Ubicación: docs/diagnostico_go_secuencial.md.
 
-Integrante 4  Instalar Git y crear el repositorio y sus cuatro carpetas (3 h). Configurar exclusiones, permisos y procedimiento de ramas y pull requests (3 h). Entregable: Repositorio inicial y normas de colaboración.
+Integrante 4  Leer workers, canales y sincronización de Go paralelo (3 h). Identificar propiedad de filas, riesgos de bloqueo y funciones pendientes (3 h). Entregable: Diagnóstico funcional Go paralelo. Ubicación: docs/diagnostico_go_paralelo.md.
 
-Integrante 5  Inventariar CPU, núcleos y RAM de las PCs disponibles (3 h). Elegir PC de medición y estimar tamaños iniciales y disponibilidad (3 h). Entregable: Inventario de hardware y propuesta de capacidad.
+Integrante 5  Resolver manualmente productos pequeños de matrices (3 h). Revisar los fixtures recibidos y corregir valores esperados incorrectos (3 h). Entregable: Casos matemáticos de referencia. Ubicación: tests/fixtures/.
 
-Integrante 6  Repetir desde cero las instrucciones C en otra PC (3 h). Registrar diferencias y corregir pasos que no sean reproducibles (3 h). Entregable: Acta de reproducción de C.
+Integrante 6  Revisar las entradas y salidas propuestas para C y Go (3 h). Registrar discrepancias de dimensiones, semilla, formato y errores (3 h). Entregable: Matriz de diferencias del contrato. Ubicación: docs/formato_datos.md.
 
-Integrante 7  Repetir desde cero las instrucciones Go y Git en otra PC (3 h). Comprobar clonación y ejecutar los ejemplos sin ayuda del autor (3 h). Entregable: Acta de reproducción de Go y Git.
+Integrante 7  Relacionar las métricas solicitadas con preguntas de rendimiento (3 h). Proponer tamaños y presupuestos de trabajadores según recursos disponibles (3 h). Entregable: Preguntas experimentales y alcance de medición. Ubicación: docs/protocolo_medicion.md.
 
-Integrante 8  Convertir requisitos de la rúbrica en una lista de aceptación (3 h). Crear las tareas del backlog y localizar los artículos IEEE del curso (3 h). Entregable: Backlog y matriz de requisitos.
+Integrante 8  Convertir los criterios académicos en entregables verificables (3 h). Priorizar pendientes y localizar los artículos científicos del curso (3 h). Entregable: Matriz de requisitos y pendientes priorizados. Ubicación: docs/requisitos.md.
 
-Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
-
-
+Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en total. La evidencia y observaciones se registran en docs/sprints/sprint-01.md.
 
 ## Registro de cierre
 

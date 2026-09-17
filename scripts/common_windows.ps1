@@ -14,6 +14,15 @@ function Invoke-Native {
     & $File @Arguments
     if ($LASTEXITCODE -ne 0) { throw "$File termino con codigo $LASTEXITCODE." }
 }
+function Invoke-MSVC {
+    param([string]$Compiler, [string[]]$Arguments)
+    # A response file avoids Windows PowerShell 5.1 native argument quoting issues.
+    # The current directory is always the generated main/test build directory.
+    $response = Join-Path (Get-Location).Path 'compile.rsp'
+    $lines = @($Arguments | ForEach-Object { '"' + $_ + '"' })
+    [IO.File]::WriteAllText($response, ($lines -join ' '), [Text.Encoding]::Unicode)
+    Invoke-Native $Compiler @('@compile.rsp')
+}
 function Find-Vswhere {
     $command = Get-Command vswhere.exe -ErrorAction SilentlyContinue
     if ($command) { return $command.Source }
@@ -95,6 +104,8 @@ function Find-MPI {
     $inc = $includes | Where-Object { $_ -and (Test-Path -LiteralPath (Join-Path $_ 'mpi.h')) } | Select-Object -First 1
     $lib = $libraries | Where-Object { $_ -and (Test-Path -LiteralPath (Join-Path $_ 'msmpi.lib')) } | Select-Object -First 1
     $exe = $executables | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -First 1
+    if ($inc) { $inc = $inc.TrimEnd('\') }
+    if ($lib) { $lib = $lib.TrimEnd('\') }
     return [pscustomobject]@{ Include = $inc; Library = $lib; Launcher = $exe }
 }
 function Assert-MPISdk {

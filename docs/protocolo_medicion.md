@@ -25,5 +25,9 @@ compilación, pruebas de instalación ni ejecuciones con instrumentación de dep
 - Mediana y dispersión; speedup respecto de la referencia secuencial del mismo
   lenguaje, eficiencia respecto de P*T o workers. No mezclar equipos ni plataformas.
 
-Guardar originales en raw, agregados reproducibles en resumen y gráficos derivados
-en graficos. No hay CSV de ejemplo que puedan confundirse con datos experimentales.
+Guardar el piloto de S7 en `resultados/piloto/` y los originales oficiales de S8 en
+`resultados/raw/`. Guardar agregados reproducibles en `resultados/resumen/` y gráficos
+derivados en `resultados/graficos/`. No hay CSV de ejemplo que puedan confundirse con
+datos experimentales. En S7 se implementará `scripts/summarize_results.ps1` para
+medianas, dispersión, speedup y eficiencia; su validación usará datos de control
+identificados como tales y separados de las observaciones experimentales.

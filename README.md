@@ -1,7 +1,7 @@
 # Multiplicación de matrices en Windows 11
 
-Repositorio para un equipo de ocho integrantes y diez sprints. Esta entrega prepara
-el entorno: **los cuatro algoritmos están pendientes**. Solo `--smoke-test` ejecuta
+Repositorio para un equipo de ocho integrantes y diez sprints de desarrollo sobre
+una base técnica preparada. **Los cuatro algoritmos están pendientes**. Solo `--smoke-test` ejecuta
 una prueba de instalación; cualquier solicitud de cálculo termina con código 2,
 sin matrices ni tiempos ficticios.
 
@@ -76,7 +76,7 @@ MatricesParalelas/                 raíz actual del proyecto
   go_paralelo/                     módulo Go independiente, workers, pruebas, build
   tests/fixtures/                 entradas y productos conocidos comunes
   scripts/                        automatización PowerShell nativa
-  resultados/{raw,resumen,graficos}/
+  resultados/{piloto,raw,resumen,graficos}/
   docs/entorno/                   plantilla y diagnóstico local
   docs/sprints/                   planificación y cierre de los 10 sprints
   .vscode/                        tareas, depuración e IntelliSense
@@ -85,14 +85,29 @@ MatricesParalelas/                 raíz actual del proyecto
 
 El [árbol completo](docs/arbol-proyecto.txt) enumera los archivos preparados.
 `build/` y `.cache/` son locales, ignorados y recreados por los scripts.
-La [guía original extraída](docs/guia-extraida.txt) conserva el contenido del
-Word, sin archivo de Word; sus ejemplos son antecedentes: prevalecen los scripts
-y el alcance actual de esqueletos descritos aquí.
+La [guía vigente](docs/guia-extraida.txt) define el
+plan de desarrollo. Los diez documentos de sprint corresponden a esa versión.
+La preparación técnica previa queda fuera de las 640 horas del equipo.
+
+## Comenzar el plan de desarrollo
+
+El [Sprint 1](docs/sprints/sprint-01.md) comienza con la revisión de la base y los
+requisitos: diagnósticos funcionales de las cuatro versiones, revisión de fixtures,
+diferencias del contrato, preguntas experimentales y requisitos académicos.
+Las instrucciones de instalación se conservan como apoyo para preparar cada PC;
+no vuelven a asignarse como trabajo de desarrollo ya realizado.
+
+Las rutas acordadas son `docs/formato_datos.md` y `docs/protocolo_medicion.md`.
+Los diagnósticos, informes y scripts que aún no existen se crearán en el sprint
+asignado. En particular, `scripts/compare_results.ps1` corresponde a S3 y
+`scripts/summarize_results.ps1` a S7. `bench_windows.ps1` es solo una interfaz
+pendiente: S7 implementará la campaña real. El piloto se guardará en
+`resultados/piloto/`, separado de los datos oficiales de S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes
 
-Consultar [contrato](docs/contrato.md), [fixtures](docs/formato-datos.md),
-[pruebas](tests/README.md), [protocolo de medición](docs/mediciones.md),
+Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
+[pruebas](tests/README.md), [protocolo de medición](docs/protocolo_medicion.md),
 [plan del equipo](docs/sprints/README.md) y [verificación de esta entrega](docs/verificacion-inicial.md).
 Las pruebas de instalación no demuestran corrección matemática. Faltan los
 multiplicadores, argumentos y validación de tamaños, generador común, lectores,
@@ -100,9 +115,25 @@ particionado, cronómetros, comparador completo y campañas de medición.
 
 ## Primer commit y publicación
 
-El repositorio local usa `main`, sin commit ni remoto. Crear manualmente en GitHub
-un repositorio **vacío** llamado `matrices-paralelas` (sin README ni .gitignore).
-Reemplazar `TU NOMBRE`, `TU CORREO` y `PROPIETARIO` antes de ejecutar:
+Este repositorio ya tiene commits en `main` y un remoto `origin` configurado.
+Conservarlos. Para publicar los ajustes locales de esta entrega, revisar y ejecutar:
+
+```powershell
+git status --short
+git diff
+git add README.md docs/arbol-proyecto.txt docs/verificacion-inicial.md scripts/build_windows.ps1 scripts/common_windows.ps1
+git diff --cached
+git commit -m "Corregir compilacion MSVC con espacios y registrar verificaciones"
+git remote -v
+git push origin main
+```
+
+Estos comandos se entregan para ejecución manual; no se hicieron commit ni push
+de estos ajustes. Para futuros cambios de desarrollo usar ramas y pull requests.
+
+**Solo para un repositorio nuevo sin commits ni remoto:** crear manualmente en
+GitHub un repositorio vacío llamado `matrices-paralelas` (sin README ni .gitignore).
+Reemplazar `TU NOMBRE`, `TU CORREO` y `PROPIETARIO` antes de ejecutar el ejemplo:
 
 ```powershell
 git config user.name "TU NOMBRE"

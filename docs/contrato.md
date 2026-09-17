@@ -51,6 +51,6 @@ pero todavía no reparte ni calcula filas.
 Comparación completa elemento a elemento:
 `abs(obtenido-esperado) <= 1e-9 + 1e-9*abs(esperado)`.
 Rechazar NaN e infinitos; un checksum no sustituye esta comparación.
-Ver [formato de datos](formato-datos.md) y [mediciones](mediciones.md).
+Ver [formato de datos](formato_datos.md) y [mediciones](protocolo_medicion.md).
 Separar `kernel_s` de `total_s` que incluye comunicación/coordinación; todavía
 no se implementan ni se imprimen tiempos.
