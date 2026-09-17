@@ -32,7 +32,8 @@ function Initialize-MSVC {
         $devcmd = Join-Path ([string]$installation) 'Common7\Tools\VsDevCmd.bat'
         if (-not (Test-Path -LiteralPath $devcmd)) { throw 'Falta VsDevCmd.bat en la instalacion detectada.' }
         # CMD is used only to initialize the official development environment.
-        $lines = & $env:ComSpec /d /s /c "`"`"$devcmd`" -no_logo -arch=x64 -host_arch=x64 >nul && set`""
+        $devArgs = '"' + $devcmd + '" -no_logo -arch=x64 -host_arch=x64 >nul && set'
+        $lines = & $env:ComSpec /d /s /c $devArgs
         if ($LASTEXITCODE -ne 0) { throw 'VsDevCmd no pudo inicializar MSVC x64.' }
         foreach ($line in $lines) {
             if ($line -match '^([^=]+)=(.*)$') {

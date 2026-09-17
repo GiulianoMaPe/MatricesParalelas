@@ -85,9 +85,9 @@ MatricesParalelas/                 raíz actual del proyecto
 
 El [árbol completo](docs/arbol-proyecto.txt) enumera los archivos preparados.
 `build/` y `.cache/` son locales, ignorados y recreados por los scripts.
-La guía Word se conserva; [su extracción](docs/guia-extraida.txt) permite consultarla
-sin Word. Sus ejemplos son antecedentes: prevalecen los scripts y el alcance
-actual de esqueletos descritos aquí.
+La [guía original extraída](docs/guia-extraida.txt) conserva el contenido del
+Word, sin archivo de Word; sus ejemplos son antecedentes: prevalecen los scripts
+y el alcance actual de esqueletos descritos aquí.
 
 ## Desarrollo y validación pendientes
 
