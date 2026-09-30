@@ -32,16 +32,19 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+#### Integrante 7 (Andrés)
 
-#### Integrante 8
+- **Participantes y horas reales:** Andrés (8 h: 3 h delimitación estricta de cronómetros `kernel_s`/`total_s` y diseño del esquema CSV, 3 h diseño de la matriz exhaustiva de experimentos y protocolo de mitigación de sesgos, 1 h revisión cruzada de I8 Roberto sobre [`docs/bibliografia.md`](../bibliografia.md), 1 h coordinación de acuerdos).
+- **Issues y pull requests:** Rama de trabajo `feature/s02-i07-protocolo-inicial`.
+- **Pruebas y evidencias:** Entregable [`docs/protocolo_medicion.md`](../protocolo_medicion.md) finalizado en su versión 1.0 (versión inicial aprobada). Incluye: delimitación formal de eventos de reloj por tecnología, matriz de exclusiones de I/O y memoria, diccionario con las 20 columnas del archivo CSV, espacio de parámetros con 234 ejecuciones planificadas para CPUs de 8 núcleos, protocolo 1 warmup + 5 repeticiones en round-robin y formulación de Speedup/Eficiencia mediante medianas.
+- **Bloqueos y decisiones:** Se adopta formalmente la mediana y el rango intercuartílico (IQR) para mitigar el jitter de Windows 11. Se prohíbe el uso de corridas consecutivas idénticas para evitar sesgo de estrangulamiento térmico (*thermal throttling*).
+- **Revisión y criterio de aceptación:** Entregable de I7 completado satisfactoriamente; pendiente revisión cruzada por Integrante 6 (Gerardo). Revisión cruzada realizada a I8 (Roberto): entregable [`docs/bibliografia.md`](../bibliografia.md) revisado y aprobado formalmente (los modelos de Quintin et al. fundamentan adecuadamente el reparto 1D por bloques de filas y la topología híbrida).
 
-- Participantes y horas reales: Roberto (8 h: 3 h análisis y resumen de los dos artículos IEEE en `docs/referencias/`, 3 h selección de artículo y justificación técnica del reparto 1D por bloques de filas, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
-- Issues y pull requests: Rama de trabajo `feature/integrante-8-roberto`.
-- Pruebas y evidencias: Entregable `docs/bibliografia.md` finalizado con análisis de Quintin et al. (ICPP 2013) y Herault et al. (ScalA 2019 / Jack Dongarra), justificación del orden $i, k, j$, `MPI_Bcast` y arquitectura de Go. PDFs de referencia resguardados en `docs/referencias/`.
-- Bloqueos y decisiones: Se adopta formalmente el reparto 1D por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` en memoria continua para evitar sobrecostes de empaquetamiento 2D en memoria compartida emulada.
-- Revision y criterio de aceptacion: Entregable de I8 finalizado; pendiente revisión cruzada formal por Integrante 7 (Andres).
+#### Integrante 8 (Roberto)
+
+- **Participantes y horas reales:** Roberto (8 h: 3 h análisis y resumen de los dos artículos IEEE en `docs/referencias/`, 3 h selección de artículo y justificación técnica del reparto 1D por bloques de filas, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
+- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
+- **Pruebas y evidencias:** Entregable [`docs/bibliografia.md`](../bibliografia.md) finalizado con análisis de Quintin et al. (ICPP 2013) y Herault et al. (ScalA 2019 / Jack Dongarra), justificación del orden $i, k, j$, `MPI_Bcast` y arquitectura de Go. PDFs de referencia resguardados en `docs/referencias/`.
+- **Bloqueos y decisiones:** Se adopta formalmente el reparto 1D por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` en memoria continua para evitar sobrecostes de empaquetamiento 2D en memoria compartida emulada.
+- **Revisión y criterio de aceptación:** Entregable de I8 revisado y aprobado formalmente con verificación técnica por Integrante 7 (Andrés).
+
