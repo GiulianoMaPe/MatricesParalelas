@@ -32,16 +32,19 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+#### Integrante 7 (Andrés)
 
-#### Integrante 8
+- **Participantes y horas reales:** Andrés (8 h: 3 h formulación de preguntas de rendimiento, 3 h diseño de tamaños $N$ y presupuestos de trabajadores, 1 h revisión cruzada de I8 Roberto, 1 h coordinación de acuerdos).
+- **Issues y pull requests:** Rama de trabajo `feature/s01-i07-protocolo`.
+- **Pruebas y evidencias:** Entregable completado en [`docs/protocolo_medicion.md`](../protocolo_medicion.md): formulación de preguntas P1 a P5, análisis de viabilidad de memoria RAM, definición de fases (Piloto S7 vs. Oficial S8), matriz de configuraciones $P \times T$ y workers para $W \in \{1, 2, 4, 8\}$, protocolo de mitigación de sesgos (1 warmup + 5 repeticiones en round-robin) y delimitación de cronómetros.
+- **Bloqueos y decisiones:** Se ratifica no generar datos experimentales ficticios mientras los algoritmos estén pendientes de implementación (S3 y S4). Se fija el uso de la mediana para mitigar variabilidad térmica y de sistema en Windows 11.
+- **Revisión y criterio de aceptación:** Entregable de I7 finalizado; revisión cruzada realizada a I8 (Roberto) sobre [`docs/requisitos.md`](../requisitos.md) con aprobación de criterios académicos. Revisor asignado de I7: Integrante 6 (Gerardo).
 
-- Participantes y horas reales: Roberto (8 h: 3 h especificación de requisitos y criterios académicos, 3 h priorización de backlog y mapeo de literatura IEEE, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
-- Issues y pull requests: Rama de trabajo `feature/integrante-8-roberto`.
-- Pruebas y evidencias: Entregable `docs/requisitos.md` finalizado con matriz de criterios verificables, RF-01..05, RNF-01..07, backlog P0..P2 y localización de fuentes IEEE.
-- Bloqueos y decisiones: Se ratifica que ningún tiempo de ejecución es admisible si la salida matemática no pasa la tolerancia elemento a elemento (1e-9). Los programas devuelven código 2 como estado pendiente.
-- Revision y criterio de aceptacion: Entregable de I8 finalizado; pendiente revisión cruzada formal por Integrante 7 (Andres).
+#### Integrante 8 (Roberto)
+
+- **Participantes y horas reales:** Roberto (8 h: 3 h especificación de requisitos y criterios académicos, 3 h priorización de backlog y mapeo de literatura IEEE, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
+- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
+- **Pruebas y evidencias:** Entregable [`docs/requisitos.md`](../requisitos.md) finalizado con matriz de criterios verificables, RF-01..05, RNF-01..07, backlog P0..P2 y localización de fuentes IEEE.
+- **Bloqueos y decisiones:** Se ratifica que ningún tiempo de ejecución es admisible si la salida matemática no pasa la tolerancia elemento a elemento (1e-9). Los programas devuelven código 2 como estado pendiente.
+- **Revisión y criterio de aceptación:** Entregable de I8 revisado y verificado conforme por Integrante 7 (Andrés).
+
