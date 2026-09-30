@@ -34,7 +34,7 @@ foreach ($item in $selected) {
             }
             $sources = @(Get-ChildItem -LiteralPath (Join-Path $module 'src') -Filter '*.c' | ForEach-Object FullName)
             Push-Location $build
-            try { Invoke-Native $cl ($options + $sources + "/Fe:$item.exe" + $linkOptions) }
+            try { Invoke-MSVC $cl ($options + $sources + "/Fe:$item.exe" + $linkOptions) }
             finally { Pop-Location }
             if ($Tests) {
                 $testBuild = Join-Path $build 'tests'
@@ -42,7 +42,7 @@ foreach ($item in $selected) {
                 $testSources = @($sources | Where-Object { (Split-Path -Leaf $_) -ne 'main.c' })
                 $testSources += Join-Path $module 'tests\pending_test.c'
                 Push-Location $testBuild
-                try { Invoke-Native $cl ($options + $testSources + '/Fe:pending_test.exe' + $linkOptions) }
+                try { Invoke-MSVC $cl ($options + $testSources + '/Fe:pending_test.exe' + $linkOptions) }
                 finally { Pop-Location }
             }
         }

@@ -1,5 +1,9 @@
 # Instalación nativa en Windows 11 x64
 
+Documento de apoyo para la preparación previa de cada PC. El plan vigente de diez
+sprints comienza con diagnóstico funcional; no vuelve a asignar instalaciones ya
+realizadas. Conservar los registros de entorno y comprobar los equipos pendientes.
+
 No se usa WSL, Docker ni Linux. Instalar manualmente los componentes siguientes;
 los scripts del repositorio no descargan ni instalan programas.
 

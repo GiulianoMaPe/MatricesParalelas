@@ -1,38 +1,36 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: pendiente de ejecucion y revision por el equipo. Plan extraido de la guia original; no es evidencia de tareas realizadas.
+Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
-Objetivo y cierre
+## Objetivo y aceptación
 
 Dejar preparada una campaña que se pueda ejecutar sin editar manualmente cada comando.
 
-Aceptación: El piloto genera CSV válidos, repite correctamente, detecta fallos y conserva la configuración completa.
+Cierre: El piloto genera CSV válidos, repite correctamente, detecta fallos y conserva la configuración completa.
 
-Asignaciones individuales
+## Trabajo de cada integrante
 
-Integrante 1  Automatizar ejecución de C secuencial con varios tamaños (3 h). Verificar calentamiento, cinco repeticiones y códigos de retorno (3 h). Entregable: Lanzador de C secuencial.
+Integrante 1  Completar el caso C secuencial del script de medición existente (3 h). Verificar tamaños, calentamiento, cinco repeticiones y errores (3 h). Entregable: Medición C secuencial validada. Ubicación: scripts/bench_windows.ps1.
 
-Integrante 2  Automatizar combinaciones MPI y OpenMP del híbrido (3 h). Registrar P, T, hilos observados y configuración de afinidad (3 h). Entregable: Lanzador del híbrido C.
+Integrante 2  Completar el caso híbrido del script para combinaciones P y T (3 h). Registrar procesos e hilos observados y parámetros de cada ejecución (3 h). Entregable: Medición C paralelo validada. Ubicación: scripts/bench_windows.ps1.
 
-Integrante 3  Automatizar Go secuencial usando el binario compilado (3 h). Fijar GOMAXPROCS y registrar versión y opciones de ejecución (3 h). Entregable: Lanzador de Go secuencial.
+Integrante 3  Completar el caso Go secuencial del script de medición (3 h). Verificar que se mida el ejecutable y que se registren sus parámetros (3 h). Entregable: Medición Go secuencial validada. Ubicación: scripts/bench_windows.ps1.
 
-Integrante 4  Automatizar workers y GOMAXPROCS de Go paralelo (3 h). Validar combinaciones y evitar ejecutar campañas simultáneas (3 h). Entregable: Lanzador de Go paralelo.
+Integrante 4  Completar el caso Go paralelo del script con distintos workers (3 h). Comprobar el paralelismo solicitado y evitar campañas simultáneas (3 h). Entregable: Medición Go paralelo validada. Ubicación: scripts/bench_windows.ps1.
 
-Integrante 5  Integrar los lanzadores en bench_windows.ps1 (3 h). Validar esquema CSV y separar resultados parciales de completos (3 h). Entregable: Script de campaña y validación de datos.
+Integrante 5  Integrar y revisar los cuatro casos en bench_windows.ps1 (3 h). Validar CSV y rechazar resultados de funciones aún pendientes (3 h). Entregable: Campaña automatizada validada. Ubicación: scripts/bench_windows.ps1.
 
-Integrante 6  Realizar un piloto completo en la PC oficial (3 h). Estimar duración total y revisar temperatura, carga y memoria disponible (3 h). Entregable: Piloto y reserva de tiempo de máquina.
+Integrante 6  Realizar un piloto completo en la PC oficial (3 h). Estimar duración total y revisar temperatura, carga y memoria disponible (3 h). Entregable: Piloto y reserva de tiempo de máquina. Ubicación: resultados/piloto/.
 
-Integrante 7  Preparar agregación de medianas, dispersión y speedup (3 h). Comprobar los cálculos con un pequeño CSV manual de control (3 h). Entregable: Procedimiento de análisis verificado.
+Integrante 7  Preparar agregación de medianas, dispersión y speedup (3 h). Comprobar los cálculos con un pequeño CSV manual de control (3 h). Entregable: Procedimiento de análisis verificado. Ubicación: scripts/summarize_results.ps1.
 
-Integrante 8  Ensayar el procedimiento desde un clon limpio (3 h). Congelar commit, parámetros y checklist previo a la campaña (3 h). Entregable: Versión experimental congelada.
+Integrante 8  Reproducir el piloto a partir de la versión candidata (3 h). Fijar la versión del código y los parámetros aceptados para medir (3 h). Entregable: Acta de congelación experimental. Ubicación: docs/campana.md.
 
-Carga adicional de cada integrante: 1 h para revisar al siguiente integrante del ciclo I1 a I8 y 1 h de coordinación. Total individual: 8 h. Registrar el resultado de la revisión en el pull request o en docs/sprints/.
+Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en total. La evidencia y observaciones se registran en docs/sprints/sprint-07.md.
 
-La demostración entre dos PCs, si se exige, debe quedar acordada y operativa antes de S8. Reservar su puesta a punto sustituyendo una mejora opcional de S6; no añadir horas ocultas.
-
-
+I1 a I4 trabajan en funciones separadas del script; I5 integra después de su revisión. El piloto se guarda separado de los CSV oficiales de S8.
 
 ## Registro de cierre
 
