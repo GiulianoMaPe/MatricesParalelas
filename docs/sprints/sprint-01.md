@@ -32,8 +32,18 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+- **Participantes y horas reales:**
+  - Integrante 7 (Andrés): 8 h registradas (3 h formulación de preguntas de rendimiento, 3 h diseño de tamaños $N$ y presupuestos de trabajadores, 1 h revisión cruzada de I8 Roberto, 1 h coordinación de acuerdos).
+  - Integrantes 1 a 6 y 8: pendientes de registro individual.
+- **Issues y pull requests:**
+  - Rama: `feature/s01-i07-protocolo`
+  - Pull Request: Pendiente de aprobación por revisor asignado (Integrante 6 · Gerardo).
+- **Pruebas y evidencias:**
+  - Entregable completado en [`docs/protocolo_medicion.md`](../protocolo_medicion.md): formulación de preguntas P1 a P5, análisis de viabilidad de memoria RAM, definición de fases (Piloto S7 vs. Oficial S8), matriz de configuraciones $P \times T$ y workers para $W \in \{1, 2, 4, 8\}$, protocolo de mitigación de sesgos (1 warmup + 5 repeticiones en round-robin) y delimitación de cronómetros.
+- **Bloqueos y decisiones:**
+  - Se ratifica no generar datos experimentales ficticios mientras los algoritmos estén pendientes de implementación (S3 y S4).
+  - Se fija el uso de la mediana para mitigar variabilidad térmica y de sistema en Windows 11.
+- **Revisión y criterio de aceptación:**
+  - Revisor de este entregable: Integrante 6 (Gerardo).
+  - Revisión asignada a realizar por I7: Integrante 8 (Roberto) sobre [`docs/requisitos.md`](../requisitos.md).
+
