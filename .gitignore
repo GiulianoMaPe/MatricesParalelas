@@ -29,3 +29,4 @@ credentials*.json
 datos_generados/
 Thumbs.db
 Desktop.ini
+.idea

@@ -12,28 +12,39 @@ Cierre: Hay un contrato único aprobado, fixtures con resultados conocidos y dis
 
 ## Trabajo de cada integrante
 
-Integrante 1  Revisar estructuras y funciones iniciales de C secuencial (3 h). Completar contrato de memoria, validación de N y liberación de buffers (3 h). Entregable: Interfaces C secuencial revisadas. Ubicación: c_secuencial/include/.
+Integrante 1 Revisar estructuras y funciones iniciales de C secuencial (3 h). Completar contrato de memoria, validación de N y liberación de buffers (3 h). Entregable: Interfaces C secuencial revisadas. Ubicación: c_secuencial/include/.
 
-Integrante 2  Diseñar reparto de filas y counts y desplazamientos MPI (3 h). Resolver en papel N no divisible entre P y procesos sin filas (3 h). Entregable: Diseño MPI con ejemplos verificables. Ubicación: c_paralelo/include/partition.h.
+Integrante 2 Diseñar reparto de filas y counts y desplazamientos MPI (3 h). Resolver en papel N no divisible entre P y procesos sin filas (3 h). Entregable: Diseño MPI con ejemplos verificables. Ubicación: c_paralelo/include/partition.h.
 
-Integrante 3  Revisar los datos y funciones iniciales de Go secuencial (3 h). Completar contrato de errores y argumentos equivalente al de C (3 h). Entregable: Interfaces Go secuencial revisadas. Ubicación: go_secuencial/matrix.go.
+Integrante 3 Revisar los datos y funciones iniciales de Go secuencial (3 h). Completar contrato de errores y argumentos equivalente al de C (3 h). Entregable: Interfaces Go secuencial revisadas. Ubicación: go_secuencial/matrix.go.
 
-Integrante 4  Diseñar workers, canal de tareas y propiedad de las filas (3 h). Definir cierre del canal y espera sin bloqueos ni escritura compartida (3 h). Entregable: Diseño Go paralelo con invariantes. Ubicación: docs/arquitectura.md.
+Integrante 4 Diseñar workers, canal de tareas y propiedad de las filas (3 h). Definir cierre del canal y espera sin bloqueos ni escritura compartida (3 h). Entregable: Diseño Go paralelo con invariantes. Ubicación: docs/arquitectura.md.
 
-Integrante 5  Ampliar los fixtures recibidos con identidad, cero y negativos (3 h). Definir tolerancias y política para NaN e infinitos (3 h). Entregable: Fixtures ampliados y criterio de comparación. Ubicación: tests/fixtures/.
+Integrante 5 Ampliar los fixtures recibidos con identidad, cero y negativos (3 h). Definir tolerancias y política para NaN e infinitos (3 h). Entregable: Fixtures ampliados y criterio de comparación. Ubicación: tests/fixtures/.
 
-Integrante 6  Completar el formato y generador determinista propuestos (3 h). Preparar vectores de control que C y Go deberán reproducir (3 h). Entregable: Contrato de entradas definitivo. Ubicación: docs/formato_datos.md.
+Integrante 6 Completar el formato y generador determinista propuestos (3 h). Preparar vectores de control que C y Go deberán reproducir (3 h). Entregable: Contrato de entradas definitivo. Ubicación: docs/formato_datos.md.
 
-Integrante 7  Definir límites de kernel_s y total_s y campos del CSV (3 h). Diseñar matriz de experimentos y criterios de repetición (3 h). Entregable: Protocolo de medición versión inicial. Ubicación: docs/protocolo_medicion.md.
+Integrante 7 Definir límites de kernel_s y total_s y campos del CSV (3 h). Diseñar matriz de experimentos y criterios de repetición (3 h). Entregable: Protocolo de medición versión inicial. Ubicación: docs/protocolo_medicion.md.
 
-Integrante 8  Leer y resumir dos candidatos de literatura científica (3 h). Seleccionar al menos uno y asociar sus hallazgos al reparto por filas (3 h). Entregable: Bibliografía verificada y decisión de diseño. Ubicación: docs/bibliografia.md.
+Integrante 8 Leer y resumir dos candidatos de literatura científica (3 h). Seleccionar al menos uno y asociar sus hallazgos al reparto por filas (3 h). Entregable: Bibliografía verificada y decisión de diseño. Ubicación: docs/bibliografia.md.
 
 Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en total. La evidencia y observaciones se registran en docs/sprints/sprint-02.md.
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+#### Integrante 7 (Andrés)
+
+- **Participantes y horas reales:** Andrés (8 h: 3 h delimitación estricta de cronómetros `kernel_s`/`total_s` y diseño del esquema CSV, 3 h diseño de la matriz exhaustiva de experimentos y protocolo de mitigación de sesgos, 1 h revisión cruzada de I8 Roberto sobre [`docs/bibliografia.md`](../bibliografia.md), 1 h coordinación de acuerdos).
+- **Issues y pull requests:** Rama de trabajo `feature/s02-i07-protocolo-inicial`.
+- **Pruebas y evidencias:** Entregable [`docs/protocolo_medicion.md`](../protocolo_medicion.md) finalizado en su versión 1.0 (versión inicial aprobada). Incluye: delimitación formal de eventos de reloj por tecnología, matriz de exclusiones de I/O y memoria, diccionario con las 20 columnas del archivo CSV, espacio de parámetros con 234 ejecuciones planificadas para CPUs de 8 núcleos, protocolo 1 warmup + 5 repeticiones en round-robin y formulación de Speedup/Eficiencia mediante medianas.
+- **Bloqueos y decisiones:** Se adopta formalmente la mediana y el rango intercuartílico (IQR) para mitigar el jitter de Windows 11. Se prohíbe el uso de corridas consecutivas idénticas para evitar sesgo de estrangulamiento térmico (*thermal throttling*).
+- **Revisión y criterio de aceptación:** Entregable de I7 completado satisfactoriamente; pendiente revisión cruzada por Integrante 6 (Gerardo). Revisión cruzada realizada a I8 (Roberto): entregable [`docs/bibliografia.md`](../bibliografia.md) revisado y aprobado formalmente (los modelos de Quintin et al. fundamentan adecuadamente el reparto 1D por bloques de filas y la topología híbrida).
+
+#### Integrante 8 (Roberto)
+
+- **Participantes y horas reales:** Roberto (8 h: 3 h análisis y resumen de los dos artículos IEEE en `docs/referencias/`, 3 h selección de artículo y justificación técnica del reparto 1D por bloques de filas, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
+- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
+- **Pruebas y evidencias:** Entregable [`docs/bibliografia.md`](../bibliografia.md) finalizado con análisis de Quintin et al. (ICPP 2013) y Herault et al. (ScalA 2019 / Jack Dongarra), justificación del orden $i, k, j$, `MPI_Bcast` y arquitectura de Go. PDFs de referencia resguardados en `docs/referencias/`.
+- **Bloqueos y decisiones:** Se adopta formalmente el reparto 1D por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` en memoria continua para evitar sobrecostes de empaquetamiento 2D en memoria compartida emulada.
+- **Revisión y criterio de aceptación:** Entregable de I8 revisado y aprobado formalmente con verificación técnica por Integrante 7 (Andrés).
+
