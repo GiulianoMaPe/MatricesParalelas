@@ -30,15 +30,6 @@ Integrante 8 Leer y resumir dos candidatos de literatura científica (3 h). Sele
 
 Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en total. La evidencia y observaciones se registran en docs/sprints/sprint-02.md.
 
-## Plan de trabajo de I3 (Giuliano)
-
-**Estado:** plan inicial; tareas todavía pendientes. Mi entregable será `go_secuencial/matrix.go` con las interfaces y sus reglas claras.
-
-1. **Revisar cómo se guardan las matrices (3 h).** Mantener `Matrix` con `N` y `Data`. Dejar claro que `N` debe ser positivo, que debe haber exactamente `N*N` valores y que se guardan fila por fila. Revisar también los límites de tamaño antes de calcular `N*N` o reservar memoria.
-2. **Completar las reglas de las funciones y los errores (3 h).** Definir qué error corresponde a dimensiones inválidas, datos incompletos o sobrantes, matrices de distinto tamaño y valores NaN o infinitos. Aclarar que `Multiply` recibe dos matrices del mismo tamaño y no modifica sus entradas. Mientras el cálculo siga pendiente, una entrada válida debe seguir devolviendo `ErrPending`.
-3. **Acordar los argumentos con el equipo (parte de la coordinación, 1 h).** Comparar estas reglas con I1, que revisa las interfaces de C. Usar lo que ya pide `docs/contrato.md`: `--n` positivo y `--seed` entre 0 y 4294967295; cuando se use `--input`, no combinarlo con `--n` ni `--seed`. Los mensajes de error deben ir a `stderr` y la ejecución fallida debe devolver un código distinto de cero. Coordinar con I4 e I7 antes de cambiar `main.go` o `input.go`, porque sus tareas de Sprint 3 usan esos archivos.
-4. **Revisión cruzada (1 h).** Pedir a I2 que revise mi entregable y revisar el diseño de I4 en `docs/arquitectura.md`, siguiendo el reparto del equipo.
-
 ### Cómo sabré que mi parte está lista
 
 - Las reglas de `Matrix` y `Multiply` están escritas junto a las funciones.
@@ -50,6 +41,17 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 La multiplicación se implementará en Sprint 3. La rama propuesta para trabajar Sprint 2 es `feature/s02-i03-interfaces-go-secuencial`, después de integrar los cambios de Sprint 1 y actualizar `main`.
 
 ## Registro de cierre
+
+#### Integrante 3 (Giuliano)
+
+- **Estado:** interfaces y validaciones implementadas y probadas; coordinación y revisión pendientes.
+- **Participantes y horas:** Giuliano. Falta anotar las horas reales.
+- **Rama:** `feature/s02-i03-interfaces-go-secuencial`.
+- **Qué hice:** Completé las reglas de las matrices en `go_secuencial/matrix.go`. Se comprueba que el tamaño sea positivo, que la cantidad de datos sea correcta y que no haya NaN ni infinitos. También se rechazan tamaños que exceden los límites. `Multiply` revisa sus dos matrices y comprueba que tengan el mismo tamaño; `Generate` usa la misma validación del tamaño.
+- **Errores y argumentos:** Cada problema tiene un error que puede identificarse en las pruebas. Con entradas válidas, las operaciones siguen avisando que están pendientes. Documenté las funciones y las reglas comunes de argumentos en `go_secuencial/README.md`. El procesamiento de argumentos de `main.go` se integrará en Sprint 3.
+- **Verificación:** El 2026-10-01 ejecuté `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial`. Terminó con código 0: compilación, formato, revisión con `go vet`, pruebas Go y prueba de instalación correctas. Las pruebas cubren datos incorrectos, límites de tamaño, ceros, negativos, NaN, infinitos, dimensiones diferentes y los extremos de la semilla. El cálculo sigue pendiente.
+- **Propuesta para I1:** Preparé [`docs/especificaciones_c_go_secuencial.md`](../especificaciones_c_go_secuencial.md) con las reglas de matrices, límites de tamaño, argumentos, casos de control y códigos de salida: 0 para éxito, 1 para entrada incorrecta o fallo y 2 para una operación pendiente. I1 puede usarla para adaptar sus interfaces de C.
+- **Pendientes para cerrar:** Recibir la confirmación de I1 sobre la adaptación, pedir a I2 que revise mi entregable y registrar mi revisión al diseño de I4. No marco esas revisiones ni acuerdos como realizados.
 
 #### Integrante 7 (Andrés)
 
