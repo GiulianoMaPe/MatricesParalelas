@@ -14,11 +14,11 @@ La versión `go_paralelo` implementa la multiplicación de matrices cuadradas de
 **Principios rectores (de `docs/contrato.md` y `docs/guia-extraida.txt`):**
 - Almacenamiento contiguo por filas (`float64`, row-major: índice `i*N + j`)
 - Pool acotado: `W` workers fijos, **no** una goroutine por celda
-- Canal de tareas: reparte intervalos de filas (bloques), no celdas individuales
+- Canal de tareas: reparte intervalos de filas (bloques), no celdas individuales; **un worker puede recibir varias tareas**; lo obligatorio es que **cada fila se calcule exactamente una vez**
 - Propiedad exclusiva: **un único worker escribe cada fila de $C$**
 - $A$ y $B$ son de **solo lectura** para todos los workers
-- Cierre ordenado del canal + `WaitGroup` para evitar *deadlocks*
-- `GOMAXPROCS` se fija y registra aparte; no equivale al número de workers
+- Cierre ordenado: **primero se envían todas las tareas al canal, luego se cierra el canal (`close(tasks)`), y finalmente se espera a los workers con `wg.Wait()`**
+- `GOMAXPROCS` se fija y registra aparte; no equivale al número de workers; **tras `runtime.GOMAXPROCS(workers)`, consultar `runtime.GOMAXPROCS(0)` para guardar el valor efectivo**
 
 ---
 
@@ -53,32 +53,33 @@ type Result struct {
 main()
 ├── 1. Parsear y validar flags: --n, --seed, --workers
 │   ├── Rechazar si faltan, N < 1, seed > 2^32-1, workers < 1
-│   └── runtime.GOMAXPROCS(workers)  // fija y registra
-├── 2. Asignar matrices A, B, C (heap, contiguas)
+│   └── runtime.GOMAXPROCS(workers); gomaxprocs = runtime.GOMAXPROCS(0)  // fija, consulta y registra valor efectivo
+├── 2. Validar tamaño: comprobar que N*N cabe en memoria (size_t) y que N*N*3*8 bytes no excede límite razonable
+├── 3. Asignar matrices A, B, C (heap, contiguas)
 │   ├── A = make([]float64, N*N)
 │   ├── B = make([]float64, N*N)
 │   └── C = make([]float64, N*N)  // se inicializa en 0 en el kernel
-├── 3. Generar A y B (input.Generate)  // PRNG determinista, mismo estado
-├── 4. Medición total_s: time.Now()  // [T0] inicio total_s
-├── 5. Crear canal de tareas: tasks := make(chan Task, workers)
-├── 6. Iniciar WaitGroup: var wg sync.WaitGroup
-├── 7. Lanzar workers fijos:
+├── 4. Generar A y B (input.Generate)  // PRNG determinista, mismo estado
+├── 5. Medición total_s: time.Now()  // [T0] inicio total_s
+├── 6. Crear canal de tareas: tasks := make(chan Task, workers)
+├── 7. Iniciar WaitGroup: var wg sync.WaitGroup
+├── 8. Lanzar workers fijos:
 │   for w := 0; w < workers; w++ {
 │       wg.Add(1)
 │       go worker(w, tasks, &wg, A, B, C, N)
 │   }
-├── 8. Despachar bloques de filas al canal (productor único):
+├── 9. Despachar bloques de filas al canal (productor único):
 │   blockSize := ceil(N / workers)  // o fijo, ej. 64 filas
 │   for start := 0; start < N; start += blockSize {
 │       end := min(start + blockSize, N)
 │       tasks <- Task{StartRow: start, EndRow: end}
 │   }
-│   close(tasks)  // señal de fin: no más tareas
-├── 9. wg.Wait()  // bloquea hasta que todos los workers terminen
-├── 10. Medición total_s: total_s = time.Since(T0)  // [T1] fin total_s
-├── 11. Validar C (elemento a elemento vs referencia, tolerancia 1e-9)
-├── 12. Imprimir CSV en stdout: N,workers,total_s,kernel_s,checksum,status
-└── 13. os.Exit(0)  // o código ≠ 0 si error
+│   close(tasks)  // señal de fin: no más tareas (tras enviar todas)
+├── 10. wg.Wait()  // bloquea hasta que todos los workers terminen
+├── 11. Medición total_s: total_s = time.Since(T0)  // [T1] fin total_s
+├── 12. Validar C (elemento a elemento vs referencia, tolerancia 1e-9)
+├── 13. Imprimir CSV en stdout: N,workers,total_s,kernel_s,checksum,status
+└── 14. os.Exit(0)  // o código ≠ 0 si error
 ```
 
 ---
@@ -168,14 +169,14 @@ Según `docs/protocolo_medicion.md` (sección 3, tabla para `go_paralelo`):
 | Evento | Variable | Código en `main.go` |
 |--------|----------|---------------------|
 | Inicio `total_s` ($T_0$) | `totalStart` | `totalStart := time.Now()` **antes** de crear canal y lanzar workers |
-| Inicio `kernel_s` ($K_0$) | `kernelStart` | `kernelStart := time.Now()` **justo antes** del primer `tasks <- Task{...}` |
-| Fin `kernel_s` ($K_1$) | `kernelEnd` | `kernelEnd := time.Now()` **justo después** de `wg.Wait()` |
-| Fin `total_s` ($T_1$) | `totalEnd` | `totalEnd := time.Now()` **después** de validación (o antes, según protocolo) |
+| Inicio `kernel_s` ($K_0$) | `kernelStart` | `kernelStart := time.Now()` **justo antes** del primer `tasks <- Task{...}` (inicio despacho) |
+| Fin `kernel_s` ($K_1$) | `kernelEnd` | `kernelEnd := time.Now()` **justo después** de `wg.Wait()` (último worker terminó) |
+| Fin `total_s` ($T_1$) | `totalEnd` | `totalEnd := time.Now()` **tras** validación y antes de CSV |
 
 **Implementación precisa:**
 
 ```go
-totalStart := time.Now()                    // [T0]
+totalStart := time.Now()                    // [T0] inicio total_s
 
 tasks := make(chan Task, workers)
 var wg sync.WaitGroup
@@ -184,7 +185,7 @@ for w := 0; w < workers; w++ {
     go worker(w, tasks, &wg, A, B, C, N)
 }
 
-kernelStart := time.Now()                   // [K0] inicio cómputo puro
+kernelStart := time.Now()                   // [K0] inicio cómputo puro (primer envío)
 // Despachar tareas
 blockSize := computeBlockSize(N, workers)
 for start := 0; start < N; start += blockSize {
@@ -194,34 +195,43 @@ for start := 0; start < N; start += blockSize {
 }
 close(tasks)
 
-wg.Wait()                                   // sincronización
-kernelEnd := time.Now()                     // [K1] fin cómputo puro
+wg.Wait()                                   // espera a que terminen TODOS los workers
+kernelEnd := time.Now()                     // [K1] fin cómputo puro (último worker terminó)
 
 kernel_s := kernelEnd.Sub(kernelStart).Seconds()
-total_s  := kernelEnd.Sub(totalStart).Seconds()  // [T1] ≈ fin total_s
+total_s  := kernelEnd.Sub(totalStart).Seconds()  // [T1] ≈ fin total_s (sin validación/CSV)
 ```
 
-**Excluidos de ambos cronómetros (protocolo §3.2):**
+**Excluidos de `kernel_s` (cómputo puro):**
 - Parseo/validación de argumentos
 - Asignación de memoria (`make`)
 - Generación PRNG (`input.Generate`)
+- **Espera final `wg.Wait()` → NO, está INCLUIDA en `kernel_s` (es sincronización del cómputo)**
 - Validación matemática elemento a elemento
 - Formateo/escritura CSV
+
+**Excluidos de `total_s` (según protocolo §3.2):**
+- Lectura de disco / fixtures
+- Generación de datos (PRNG)
+- Validación matemática
+- Reserva/liberación memoria matrices completas
+- Generación de reportes (CSV)
 
 ---
 
 ## 8. Manejo de Errores
 
-| Situación | Acción | Código de salida |
-|-----------|--------|------------------|
-| Flags faltantes/inválidos | `fmt.Fprintln(os.Stderr, "uso: ...")` | 2 |
-| `N < 1` o `workers < 1` | Error a `stderr` | 2 |
-| `seed > 2^32-1` | Error a `stderr` | 2 |
-| Fallo asignación memoria (`make`) | `panic` o error controlado → `stderr` | 1 |
-| Validación numérica falla | `fmt.Fprintf(stderr, "validación falló: ...")` | 1 |
-| *Data race* detectado (`-race`) | Termina con error del runtime | ≠0 |
+| Situación | Tipo | Acción | Código de salida |
+|-----------|------|--------|------------------|
+| Flags faltantes/inválidos | **Entrada inválida** | `fmt.Fprintln(os.Stderr, "uso: ...")` | 2 |
+| `N < 1` o `workers < 1` | **Entrada inválida** | Error a `stderr` | 2 |
+| `seed > 2^32-1` | **Entrada inválida** | Error a `stderr` | 2 |
+| Fallo asignación memoria (`make`) | **Entorno** | `panic` o error controlado → `stderr` | 1 |
+| Operación pendiente (algoritmo no implementado) | **Pendiente** | `fmt.Fprintln(os.Stderr, "PENDIENTE: ...")` | 2 |
+| Validación numérica falla | **Cálculo** | `fmt.Fprintf(stderr, "validación falló: ...")` | 1 |
+| *Data race* detectado (`-race`) | **Entorno** | Termina con error del runtime | ≠0 |
 
-**Regla:** Cualquier error **antes** de la medición válida escribe en `stderr` y sale con código ≠ 0. No se imprime CSV parcial.
+**Regla:** Errores de **entrada** y **operaciones pendientes** → `stderr`, código 2. Errores de **entorno/cálculo** → `stderr`, código 1. Cualquier error **antes** de medición válida no imprime CSV parcial.
 
 ---
 
@@ -298,6 +308,15 @@ func validate(C, Cref *Matrix) error {
 
 ## 12. Pruebas de Arquitectura (Para Sprint 4)
 
+**Ejecución:** Todas las pruebas se ejecutan desde dentro del módulo `go_paralelo/`:
+```powershell
+cd go_paralelo
+go test -race -run TestWorkerRowOwnership
+go test -race ./...
+go test -run TestChannelClose
+# etc.
+```
+
 | Test | Qué verifica | Comando |
 |------|--------------|---------|
 | `TestWorkerRowOwnership` | I1: cada fila escrita una vez | `go test -race -run TestWorkerRowOwnership` |
@@ -366,4 +385,4 @@ func validate(C, Cref *Matrix) error {
 ---
 
 **Autor:** Integrante 4
-**Revisión cruzada:** Pendiente (Integrante 5)
+**Revisión cruzada:** Pendiente (Integrante 3)
