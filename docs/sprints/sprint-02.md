@@ -30,15 +30,36 @@ Integrante 8 Leer y resumir dos candidatos de literatura científica (3 h). Sele
 
 Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en total. La evidencia y observaciones se registran en docs/sprints/sprint-02.md.
 
+## Plan de trabajo de I3 (Giuliano)
+
+**Estado:** plan inicial; tareas todavía pendientes. Mi entregable será `go_secuencial/matrix.go` con las interfaces y sus reglas claras.
+
+1. **Revisar cómo se guardan las matrices (3 h).** Mantener `Matrix` con `N` y `Data`. Dejar claro que `N` debe ser positivo, que debe haber exactamente `N*N` valores y que se guardan fila por fila. Revisar también los límites de tamaño antes de calcular `N*N` o reservar memoria.
+2. **Completar las reglas de las funciones y los errores (3 h).** Definir qué error corresponde a dimensiones inválidas, datos incompletos o sobrantes, matrices de distinto tamaño y valores NaN o infinitos. Aclarar que `Multiply` recibe dos matrices del mismo tamaño y no modifica sus entradas. Mientras el cálculo siga pendiente, una entrada válida debe seguir devolviendo `ErrPending`.
+3. **Acordar los argumentos con el equipo (parte de la coordinación, 1 h).** Comparar estas reglas con I1, que revisa las interfaces de C. Usar lo que ya pide `docs/contrato.md`: `--n` positivo y `--seed` entre 0 y 4294967295; cuando se use `--input`, no combinarlo con `--n` ni `--seed`. Los mensajes de error deben ir a `stderr` y la ejecución fallida debe devolver un código distinto de cero. Coordinar con I4 e I7 antes de cambiar `main.go` o `input.go`, porque sus tareas de Sprint 3 usan esos archivos.
+4. **Revisión cruzada (1 h).** Pedir a I2 que revise mi entregable y revisar el diseño de I4 en `docs/arquitectura.md`, siguiendo el reparto del equipo.
+
+### Cómo sabré que mi parte está lista
+
+- Las reglas de `Matrix` y `Multiply` están escritas junto a las funciones.
+- Las validaciones distinguen una entrada incorrecta de una función pendiente.
+- Las pruebas de las validaciones cubren los errores acordados y las pruebas existentes siguen pasando.
+- Los argumentos y errores son coherentes con el contrato común; los acuerdos y resultados reales quedan registrados aquí.
+- I2 revisó mi entregable y registré mi revisión a I4.
+
+La multiplicación se implementará en Sprint 3. La rama propuesta para trabajar Sprint 2 es `feature/s02-i03-interfaces-go-secuencial`, después de integrar los cambios de Sprint 1 y actualizar `main`.
+
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+#### Integrante 7 (Andrés)
 
-#### Integrante 8
+- **Participantes y horas reales:** Andrés (8 h: 3 h delimitación estricta de cronómetros `kernel_s`/`total_s` y diseño del esquema CSV, 3 h diseño de la matriz exhaustiva de experimentos y protocolo de mitigación de sesgos, 1 h revisión cruzada de I8 Roberto sobre [`docs/bibliografia.md`](../bibliografia.md), 1 h coordinación de acuerdos).
+- **Issues y pull requests:** Rama de trabajo `feature/s02-i07-protocolo-inicial`.
+- **Pruebas y evidencias:** Entregable [`docs/protocolo_medicion.md`](../protocolo_medicion.md) finalizado en su versión 1.0 (versión inicial aprobada). Incluye: delimitación formal de eventos de reloj por tecnología, matriz de exclusiones de I/O y memoria, diccionario con las 20 columnas del archivo CSV, espacio de parámetros con 234 ejecuciones planificadas para CPUs de 8 núcleos, protocolo 1 warmup + 5 repeticiones en round-robin y formulación de Speedup/Eficiencia mediante medianas.
+- **Bloqueos y decisiones:** Se adopta formalmente la mediana y el rango intercuartílico (IQR) para mitigar el jitter de Windows 11. Se prohíbe el uso de corridas consecutivas idénticas para evitar sesgo de estrangulamiento térmico (*thermal throttling*).
+- **Revisión y criterio de aceptación:** Entregable de I7 completado satisfactoriamente; pendiente revisión cruzada por Integrante 6 (Gerardo). Revisión cruzada realizada a I8 (Roberto): entregable [`docs/bibliografia.md`](../bibliografia.md) revisado y aprobado formalmente (los modelos de Quintin et al. fundamentan adecuadamente el reparto 1D por bloques de filas y la topología híbrida).
+
+#### Integrante 8 (Roberto)
 
 - Participantes y horas reales: Roberto (8 h: 3 h análisis y resumen de los dos artículos IEEE en `docs/referencias/`, 3 h selección de artículo y justificación técnica del reparto 1D por bloques de filas, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
 - Issues y pull requests: Rama de trabajo `feature/integrante-8-roberto`.
@@ -73,3 +94,8 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
   - Compilación con MSVC **pendiente**: este equipo no tiene MSVC, MS-MPI ni Go (comprobado el 30/09/2026), así que la evidencia de S2 es aritmética y estática. Reproducción en una PC con el entorno: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1 -Version c_paralelo -Configuration Debug -Tests`.
 - Bloqueos y decisiones: (1) `counts` y desplazamientos se expresan en **elementos `double`** (filas locales × N), no en filas; los desplazamientos son la suma acumulada de los `counts`. (2) **P > N es legal**: con `q = 0` y `r = N`, los primeros N procesos reciben 1 fila y los `P − N` restantes `count = 0` con desplazamiento N·N; MPI admite counts nulos y nadie queda esperando. (3) Se diseñan **dos funciones puras sin llamadas a MPI** —`partition_split` (filas e índice inicial) y `partition_rows` (elementos MPI)— para poder probarlas sin `MPI_Init` y para dar a `main.c` el límite del bucle OpenMP. (4) Sin VLA (MSVC no los admite en C11) e índice entero con signo en `parallel for`, según la guía §«Memoria y errores». (5) La implementación de `partition.c` queda para **S4** (I1 e I2); mientras tanto ambas funciones devuelven `PARTITION_PENDING` (2) y `status.json` no se modifica. (6) Diseño alineado con `docs/requisitos.md` RNF-04 y con la decisión de reparto 1D de `docs/bibliografia.md` (I8).
 - Revision y criterio de aceptacion: Entregable de I2 finalizado en la ruta asignada `c_paralelo/include/partition.h`, con ejemplos resueltos y comando de reproducción; pendiente la revisión cruzada formal por Integrante 1 (Yessly) y la revisión del diseño por Integrante 1, que es quien implementará `MPI_Scatterv`/`MPI_Gatherv` con este reparto en S4. Como revisor asignado de I3, `docs/diagnostico_go_secuencial.md` sigue sin existir en el repositorio, por lo que su revisión formal queda pendiente de que I3 lo publique.
+- **Participantes y horas reales:** Roberto (8 h: 3 h análisis y resumen de los dos artículos IEEE en `docs/referencias/`, 3 h selección de artículo y justificación técnica del reparto 1D por bloques de filas, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
+- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
+- **Pruebas y evidencias:** Entregable [`docs/bibliografia.md`](../bibliografia.md) finalizado con análisis de Quintin et al. (ICPP 2013) y Herault et al. (ScalA 2019 / Jack Dongarra), justificación del orden $i, k, j$, `MPI_Bcast` y arquitectura de Go. PDFs de referencia resguardados en `docs/referencias/`.
+- **Bloqueos y decisiones:** Se adopta formalmente el reparto 1D por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` en memoria continua para evitar sobrecostes de empaquetamiento 2D en memoria compartida emulada.
+- **Revisión y criterio de aceptación:** Entregable de I8 revisado y aprobado formalmente con verificación técnica por Integrante 7 (Andrés).

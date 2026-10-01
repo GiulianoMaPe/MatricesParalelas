@@ -21,7 +21,9 @@ foreach ($item in $selected) {
                 Invoke-Native $go @('test','-count=1','-timeout=30s','./...')
             } finally { Pop-Location }
         } else {
-            Invoke-Native (Join-Path $build 'tests\pending_test.exe')
+            Push-Location $script:ProjectRoot
+            try { Invoke-Native (Join-Path $build 'tests\pending_test.exe') }
+            finally { Pop-Location }
         }
         if ($item -eq 'c_paralelo') {
             Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\run_hybrid_windows.ps1",'-Configuration',$Configuration)
