@@ -51,7 +51,8 @@ La multiplicación se implementará en Sprint 3. La rama propuesta para trabajar
 - **Errores y argumentos:** Cada problema tiene un error que puede identificarse en las pruebas. Con entradas válidas, las operaciones siguen avisando que están pendientes. Documenté las funciones y las reglas comunes de argumentos en `go_secuencial/README.md`. El procesamiento de argumentos de `main.go` se integrará en Sprint 3.
 - **Verificación:** El 2026-10-01 ejecuté `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial`. Terminó con código 0: compilación, formato, revisión con `go vet`, pruebas Go y prueba de instalación correctas. Las pruebas cubren datos incorrectos, límites de tamaño, ceros, negativos, NaN, infinitos, dimensiones diferentes y los extremos de la semilla. El cálculo sigue pendiente.
 - **Propuesta para I1:** Preparé [`docs/especificaciones_c_go_secuencial.md`](../especificaciones_c_go_secuencial.md) con las reglas de matrices, límites de tamaño, argumentos, casos de control y códigos de salida: 0 para éxito, 1 para entrada incorrecta o fallo y 2 para una operación pendiente. I1 puede usarla para adaptar sus interfaces de C.
-- **Pendientes para cerrar:** Recibir la confirmación de I1 sobre la adaptación, pedir a I2 que revise mi entregable y registrar mi revisión al diseño de I4. No marco esas revisiones ni acuerdos como realizados.
+- **Revisión a I4 (Eva):** Su diseño escribe cómo repartir las filas, cerrar el canal de tareas y esperar a los trabajadores. La revisión está realizada; la aprobación final sigue pendiente.
+- **Pendientes para cerrar:** Recibir la confirmación de I1 sobre la adaptación, pedir a I2 que revise mi entregable y completar la aprobación del diseño de I4.
 
 #### Integrante 7 (Andrés)
 
