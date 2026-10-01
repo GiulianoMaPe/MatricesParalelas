@@ -48,3 +48,11 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - **Bloqueos y decisiones:** Se ratifica que ningún tiempo de ejecución es admisible si la salida matemática no pasa la tolerancia elemento a elemento (1e-9). Los programas devuelven código 2 como estado pendiente.
 - **Revisión y criterio de aceptación:** Entregable de I8 revisado y verificado conforme por Integrante 7 (Andrés).
 
+#### Integrante 3 (Giuliano)
+
+- **Participantes y horas:** Giuliano. Falta anotar las horas reales; la estimación era de 8 h.
+- **Issues y pull requests:** Rama de trabajo `feature/s01-i03-diagnostico-go-secuencial`.
+- **Qué hice:** Revisé el programa Go secuencial y anoté qué funciona y qué falta en [`docs/diagnostico_go_secuencial.md`](../diagnostico_go_secuencial.md).
+- **Verificación:** El 2026-09-30 ejecuté `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial`. Terminó correctamente. Confirmó que el programa compila, pasa sus pruebas actuales y reconoce que el cálculo sigue pendiente. Aparecieron avisos de acceso a telemetría, pero no detuvieron la verificación. Esta prueba no comprueba que la multiplicación funcione.
+- **Revisión a I4 (Eva):** Revisé `docs/diagnostico_go_paralelo.md` sin cambiar de rama. El documento existe, pero necesita correcciones antes de aceptarlo: dice que el programa procesa `--n`, `--seed` y `--workers`, mide tiempos y escribe CSV, aunque `main.go` solo acepta `--smoke-test`; menciona `NewMatrix` y `MultiplyParallel`, que no existen; y marca argumentos, formato y salida como implementados cuando siguen pendientes. También debe aclarar desde qué carpeta se ejecutaron los comandos y aportar evidencia de los resultados anotados. El código actual solo prueba que dos goroutines se comuniquen y terminen; no reparte filas ni multiplica matrices. **Resultado:** revisión realizada; aceptación pendiente de corregir el diagnóstico.
+- **Revisión de mi diagnóstico:** Pendiente.
