@@ -66,3 +66,12 @@ La multiplicación se implementará en Sprint 3. La rama propuesta para trabajar
 - **Pruebas y evidencias:** Entregable [`docs/bibliografia.md`](../bibliografia.md) finalizado con análisis de Quintin et al. (ICPP 2013) y Herault et al. (ScalA 2019 / Jack Dongarra), justificación del orden $i, k, j$, `MPI_Bcast` y arquitectura de Go. PDFs de referencia resguardados en `docs/referencias/`.
 - **Bloqueos y decisiones:** Se adopta formalmente el reparto 1D por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` en memoria continua para evitar sobrecostes de empaquetamiento 2D en memoria compartida emulada.
 - **Revisión y criterio de aceptación:** Entregable de I8 revisado y aprobado formalmente con verificación técnica por Integrante 7 (Andrés).
+
+#### Integrante 5 (Fernando Saire)
+
+- **Participantes y horas reales:** Fernando Saire. Falta registrar las horas reales; la estimación del sprint es de 8 h.
+- **Issues y pull requests:** Rama de trabajo `feature/s02-i05-fixtures-tolerancias`; issue y pull request pendientes.
+- **Pruebas y evidencias:** Se añadió el caso de dimensión impar [`tests/fixtures/impar3.input.txt`](../../tests/fixtures/impar3.input.txt) con su resultado [`tests/fixtures/impar3.expected.txt`](../../tests/fixtures/impar3.expected.txt). El cálculo manual de sus nueve celdas y el criterio de comparación están documentados en [`tests/fixtures/README.md`](../../tests/fixtures/README.md).
+- **Cobertura y criterio numérico:** Los fixtures recibidos ya cubrían identidad, matriz cero y valores negativos, por lo que no se duplicaron. Se añadió el caso 3 por 3 con ceros y negativos. Se adoptó el contrato común `atol = 1e-9`, `rtol = 1e-9`, comparación completa celda por celda y rechazo de NaN e infinitos.
+- **Revisión cruzada a I6 (Gerardo):** Pendiente hasta que Gerardo publique el contrato definitivo de entradas y sus vectores de control.
+- **Coordinación y criterio de aceptación:** La coordinación con I2 (Sebastian) y la revisión asignada a I4 (Eva) quedan pendientes. El entregable técnico queda preparado para revisión; el lector y el comparador se implementarán en sprints posteriores.
