@@ -1,5 +1,14 @@
 # Validacion manual de los fixtures
 
+## Autor y alcance
+
+Este documento registra el trabajo de Fernando, Integrante 5.
+
+- Sprint 1: validacion manual de los cuatro fixtures recibidos.
+- Sprint 2: ampliacion de los casos con una matriz 3x3 de dimension impar y
+  definicion del criterio de comparacion, tolerancias y politica para `NaN` e
+  infinitos.
+
 Revision realizada el 2026-10-01. Cada archivo de entrada contiene primero
 `N`, luego las `N` filas de `A` y finalmente las `N` filas de `B`. El archivo
 esperado contiene `N` y las `N` filas de `C = A * B`.
@@ -58,9 +67,53 @@ C = [0 0]
 
 El resultado coincide con `cero.expected.txt`.
 
+## Dimension impar con ceros y negativos
+
+`impar3.input.txt` amplia la cobertura con matrices de orden 3:
+
+```text
+A = [ 1 -2  0]    B = [2  0 -1]
+    [ 0  3  1]        [1 -1  2]
+    [-1  0  2]        [0  3  1]
+```
+
+Calculo celda por celda:
+
+```text
+C[0,0] =  1*2 + (-2)*1 + 0*0     =  0
+C[0,1] =  1*0 + (-2)*(-1) + 0*3  =  2
+C[0,2] =  1*(-1) + (-2)*2 + 0*1  = -5
+C[1,0] =  0*2 + 3*1 + 1*0        =  3
+C[1,1] =  0*0 + 3*(-1) + 1*3     =  0
+C[1,2] =  0*(-1) + 3*2 + 1*1     =  7
+C[2,0] = (-1)*2 + 0*1 + 2*0      = -2
+C[2,1] = (-1)*0 + 0*(-1) + 2*3   =  6
+C[2,2] = (-1)*(-1) + 0*2 + 2*1   =  3
+```
+
+El resultado coincide con `impar3.expected.txt`.
+
+## Criterio de comparacion
+
+Antes de comparar valores, ambas matrices deben tener la misma dimension y todos
+sus elementos deben ser finitos. La presencia de `NaN`, infinito positivo o
+infinito negativo hace fallar la validacion, incluso si aparece en ambas matrices.
+
+Cada celda se acepta cuando cumple:
+
+```text
+abs(obtenido - esperado) <= 1e-9 + 1e-9*abs(esperado)
+```
+
+Esto corresponde a una tolerancia absoluta `atol = 1e-9` y una tolerancia
+relativa `rtol = 1e-9`. Deben compararse todas las celdas; un checksum no
+sustituye esta comprobacion.
+
 ## Resultado de la revision
 
-Los cuatro pares de archivos tienen dimensiones, cantidad de filas y valores
-coherentes con `docs/formato_datos.md`. No se encontraron resultados esperados
-incorrectos. Esta validacion es manual e independiente de los ejecutables: el
-lector de fixtures y los algoritmos de multiplicacion siguen pendientes.
+Los cinco pares de archivos tienen dimensiones, cantidad de filas y valores
+coherentes con `docs/formato_datos.md`. Los casos cubren producto conocido,
+identidad, matriz cero, valor escalar negativo y dimension impar con valores
+positivos, negativos y cero. No se encontraron resultados esperados incorrectos.
+Esta validacion es manual e independiente de los ejecutables: el lector de
+fixtures, el comparador y los algoritmos de multiplicacion siguen pendientes.
