@@ -1,82 +1,93 @@
 # Diagnóstico funcional: Go paralelo
 
 **Proyecto:** Multiplicación de matrices densas en C y Go (Windows 11)
-**Sprint:** 1 · **Integrante:** 4 · **Versión analizada:** `go_paralelo`
-**Estado:** Diagnóstico completado a partir de lectura de código, verificación de pruebas base y alineación con la guía del proyecto.
-**Método:** Lectura analítica del código en `go_paralelo/`, verificación de ejecución de comandos e inventario inicial.
+**Sprint:** 1 · **Integrante:** 4 Moreno Eva · **Versión analizada:** `go_paralelo`
+**Estado:** Diagnóstico completado a partir de lectura de código y ejecución de pruebas base. Solo existe una prueba de instalación (`--smoke-test`); la lógica de multiplicación y argumentos CLI está pendiente.
+**Método:** Lectura analítica del código en `go_paralelo/`, ejecución de `go test` y `go build` desde `go_paralelo/` (directorio del módulo Go), y verificación de `status.json`. **Evidencia real ejecutada 2026-10-01 con Go 1.27.1.**
 
 ---
 
 ## 1. Resumen
 
-La versión `go_paralelo` cuenta con una estructura inicial en `go_paralelo/` para el manejo de argumentos CLI (`--n`, `--seed`, `--workers`) e I/O básica. Sin embargo, todo el módulo de concurrencia y cálculo matemático en `workers.go` se encuentra en estado pendiente. El mayor riesgo para los siguientes sprints radica en garantizar que la distribución por bloques de filas mediante canales y sincronización con `sync.WaitGroup` no genere carreras de datos (*data races*) ni cuellos de botella por sobrecoste de goroutines.
+La versión `go_paralelo` contiene únicamente una prueba de instalación (`--smoke-test`) que verifica que dos goroutines se comuniquen por canal y terminen sincronizadas con `sync.WaitGroup`. No hay análisis de argumentos (`--n`, `--seed`, `--workers`), no hay generación de matrices, no hay multiplicación (ni secuencial ni paralela), y no hay salida CSV. El código en `workers.go`, `matrix.go` e `input.go` son esqueletos que retornan `ErrPending`. El mayor riesgo para los siguientes sprints es implementar la arquitectura completa de workers, distribución de filas por canal, y multiplicación por bloques sin introducir *data races* ni *deadlocks*.
 
 ## 2. Flujo actual de ejecución
 
-1. `main()` parsea los argumentos de línea de comandos (`--n`, `--seed`, `--workers`, `--input`, `--output`).
-2. Valida la coherencia de dimensiones ($N \ge 1$), semilla y cantidad de trabajadores (`workers` $\ge 1$).
-3. Reserva e inicializa las matrices cuadradas $A$ y $B$ de dimensión $N \times N$ (almacenamiento contiguo por filas con `float64`).
-4. Invoca la generación determinista o la lectura de matriz según las banderas de entrada.
-5. Inicia el cronómetro de tiempo monotónico (`time.Now()`).
-6. Llama a `MultiplyParallel(A, B, N, workers)`, la cual actualmente no realiza el producto matricial real (pendiente).
-7. Registra el tiempo transcurrido (`total_s` y `kernel_s`).
-8. Valida la salida mediante *checksum* o comparación con *fixtures* (si se especificó salida).
-9. Imprime métricas en `stdout` en formato CSV y finaliza con código de salida `0` (o `1` en caso de error).
+1. `main()` recibe argumentos de línea de comandos.
+2. Si el único argumento es `--smoke-test`, ejecuta `smokeTest()` (definida en `workers.go`).
+3. `smokeTest()` crea un canal `results`, lanza 2 goroutines que envían su ID al canal, espera con `WaitGroup`, cierra el canal, y verifica que recibió ambos IDs.
+4. Imprime "OK: prueba de instalacion Go. Algoritmo y contrato de argumentos pendientes." y sale con código 0.
+5. Cualquier otro uso imprime mensaje de error a `stderr` y sale con código 2.
 
 ## 3. Inventario por módulo
 
 | Archivo | Función o elemento | Estado | Observaciones |
 | --- | --- | --- | --- |
-| `go_paralelo/main.go` | `main` | Parcial | Mantiene el flujo principal pero depende del módulo de cálculo pendiente. |
-| `go_paralelo/matrix.go` | `Matrix`, `NewMatrix` | Pendiente | Representación contigua por filas pendiente de validación completa. |
-| `go_paralelo/workers.go` | `MultiplyParallel` | Pendiente | Función base declarada; falta el canal de tareas y la lógica de workers. |
-| `go_paralelo/workers.go` | `workerTask` / Distribución | Pendiente | Asignación de bloques de filas a workers por implementar en S2/S4. |
-| `go_paralelo/input.go` | `GenerateInput`, `ReadInput` | Pendiente | Generación determinista y lectura I/O pendiente de pruebas cruzadas. |
-| `go_paralelo/workers_test.go` | `TestMultiplyParallel` | Pendiente | Pruebas unitarias pendientes de completar para el producto real. |
-| `go_paralelo/status.json` | Estado del módulo | Pendiente | Metadatos y control de estado de la versión. |
+| `go_paralelo/main.go` | `main`, `smokeTest` | Parcial | Solo implementa `--smoke-test`; resto del flujo (args, matrices, tiempo, CSV) pendiente. |
+| `go_paralelo/workers.go` | `smokeTest` | Parcial | Contiene `smokeTest` (2 goroutines + canal + WaitGroup); no hay pool de workers, no hay distribución de filas, no hay multiplicación. |
+| `go_paralelo/matrix.go` | `Matrix` (struct), `Multiply`, `ErrPending` | Pendiente | Struct definido; `Multiply` retorna `ErrPending`; no hay `NewMatrix` ni `MultiplyParallel`. |
+| `go_paralelo/input.go` | `Generate` | Pendiente | Retorna `ErrPending`; no hay lectura de archivo ni generación determinista. |
+| `go_paralelo/workers_test.go` | `TestGoroutinesSynchronize` | Implementado | Verifica que `smokeTest` pasa 10 veces seguidas. |
+| `go_paralelo/matrix_test.go` | `TestMultiplyReportsPending` | Implementado | Verifica que `Multiply` retorna `ErrPending` y no un producto falso. |
+| `go_paralelo/input_test.go` | `TestGenerateReportsPending` | Implementado | Verifica que `Generate` retorna `ErrPending` y no entradas falsas. |
+| `go_paralelo/status.json` | Estado del módulo | Pendiente | `{"algorithm":"pending","validation":"pending"}`. |
 
 ## 4. Funciones pendientes priorizadas
 
 | Prioridad | Pendiente | Por qué bloquea o importa | Sprint sugerido |
 | --- | --- | --- | --- |
-| **P0** | Diseñar e implementar canal de tareas y `sync.WaitGroup` en `workers.go` | Bloquea la concurrencia real y la distribución del trabajo entre goroutines. | Sprint 2 / Sprint 4 |
-| **P0** | Implementar la multiplicación por bloques de filas asignados a cada worker | Bloquea la validez matemática del programa ($C = A \times B$). | Sprint 4 |
-| **P1** | Garantizar la propiedad exclusiva de filas en la matriz de salida $C$ | Evita condiciones de carrera (*data races*) sin recurrir a bloqueos por mutex. | Sprint 2 / Sprint 4 |
-| **P2** | Ajustar la granularidad de bloques de filas según la cantidad de `--workers` | Previene la sobrecarga del runtime cuando `workers` es mayor a las CPUs físicas. | Sprint 6 |
+| **P0** | Implementar parsing de `--n`, `--seed`, `--workers` en `main.go` | Bloquea cualquier ejecución real del programa. | Sprint 2 |
+| **P0** | Implementar `Generate` en `input.go` (generación determinista con semilla) | Bloquea la creación de matrices de entrada. | Sprint 2 |
+| **P0** | Implementar `Multiply` secuencial en `matrix.go` (referencia numérica) | Necesaria como baseline para validar la versión paralela. | Sprint 3 |
+| **P0** | Diseñar arquitectura de workers: canal de tareas, `WaitGroup`, propiedad exclusiva de filas | Bloquea la concurrencia real y la validez matemática. | Sprint 2 |
+| **P0** | Implementar `MultiplyParallel` en `workers.go` (distribución de bloques de filas) | Bloquea el producto matricial paralelo real ($C = A \times B$). | Sprint 4 |
+| **P1** | Implementar salida CSV en `stdout` con métricas (`total_s`, `kernel_s`) | Requerido por el contrato de medición. | Sprint 4 |
+| **P2** | Ajustar granularidad de bloques según `--workers` y CPUs físicas | Previene sobrecarga del runtime. | Sprint 6 |
 
 ## 5. Supuestos del contrato
 
 | Supuesto | Documento de origen | Cumplido hoy |
 | --- | --- | --- |
-| Argumentos obligatorios `--n`, `--seed` y `--workers` | `docs/contrato.md` | Sí |
-| Almacenamiento contiguo por filas utilizando `float64` | `docs/formato_datos.md` | Sí |
-| Salida de errores por `stderr` y resultados por `stdout` | `docs/contrato.md` | Sí |
+| Argumentos obligatorios `--n`, `--seed` y `--workers` | `docs/contrato.md` | No (solo `--smoke-test`) |
+| Almacenamiento contiguo por filas utilizando `float64` | `docs/formato_datos.md` | Parcial (struct `Matrix` definido, pero no se usa) |
+| Salida de errores por `stderr` y resultados por `stdout` | `docs/contrato.md` | Parcial (solo mensaje de smoke test) |
 | Asignación de tareas por canal sin crear una goroutine por celda | `docs/guia-extraida.txt` | No |
 | Propiedad exclusiva de fila: un único worker es dueño de cada fila de $C$ | `docs/guia-extraida.txt` | No |
+| Formato CSV con columnas `N,workers,total_s,kernel_s,checksum` | `docs/protocolo_medicion.md` | No |
 
 ## 6. Puntos de validación y riesgos
 
 | # | Punto de validación | Riesgo o decisión pendiente | Cómo se comprobará |
 | --- | --- | --- | --- |
-| **V1** | Propiedad exclusiva de filas en $C$ | Riesgo de *data races* si dos goroutines escriben la misma fila. | Ejecución con el detector de carreras de Go (`go test -race`). |
-| **V2** | Cierre del canal y sincronización | Riesgo de *deadlock* si el canal no se cierra o los workers no terminan. | Pruebas de estrés variando `--workers` (1, 2, 4, 8). |
-| **V3** | Casos límite ($N < \text{workers}$) | Asignación de más workers que filas disponibles en la matriz. | Fixtures con $N=1, 2$ y `workers=4, 8`. |
-| **V4** | Equivalencia numérica | Inconsistencia de resultados frente a la referencia secuencial. | Comparación contra `tests/fixtures/` usando `compare_results.ps1`. |
+| **V1** | Propiedad exclusiva de filas en $C$ | Riesgo de *data races* si dos goroutines escriben la misma fila. | `go test -race ./go_paralelo/...` con matriz real. |
+| **V2** | Cierre del canal y sincronización `WaitGroup` | Riesgo de *deadlock* si el canal no se cierra o workers no terminan. | Pruebas de estrés variando `--workers` (1, 2, 4, 8). |
+| **V3** | Casos límite ($N < \text{workers}$) | Asignación de más workers que filas disponibles. | Fixtures con $N=1, 2$ y `workers=4, 8`. |
+| **V4** | Equivalencia numérica vs. referencia secuencial | Inconsistencia de resultados. | Comparación contra `tests/fixtures/` usando `compare_results.ps1`. |
+| **V5** | Parsing y validación de argumentos CLI | Entrada inválida no controlada. | Pruebas con argumentos faltantes, negativos, no numéricos. |
 
 ## 7. Comandos de verificación y evidencia
 
+Ejecutados desde **`go_paralelo/`** (directorio del módulo Go):
+
 | Comando | Resultado esperado | Resultado observado | Fecha |
 | --- | --- | --- | --- |
-| `go test ./go_paralelo/...` | Ejecución de suite de pruebas del paquete. | Pruebas ejecutadas; pendientes de lógica matemática real. | 2026-09-30 |
-| `go build -o go_paralelo.exe ./go_paralelo` | Compilación exitosa del binario en Windows 11. | Generación correcta de `go_paralelo.exe`. | 2026-09-30 |
-| `go test -race ./go_paralelo/...` | Detección de carreras de datos (*data race detector*). | Sin alertas en la estructura base actual. | 2026-09-30 |
+| `go test ./...` | Ejecución de suite de pruebas del paquete. | PASS: `TestGoroutinesSynchronize` (10 iteraciones), `TestMultiplyReportsPending`, `TestGenerateReportsPending`. | 2026-10-01 |
+| `go build -o go_paralelo.exe .` | Compilación exitosa del binario en Windows 11. | Generación correcta de `go_paralelo.exe`. | 2026-10-01 |
+| `go test -race ./...` | Detección de carreras de datos. | PASS: sin alertas (smoke test no tiene carreras). | 2026-10-01 |
+| `.\go_paralelo.exe --smoke-test` | Prueba de instalación exitosa. | `Prueba de instalacion: 2 goroutines completadas mediante canal y WaitGroup.` + `OK: prueba de instalacion Go. Algoritmo y contrato de argumentos pendientes.` | 2026-10-01 |
+| `.\go_paralelo.exe --n 10 --seed 123 --workers 2` | Ejecución con argumentos reales (pendiente). | `PENDIENTE: multiplicacion y argumentos. Use --smoke-test para probar la instalacion.` (exit 2) | 2026-10-01 |
+| `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_paralelo` | Suite oficial: build, fmt, vet, test, smoke-test, rechazo pending. | PASS: build OK, tests OK, smoke-test OK, rechaza pending (exit 2). | 2026-10-01 |
 
 ## 8. Trazabilidad con los sprints
 
 | Pendiente | Sprint | Responsable |
 | --- | --- | --- |
-| Diseño de arquitectura de workers, canal de tareas e invariantes | Sprint 2 | Integrante 4 |
-| Implementación de `workers.go` y sincronización con `WaitGroup` | Sprint 4 | Integrante 4 / Integrante 3 |
+| Parsing de argumentos CLI (`--n`, `--seed`, `--workers`) | Sprint 2 | Integrante 4 |
+| Generación determinista de matrices (`input.go`) | Sprint 2 | Integrante 4 |
+| Multiplicación secuencial de referencia (`matrix.go`) | Sprint 3 | Integrante 4 |
+| Arquitectura de workers: canal, `WaitGroup`, propiedad de filas | Sprint 2 | Integrante 4 / Integrante 3 |
+| `MultiplyParallel` real con distribución de bloques | Sprint 4 | Integrante 4 / Integrante 3 |
+| Salida CSV y medición de tiempos | Sprint 4 | Integrante 4 |
 | Revisión de límites de workers y estabilidad de memoria | Sprint 5 | Integrante 4 |
 | Sintonización de granularidad y campaña de medición | Sprint 6 / Sprint 7 | Integrante 4 |
 
@@ -84,6 +95,6 @@ La versión `go_paralelo` cuenta con una estructura inicial en `go_paralelo/` pa
 
 ## Registro de revisión
 
-- **Autor:** Integrante 4.
-- **Revisión cruzada:** Pendiente (Integrante 5).
+- **Autor:** Moreno Eva.
+- **Revisión cruzada:** Pendiente (Integrante 3).
 - **Observaciones de la revisión:** Pendiente.
