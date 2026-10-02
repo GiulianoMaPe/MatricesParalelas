@@ -2,7 +2,7 @@
 
 **Proyecto:** Multiplicación de matrices densas en C y Go (Windows 11)
 **Sprint:** 2 · **Integrante:** 4 Moreno Eva· **Versión:** `go_paralelo`
-**Estado:** Diseño pendiente de aprobación para implementación en Sprint 4
+**Estado:** Diseño S2 conforme en la evaluación asistida en la voz de Giuliano (I3), registrada en [Sprint 2](sprints/sprint-02.md). Implementación prevista para Sprint 4.
 **Ubicación del código:** `go_paralelo/` (`main.go`, `workers.go`, `matrix.go`, `input.go`)
 
 ---
@@ -380,4 +380,4 @@ go test -run TestChannelClose
 ---
 
 **Autor:** Integrante 4
-**Revisión cruzada:** Pendiente (Integrante 3)
+**Revisión cruzada:** Evaluación asistida de I3 a I4 conforme, registrada en [Sprint 2](sprints/sprint-02.md).

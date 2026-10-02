@@ -1,7 +1,7 @@
 # Protocolo de medición y diseño experimental
 
 **Versión:** 1.2 (Correcciones del entregable de I7 · 2026-10-01; base de Andrés)
-**Estado:** Diseño técnico de S1/S2 corregido y verificado; revisión cruzada de I6 pendiente. Núcleos y mediciones todavía pendientes.
+**Estado:** Diseño técnico de S1/S2 conforme y verificado. Las evaluaciones asistidas en la voz de Gerardo (I6) están registradas en [S1](sprints/sprint-01.md) y [S2](sprints/sprint-02.md). Los núcleos y las mediciones corresponden a los sprints posteriores.
 **Documentos relacionados:** `docs/Guia_Sprints.md`, [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
 
 ---

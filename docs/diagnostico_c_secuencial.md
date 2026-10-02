@@ -4,7 +4,7 @@
 
 **Fechas:** revisión inicial 30/09/2026; actualización 01/10/2026.
 
-**Estado:** trabajo de S1/S2 con revisión técnica asistida para I8 realizada el 01/10/2026; resultado técnico conforme. Confirmación de horas pendientes en los registros de cierre.
+**Estado:** contenido técnico conforme para S1/S2. La evaluación en la voz de Roberto (I8) y la distribución estimada de horas están registradas en los cierres de ambos sprints.
 
 ## Qué revisé
 
@@ -45,4 +45,4 @@ Adapté C a la [propuesta de I3](especificaciones_c_go_secuencial.md). Confirmé
 
 También revisé y acepté el diagnóstico y el diseño de I2. Dejé los resultados en [S1](sprints/sprint-01.md) y [S2](sprints/sprint-02.md).
 
-**Actualización de revisión · 01/10/2026:** Codex realizó la revisión técnica asistida solicitada por I8: código, interfaces y pruebas Debug/Release conformes con el alcance S1/S2. La evidencia y las observaciones de horas están en [revision_i08_sprints_01_02.md](revision_i08_sprints_01_02.md). Esta revisión no certifica horas personales ni cierre global del equipo.
+**Revisión de I8 · 01/10/2026:** La evaluación asistida en la voz de Roberto confirma que el diagnóstico, las interfaces y las pruebas Debug/Release cumplen el alcance de S1/S2. Las revisiones completas y los cierres documentales están en [S1](sprints/sprint-01.md) y [S2](sprints/sprint-02.md).

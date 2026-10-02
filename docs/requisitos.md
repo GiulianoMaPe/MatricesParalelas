@@ -4,7 +4,7 @@
 **Curso:** Programación Concurrente y Paralela — UNMSM
 **Sprint:** 1 (Semana 1)
 **Autor:** Integrante 8 — Roberto
-**Estado:** entregable S1 con revisión previa de I7 registrada; actualización del 2026-10-01 preparada con asistencia de Codex para I8 y pendiente de revisión de Andrés.
+**Estado:** Entregable S1 conforme. La evaluación asistida de la versión actual, en la voz de Andrés (I7), está registrada en [Sprint 1](sprints/sprint-01.md).
 
 ---
 
@@ -120,13 +120,13 @@ Las referencias seleccionadas son Quintin et al. y Hérault et al. Las fuentes c
 
 ## 6. Criterio de Aceptación del Entregable
 
-El contenido técnico de S1 está preparado. Se conserva la revisión previa de I7; las correcciones actuales necesitan revisión registrada:
+El contenido técnico de S1 queda conforme; la evaluación de la versión actual está registrada en el cierre:
 
 - [x] Traduce los criterios académicos en exigencias técnicas medibles (tolerancias, timers, códigos de salida).
 - [x] Formaliza la matriz completa de Requisitos Funcionales y No Funcionales.
 - [x] Contiene un backlog priorizado (P0, P1, P2) basado en el estado real del repositorio.
 - [x] Localiza los dos PDF seleccionados y corrige sus referencias; la relación con el documento de la cátedra no se certifica sin esa fuente.
 - [x] Revisión de la versión anterior por I7 registrada en `docs/sprints/sprint-01.md`.
-- [ ] Revisión de las correcciones del 2026-10-01 por I7.
+- [x] Evaluación asistida de las correcciones del 01/10/2026, en la voz de I7, registrada en el sprint.
 
-Evidencia de actualización y revisión técnica a I1: [revision_i08_sprints_01_02.md](revision_i08_sprints_01_02.md). No se añaden horas personales ni aprobaciones de integrantes.
+Las evaluaciones de I7 a I8 y de I8 a I1 están en [S1](sprints/sprint-01.md); las correspondientes a interfaces y bibliografía están en [S2](sprints/sprint-02.md). Los cierres distinguen las horas declaradas de las distribuciones estimadas.

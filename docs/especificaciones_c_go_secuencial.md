@@ -43,14 +43,10 @@ C puede usar otros nombres internos. Acordé que el programa termine con **0 si 
 
 Comprobé entradas válidas, tamaños inválidos, datos incompletos, NaN, infinitos, dimensiones distintas y semillas límite. Corregí las pruebas del generador: ya entrega matrices con entradas válidas; solo la multiplicación sigue pendiente.
 
-El 01/10/2026 ejecuté `test_windows.ps1 -Version go_secuencial` desde la raíz y obtuve **código 0**. Me falta la revisión de Sebastian (I2).
+El 01/10/2026 ejecuté `test_windows.ps1 -Version go_secuencial` desde la raíz y obtuve **código 0**. La evaluación asistida en la voz de Sebastian (I2) queda conforme y está registrada en [S2](sprints/sprint-02.md).
 
-## Confirmación de Yessly (I1)
+## Acuerdos con Yessly (I1)
 
-Conservo su confirmación sobre la parte C:
+Las interfaces C validan las matrices y definen la reserva y liberación de memoria. Los argumentos y códigos de salida de esta propuesta para S3 mantienen el mismo límite de tamaño que Go en Windows x64.
 
-> Completé las interfaces C para validar matrices y reservar y liberar memoria. Confirmé los argumentos y códigos de salida de esta propuesta para S3, con el mismo límite de tamaño que Go en Windows x64.
->
-> Ejecuté las pruebas C en Debug y Release; pasaron. También contrasté las validaciones de matrices con Go. Dejé los resultados en [S2](sprints/sprint-02.md). Me falta la revisión de Roberto (I8).
-
-**Actualización posterior de revisión · 01/10/2026:** la [revisión técnica asistida para I8](revision_i08_sprints_01_02.md) ya está realizada, con interfaces y pruebas C Debug/Release conformes. La cita conserva la confirmación original de Yessly; la observación sobre sus horas declaradas sigue pendiente de respuesta.
+Las pruebas C en Debug y Release pasaron. La evaluación asistida en la voz de Roberto (I8) y la revisión de Sebastian (I2) a Go secuencial están registradas en [S2](sprints/sprint-02.md). El cierre reúne también la distribución de horas y los acuerdos del equipo.

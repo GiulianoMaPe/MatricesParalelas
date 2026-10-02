@@ -31,8 +31,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -
 
 El comando terminó con **código 0**. Pasaron la compilación, la revisión del código y todas las pruebas actuales. Todavía no comprueban una multiplicación, porque esa parte corresponde al Sprint 3.
 
-## Qué me falta
+## Revisión y siguientes pasos
 
-Me falta la revisión de Sebastian (I2). En Sprint 3 implementaré y probaré la multiplicación. La integración de los argumentos también queda para ese sprint.
+Mi diagnóstico queda conforme en la evaluación asistida en la voz de Sebastian (I2), registrada en [S1](sprints/sprint-01.md). En Sprint 3 implementaré y probaré la multiplicación; la integración de los argumentos también corresponde a ese sprint.
 
-Dejé mi revisión de Eva en [este documento](revision_i03_i04_sprints_01_02.md).
+Mi evaluación del diagnóstico de Eva está en [S1](sprints/sprint-01.md) y la de su diseño está en [S2](sprints/sprint-02.md). Las observaciones anteriores quedaron resueltas.

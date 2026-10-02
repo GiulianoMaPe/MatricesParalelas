@@ -1,9 +1,10 @@
 # Contrato común de C y Go
 
-Versión unificada: 2026-10-01. Este documento define las reglas comunes; no declara
-cerrado S2 ni sustituye la revisión cruzada del equipo. Los generadores y lectores
-están implementados como funciones; los ejecutables aún solo integran
-`--smoke-test`, y la multiplicación y las mediciones siguen pendientes.
+Versión unificada: 01/10/2026. Este documento reúne las reglas comunes conformes
+para S2. Las evaluaciones asistidas y el cierre documental están registrados en
+[Sprint 2](sprints/sprint-02.md). Los generadores y lectores están implementados
+como funciones; los ejecutables aún solo integran `--smoke-test`. El cálculo
+y las mediciones corresponden a los sprints posteriores.
 
 ## Códigos de salida y errores
 

@@ -6,7 +6,7 @@
 
 **Actualización:** 2026-10-01, preparada con asistencia de Codex a solicitud de I8.
 
-**Estado:** contenido técnico corregido; revisión de esta actualización por I7 (Andrés) pendiente. La aprobación de la versión anterior se conserva en el registro del sprint.
+**Estado:** Contenido técnico conforme. La evaluación asistida de esta versión, en la voz de Andrés (I7), está registrada en [Sprint 2](sprints/sprint-02.md).
 
 ## 1. Alcance y fuentes
 
@@ -108,6 +108,6 @@ Solo estas dos referencias se usan para los resúmenes anteriores. Las fuentes c
 - [x] Metadatos corregidos con fuentes de los autores e instituciones.
 - [x] Reparto por filas justificado por el contrato y la representación contigua.
 - [x] Aprobación de la versión anterior por I7 conservada en `docs/sprints/sprint-02.md`.
-- [ ] Revisión de esta actualización por I7 y aceptación registrada.
+- [x] Evaluación asistida de esta actualización, en la voz de I7, conforme y registrada en el sprint.
 
-La actualización no añade horas personales ni certifica una nueva aprobación de Andrés. El detalle de cambios y de la revisión técnica a I1 está en `docs/revision_i08_sprints_01_02.md`.
+Las evaluaciones de I7 a I8 y de I8 a I1 están registradas en [Sprint 2](sprints/sprint-02.md). El cierre reúne la evidencia y conserva las horas declaradas anteriormente por ambos integrantes.
