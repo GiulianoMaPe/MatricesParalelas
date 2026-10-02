@@ -37,9 +37,12 @@ func TestGenerateSeed42Vector(t *testing.T) {
 }
 
 func TestGenerateRejectsInvalidDimensions(t *testing.T) {
-	for _, n := range []int{0, -1, int(^uint(0) >> 1)} {
-		if _, _, err := Generate(n, 42); !errors.Is(err, ErrInvalidInput) {
-			t.Errorf("Generate(%d) error = %v, want ErrInvalidInput", n, err)
+	for _, tc := range []struct {
+		n    int
+		want error
+	}{{0, ErrInvalidDimension}, {-1, ErrInvalidDimension}, {int(^uint(0) >> 1), ErrSizeOverflow}} {
+		if _, _, err := Generate(tc.n, 42); !errors.Is(err, tc.want) {
+			t.Errorf("Generate(%d) error = %v, want %v", tc.n, err, tc.want)
 		}
 	}
 }
@@ -125,4 +128,53 @@ func equalValues(got, want []float64) bool {
 		}
 	}
 	return true
+}
+
+// This table exercises the same file grammar in both independent Go modules.
+func TestReadMatricesLayoutContract(t *testing.T) {
+	cases := []struct {
+		name, input string
+		valid       bool
+		a, b        float64
+	}{
+		{"lf_without_final_newline", "1\n1\n2", true, 1, 2},
+		{"crlf", "1\r\n1\r\n2\r\n", true, 1, 2},
+		{"whitespace", " \t1 \n \t1\t \n2  \n\t \n", true, 1, 2},
+		{"mixed_newlines", "1\r\n1\n2\r\n", true, 1, 2},
+		{"subnormal_and_underflow", "1\n4.9406564584124654e-324\n1e-9999", true, math.SmallestNonzeroFloat64, 0},
+		{"header_extra_value", "1 1\n2", false, 0, 0},
+		{"fused_rows", "2\n1 2 3 4\n5 6\n7 8", false, 0, 0},
+		{"split_rows", "2\n1\n2 3 4\n5 6\n7 8", false, 0, 0},
+		{"internal_blank_line", "1\n\n1\n2", false, 0, 0},
+		{"extra_row", "1\n1\n2\n3", false, 0, 0},
+		{"missing_value", "1\n1", false, 0, 0},
+		{"bare_cr", "1\r1\r2", false, 0, 0},
+		{"bom", "\ufeff1\n1\n2", false, 0, 0},
+		{"nul", "1\n1\x00x\n2", false, 0, 0},
+		{"non_ascii_space", "1\n1\u00a0\n2", false, 0, 0},
+		{"invalid_utf8", "1\n1\xff\n2", false, 0, 0},
+		{"nan", "1\nNaN\n2", false, 0, 0},
+		{"infinity", "1\n+Inf\n2", false, 0, 0},
+		{"overflow", "1\n1e9999\n2", false, 0, 0},
+		{"hexadecimal", "1\n0x1p2\n2", false, 0, 0},
+		{"invalid_decimal", "1\n1e\n2", false, 0, 0},
+		{"unsigned_dimension_overflow", "18446744073709551615\n1\n2", false, 0, 0},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			a, b, err := ReadMatrices(bytes.NewBufferString(tc.input))
+			if !tc.valid {
+				if !errors.Is(err, ErrInvalidFixture) || a.N != 0 || b.N != 0 || a.Data != nil || b.Data != nil {
+					t.Fatalf("invalid input returned A=%v B=%v error=%v", a, b, err)
+				}
+				return
+			}
+			if err != nil || a.N != 1 || b.N != 1 || len(a.Data) != 1 || len(b.Data) != 1 {
+				t.Fatalf("valid input returned A=%v B=%v error=%v", a, b, err)
+			}
+			if a.Data[0] != tc.a || b.Data[0] != tc.b {
+				t.Fatalf("A=%v B=%v; want %v and %v", a.Data, b.Data, tc.a, tc.b)
+			}
+		})
+	}
 }

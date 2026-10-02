@@ -73,6 +73,71 @@ static int rejects_fixture(const char *text) {
     return clean ? 0 : 1;
 }
 
+
+static int check_file_format_contract(void) {
+    struct FormatCase {
+        const char *data;
+        size_t length;
+        int valid;
+        double a, b;
+    };
+#define FORMAT_CASE(text, valid, a, b) {text, sizeof(text) - 1, valid, a, b}
+    const struct FormatCase cases[] = {
+        FORMAT_CASE("1\n1\n2", 1, 1, 2),
+        FORMAT_CASE("1\r\n1\r\n2\r\n", 1, 1, 2),
+        FORMAT_CASE(" \t1 \n \t1\t \n2  \n\t \n", 1, 1, 2),
+        FORMAT_CASE("1\r\n1\n2\r\n", 1, 1, 2),
+        FORMAT_CASE("1\n4.9406564584124654e-324\n1e-9999", 1, nextafter(0.0, 1.0), 0),
+        FORMAT_CASE("1 1\n2", 0, 0, 0),
+        FORMAT_CASE("2\n1 2 3 4\n5 6\n7 8", 0, 0, 0),
+        FORMAT_CASE("2\n1\n2 3 4\n5 6\n7 8", 0, 0, 0),
+        FORMAT_CASE("1\n\n1\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1\n2\n3", 0, 0, 0),
+        FORMAT_CASE("1\n1", 0, 0, 0),
+        FORMAT_CASE("1\r1\r2", 0, 0, 0),
+        FORMAT_CASE("\xef\xbb\xbf" "1\n1\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1\0x\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1\xc2\xa0\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1\xff\n2", 0, 0, 0),
+        FORMAT_CASE("1\nNaN\n2", 0, 0, 0),
+        FORMAT_CASE("1\n+Inf\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1e9999\n2", 0, 0, 0),
+        FORMAT_CASE("1\n0x1p2\n2", 0, 0, 0),
+        FORMAT_CASE("1\n1e\n2", 0, 0, 0),
+        FORMAT_CASE("18446744073709551615\n1\n2", 0, 0, 0)
+    };
+#undef FORMAT_CASE
+    size_t i;
+    for (i = 0; i < sizeof(cases) / sizeof(cases[0]); ++i) {
+        const struct FormatCase *test = &cases[i];
+        FILE *stream = tmpfile();
+        double *a = NULL, *b = NULL;
+        size_t n = 0;
+        int status, ok;
+        if (stream == NULL) return 1;
+        if (fwrite(test->data, 1, test->length, stream) != test->length ||
+            fflush(stream) != 0 || fseek(stream, 0, SEEK_SET) != 0) {
+            fclose(stream);
+            return 1;
+        }
+        status = input_read(stream, &a, &b, &n);
+        fclose(stream);
+        if (test->valid) {
+            ok = status == 0 && n == 1 && a != NULL && b != NULL &&
+                 a[0] == test->a && b[0] == test->b;
+        } else {
+            ok = status == INPUT_INVALID && n == 0 && a == NULL && b == NULL;
+        }
+        free(a);
+        free(b);
+        if (!ok) {
+            fprintf(stderr, "FALLO formato de archivo, caso %zu\n", i);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(void) {
     double a[4], b[4];
     const double want_a[4] = {-0.363, 0.036, -0.215, 0.602};
@@ -102,6 +167,7 @@ int main(void) {
     if (check_fixture("tests/fixtures/identidad.input.txt", 2, fixture_identidad_a, fixture_identidad_b) != 0) return 1;
     if (check_fixture("tests/fixtures/cero.input.txt", 2, fixture_cero_a, fixture_cero_b) != 0) return 1;
     if (accepts_crlf_fixture() != 0) return 1;
+    if (check_file_format_contract() != 0) return 1;
     for (i = 0; i < sizeof(invalid) / sizeof(invalid[0]); ++i) {
         if (rejects_fixture(invalid[i]) != 0) return 1;
     }

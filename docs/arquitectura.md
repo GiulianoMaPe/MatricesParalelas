@@ -9,9 +9,9 @@
 
 ## 1. Visión General
 
-La versión `go_paralelo` implementa la multiplicación de matrices cuadradas densas $C = A \times B$ de dimensión $N \times N$ usando un **pool acotado de workers** (goroutines) que consumen **bloques de filas** desde un **canal de tareas tipado**. La sincronización usa `sync.WaitGroup`. Los argumentos CLI son `--n N --seed SEED --workers W`.
+La implementación futura de `go_paralelo` multiplicará matrices cuadradas densas $C = A \times B$ de dimensión $N \times N$ usando un **pool acotado de workers** (goroutines) que consumen **bloques de filas** desde un **canal de tareas tipado**. La sincronización usa `sync.WaitGroup`. Los argumentos CLI son `--n N --seed SEED --workers W`.
 
-**Principios rectores (de `docs/contrato.md` y `docs/guia-extraida.txt`):**
+**Principios rectores (de `docs/contrato.md` y `docs/Guia_Sprints.md`):**
 - Almacenamiento contiguo por filas (`float64`, row-major: índice `i*N + j`)
 - Pool acotado: `W` workers fijos, **no** una goroutine por celda
 - Canal de tareas: reparte intervalos de filas (bloques), no celdas individuales; **un worker puede recibir varias tareas**; lo obligatorio es que **cada fila se calcule exactamente una vez**
@@ -52,33 +52,35 @@ type Result struct {
 ```text
 main()
 ├── 1. Parsear y validar flags: --n, --seed, --workers
-│   ├── Rechazar si faltan, N < 1, seed > 2^32-1, workers < 1
+│   ├── Rechazar si faltan, N < 1, seed fuera de [0, 2^32-1], workers < 1
 │   └── runtime.GOMAXPROCS(workers); gomaxprocs = runtime.GOMAXPROCS(0)  // fija, consulta y registra valor efectivo
-├── 2. Validar tamaño: comprobar que N*N cabe en memoria (size_t) y que N*N*3*8 bytes no excede límite razonable
+├── 2. Validar tamaño: comprobar N*N y N*N*8 antes de multiplicar; considerar RAM para A/B/C
 ├── 3. Asignar matrices A, B, C (heap, contiguas)
 │   ├── A = make([]float64, N*N)
 │   ├── B = make([]float64, N*N)
-│   └── C = make([]float64, N*N)  // se inicializa en 0 en el kernel
-├── 4. Generar A y B (input.Generate)  // PRNG determinista, mismo estado
+│   └── C = make([]float64, N*N)  // reserva fuera de total_s; vaciado explícito dentro
+├── 4. Generar A y B; reservar kernelDurations  // PRNG determinista, instrumentación fuera de total_s
 ├── 5. Medición total_s: time.Now()  // [T0] inicio total_s
-├── 6. Crear canal de tareas: tasks := make(chan Task, workers)
+├── 6. Vaciar C; crear canal de tareas: tasks := make(chan Task, workers)
 ├── 7. Iniciar WaitGroup: var wg sync.WaitGroup
 ├── 8. Lanzar workers fijos:
 │   for w := 0; w < workers; w++ {
 │       wg.Add(1)
-│       go worker(w, tasks, &wg, A, B, C, N)
+│       go worker(w, tasks, &wg, &A, &B, &C, kernelDurations)
 │   }
 ├── 9. Despachar bloques de filas al canal (productor único):
-│   blockSize := ceil(N / workers)  // o fijo, ej. 64 filas
-│   for start := 0; start < N; start += blockSize {
-│       end := min(start + blockSize, N)
+│   blockSize := computeBlockSize(N, workers)
+│   for start := 0; start < N; {
+│       end := N
+│       if blockSize < N-start { end = start + blockSize }
 │       tasks <- Task{StartRow: start, EndRow: end}
+│       start = end
 │   }
 │   close(tasks)  // señal de fin: no más tareas (tras enviar todas)
 ├── 10. wg.Wait()  // bloquea hasta que todos los workers terminen
 ├── 11. Medición total_s: total_s = time.Since(T0)  // [T1] fin total_s
-├── 12. Validar C (elemento a elemento vs referencia, tolerancia 1e-9)
-├── 13. Imprimir CSV en stdout: N,workers,total_s,kernel_s,checksum,status
+├── 12. Obtener máximo de tiempos locales; validar C (elemento a elemento vs referencia, tolerancia 1e-9)
+├── 13. Imprimir CSV en stdout con las 20 columnas del protocolo
 └── 14. os.Exit(0)  // o código ≠ 0 si error
 ```
 
@@ -86,36 +88,31 @@ main()
 
 ## 4. Worker (`workers.go`)
 
+Pseudocódigo de la implementación futura. A/B/C y el vector de tiempos se
+reservan antes de total_s; C se vacía dentro de total_s antes de lanzar workers.
+Cada slot de tiempo pertenece a un solo worker y se consulta después de WaitGroup.
+
 ```go
-func worker(id int, tasks <-chan Task, wg *sync.WaitGroup, A, B, C *Matrix, N int) {
+func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
+    A, B, C *Matrix, kernelDurations []time.Duration) {
     defer wg.Done()
-
-    // [K0] kernel_s inicia con la primera iteración real de cálculo
-    // (se mide en main con time.Now() antes del primer envío al canal
-    //  y time.Since() tras wg.Wait(); ver sección 7)
-
-    for task := range tasks {
-        // Propiedad exclusiva: este worker es dueño de filas [task.StartRow, task.EndRow)
-        multiplyBlock(A, B, C, task.StartRow, task.EndRow, N)
+    var elapsed time.Duration
+    for task := range tasks {             // recepción fuera del kernel
+        start := time.Now()
+        multiplyBlock(A, B, C, task.StartRow, task.EndRow)
+        elapsed += time.Since(start)      // solo cálculo de esta tarea
     }
-    // Al salir del range, el canal está cerrado y no hay más trabajo
+    kernelDurations[id] = elapsed          // antes de Done; sin escritor compartido
 }
 
-func multiplyBlock(A, B, C *Matrix, startRow, endRow, N int) {
-    // Orden de bucles i, k, j (igual que referencia secuencial)
+func multiplyBlock(A, B, C *Matrix, startRow, endRow int) {
+    N := A.N
+    // C ya está vaciada. Aquí solo se acumula el producto i,k,j.
     for i := startRow; i < endRow; i++ {
-        // Inicializar fila i de C en 0 (parte del kernel_s)
-        base := i * N
-        for j := 0; j < N; j++ {
-            C.Data[base+j] = 0
-        }
-        // Acumular productos
         for k := 0; k < N; k++ {
             a := A.Data[i*N + k]
-            bBase := k * N
-            cBase := i * N
             for j := 0; j < N; j++ {
-                C.Data[cBase+j] += a * B.Data[bBase+j]
+                C.Data[i*N+j] += a * B.Data[k*N+j]
             }
         }
     }
@@ -129,11 +126,11 @@ func multiplyBlock(A, B, C *Matrix, startRow, endRow, N int) {
 | # | Invariante | Dónde se garantiza | Verificación |
 |---|------------|-------------------|--------------|
 | **I1** | **Propiedad exclusiva de filas**: cada fila de $C$ es escrita por **exactamente un** worker | `multiplyBlock` recibe rango disjunto `[StartRow, EndRow)`; partición cubre `[0, N)` sin solapamientos ni huecos | Test: `go test -race` + fixture N=2, workers=4 |
-| **I2** | **Sin *data races***: $A$ y $B$ solo lectura; $C$ escritura disjunta por fila | `A` y `B` pasados como `*Matrix` (no se modifican); `C` escrito solo en índices `i*N+j` con `i` en rango propio del worker | `go test -race ./go_paralelo/...` |
+| **I2** | **Sin *data races***: $A$ y $B$ solo lectura; $C$ escritura disjunta por fila | `A` y `B` pasados como `*Matrix` (no se modifican); `C` escrito solo en índices `i*N+j` con `i` en rango propio del worker | `go test -race ./...` |
 | **I3** | **Cierre ordenado del canal**: `close(tasks)` **solo** después de enviar todas las tareas, y **solo** desde `main` (productor único) | `main` envía todos los bloques en bucle `for`, luego `close(tasks)` | Test: `workers` > `N` no hace panic |
 | **I4** | **Sincronización completa**: `wg.Wait()` retorna **solo después** de que todos los workers hayan salido del `range tasks` | `wg.Add(workers)` antes de lanzar; cada worker `defer wg.Done()` al salir de `for range` | Test: variar workers=1,2,4,8; verificar que termina |
-| **I5** | **No *deadlock***: canal con buffer `workers` evita bloqueo del productor; `close` + `range` + `WaitGroup` patrón estándar | `make(chan Task, workers)`; `close` en productor; `range` en consumidores | Test: stress con N=1000, workers=8 |
-| **I6** | **Inicialización de $C$ a cero dentro del kernel**: cada worker pone a 0 sus filas antes de acumular | `multiplyBlock` pone `C.Data[base+j] = 0` al inicio de cada fila | Validación numérica vs fixture |
+| **I5** | **Cierre sin bloqueo permanente**: consumidores activos, productor único, envío antes de close y WaitGroup después de close | Consumidores lanzados antes del primer envío; productor cierra; consumidores terminan y llaman a Done | Test: stress con N=1000, workers=8 |
+| **I6** | **Inicialización de C dentro de total_s y fuera del kernel**: el coordinador vacía C antes de lanzar workers | El coordinador vacía toda C antes del despacho; multiplyBlock solo acumula | Validación numérica vs fixture |
 | **I7** | **Generación determinista**: mismo `seed` → mismas matrices $A, B$ en C y Go | `input.Generate` usa LCG idéntico: `state = (1664525*state + 1013904223) % 2^32` | Vectores de control en `docs/formato_datos.md` |
 
 ---
@@ -147,7 +144,8 @@ func computeBlockSize(N, workers int) int {
     // Opción A: tamaño fijo (ej. 64 filas) → mejor balanceo dinámico
     // Opción B: división entera → ceil(N/workers)
     // Para S4: usar división entera simple
-    blockSize := (N + workers - 1) / workers // ceil
+    blockSize := N / workers
+    if N % workers != 0 { blockSize++ } // ceil sin suma que pueda desbordar
     if blockSize < 1 {
         blockSize = 1
     }
@@ -155,67 +153,64 @@ func computeBlockSize(N, workers int) int {
 }
 ```
 
+**Precondiciones:** N y workers positivos y tamaño matricial válido.
+
 **Casos límite:**
-- `workers >= N`: `blockSize = 1` → cada worker recibe 0 o 1 fila; workers extra salen del `range` sin trabajo (correcto)
+- `workers >= N`: `blockSize = 1` → cada tarea tiene una fila; un worker puede consumir varias tareas y los que no reciben ninguna salen tras close
 - `N % workers != 0`: último bloque más pequeño; `min(start+blockSize, N)` lo maneja
 - `workers = 1`: un solo bloque `[0, N)` → equivalente a secuencial (útil para medir sobrecoste)
 
 ---
 
-## 7. Delimitación de Tiempos (`kernel_s` vs `total_s`)
+## 7. Delimitación de tiempos (`kernel_s` vs `total_s`)
 
-Según `docs/protocolo_medicion.md` (sección 3, tabla para `go_paralelo`):
+Aplicar `protocolo_medicion.md`, sección 3. El kernel es el máximo de los
+intervalos de cálculo acumulados por cada worker, no el tiempo desde el primer
+envío de tareas hasta WaitGroup. Despacho, espera y vaciado solo cuentan en total_s.
 
-| Evento | Variable | Código en `main.go` |
-|--------|----------|---------------------|
-| Inicio `total_s` ($T_0$) | `totalStart` | `totalStart := time.Now()` **antes** de crear canal y lanzar workers |
-| Inicio `kernel_s` ($K_0$) | `kernelStart` | `kernelStart := time.Now()` **justo antes** del primer `tasks <- Task{...}` (inicio despacho) |
-| Fin `kernel_s` ($K_1$) | `kernelEnd` | `kernelEnd := time.Now()` **justo después** de `wg.Wait()` (último worker terminó) |
-| Fin `total_s` ($T_1$) | `totalEnd` | `totalEnd := time.Now()` **tras** validación y antes de CSV |
+| Evento | Frontera |
+| --- | --- |
+| Antes de T0 | A/B/C preparados y reservados; validación de entradas, referencia y vector de tiempos listos. |
+| T0 | Antes de vaciar C y de crear canal/workers. |
+| Kernel local | Dentro de cada worker, justo antes y después de multiplyBlock; acumular por worker. |
+| T1 | Inmediatamente después de wg.Wait(), antes de validar o escribir. |
+| Después de T1 | Calcular máximo de tiempos, validar C, escribir CSV y liberar buffers. |
 
-**Implementación precisa:**
+Pseudocódigo futuro; no supone que el multiplicador ya existe:
 
 ```go
-totalStart := time.Now()                    // [T0] inicio total_s
-
+kernelDurations := make([]time.Duration, workers) // instrumentación fuera de total_s
+totalStart := time.Now()
+for i := range C.Data { C.Data[i] = 0 }
 tasks := make(chan Task, workers)
 var wg sync.WaitGroup
 for w := 0; w < workers; w++ {
     wg.Add(1)
-    go worker(w, tasks, &wg, A, B, C, N)
+    go worker(w, tasks, &wg, &A, &B, &C, kernelDurations)
 }
-
-kernelStart := time.Now()                   // [K0] inicio cómputo puro (primer envío)
-// Despachar tareas
 blockSize := computeBlockSize(N, workers)
-for start := 0; start < N; start += blockSize {
-    end := start + blockSize
-    if end > N { end = N }
+for start := 0; start < N; {
+    end := N
+    if blockSize < N-start { end = start + blockSize }
     tasks <- Task{StartRow: start, EndRow: end}
+    start = end
 }
 close(tasks)
-
-wg.Wait()                                   // espera a que terminen TODOS los workers
-kernelEnd := time.Now()                     // [K1] fin cómputo puro (último worker terminó)
-
-kernel_s := kernelEnd.Sub(kernelStart).Seconds()
-total_s  := kernelEnd.Sub(totalStart).Seconds()  // [T1] ≈ fin total_s (sin validación/CSV)
+wg.Wait()
+total_s := time.Since(totalStart).Seconds()  // detener antes de validación/I/O
+var kernelDuration time.Duration
+for _, duration := range kernelDurations {
+    if duration > kernelDuration { kernelDuration = duration }
+}
+kernel_s := kernelDuration.Seconds()
+// Validar y escribir solo después de detener total_s.
 ```
 
-**Excluidos de `kernel_s` (cómputo puro):**
-- Parseo/validación de argumentos
-- Asignación de memoria (`make`)
-- Generación PRNG (`input.Generate`)
-- **Espera final `wg.Wait()` → NO, está INCLUIDA en `kernel_s` (es sincronización del cómputo)**
-- Validación matemática elemento a elemento
-- Formateo/escritura CSV
-
-**Excluidos de `total_s` (según protocolo §3.2):**
-- Lectura de disco / fixtures
-- Generación de datos (PRNG)
-- Validación matemática
-- Reserva/liberación memoria matrices completas
-- Generación de reportes (CSV)
+Un worker sin tareas aporta cero. No se cronometra el range/recepción del canal.
+Lectura/generación, reserva/liberación de matrices, argumentos, validación y salida
+quedan fuera de ambos intervalos. La creación del canal y las goroutines sí es
+coordinación dentro de total_s. Los tiempos deben ser finitos y no negativos;
+solo se aceptan mediciones con resultado matemático válido.
 
 ---
 
@@ -223,15 +218,15 @@ total_s  := kernelEnd.Sub(totalStart).Seconds()  // [T1] ≈ fin total_s (sin va
 
 | Situación | Tipo | Acción | Código de salida |
 |-----------|------|--------|------------------|
-| Flags faltantes/inválidos | **Entrada inválida** | `fmt.Fprintln(os.Stderr, "uso: ...")` | 2 |
-| `N < 1` o `workers < 1` | **Entrada inválida** | Error a `stderr` | 2 |
-| `seed > 2^32-1` | **Entrada inválida** | Error a `stderr` | 2 |
-| Fallo asignación memoria (`make`) | **Entorno** | `panic` o error controlado → `stderr` | 1 |
+| Flags faltantes/inválidos | **Entrada inválida** | `fmt.Fprintln(os.Stderr, "uso: ...")` | 1 |
+| `N < 1` o `workers < 1` | **Entrada inválida** | Error a `stderr` | 1 |
+| `seed > 2^32-1` | **Entrada inválida** | Error a `stderr` | 1 |
+| Fallo controlado de asignación memoria | **Entorno** | Error a `stderr` | 1 |
 | Operación pendiente (algoritmo no implementado) | **Pendiente** | `fmt.Fprintln(os.Stderr, "PENDIENTE: ...")` | 2 |
 | Validación numérica falla | **Cálculo** | `fmt.Fprintf(stderr, "validación falló: ...")` | 1 |
 | *Data race* detectado (`-race`) | **Entorno** | Termina con error del runtime | ≠0 |
 
-**Regla:** Errores de **entrada** y **operaciones pendientes** → `stderr`, código 2. Errores de **entorno/cálculo** → `stderr`, código 1. Cualquier error **antes** de medición válida no imprime CSV parcial.
+**Regla común:** éxito → 0; cualquier error de entrada, archivo, memoria, entorno o cálculo → stderr y 1; únicamente operación pendiente → stderr y 2. Son códigos del ejecutable, no los estados internos de C. Un fallo no imprime una medición válida ni una matriz parcial. La CLI completa se integrará en S4; la prueba actual de cálculo sigue devolviendo pendiente.
 
 ---
 
@@ -250,7 +245,7 @@ Campos específicos de Go paralelo:
 - `processes`: `1` (no usa MPI)
 - `threads`: `1` (no usa OpenMP)
 - `workers`: valor de `--workers`
-- `gomaxprocs`: valor de `runtime.GOMAXPROCS(workers)`
+- `gomaxprocs`: valor efectivo consultado con `runtime.GOMAXPROCS(0)` tras fijarlo
 
 ---
 
@@ -291,7 +286,7 @@ func validate(C, Cref *Matrix) error {
     for i := 0; i < C.N*C.N; i++ {
         got := C.Data[i]
         exp := Cref.Data[i]
-        if math.IsNaN(got) || math.IsInf(got, 0) {
+        if math.IsNaN(got) || math.IsInf(got, 0) || math.IsNaN(exp) || math.IsInf(exp, 0) {
             return fmt.Errorf("NaN/Inf en C[%d]", i)
         }
         diff := math.Abs(got - exp)
@@ -320,7 +315,7 @@ go test -run TestChannelClose
 | Test | Qué verifica | Comando |
 |------|--------------|---------|
 | `TestWorkerRowOwnership` | I1: cada fila escrita una vez | `go test -race -run TestWorkerRowOwnership` |
-| `TestNoDataRaces` | I2: sin carreras en A/B/C | `go test -race ./go_paralelo/...` |
+| `TestNoDataRaces` | I2: sin carreras en A/B/C | `go test -race ./...` |
 | `TestChannelClose` | I3: close tras enviar todas | `go test -run TestChannelClose` |
 | `TestWaitGroupSync` | I4: wg.Wait retorna tras todos | `go test -run TestWaitGroupSync` |
 | `TestWorkersGTN` | I5: workers > N no deadlock | `go test -run TestWorkersGTN` |
@@ -334,11 +329,11 @@ go test -run TestChannelClose
 
 | Requisito | Documento | Sección arquitectura |
 |-----------|-----------|---------------------|
-| Pool acotado, canal tareas, WaitGroup | `contrato.md` §31, `guia-extraida.txt` §70 | §3, §4 |
-| Propiedad exclusiva de filas | `guia-extraida.txt` §70 | §5 (I1, I6) |
-| No goroutine por celda | `guia-extraida.txt` §70 | §4 (bloques de filas) |
-| A/B solo lectura | `guia-extraida.txt` §70 | §5 (I2) |
-| Cierre canal + WaitGroup | `guia-extraida.txt` §70 | §5 (I3, I4) |
+| Pool acotado, canal tareas, WaitGroup | `contrato.md` §31, `Guia_Sprints.md` §70 | §3, §4 |
+| Propiedad exclusiva de filas | `Guia_Sprints.md` §70 | §5 (I1, I6) |
+| No goroutine por celda | `Guia_Sprints.md` §70 | §4 (bloques de filas) |
+| A/B solo lectura | `Guia_Sprints.md` §70 | §5 (I2) |
+| Cierre canal + WaitGroup | `Guia_Sprints.md` §70 | §5 (I3, I4) |
 | GOMAXPROCS fijado y registrado | `contrato.md` §11 | §3 (paso 1), §9 |
 | kernel_s / total_s delimitados | `protocolo_medicion.md` §3 | §7 |
 | Generación determinista LCG | `contrato.md` §20, `formato_datos.md` | §10 |
@@ -351,7 +346,7 @@ go test -run TestChannelClose
 
 | Sprint | Tarea | Responsable |
 |--------|-------|-------------|
-| **S3** | Implementar `input.Generate` (PRNG LCG) | Integrante 4 / 7 |
+| **S3** | Integrar y conservar pruebas de `input.Generate` y lector ya implementados | Integrante 4 / 7 |
 | **S3** | Implementar `Multiply` secuencial en `matrix.go` (referencia) | Integrante 3 |
 | **S4** | Implementar `worker` y `multiplyBlock` en `workers.go` | Integrante 3 / 4 |
 | **S4** | Integrar flags, canal, WaitGroup, tiempos en `main.go` | Integrante 4 |
@@ -366,10 +361,10 @@ go test -run TestChannelClose
 
 | Decisión | Justificación | Alternativa descartada |
 |----------|---------------|------------------------|
-| Buffer del canal = `workers` | Evita bloqueo productor si workers lentos al inicio; tamaño acotado | Sin buffer (bloquea productor) o buffer `N` (memoria innecesaria) |
+| Buffer del canal = `workers` | Tamaño acotado; el envío puede esperar consumidores sin constituir un deadlock | Sin buffer (bloquea productor) o buffer `N` (memoria innecesaria) |
 | Bloques contiguos de filas | Localidad de caché: cada worker accede a filas contiguas de C y recorre A/B secuencialmente | Filas intercaladas (stride) → peor localidad |
-| `GOMAXPROCS = workers` | Mapea workers a hilos OS; evita sobrecoste de scheduler Go | `GOMAXPROCS = NumCPU()` → ignora flag `--workers` |
-| Inicializar C a 0 dentro del kernel | Parte del cómputo puro; exclusivo de cada worker | Inicializar en main antes de despachar → incluido en `total_s` pero no en `kernel_s` |
+| `GOMAXPROCS = workers` | Limita ejecución simultánea de código Go; consultar y registrar el valor efectivo | `GOMAXPROCS = NumCPU()` → ignora flag `--workers` |
+| Vaciar C antes de lanzar workers, dentro de total_s | Mismo límite que las referencias; kernel mide solo acumulación | Vaciar dentro de multiplyBlock mezclaría inicialización y cálculo |
 | Validación elemento a elemento | Contrato exige comparación completa; checksum no sustituye | Solo checksum → no detecta errores locales |
 
 ---
@@ -379,7 +374,7 @@ go test -run TestChannelClose
 - `docs/contrato.md` — Contrato de argumentos, generación, cálculo, corrección
 - `docs/formato_datos.md` — Formato fixtures, vectores de control PRNG
 - `docs/protocolo_medicion.md` — Delimitación tiempos, CSV, matriz experimentos
-- `docs/guia-extraida.txt` §69-70 — Núcleo secuencial y Go paralelo
+- `docs/Guia_Sprints.md` §69-70 — Núcleo secuencial y Go paralelo
 - `docs/diagnostico_go_paralelo.md` — Estado actual y pendientes priorizados
 
 ---

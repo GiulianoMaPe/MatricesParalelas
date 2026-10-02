@@ -4,7 +4,7 @@
 **Curso:** Programación Concurrente y Paralela — UNMSM
 **Sprint:** 1 (Semana 1) · **Autor:** Integrante 2 — Sebastian · **Módulo:** `c_paralelo`
 **Fecha de redacción:** 30/09/2026
-**Estado:** Entregable de Sprint 1 finalizado. Pendiente de revisión cruzada formal por Integrante 1 (Yessly), que registra su visto bueno en `docs/sprints/sprint-01.md`.
+**Mi revisión como I1 (01/10/2026):** acepté el diagnóstico; dejé mi nota al final.
 
 ---
 
@@ -195,4 +195,12 @@ Reproducción de este diagnóstico: leer los seis ficheros de `c_paralelo/src` y
 - [x] Los faltantes están enumerados y priorizados, con sprint y responsables (§5).
 - [x] Los supuestos y puntos de validación que condicionan el diseño de reparto quedan fijados (§6).
 - [x] Instrucciones de reproducción publicadas y límites de la evidencia declarados (§7).
-- [ ] Revisión cruzada por Integrante 1 (Yessly) registrada en `docs/sprints/sprint-01.md`.
+- [x] Registré mi revisión como I1 en `docs/sprints/sprint-01.md` el 01/10/2026.
+
+## Mi revisión como I1 · 2026-10-01
+
+Revisé el programa, sus pruebas y este diagnóstico. Confirmé que distingue la instalación del cálculo real y acepté el entregable de S1.
+
+Aclaré que el generador y el lector ya funcionan y que la cabecera contiene el diseño de S2. El reparto y la multiplicación siguen pendientes. También corregí el inventario: cuatro archivos C y tres cabeceras.
+
+Las pruebas de entradas y la instalación con dos procesos y dos hilos pasaron. El intento de cálculo devolvió 2, como corresponde al estado pendiente. Dejé mi revisión en [S1](sprints/sprint-01.md).

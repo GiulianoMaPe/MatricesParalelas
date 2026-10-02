@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 )
 
@@ -32,22 +33,6 @@ func TestGenerateSeed42Vector(t *testing.T) {
 	for i, want := range wantB {
 		if math.Abs(b.Data[i]-want) > 1e-15 {
 			t.Fatalf("B[%d] = %.17g, want %.17g", i, b.Data[i], want)
-		}
-	}
-}
-
-func TestGenerateRejectsInvalidDimensions(t *testing.T) {
-	for _, n := range []int{0, -1, int(^uint(0) >> 1)} {
-		if _, _, err := Generate(n, 42); !errors.Is(err, ErrInvalidInput) {
-			t.Errorf("Generate(%d) error = %v, want ErrInvalidInput", n, err)
-		}
-	}
-}
-
-func TestGenerateAcceptsUint32SeedLimits(t *testing.T) {
-	for _, seed := range []uint32{0, ^uint32(0)} {
-		if _, _, err := Generate(1, seed); err != nil {
-			t.Errorf("Generate(1, %d): %v", seed, err)
 		}
 	}
 }
@@ -137,8 +122,10 @@ func TestGenerateValidatesArguments(t *testing.T) {
 		{"zero_dimension", 0, 42, ErrInvalidDimension},
 		{"negative_dimension", -1, 42, ErrInvalidDimension},
 		{"size_overflow", int(^uint(0) >> 1), 42, ErrSizeOverflow},
-		{"minimum_seed", 1, 0, ErrPending},
-		{"maximum_seed", 1, ^uint32(0), ErrPending},
+		{"byte_size_overflow", 1 << (strconv.IntSize/2 - 2), 42, ErrSizeOverflow},
+		{"minimum_seed", 1, 0, nil},
+		{"maximum_seed", 1, ^uint32(0), nil},
+		{"valid_dimension", 2, 42, nil},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -146,8 +133,69 @@ func TestGenerateValidatesArguments(t *testing.T) {
 			if !errors.Is(err, tc.want) {
 				t.Fatalf("Generate(%d, %d) error = %v; want %v", tc.n, tc.seed, err, tc.want)
 			}
-			if a.N != 0 || b.N != 0 || a.Data != nil || b.Data != nil {
-				t.Fatal("Generate must not return data before implementation", a, b)
+			if tc.want != nil {
+				if a.N != 0 || b.N != 0 || a.Data != nil || b.Data != nil {
+					t.Fatal("invalid inputs must not produce matrices", a, b)
+				}
+				return
+			}
+			if a.N != tc.n || b.N != tc.n {
+				t.Fatalf("generated dimensions A=%d B=%d; want %d", a.N, b.N, tc.n)
+			}
+			if err := a.Validate(); err != nil {
+				t.Fatalf("generated A is invalid: %v", err)
+			}
+			if err := b.Validate(); err != nil {
+				t.Fatalf("generated B is invalid: %v", err)
+			}
+		})
+	}
+}
+
+// This table exercises the same file grammar in both independent Go modules.
+func TestReadMatricesLayoutContract(t *testing.T) {
+	cases := []struct {
+		name, input string
+		valid       bool
+		a, b        float64
+	}{
+		{"lf_without_final_newline", "1\n1\n2", true, 1, 2},
+		{"crlf", "1\r\n1\r\n2\r\n", true, 1, 2},
+		{"whitespace", " \t1 \n \t1\t \n2  \n\t \n", true, 1, 2},
+		{"mixed_newlines", "1\r\n1\n2\r\n", true, 1, 2},
+		{"subnormal_and_underflow", "1\n4.9406564584124654e-324\n1e-9999", true, math.SmallestNonzeroFloat64, 0},
+		{"header_extra_value", "1 1\n2", false, 0, 0},
+		{"fused_rows", "2\n1 2 3 4\n5 6\n7 8", false, 0, 0},
+		{"split_rows", "2\n1\n2 3 4\n5 6\n7 8", false, 0, 0},
+		{"internal_blank_line", "1\n\n1\n2", false, 0, 0},
+		{"extra_row", "1\n1\n2\n3", false, 0, 0},
+		{"missing_value", "1\n1", false, 0, 0},
+		{"bare_cr", "1\r1\r2", false, 0, 0},
+		{"bom", "\ufeff1\n1\n2", false, 0, 0},
+		{"nul", "1\n1\x00x\n2", false, 0, 0},
+		{"non_ascii_space", "1\n1\u00a0\n2", false, 0, 0},
+		{"invalid_utf8", "1\n1\xff\n2", false, 0, 0},
+		{"nan", "1\nNaN\n2", false, 0, 0},
+		{"infinity", "1\n+Inf\n2", false, 0, 0},
+		{"overflow", "1\n1e9999\n2", false, 0, 0},
+		{"hexadecimal", "1\n0x1p2\n2", false, 0, 0},
+		{"invalid_decimal", "1\n1e\n2", false, 0, 0},
+		{"unsigned_dimension_overflow", "18446744073709551615\n1\n2", false, 0, 0},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			a, b, err := ReadMatrices(bytes.NewBufferString(tc.input))
+			if !tc.valid {
+				if !errors.Is(err, ErrInvalidFixture) || a.N != 0 || b.N != 0 || a.Data != nil || b.Data != nil {
+					t.Fatalf("invalid input returned A=%v B=%v error=%v", a, b, err)
+				}
+				return
+			}
+			if err != nil || a.N != 1 || b.N != 1 || len(a.Data) != 1 || len(b.Data) != 1 {
+				t.Fatalf("valid input returned A=%v B=%v error=%v", a, b, err)
+			}
+			if a.Data[0] != tc.a || b.Data[0] != tc.b {
+				t.Fatalf("A=%v B=%v; want %v and %v", a.Data, b.Data, tc.a, tc.b)
 			}
 		})
 	}

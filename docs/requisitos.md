@@ -4,7 +4,7 @@
 **Curso:** Programación Concurrente y Paralela — UNMSM
 **Sprint:** 1 (Semana 1)
 **Autor:** Integrante 8 — Roberto
-**Estado:** Completado para Sprint 1 · Pendiente de revisión cruzada por Integrante 7 (Andres)
+**Estado:** entregable S1 con revisión previa de I7 registrada; actualización del 2026-10-01 preparada con asistencia de Codex para I8 y pendiente de revisión de Andrés.
 
 ---
 
@@ -17,7 +17,7 @@ El presente documento formaliza el marco de requerimientos técnicos y criterios
 3. **`go_secuencial`**: Referencia secuencial en lenguaje Go con un único hilo lógico de cómputo.
 4. **`go_paralelo`**: Implementación concurrente/paralela en Go mediante _worker pools_ acotados (goroutines) y canales de sincronización.
 
-El objetivo central es transformar las especificaciones docentes, el sílabo de la asignatura y la guía técnica en **entregables verificables, contratos funcionales exactos y un backlog priorizado**, garantizando que ninguna optimización o medición de rendimiento sea admitida si no se demuestra previamente la corrección matemática absoluta del algoritmo.
+El objetivo central es transformar la guía técnica del repositorio en **entregables verificables, contratos funcionales y un backlog priorizado**. Antes de aceptar mediciones, la salida matemática debe cumplir la tolerancia acordada. Esta revisión no coteja un sílabo o una rúbrica docente que no estén incluidos en el proyecto.
 
 ---
 
@@ -30,7 +30,7 @@ A continuación se traduce cada criterio de evaluación del curso en un mecanism
 | **Corrección Matemática Estricta**                 | El cálculo numérico debe ser exacto frente a una solución de referencia comprobada.                   | Comparación celda por celda de toda la matriz$C$ ($N \times N$) aplicando tolerancia numérica combinada:`abs(C_calc[i] - C_esp[i]) <= atol + rtol * abs(C_esp[i])`con `atol = 1e-9` y `rtol = 1e-9`.**Invariante:** Se rechazan terminantemente _checksums_ o sumas de control como sustituto de validación completa. NaN o $\pm\infty$ generan aborto inmediato con error.                                                   |
 | **Rigor en la Cronometría de Rendimiento**         | Medir únicamente el tiempo algorítmico, excluyendo I/O, generación de datos y reservas de memoria.    | Se diferencian dos intervalos de tiempo estrictos:1.`kernel_s`: Intervalo exclusivo del triple bucle de multiplicación matricial.2. `total_s`: Incluye vaciado de $C$, reparto de datos (`Scatterv`/canales), cálculo y recolección de resultados (`Gatherv`/`WaitGroup`).**Invariante:** Toda lectura de disco, generación pseudoaleatoria, validación numérica e impresión en terminal/CSV quedan **fuera** de la medición. |
 | **Monotonicidad y Precisión del Reloj**            | Uso de temporizadores de alta resolución inmunes a desajustes de reloj de pared (_wall-clock drift_). | • En C:`QueryPerformanceCounter` y `QueryPerformanceFrequency` de la API Win32.• En Go: `time.Now()` y `time.Since()` apoyados en reloj monotónico nativo del runtime.• En MPI: `MPI_Wtime()` con sincronización de inicio y agregación final del máximo global entre procesos mediante `MPI_Reduce(..., MPI_MAX)`.                                                                                                           |
-| **Control de Procesos y Concurrencia Limpia**      | Evitar bloqueos (_deadlocks_), procesos zombies o hilos desbocados en el sistema operativo.           | • En C híbrido: Nivel requerido`MPI_THREAD_FUNNELED`. Llamadas MPI ejecutadas **únicamente** por el hilo maestro (rank 0) fuera de las directivas OpenMP.• En Go: Pool fijo de $W$ trabajadores limitados alimentados por canal de bloques de tareas y espera centralizada con `sync.WaitGroup`. Prohibido instanciar goroutines por celda ($O(N^2)$).                                                                        |
+| **Control de Procesos y Concurrencia Limpia** | Evitar bloqueos (_deadlocks_), procesos zombies o hilos desbocados. | En C híbrido: `MPI_THREAD_FUNNELED`, con llamadas MPI desde el hilo inicial de cada proceso y fuera de OpenMP; rank 0 prepara entradas y emite resultados. En Go: pool fijo de W trabajadores, canal de bloques y WaitGroup. Prohibido crear goroutines por celda. |
 | **Gestión Robusta de Errores y Códigos de Salida** | Interfaz CLI uniforme que informe fallos por`stderr` con códigos de terminación consistentes.         | Códigos de salida universales en las 4 versiones:•`0`: Ejecución exitosa y validada.• `1`: Error de entorno, argumentos inválidos, fallo de reserva de memoria o archivo malformado.• `2`: Operación pendiente o no implementada (estado de esqueleto).**Invariante:** En caso de error crítico en un proceso MPI, se invoca decisión colectiva o `MPI_Abort` para evitar que otros nodos queden bloqueados indefinidamente.  |
 | **Reproducibilidad Experimental**                  | Conclusiones sustentadas en réplicas estadísticas en condiciones homogéneas de hardware.              | Campaña oficial compuesta por: 1 ejecución de calentamiento (_warm-up_) descartada + 5 repeticiones medidas por configuración. Cálculo de mediana, valor mínimo, valor máximo e intervalo intercuartílico (IQR). Registro exhaustivo de metadatos de CPU, RAM, SO y commit Git.                                                                                                                                               |
 
@@ -41,12 +41,12 @@ A continuación se traduce cada criterio de evaluación del curso en un mecanism
 ### 3.1. Requisitos Funcionales (RF)
 
 | ID        | Nombre                                           | Descripción Técnica                                                                                                                                                                                                                                                                                                                          | Prioridad      |
-| :-------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------- | --- |
+| :-------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
 | **RF-01** | **Interfaz de Línea de Comandos (CLI) Estándar** | Los 4 ejecutables deben aceptar de forma uniforme los argumentos obligatorios:`--n <dim>` (dimensión entera positiva) y `--seed <uint32>` (semilla entre 0 y $4294967295$). `go_paralelo` añade `--workers <W>`. Las 4 versiones deben responder a `--smoke-test` para verificación de entorno.                                              | **Alta (P0)**  |
 | **RF-02** | **Generador Determinista Portable**              | Implementar un generador congruencial lineal (LCG) idéntico de 32 bits en C y Go para matrices$A$ y $B$, evitando la discrepancia entre el `rand()` de C y `math/rand` de Go. Regla de transición: `state = (1664525 * state + 1013904223) mod 2^32`. Normalización flotante: `(int64(state % 2001) - 1000) / 1000.0` (rango $[-1.0, 1.0]$). | **Alta (P0)**  |
-| **RF-03** | **Cálculo Matricial Canónico ($i, k, j$)**       | Implementación del producto$C = A \times B$ denso con orden de bucles $i, k, j$, maximizando el aprovechamiento de la línea de caché al acceder a $B$ por filas continuas en memoria contigua. La matriz $C$ debe inicializarse a ceros antes de la acumulación.                                                                             | **Alta (P0)**  |     |
+| **RF-03** | **Cálculo Matricial Canónico ($i, k, j$)** | Implementar el producto denso $C = A \times B$ con bucles i,k,j y C inicialmente a cero. En el bucle j se recorren B y C por filas contiguas; el efecto de esa localidad se evaluará experimentalmente. | **Alta (P0)** |
 | **RF-04** | **Soporte de Fixtures de Archivo**               | Soporte de flags`--input <archivo>` para leer matrices de prueba predefinidas y `--output <archivo>` para exportar la matriz resultante $C$. El formato de archivo consta de una primera línea con $N$, seguida de $N$ filas para $A$ y $N$ filas para $B$ (valores separados por espacios y punto decimal).                                 | **Media (P1)** |
-| **RF-05** | **Emisión Limpia de Métricas**                   | Salida por`stdout` en formato estructurado o CSV con las columnas: `version,N,seed,P,T,workers,kernel_s,total_s,status`. Mensajes de depuración y errores se envían exclusivamente a `stderr`. No imprimir matrices en consola durante ejecuciones de rendimiento.                                                                           | **Media (P1)** |
+| **RF-05** | **Emisión Limpia de Métricas** | Salida por `stdout` con las 20 columnas CSV de `docs/protocolo_medicion.md`, sección 4; las matrices usan `docs/formato_datos.md`. Errores y diagnósticos por `stderr`. No imprimir matrices durante el benchmark. | **Media (P1)** |
 
 ### 3.2. Requisitos No Funcionales (RNF)
 
@@ -64,12 +64,12 @@ A continuación se traduce cada criterio de evaluación del curso en un mecanism
 
 ## 4. Diagnóstico del Repositorio y Backlog Priorizado
 
-Al cierre del Sprint 1, el análisis del repositorio `proyecto/` muestra que:
+La siguiente lista conserva la fotografía de la base recibida al preparar S1; no describe los cambios posteriores de S2:
 
 - Las 4 carpetas de versión (`c_secuencial`, `c_paralelo`, `go_secuencial`, `go_paralelo`) poseen su estructura de compilación lista, pero sus módulos contienen únicamente esqueletos que devuelven código `2` ante llamadas de cálculo (`algorithm: pending`, `validation: pending`).
 - El entorno base está verificado para compilación (`smoke-test`), pero carece de la lógica de multiplicación, generador común y fixtures ampliados.
 
-A continuación se establece el **Backlog Priorizado de Pendientes Técnicos** para los sprints inmediatos:
+A continuación se conserva el **Backlog Priorizado** del plan. Al 2026-10-01, los generadores y lectores están implementados, los fixtures incluyen N impar y existen validaciones e interfaces C/Go; los multiplicadores siguen pendientes. Las revisiones y el cierre se consultan en `docs/sprints/`. Una tarea implementada anticipadamente se dedica a revisión y pruebas en el sprint previsto, según la guía.
 
 |    Prioridad     | Tarea / Módulo                               | Descripción del Entregable Requerido                                                                                                                       | Sprint Asignado | Responsable Primario |
 | :--------------: | :------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------: | :------------------: |
@@ -89,41 +89,44 @@ A continuación se establece el **Backlog Priorizado de Pendientes Técnicos** p
 
 ## 5. Mapeo y Localización de la Literatura Científica del Curso
 
-En cumplimiento de los requerimientos académicos del curso de Programación Concurrente y Paralela de la UNMSM, se procedió a localizar y mapear los artículos científicos provistos en `Articulos_IEEE_Proyectos_UNMSM_PConcurrenteyParalela.docx`.
+La lista inicial citaba `Articulos_IEEE_Proyectos_UNMSM_PConcurrenteyParalela.docx`; ese documento no está incluido en este clon y no se verificó aquí su contenido. Para S2 se contrastaron los dos PDF locales seleccionados y sus metadatos con fuentes de los autores, documentadas en [bibliografia.md](bibliografia.md).
 
-Para el **Proyecto 2: Multiplicación de Matrices Densas y Paralelismo**, se ha seleccionado las siguientes publicaciones de la IEEE Computer Society y literatura especializada:
+Las referencias seleccionadas son Quintin et al. y Hérault et al. Las fuentes complementarias listadas abajo conservan su identificación inicial, pendiente de verificar; no se usan como evidencia en los dos resúmenes de S2.
 
 ### 5.1. Artículos IEEE del Proyecto 2 (Multiplicación de Matrices)
 
-1. **Huang, H., & Chow, E. (2024).\***Exploring the Design Space of Distributed Parallel Sparse Matrix–Multiple Vector Multiplication.\*_IEEE Transactions on Parallel and Distributed Systems (TPDS)_, 35(11), 1977–1988. DOI: [10.1109/TPDS.2024.3458921](https://doi.org/10.1109/TPDS.2024.3458921)._Aporte al proyecto:_ Analiza la partición de datos entre procesos de memoria distribuida, demostrando cuantitativamente que la granularidad de bloque y el agrupamiento reducen drásticamente la sobrecarga de comunicación en MPI.
-2. **Herault, T., Robert, Y., Bosilca, G., & Dongarra, J. (2019).\***Generic Matrix Multiplication for Multi-GPU Accelerated Distributed-Memory Platforms over PaRSEC.\*_Proc. 10th IEEE/ACM Workshop on Latest Advances in Scalable Algorithms for Large-Scale Systems (ScalA 2019)_. DOI: [10.1109/ScalA49576.2019.00010](https://doi.org/10.1109/ScalA49576.2019.00010)._Aporte al proyecto:_ Formaliza la descomposición matricial mediante particionamiento en bloques (_tiles_) y el solapamiento óptimo entre transferencia de memoria y cómputo aritmético.
+1. **Fuente complementaria pendiente de verificar:** Huang, H., & Chow, E. (2024), *Exploring the Design Space of Distributed Parallel Sparse Matrix–Multiple Vector Multiplication*. Identificación inicial: TPDS, 35(11), 1977–1988, DOI 10.1109/TPDS.2024.3458921. No se certifican esos metadatos ni sus hallazgos en esta actualización.
+2. **Hérault, T., Robert, Y., Bosilca, G., & Dongarra, J. (2019).** *Generic Matrix Multiplication for Multi-GPU Accelerated Distributed-Memory Platforms over PaRSEC*, ScalA 2019, pp. 33–41. DOI: [10.1109/ScalA49573.2019.00010](https://doi.org/10.1109/ScalA49573.2019.00010). Estudia bloques, teselas y control de dependencias en plataformas multi-GPU; su adaptación a CPU/Go se distingue de los resultados del artículo en la bibliografía.
 3. **Quintin, J.-N., Hasanov, K., & Lastovetsky, A. (2013).**
    _Hierarchical Parallel Matrix Multiplication on Large-Scale Distributed Memory Platforms._
-   _Proc. 2013 42nd International Conference on Parallel Processing (ICPP)_, 754–762. DOI: [10.1109/ICPP.2013.88](https://doi.org/10.1109/ICPP.2013.88).
+   _Proc. 2013 42nd International Conference on Parallel Processing (ICPP)_, 754–762. DOI: [10.1109/ICPP.2013.89](https://doi.org/10.1109/ICPP.2013.89).
    _Aporte al proyecto:_ Introduce HSUMMA (variante jerárquica de dos niveles de SUMMA), proporcionando la base matemática para optimizar la comunicación colectiva cuando se escala el número de procesos.
 
-### 5.2. Literatura Específica para Concurrencia en Go
+### 5.2. Literatura complementaria Go · verificación pendiente
 
-- **Dilley, N., & Lange, J. (2019).\***An Empirical Study of Messaging Passing Concurrency in Go Projects.\*_Proc. 2019 IEEE 26th International Conference on Software Analysis, Evolution and Reengineering (SANER)_, 377–387. DOI: [10.1109/SANER.2019.8668036](https://doi.org/10.1109/SANER.2019.8668036)._Aporte al proyecto:_ Provee un estudio empírico sobre los patrones de concurrencia más eficientes en Go (como el _worker pool_ acotado) y los errores recurrentes en el manejo de canales y `sync.WaitGroup`.
+- **Dilley, N., & Lange, J. (2019).** Identificación inicial: *An Empirical Study of Messaging Passing Concurrency in Go Projects*, SANER, 377–387, DOI 10.1109/SANER.2019.8668036. Título, metadatos y hallazgos pendientes de verificar; no se usa para afirmar superioridad de un patrón Go.
 - **Yuan, T., et al. (2021).**
   _GoBench: A Benchmark Suite of Real-World Go Concurrency Bugs._
   _Proc. 2021 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)_. DOI: [10.1109/CGO51591.2021.9370317](https://doi.org/10.1109/CGO51591.2021.9370317).
 
-### 5.3. Textos Guía de Referencia Teórica
+### 5.3. Textos complementarios · edición y capítulos pendientes de verificar
 
 - **Pacheco, P. (2021).** _An Introduction to Parallel Programming_ (2nd ed.). Morgan Kaufmann / Elsevier. (Capítulos 3 y 5: descomposición por bloques de filas con `MPI_Scatterv`/`MPI_Gatherv` y regiones paralelas OpenMP).
 - **Cox-Buday, K. (2017).** _Concurrency in Go: Tools and Techniques for Developers_. O'Reilly Media.
 
-> **Transición a Sprint 2:** Con estas fuentes identificadas, el Integrante 8 procederá en el Sprint 2 a redactar el documento `docs/bibliografia.md`, resumiendo en profundidad dos de estos artículos y sustentando matemáticamente la decisión de diseño del reparto 1D por bloques de filas frente a alternativas 2D.
+> **Entregable de Sprint 2:** [bibliografia.md](bibliografia.md) resume los dos artículos seleccionados y distingue sus hallazgos del reparto 1D propio del proyecto. El reparto se justifica por el alcance y el almacenamiento contiguo; no se afirma su superioridad universal frente a 2D.
 
 ---
 
 ## 6. Criterio de Aceptación del Entregable
 
-Este documento cumple con el **Criterio de Terminado (_Definition of Done_)** del Sprint 1 para el Integrante 8:
+El contenido técnico de S1 está preparado. Se conserva la revisión previa de I7; las correcciones actuales necesitan revisión registrada:
 
 - [x] Traduce los criterios académicos en exigencias técnicas medibles (tolerancias, timers, códigos de salida).
 - [x] Formaliza la matriz completa de Requisitos Funcionales y No Funcionales.
 - [x] Contiene un backlog priorizado (P0, P1, P2) basado en el estado real del repositorio.
-- [x] Localiza y documenta los artículos científicos IEEE de la cátedra para el Proyecto 2.
-- [ ] Revisión cruzada por Integrante 7 (Andres) registrada en `docs/sprints/sprint-01.md`.
+- [x] Localiza los dos PDF seleccionados y corrige sus referencias; la relación con el documento de la cátedra no se certifica sin esa fuente.
+- [x] Revisión de la versión anterior por I7 registrada en `docs/sprints/sprint-01.md`.
+- [ ] Revisión de las correcciones del 2026-10-01 por I7.
+
+Evidencia de actualización y revisión técnica a I1: [revision_i08_sprints_01_02.md](revision_i08_sprints_01_02.md). No se añaden horas personales ni aprobaciones de integrantes.

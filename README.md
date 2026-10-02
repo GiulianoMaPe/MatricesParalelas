@@ -109,9 +109,13 @@ pendiente: S7 implementará la campaña real. El piloto se guardará en
 Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
 [pruebas](tests/README.md), [protocolo de medición](docs/protocolo_medicion.md),
 [plan del equipo](docs/sprints/README.md) y [verificación de esta entrega](docs/verificacion-inicial.md).
-Las pruebas de instalación no demuestran corrección matemática. Faltan los
-multiplicadores, argumentos y validación de tamaños, generador común, lectores,
-particionado, cronómetros, comparador completo y campañas de medición.
+Las pruebas de instalación no demuestran corrección matemática. Los generadores
+y lectores ya aplican el contrato común; faltan los multiplicadores, su integración
+con los argumentos, el particionado ejecutable, los cronómetros, el comparador
+completo y las campañas de medición. El contrato fija salida 0 para éxito, 1 para
+errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
+línea propia y N valores por fila. El protocolo distingue cálculo (`kernel_s`)
+de vaciado, reparto y coordinación incluidos en `total_s`.
 
 ## Primer commit y publicación
 

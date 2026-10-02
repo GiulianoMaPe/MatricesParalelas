@@ -9,17 +9,18 @@ import (
 	"unicode/utf8"
 )
 
-var ErrInvalidInput = errors.New("dimension invalida para generar matrices")
 var ErrInvalidFixture = errors.New("fixture invalido")
 var ErrFixtureIO = errors.New("error al leer fixture")
 
 // Generate returns two row-major matrices using the shared uint32 LCG contract.
+// It validates N with the same rules as Matrix.Validate before allocating.
+// Invalid dimensions return ErrInvalidDimension or ErrSizeOverflow and empty
+// matrices. Valid input returns generated matrices, not ErrPending.
 func Generate(n int, seed uint32) (Matrix, Matrix, error) {
-	maxInt := int(^uint(0) >> 1)
-	if n <= 0 || n > maxInt/n || n*n > maxInt/8 {
-		return Matrix{}, Matrix{}, ErrInvalidInput
+	count, err := matrixElementCount(n)
+	if err != nil {
+		return Matrix{}, Matrix{}, err
 	}
-	count := n * n
 	a := Matrix{N: n, Data: make([]float64, count)}
 	b := Matrix{N: n, Data: make([]float64, count)}
 	state := seed
@@ -39,7 +40,10 @@ func nextState(state uint32) uint32 {
 	return 1664525*state + 1013904223
 }
 
-// ReadMatrices parses the shared fixture format from an input stream.
+// ReadMatrices requires N on its own line, then N rows of A and N rows of B.
+// Each row has exactly N decimal values; LF/CRLF and trailing whitespace are
+// accepted. Invalid input returns empty matrices and ErrInvalidFixture; reader
+// failures return ErrFixtureIO. Neither error is an executable exit code.
 func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
 	if reader == nil {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
@@ -51,39 +55,58 @@ func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
 	if !utf8.Valid(content) {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
 	}
-	tokens := strings.FieldsFunc(string(content), func(r rune) bool {
-		return r == ' ' || r == '\t' || r == '\r' || r == '\n'
-	})
-	if len(tokens) == 0 || !isUnsignedDecimal(tokens[0]) {
+	text := strings.ReplaceAll(string(content), "\r\n", "\n")
+	if strings.ContainsRune(text, '\r') {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
 	}
-	dimension, err := strconv.ParseUint(tokens[0], 10, strconv.IntSize)
-	if err != nil || dimension == 0 {
+	lines := strings.Split(text, "\n")
+	header := rowTokens(lines[0])
+	if len(header) != 1 || !isUnsignedDecimal(header[0]) {
+		return Matrix{}, Matrix{}, ErrInvalidFixture
+	}
+	dimension, err := strconv.ParseUint(header[0], 10, strconv.IntSize)
+	maxInt := int(^uint(0) >> 1)
+	if err != nil || dimension == 0 || dimension > uint64(maxInt) {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
 	}
 	n := int(dimension)
-	maxInt := int(^uint(0) >> 1)
-	if n > maxInt/n || n*n > maxInt/16 || len(tokens) != 1+2*n*n {
+	if n > maxInt/n || n*n > maxInt/8 || n > (maxInt-1)/2 || len(lines) < 1+2*n {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
+	}
+	for _, line := range lines[1 : 1+2*n] {
+		if len(rowTokens(line)) != n {
+			return Matrix{}, Matrix{}, ErrInvalidFixture
+		}
+	}
+	for _, line := range lines[1+2*n:] {
+		if strings.Trim(line, " \t") != "" {
+			return Matrix{}, Matrix{}, ErrInvalidFixture
+		}
 	}
 	count := n * n
 	a := Matrix{N: n, Data: make([]float64, count)}
 	b := Matrix{N: n, Data: make([]float64, count)}
-	for i, token := range tokens[1:] {
-		if !isDecimalFloat(token) {
-			return Matrix{}, Matrix{}, ErrInvalidFixture
-		}
-		value, parseErr := strconv.ParseFloat(token, 64)
-		if parseErr != nil || math.IsInf(value, 0) || math.IsNaN(value) {
-			return Matrix{}, Matrix{}, ErrInvalidFixture
-		}
-		if i < count {
-			a.Data[i] = value
-		} else {
-			b.Data[i-count] = value
+	for row, line := range lines[1 : 1+2*n] {
+		for column, token := range rowTokens(line) {
+			if !isDecimalFloat(token) {
+				return Matrix{}, Matrix{}, ErrInvalidFixture
+			}
+			value, parseErr := strconv.ParseFloat(token, 64)
+			if parseErr != nil || math.IsInf(value, 0) || math.IsNaN(value) {
+				return Matrix{}, Matrix{}, ErrInvalidFixture
+			}
+			if row < n {
+				a.Data[row*n+column] = value
+			} else {
+				b.Data[(row-n)*n+column] = value
+			}
 		}
 	}
 	return a, b, nil
+}
+
+func rowTokens(line string) []string {
+	return strings.FieldsFunc(line, func(r rune) bool { return r == ' ' || r == '\t' })
 }
 
 func isUnsignedDecimal(token string) bool {

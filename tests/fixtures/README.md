@@ -115,5 +115,7 @@ Los cinco pares de archivos tienen dimensiones, cantidad de filas y valores
 coherentes con `docs/formato_datos.md`. Los casos cubren producto conocido,
 identidad, matriz cero, valor escalar negativo y dimension impar con valores
 positivos, negativos y cero. No se encontraron resultados esperados incorrectos.
-Esta validacion es manual e independiente de los ejecutables: el lector de
-fixtures, el comparador y los algoritmos de multiplicacion siguen pendientes.
+Esta validacion matematica es manual e independiente de los ejecutables. Los
+lectores de fixtures ya existen como funciones y aplican el contrato por lineas;
+su integracion en la CLI, el comparador y los algoritmos de multiplicacion siguen
+pendientes. Ver [formato comun](../../docs/formato_datos.md).

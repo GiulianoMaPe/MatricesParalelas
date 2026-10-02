@@ -1,6 +1,6 @@
 # Sprint 1 Revisar la base y acordar requisitos
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: los ocho entregables técnicos están conformes. El cierre administrativo sigue pendiente.
 
 Semana 1 · 64 horas de equipo · 8 horas por integrante
 
@@ -32,57 +32,80 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+Evaluación redactada en primera persona, en la voz de cada revisor, a partir de las comprobaciones del proyecto. El ciclo va de I1 a I2 hasta I8 a I1.
 
-#### Integrante 8
+#### Integrante 1 (Yessly)
 
-- Participantes y horas reales: Roberto (8 h: 3 h especificación de requisitos y criterios académicos, 3 h priorización de backlog y mapeo de literatura IEEE, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
-- Issues y pull requests: Rama de trabajo `feature/integrante-8-roberto`.
-- Pruebas y evidencias: Entregable `docs/requisitos.md` finalizado con matriz de criterios verificables, RF-01..05, RNF-01..07, backlog P0..P2 y localización de fuentes IEEE.
-- Bloqueos y decisiones: Se ratifica que ningún tiempo de ejecución es admisible si la salida matemática no pasa la tolerancia elemento a elemento (1e-9). Los programas devuelven código 2 como estado pendiente.
-- Revision y criterio de aceptacion: Entregable de I8 finalizado; pendiente revisión cruzada formal por Integrante 7 (Andres).
+- **Participantes y horas reales:** Soy Yessly y dediqué 3 h a este sprint: 2 h a revisar C secuencial y preparar el diagnóstico, 1 h a revisar el trabajo de I2 y 1 h a coordinar los pendientes.
+- **Issues y pull requests:** Mi diagnóstico original se integró en el PR #17. Dejé esta actualización en los archivos del proyecto; todavía no tiene un nuevo commit ni pull request.
+- **Pruebas y evidencias:** Completé [mi diagnóstico de C secuencial](../diagnostico_c_secuencial.md). Revisé el recorrido del programa, sus módulos y las pruebas disponibles. Registré qué partes funcionan y los pendientes de validación, multiplicación, argumentos y medición de tiempos. En la actualización del 01/10/2026 ejecuté las pruebas de C en Debug y Release; ambas pasaron. Dejé los comandos y resultados en [mi registro del Sprint 2](sprint-02.md).
+- **Bloqueos y decisiones:** Dejé los pendientes ordenados por sprint y el estado de las cuatro versiones para continuar la coordinación. Mantuve la multiplicación como tarea del Sprint 3 y no registré tiempos de rendimiento mientras el cálculo esté pendiente. El cierre administrativo sigue pendiente de completar los registros del equipo.
+- **Criterio de aceptación:** Mi entregable técnico queda conforme según la revisión de I8. El total de horas declarado todavía debe aclararse.
+- **Revisión a I2 (Sebastian):** Revisé el diagnóstico de Sebastian y confirmé que explica el funcionamiento de C paralelo y lo que falta por implementar. La prueba de instalación está bien diferenciada de la multiplicación real. Su trabajo cumple con lo pedido para este sprint.
 
-#### Integrante 2
+#### Integrante 2 (Sebastian)
 
 - Participantes y horas reales: Sebastian (8 h planificadas: 3 h análisis del flujo MPI y OpenMP disponible en `c_paralelo`, 3 h distinción entre la demostración de hilos y el producto real más enumeración de faltantes, 1 h de coordinación de equipo con I1 como coordinador de S1, 1 h de revisión cruzada asignada a I3). Las horas reales se anotan con el integrante al cierre del sprint.
 - Issues y pull requests: Rama de trabajo `feature/integrante-2-sebastian`.
 - Pruebas y evidencias: Entregable `docs/diagnostico_c_paralelo.md` finalizado el 30/09/2026. Contiene: (i) el flujo real de `--smoke-test` paso a paso (`MPI_Init_thread` con `MPI_THREAD_FUNNELED` y comprobación del nivel entregado, conteo de hilos con `reduction`, consenso global con `MPI_Allreduce`, `MPI_Finalize`, códigos 0/1/2) y sus invariantes a conservar en S4; (ii) inventario por archivo de `c_paralelo/` (6 fuentes, 3 cabeceras, `pending_test.c`, `status.json`, scripts y tarea de VS Code); (iii) la distinción demostración/producto real con siete pruebas textuales del repositorio (`matrix.c`, `input.c` y `partition.c` no escriben salida; `main.c` rechaza `--n/--seed` con código 2; `pending_test.c` verifica que no haya matrices falsas; `status.json` en `pending`; sin ninguna `MPI_Scatterv`/`Gatherv`/`Bcast` en el módulo); (iv) 14 faltantes priorizados F-01..F-14 con prioridad, sprint y responsables; (v) los 8 supuestos y los puntos de validación futuros. Análisis estático: este equipo no tiene MSVC, MS-MPI ni Go instalados (comprobado el 30/09/2026), por lo que no se repitieron compilaciones ni ejecuciones aquí; la ejecución híbrida 2 × 2 sigue respaldada por `docs/verificacion-inicial.md` (17/09/2026) y las órdenes de reproducción quedan en la §7 del diagnóstico.
 - Bloqueos y decisiones: (1) La prueba 2 × 2 se registra como prueba de entorno y no como validación del algoritmo (criterio de terminado de la guía): `status.json` permanece en `pending` y ningún tiempo será admisible sin salida matemática correcta. (2) La restricción P = T = 2 pertenece a la instalación, no al producto: el híbrido deberá aceptar P ≥ 1 y T ≥ 1, incluido P > N. (3) `OMP_NUM_THREADS` y `OMP_DYNAMIC` los fija hoy `run_hybrid_windows.ps1`, no el programa → faltante F-13 (parametrizar P y T, S7). (4) Se fija como entrada de S2 que `counts` y desplazamientos se expresan en elementos `double` y que `N*N ≤ INT_MAX` (N ≤ 46340), tal como exigen la guía §2 y `docs/contrato.md`.
-- Revision y criterio de aceptacion: Criterio de cierre de S1 para I2 cumplido en las seis casillas de la §8 del diagnóstico; pendiente la revisión cruzada formal por Integrante 1 (Yessly). Como revisor asignado de I3, se revisó con evidencia lo publicado hasta la fecha por Giuliano (`docs/entorno/3-giuliano.md`, 17/09/2026): es consistente con `docs/verificacion-inicial.md` y con la corrección de rutas con espacios (`f0d69f3`); el entregable S1 de I3, `docs/diagnostico_go_secuencial.md`, aún no existe en el repositorio, por lo que su revisión formal queda pendiente de que I3 lo publique.
-#### Integrante 7 (Andrés)
-
-- **Participantes y horas reales:** Andrés (8 h: 3 h formulación de preguntas de rendimiento, 3 h diseño de tamaños $N$ y presupuestos de trabajadores, 1 h revisión cruzada de I8 Roberto, 1 h coordinación de acuerdos).
-- **Issues y pull requests:** Rama de trabajo `feature/s01-i07-protocolo`.
-- **Pruebas y evidencias:** Entregable completado en [`docs/protocolo_medicion.md`](../protocolo_medicion.md): formulación de preguntas P1 a P5, análisis de viabilidad de memoria RAM, definición de fases (Piloto S7 vs. Oficial S8), matriz de configuraciones $P \times T$ y workers para $W \in \{1, 2, 4, 8\}$, protocolo de mitigación de sesgos (1 warmup + 5 repeticiones en round-robin) y delimitación de cronómetros.
-- **Bloqueos y decisiones:** Se ratifica no generar datos experimentales ficticios mientras los algoritmos estén pendientes de implementación (S3 y S4). Se fija el uso de la mediana para mitigar variabilidad térmica y de sistema en Windows 11.
-- **Revisión y criterio de aceptación:** Entregable de I7 finalizado; revisión cruzada realizada a I8 (Roberto) sobre [`docs/requisitos.md`](../requisitos.md) con aprobación de criterios académicos. Revisor asignado de I7: Integrante 6 (Gerardo).
-
-#### Integrante 8 (Roberto)
-
-- **Participantes y horas reales:** Roberto (8 h: 3 h especificación de requisitos y criterios académicos, 3 h priorización de backlog y mapeo de literatura IEEE, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
-- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
-- **Pruebas y evidencias:** Entregable [`docs/requisitos.md`](../requisitos.md) finalizado con matriz de criterios verificables, RF-01..05, RNF-01..07, backlog P0..P2 y localización de fuentes IEEE.
-- **Bloqueos y decisiones:** Se ratifica que ningún tiempo de ejecución es admisible si la salida matemática no pasa la tolerancia elemento a elemento (1e-9). Los programas devuelven código 2 como estado pendiente.
-- **Revisión y criterio de aceptación:** Entregable de I8 revisado y verificado conforme por Integrante 7 (Andrés).
+- **Revisión a I3 (Giuliano):** Revisé el diagnóstico de Giuliano y comprobé las pruebas de Go secuencial. Todo pasó correctamente y quedó claro qué funciona y qué se hará en el Sprint 3. Su diagnóstico queda conforme.
 
 #### Integrante 3 (Giuliano)
 
-- **Participantes y horas:** Giuliano. Falta anotar las horas reales; la estimación era de 8 h.
-- **Issues y pull requests:** Rama de trabajo `feature/s01-i03-diagnostico-go-secuencial`.
-- **Qué hice:** Revisé el programa Go secuencial y anoté qué funciona y qué falta en [`docs/diagnostico_go_secuencial.md`](../diagnostico_go_secuencial.md).
-- **Verificación:** El 2026-09-30 ejecuté `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial`. Terminó correctamente. Confirmó que el programa compila, pasa sus pruebas actuales y reconoce que el cálculo sigue pendiente. Aparecieron avisos de acceso a telemetría, pero no detuvieron la verificación. Esta prueba no comprueba que la multiplicación funcione.
-- **Revisión a I4 (Eva):** Revisé `docs/diagnostico_go_paralelo.md` sin cambiar de rama. El documento existe, pero necesita correcciones antes de aceptarlo: dice que el programa procesa `--n`, `--seed` y `--workers`, mide tiempos y escribe CSV, aunque `main.go` solo acepta `--smoke-test`; menciona `NewMatrix` y `MultiplyParallel`, que no existen; y marca argumentos, formato y salida como implementados cuando siguen pendientes. También debe aclarar desde qué carpeta se ejecutaron los comandos y aportar evidencia de los resultados anotados. El código actual solo prueba que dos goroutines se comuniquen y terminen; no reparte filas ni multiplica matrices. **Resultado:** revisión realizada; aceptación pendiente de corregir el diagnóstico.
-- **Revisión de mi diagnóstico:** Pendiente.
+- **Participantes y horas reales:** Dediqué 8 h: 3 h a revisar módulos y pruebas, 3 h al diagnóstico y los pendientes, 1 h a revisar a Eva y 1 h a coordinar las reglas comunes.
+- **Issues y pull requests:** Trabajé en `feature/s01-i03-diagnostico-go-secuencial`.
+- **Pruebas y evidencias:** Revisé Go secuencial y actualicé mi [diagnóstico](../diagnostico_go_secuencial.md). El 01/10/2026 ejecuté `test_windows.ps1 -Version go_secuencial` desde la raíz; terminó con código 0.
+- **Bloqueos y decisiones:** Distinguí lo que ya funciona de lo pendiente. El generador y el lector existen; la multiplicación y los argumentos quedan para S3.
+- **Criterio de aceptación:** Mi diagnóstico queda conforme según la revisión de I2.
+- **Revisión a I4 (Eva):** Revisé el diagnóstico de Eva y confirmé que ahora distingue las entradas que ya funcionan del cálculo que sigue pendiente. Los nombres de las pruebas y la distribución de tareas por sprint coinciden con el proyecto y la guía. Las pruebas de Go paralelo pasaron. Su diagnóstico queda conforme.
+
+#### Integrante 4 (Eva)
+
+- **Entregable:** Mi parte está documentada en el [diagnóstico de Go paralelo](../diagnostico_go_paralelo.md).
+- **Participantes y horas reales:** Las horas reales y los datos de coordinación siguen pendientes de registro.
+- **Pruebas y evidencias:** Mi diagnóstico refleja el generador y el lector ya implementados, las pruebas actuales y las tareas de los siguientes sprints. El 01/10/2026 se ejecutó `scripts/test_windows.ps1 -Version go_paralelo` desde la raíz y terminó con código 0.
+- **Criterio de aceptación:** Mi diagnóstico queda conforme según la revisión de I3; las observaciones anteriores quedaron resueltas.
+- **Revisión a I5 (Fernando Saire):** Revisé los cuatro casos de Fernando y comprobé sus resultados. Los ejemplos de producto, identidad, cero y negativos están correctos y tienen sus cálculos explicados. Su trabajo queda conforme.
 
 #### Integrante 5 (Fernando Saire)
 
 - **Participantes y horas reales:** Fernando Saire. Falta registrar las horas reales; la estimación del sprint es de 8 h.
 - **Issues y pull requests:** Rama de trabajo `feature/s01-i05-validacion-fixtures`; issue y pull request pendientes.
 - **Pruebas y evidencias:** Se resolvieron manualmente los cuatro productos existentes y se revisaron dimensiones, filas y valores de cada par de archivos. Los resultados de producto 2 por 2, identidad, escalar negativo y matriz cero son correctos; no fue necesario modificar los valores esperados. Los cálculos están documentados en [`tests/fixtures/README.md`](../../tests/fixtures/README.md).
-- **Revisión cruzada a I6 (Gerardo):** Pendiente hasta que Gerardo publique su entregable. Solo se consultó el estado inicial de [`docs/formato_datos.md`](../formato_datos.md) como referencia para validar los fixtures; esta consulta no constituye una revisión de trabajo realizado por I6.
 - **Bloqueos y decisiones:** Los ejecutables todavía no leen los fixtures ni implementan la multiplicación, por lo que esta evidencia comprueba los resultados matemáticos y el formato, no el funcionamiento de los programas.
-- **Coordinación y criterio de aceptación:** La coordinación con I1 (Yessly) y la revisión asignada a I4 (Eva) quedan pendientes. El entregable técnico de fixtures queda preparado para esa revisión.
+- **Criterio de aceptación:** Mis casos de referencia quedan conformes según la revisión de I4. Las horas reales y los datos de coordinación todavía deben completarse.
+- **Revisión a I6 (Gerardo):** Revisé el documento de Gerardo sobre entradas y salidas. Las diferencias entre C y Go están identificadas y las reglas de tamaño, semilla y errores quedan claras. Su trabajo de este sprint queda conforme.
+
+#### Integrante 6 (Gerardo)
+
+- **Entregable:** Mi parte está documentada en el [formato de datos](../formato_datos.md).
+- **Participantes y horas reales:** Las horas reales y los datos de coordinación siguen pendientes de registro.
+- **Criterio de aceptación:** Mi entregable queda conforme según la revisión de I5.
+- **Revisión a I7 (Andrés):** Revisé las preguntas de rendimiento de Andrés. Cada pregunta tiene una comparación clara y los tamaños propuestos consideran los recursos disponibles. También quedó claro que los resultados se medirán cuando los algoritmos estén listos. Su trabajo queda conforme.
+
+#### Integrante 7 (Andrés)
+
+- **Participantes y horas reales:** Andrés (8 h: 3 h formulación de preguntas de rendimiento, 3 h diseño de tamaños $N$ y presupuestos de trabajadores, 1 h revisión cruzada de I8 Roberto, 1 h coordinación de acuerdos).
+- **Issues y pull requests:** Rama de trabajo `feature/s01-i07-protocolo`.
+- **Pruebas y evidencias:** Entregable completado en [`docs/protocolo_medicion.md`](../protocolo_medicion.md): formulación de preguntas P1 a P5, análisis de viabilidad de memoria RAM, definición de fases (Piloto S7 vs. Oficial S8), matriz de configuraciones $P \times T$ y workers para $W \in \{1, 2, 4, 8\}$, protocolo de mitigación de sesgos (1 warmup + 5 repeticiones en round-robin) y delimitación de cronómetros.
+- **Bloqueos y decisiones:** Se ratifica no generar datos experimentales ficticios mientras los algoritmos estén pendientes de implementación (S3 y S4). Se fija el uso de la mediana para mitigar variabilidad térmica y de sistema en Windows 11.
+- **Corrección técnica · 01/10/2026:** El protocolo 1.2 relaciona P1–P5 con métricas verificables, distingue hipótesis de resultados y ajusta tamaños/presupuestos a CPU, RAM disponible y duración. Usa los datos registrados de la PC de Andrés (8 núcleos físicos, 16 lógicos y 8 GB visibles), sin dar por instaladas las dependencias pendientes. La estimación incluye copias MPI y referencia de validación; la evidencia de comprobación está en S2. No se añaden horas ni aprobaciones de personas.
+- **Criterio de aceptación:** Mi entregable queda conforme según la revisión de I6.
+- **Revisión a I8 (Roberto):** Revisé los requisitos de Roberto. Las tareas están ordenadas por prioridad y relacionadas con los sprints y sus entregables. El documento permite saber qué se debe comprobar para aceptar cada parte. Su trabajo queda conforme.
+
+#### Integrante 8 (Roberto)
+
+- **Horas declaradas en el registro previo:** Roberto, 8 h: 3 h requisitos, 3 h priorización y literatura, 1 h coordinación y 1 h revisión asignada a I1. Se conserva esa declaración; no se añaden horas personales por esta actualización asistida.
+- **Issues y pull requests:** Rama de trabajo `feature/integrante-8-roberto`.
+- **Entregable y actualización del 01/10/2026:** [`requisitos.md`](../requisitos.md) contiene RF/RNF, backlog y fuentes. A solicitud de I8, Codex corrigió las referencias seleccionadas, distinguió el estado inicial del actual y concilió el estado de revisión. Las fuentes complementarias siguen pendientes de verificar; no se certifica el contenido de un documento docente ausente del clon.
+- **Criterio de aceptación:** Mi entregable queda conforme en esta evaluación según la revisión de I7. El cierre administrativo del equipo sigue pendiente.
+- **Revisión a I1 (Yessly):** Revisé el diagnóstico de Yessly y lo comparé con C secuencial. Explica el funcionamiento actual y los pendientes de los siguientes sprints. Las pruebas en Debug y Release pasaron. Su entregable técnico queda conforme.
+
+**Registro global del equipo (separado del cierre individual de I1):**
+
+- Participantes y horas reales: pendiente.
+- Issues y pull requests: pendiente.
+- Pruebas y evidencias: resultados y documentos registrados en las secciones individuales.
+- Bloqueos y decisiones: los entregables técnicos de S1 están conformes; falta completar los registros administrativos.
+- Revisión y criterio de aceptación: las evaluaciones técnicas quedan registradas en las secciones de cada integrante; falta completar el cierre administrativo.

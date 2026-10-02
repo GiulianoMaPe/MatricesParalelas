@@ -11,8 +11,8 @@
  *  Estado: DISENO. Este archivo es el entregable de Sprint 2 ("Diseno MPI con
  *  ejemplos verificables"). La implementacion entra en Sprint 4
  *  (c_paralelo/src/partition.c, junto con Scatterv/Gatherv de I1); hasta entonces
- *  partition_rows() y partition_split() devuelven PARTITION_PENDING (2), igual
- *  que el resto del modulo.  Ver docs/diagnostico_c_paralelo.md (seccion 6) y
+ *  partition_rows() devuelve PARTITION_PENDING (2); partition_split() solo
+ *  esta declarada y tendra implementacion en S4. Ver docs/diagnostico_c_paralelo.md (seccion 6) y
  *  la evidencia de ejecucion en docs/sprints/sprint-02.md.
  *
  *  NOTA DE CODIGO: este fichero es ASCII a proposito (regla de todos los .c/.h
@@ -42,8 +42,8 @@
  *                                         (filas * N, con comprobacion de los
  *                                         limites enteros de las API MPI).
  *
- *  Ambas son funciones puras: NO llaman a MPI, no usan hilos, no reservan
- *  memoria y no tienen efectos secundarios. Por eso se pueden probar sin
+ *  Ambas son deterministas: NO llaman a MPI, no usan hilos ni reservan
+ *  memoria. Solo escribiran en los vectores del llamador. Se pueden probar sin
  *  inicializar MPI y con cualquier P, incluidos los casos donde P > N.
  *
  * ----------------------------------------------------------------------------
@@ -81,8 +81,9 @@
  *
  *      - n >= 1 y processes >= 1                 (contrato: N > 0, P >= 1)
  *      - punteros no nulos
- *      - n * n sin desbordar size_t
- *      - n * n <= INT_MAX     ->  N <= 46340      (los counts y desplazamientos
+ *      - partition_split: n <= INT_MAX (filas e indices se guardan en int)
+ *      - partition_rows: n * n sin desbordar size_t
+ *      - partition_rows: n * n <= INT_MAX -> N <= 46340 (counts y desplazamientos
  *                                                  de las colectivas variables
  *                                                  son int en MPI)
  *
@@ -175,7 +176,7 @@
  *      for (int i = 0; i < filas[rank]; ++i) { ... }   // filas locales de C
  *
  *      MPI_Gatherv(local_c, filas[rank] * N, MPI_DOUBLE,
- *                  cnt, dsp, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+ *                  C, cnt, dsp, MPI_DOUBLE, 0, MPI_COMM_WORLD);
  *
  *  Notas de diseno ligadas a este uso:
  *   - Los vectores los reserva el llamador con "processes" entradas; nadie los
@@ -222,7 +223,8 @@
  * Fase 1: reparto en filas (unidades de fila, independiente de MPI).
  *   rows[i]        filas asignadas al proceso i       (0 <= rows[i] <= n)
  *   first_rows[i]  indice global de su primera fila   (0 <= first_rows[i] <= n)
- * Devuelve PARTITION_OK, PARTITION_INVALID (n < 1, processes < 1, puntero nulo)
+ * Devuelve PARTITION_OK, PARTITION_INVALID (n < 1, n > INT_MAX,
+ * processes < 1, puntero nulo)
  * o PARTITION_PENDING.  El llamador reserva "processes" entradas en cada vector.
  */
 int partition_split(size_t n, int processes, int *rows, int *first_rows);

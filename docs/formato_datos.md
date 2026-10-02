@@ -5,12 +5,12 @@
 Texto UTF-8 sin BOM, separador decimal punto, espacios entre valores; sin comentarios ni encabezados. 
 * **Estructura de entrada:** Primera línea: entero positivo N. A continuación N filas de la matriz A y N filas de la matriz B, exactamente N números por fila. 
 * **Salida esperada:** N seguido de N filas de la matriz C (resultado).
-* **Manejo de caracteres:** Aceptar LF y CRLF, espacios finales y salto de línea final. 
-* **Validación estricta:** Rechazar valores extra, faltantes, dimensiones inválidas, NaN e infinitos. (El lector aún no está implementado).
+* **Manejo de caracteres:** Aceptar LF y CRLF, espacios/tabuladores por línea, blanco al final y ausencia de salto final; rechazar líneas vacías dentro de las matrices.
+* **Validación estricta:** Rechazar valores extra, faltantes, dimensiones inválidas, NaN e infinitos. Los cuatro lectores aplican estas reglas; su integración en la CLI sigue pendiente.
 
 ## 2. Vectores de Control (Fixtures compartidos)
 
-Actualmente existen casos de prueba preparados a mano, **no resultados producidos por los esqueletos**. Faltan el lector, el comparador, N impar, pruebas de error y particiones no divisibles.
+Actualmente existen casos de prueba preparados a mano, **no resultados producidos por los esqueletos**. Hay lectores, pruebas de entradas malformadas y el fixture impar3. El multiplicador, el comparador y las pruebas de particiones ejecutables siguen pendientes.
 
 **Ejemplo de entrada:** `tests/fixtures/producto2.input.txt`:
 
@@ -26,13 +26,13 @@ Actualmente existen casos de prueba preparados a mano, **no resultados producido
     19 22
     43 50
 
-*(Nota: También hay casos `escalar` negativo (N=1), `identidad` y `cero`).*
+*(Nota: También hay casos `escalar` negativo (N=1), `identidad`, `cero` e `impar3`).*
 
 ---
 
-## 3. Sprint 1: Matriz de Diferencias (Estado Actual del Código)
+## 3. Sprint 1: Matriz de diferencias de la base recibida
 
-Esta tabla documenta el estado actual y las discrepancias detectadas entre las implementaciones de C y Go durante la fase de auditoría. Se observa que ambas implementaciones se encuentran en un estado base (*stub*), pendientes de desarrollo de lógica capaz de procesar el formato arriba mencionado.
+Esta tabla conserva la fotografía histórica de la base recibida en S1. No describe el código actual: posteriormente se implementaron los generadores y lectores. El contrato vigente es la sección 4 y `docs/contrato.md`.
 
 | Criterio | Implementación en C | Implementación en Go | Discrepancia / Problema detectado |
 | :--- | :--- | :--- | :--- |
@@ -55,20 +55,31 @@ Este contrato define el comportamiento que deberán compartir las implementacion
 - Las entradas son dos matrices densas cuadradas A y B, ambas de dimensión `N × N`, con `N > 0`.
 - Los elementos se representan como `double` en C y `float64` en Go.
 - Los elementos se ordenan por filas. En almacenamiento contiguo, la posición `i*N+j` corresponde a la fila `i` y columna `j`, con índices internos desde cero.
-- Antes de reservar memoria o calcular índices, validar que `N*N` y el tamaño en bytes caben en los tipos y límites de la plataforma.
+- Antes de reservar memoria o calcular índices, validar que `N*N` y sus bytes caben en el entero con signo de la plataforma (`PTRDIFF_MAX` en C e `int` en Go). MPI añade los límites de `partition.h`. La validez aritmética no garantiza RAM disponible.
 - La multiplicación lee A y B sin modificarlas y produce la matriz C, también de dimensión `N × N`.
 
 ### 4.2 Entrada desde archivo
 
-El archivo es texto UTF-8 sin BOM, sin encabezados ni comentarios. Los tokens se separan mediante uno o más espacios, tabuladores, LF o CRLF.
+El archivo es texto UTF-8 sin BOM, sin encabezados ni comentarios. Se aceptan
+LF y CRLF, incluso mezclados; un CR aislado no es un salto válido.
 
-- El primer token es `N`: un entero decimal positivo.
-- Después siguen exactamente `N*N` valores de A y luego `N*N` valores de B, ambas en orden por filas.
-- `N` se reconoce como primer token; no es obligatorio que ocupe una línea completa.
-- Se permiten espacios en blanco al final del archivo y que el último token termine con o sin salto de línea.
-- Los valores usan punto decimal y pueden llevar signo opcional. Se aceptan enteros, decimales y notación científica decimal; se rechazan tokens que no sean números decimales válidos.
-- Todos los valores deben ser finitos al convertirse a `double`/`float64`. Rechazar NaN e infinitos.
-- Rechazar dimensión inválida, valores faltantes o extra, archivo vacío, filas incompletas y errores de lectura.
+- La primera línea contiene únicamente `N`, un entero decimal positivo sin signo.
+- Siguen exactamente N líneas de A y N líneas de B, con exactamente N valores por línea.
+- Los tokens de una línea se separan por uno o más espacios o tabuladores ASCII.
+  Se permiten espacios/tabuladores iniciales y finales.
+- No se permiten líneas vacías dentro de las matrices ni datos de dos filas en una
+  misma línea. N debe ocupar su propia línea. Las líneas vacías o de blanco solo
+  se permiten después de la última fila; el salto de línea final es opcional.
+- Los valores usan punto decimal y signo opcional. Se aceptan enteros, decimales
+  y notación científica decimal; no hexadecimal, NaN, infinito ni comentarios.
+- La conversión a double/float64 debe dar un valor finito. Se aceptan subnormales
+  y underflow redondeado a cero; overflow a infinito se rechaza en ambos lenguajes.
+- Rechazar archivo vacío, BOM, caracteres ajenos a la gramática (incluido NUL),
+  dimensión inválida/no representable, filas incompletas, valores extra o faltantes
+  y fallos de lectura. Los lectores devuelven el error sin matrices parciales.
+- Los códigos del ejecutable son los del contrato común: 0 éxito, 1 error y
+  2 pendiente. Los errores internos del lector siempre se convierten a 1.
+
 
 Ejemplo válido:
 
@@ -152,9 +163,9 @@ C y Go deben reproducir los estados y valores de A y B en el orden indicado. El 
 
 La salida de una matriz usa texto UTF-8 sin encabezados ni comentarios: `N` en la primera línea, seguido por `N` filas con `N` valores por fila. Los valores se separan por espacios y usan punto decimal.
 
-Para conservar la precisión, imprimir cada valor con una representación decimal que permita recuperarlo como el mismo valor `float64`/`double` al volver a leerlo. Se acepta una línea final LF, pero no es obligatoria.
+Para conservar la precisión, imprimir cada valor con una representación decimal que permita recuperarlo como el mismo valor `float64`/`double` al volver a leerlo. El escritor usa LF; el lector acepta también CRLF. El salto final no es obligatorio. La misma gramática de líneas se aplica a C: primera línea N y exactamente N filas de resultado.
 
-Los mensajes de error y diagnósticos van a `stderr`. En caso de error, la ejecución termina con código distinto de cero y no presenta una matriz parcial como resultado válido. Si se escribe a un archivo de salida, un fallo no debe dejar un archivo que parezca un resultado completo.
+Los mensajes de error y diagnósticos van a `stderr`. En caso de error, la ejecución termina con código 1 (2 solo si la operación está pendiente) y no presenta una matriz parcial como resultado válido. Si se escribe a un archivo de salida, un fallo no debe dejar un archivo que parezca un resultado completo.
 
 ### 4.7 Comparación de resultados
 
@@ -174,9 +185,9 @@ Ambas implementaciones deben cubrir los siguientes casos:
 - Semillas límite aceptadas: `0` y `4294967295`.
 - Semillas inválidas rechazadas: `-1` y `4294967296`.
 - Dimensiones: `N=1` y `N=2` aceptadas; `N=0`, dimensión negativa y entrada no entera rechazadas.
-- Fixtures existentes: `producto2`, `escalar`, `identidad` y `cero`, comparados con sus resultados esperados.
+- Fixtures existentes: `producto2`, `escalar`, `identidad`, `cero` e `impar3`, comparados con sus resultados esperados.
 - Lectura: aceptar fixture con LF y CRLF, con o sin espacios finales y con o sin salto de línea al final.
-- Entradas malformadas: archivo vacío, dimensión inválida, valor faltante, valor extra, token no numérico, NaN, infinito y archivo ilegible.
+- Entradas malformadas: archivo vacío, dimensión inválida, valor faltante/extra, filas fusionadas o divididas, línea interna vacía, BOM, NUL, CR aislado, token no numérico, NaN, infinito y archivo ilegible.
 
 ### 4.9 Criterios de aceptación del entregable
 
@@ -185,7 +196,7 @@ El contrato de Sprint 2 se considera listo cuando:
 1. Las reglas de entrada, generación, salida, errores y comparación están documentadas sin ambigüedades.
 2. Los vectores de control tienen un resultado esperado explícito y compartido por C y Go.
 3. Las implementaciones C y Go producen las mismas matrices A y B para el vector de control.
-4. Los fixtures y los casos de error mínimos se ejecutan en ambas implementaciones y sus resultados quedan registrados.
+4. Los lectores y generadores ejecutan los fixtures/casos de error en ambos lenguajes y los resultados quedan registrados. La comparación de productos corresponde a S3, cuando exista el multiplicador.
 5. Una revisión cruzada confirma que ambos lenguajes siguen este mismo contrato.
 
-**Estado de implementación/verificación:** pendiente de registrar por el equipo. No marcar los puntos 3 y 4 como completados hasta ejecutar y documentar las pruebas en C y Go.
+**Verificación técnica del ajuste (2026-10-01):** la batería disponible de los cuatro módulos pasó en Debug, incluidos vectores del generador y los nuevos casos del formato por líneas. La evidencia se registra en `docs/sprints/sprint-02.md`, apartado «Unificación técnica del contrato». La revisión cruzada y el cierre del equipo siguen pendientes; no se validan productos hasta implementar el cálculo.

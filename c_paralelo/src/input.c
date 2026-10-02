@@ -1,10 +1,8 @@
 #include "input.h"
 #include "matrix.h"
-#include <errno.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <string.h>
 
 uint32_t input_next_state(uint32_t *state) {
     if (state == NULL) {
@@ -14,43 +12,57 @@ uint32_t input_next_state(uint32_t *state) {
     return *state;
 }
 
-static int is_ascii_space(int ch) {
-    return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
-}
-
-static int read_token(FILE *stream, char **token, size_t *capacity) {
-    int ch;
+/* 1 = line read, 0 = EOF, -1 = I/O, -2 = allocation, -3 = format.
+ * Only LF/CRLF terminate a line. NUL and non-ASCII bytes cannot be part of the
+ * decimal fixture grammar, so reject them before using C string functions. */
+static int read_line(FILE *stream, char **line, size_t *capacity) {
     size_t length = 0;
-    do {
+    int ch;
+    for (;;) {
+        char *resized;
         ch = fgetc(stream);
         if (ch == EOF) {
-            return ferror(stream) ? -1 : 0;
+            if (ferror(stream)) return -1;
+            if (length == 0) return 0;
+            break;
         }
-    } while (is_ascii_space(ch));
-
-    do {
-        char *resized;
+        if (ch == '\n') break;
+        if (ch == '\r') {
+            ch = fgetc(stream);
+            if (ch == EOF && ferror(stream)) return -1;
+            if (ch != '\n') return -3;
+            break;
+        }
+        if (ch == 0 || ch > 127) return -3;
         if (length + 1 >= *capacity) {
-            size_t next_capacity = *capacity == 0 ? 32 : *capacity * 2;
-            if (next_capacity <= *capacity) {
-                return -2;
-            }
-            resized = (char *)realloc(*token, next_capacity);
-            if (resized == NULL) {
-                return -2;
-            }
-            *token = resized;
+            size_t next_capacity;
+            if (*capacity > SIZE_MAX / 2) return -2;
+            next_capacity = *capacity == 0 ? 32 : *capacity * 2;
+            resized = (char *)realloc(*line, next_capacity);
+            if (resized == NULL) return -2;
+            *line = resized;
             *capacity = next_capacity;
         }
-        (*token)[length++] = (char)ch;
-        ch = fgetc(stream);
-    } while (ch != EOF && !is_ascii_space(ch));
-
-    if (ch == EOF && ferror(stream)) {
-        return -1;
+        (*line)[length++] = (char)ch;
     }
-    (*token)[length] = '\0';
+    /* Empty lines also need a terminating NUL. */
+    if (*capacity == 0) {
+        *line = (char *)malloc(1);
+        if (*line == NULL) return -2;
+        *capacity = 1;
+    }
+    (*line)[length] = '\0';
     return 1;
+}
+
+static char *next_row_token(char **cursor) {
+    char *token;
+    while (**cursor == ' ' || **cursor == '\t') ++*cursor;
+    if (**cursor == '\0') return NULL;
+    token = *cursor;
+    while (**cursor != '\0' && **cursor != ' ' && **cursor != '\t') ++*cursor;
+    if (**cursor != '\0') *(*cursor)++ = '\0';
+    return token;
 }
 
 static int parse_dimension(const char *token, size_t *dimension) {
@@ -121,52 +133,50 @@ static int parse_value(const char *token, double *value) {
     if (!is_decimal_float(token)) {
         return 0;
     }
-    errno = 0;
     parsed = strtod(token, &end);
-    if (errno == ERANGE || *end != '\0' || !isfinite(parsed)) {
+    if (*end != '\0' || !isfinite(parsed)) {
         return 0;
     }
     *value = parsed;
     return 1;
 }
 
-static int token_status(int status) {
+static int line_status(int status) {
     if (status == -2) {
         return INPUT_NO_MEMORY;
     }
-    if (status < 0) {
+    if (status == -1) {
         return INPUT_IO_ERROR;
     }
     return INPUT_INVALID;
 }
 
 int input_read(FILE *stream, double **a, double **b, size_t *n) {
-    char *token = NULL;
-    size_t token_capacity = 0;
-    size_t dimension, count, i;
-    double *matrix_a = NULL;
-    double *matrix_b = NULL;
+    char *line = NULL, *cursor, *token;
+    size_t line_capacity = 0;
+    size_t dimension, count, row, column;
+    double *matrix_a = NULL, *matrix_b = NULL;
     int status, result = INPUT_INVALID;
 
-    if (stream == NULL || a == NULL || b == NULL || n == NULL) {
+    if (stream == NULL || a == NULL || b == NULL || n == NULL || a == b) {
         return INPUT_INVALID;
     }
     *a = NULL;
     *b = NULL;
     *n = 0;
 
-    status = read_token(stream, &token, &token_capacity);
+    status = read_line(stream, &line, &line_capacity);
     if (status != 1) {
-        result = token_status(status);
+        result = line_status(status);
         goto done;
     }
-    if (!parse_dimension(token, &dimension) || dimension > SIZE_MAX / dimension) {
-        goto done;
-    }
+    cursor = line;
+    token = next_row_token(&cursor);
+    if (token == NULL || !parse_dimension(token, &dimension) ||
+        next_row_token(&cursor) != NULL) goto done;
+    if (dimension > SIZE_MAX / dimension || dimension > SIZE_MAX / 2) goto done;
     count = dimension * dimension;
-    if (count > SIZE_MAX / sizeof(double) || count > SIZE_MAX / 2) {
-        goto done;
-    }
+    if (count > (size_t)PTRDIFF_MAX / sizeof(double)) goto done;
     matrix_a = (double *)malloc(count * sizeof(double));
     matrix_b = (double *)malloc(count * sizeof(double));
     if (matrix_a == NULL || matrix_b == NULL) {
@@ -174,28 +184,31 @@ int input_read(FILE *stream, double **a, double **b, size_t *n) {
         goto done;
     }
 
-    for (i = 0; i < 2 * count; ++i) {
-        double value;
-        status = read_token(stream, &token, &token_capacity);
+    for (row = 0; row < 2 * dimension; ++row) {
+        double *matrix = row < dimension ? matrix_a : matrix_b;
+        size_t local_row = row < dimension ? row : row - dimension;
+        status = read_line(stream, &line, &line_capacity);
         if (status != 1) {
-            result = token_status(status);
+            result = line_status(status);
             goto done;
         }
-        if (!parse_value(token, &value)) {
-            goto done;
+        cursor = line;
+        for (column = 0; column < dimension; ++column) {
+            token = next_row_token(&cursor);
+            if (token == NULL || !parse_value(token, &matrix[local_row * dimension + column])) {
+                goto done;
+            }
         }
-        if (i < count) {
-            matrix_a[i] = value;
-        } else {
-            matrix_b[i - count] = value;
-        }
+        if (next_row_token(&cursor) != NULL) goto done;
     }
-    status = read_token(stream, &token, &token_capacity);
+    while ((status = read_line(stream, &line, &line_capacity)) == 1) {
+        cursor = line;
+        if (next_row_token(&cursor) != NULL) goto done;
+    }
     if (status != 0) {
-        result = status < 0 ? token_status(status) : INPUT_INVALID;
+        result = line_status(status);
         goto done;
     }
-
     *a = matrix_a;
     *b = matrix_b;
     *n = dimension;
@@ -204,7 +217,7 @@ int input_read(FILE *stream, double **a, double **b, size_t *n) {
     result = 0;
 
 done:
-    free(token);
+    free(line);
     free(matrix_a);
     free(matrix_b);
     return result;
@@ -218,7 +231,7 @@ int input_generate(double *a, double *b, size_t n, uint32_t seed) {
         return INPUT_INVALID;
     }
     count = n * n;
-    if (count > SIZE_MAX / sizeof(*a)) {
+    if (count > (size_t)PTRDIFF_MAX / sizeof(*a)) {
         return INPUT_INVALID;
     }
 
