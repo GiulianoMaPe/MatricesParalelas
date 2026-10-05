@@ -50,15 +50,32 @@ int matrix_allocate(Matrix *matrix, size_t n);
 void matrix_release(Matrix *matrix);
 
 /* Validate A, B, matching dimensions, then C's exact capacity and non-overlap.
- * A/B may share data; C must be disjoint from both. On errors and PENDING, all
- * buffers remain untouched. Valid inputs return PENDING until Sprint 3.
- * C need not be initialized or finite: Sprint 3 will zero it within total_s,
- * before timing the pure i,k,j kernel. */
+ * A/B may share data; C must be disjoint from both. Writes NOTHING: it is meant
+ * to run BEFORE the timers start. Returns MATRIX_OK when the product can be
+ * computed. C need not be initialized or finite. */
+int matrix_multiply_validate(const Matrix *a, const Matrix *b,
+                             const double *c, size_t c_length);
+
+/* Explicit zeroing of C. Counts in total_s but NOT in kernel_s.
+ * Precondition (checked beforehand with matrix_multiply_validate): c points to
+ * length writable doubles. */
+void matrix_clear(double *c, size_t length);
+
+/* Pure accumulation c += a*b with loop order i,k,j. No validation and no
+ * zeroing: this is the interval measured by kernel_s. Preconditions: validated
+ * with matrix_multiply_validate and C already cleared with matrix_clear. */
+void matrix_accumulate(const double *a, const double *b, double *c, size_t n);
+
+/* Validate, clear C, accumulate and check the result is finite. Returns
+ * MATRIX_OK on success. On validation errors all buffers remain untouched. On
+ * MATRIX_NON_FINITE_VALUE (the product overflowed) the contents of C are
+ * unspecified and must not be used. C need not be initialized: it is zeroed
+ * inside the call, so repeated calls never accumulate earlier results. */
 int matrix_multiply_checked(const Matrix *a, const Matrix *b,
                             double *c, size_t c_length);
 
 /* Legacy adapter: caller guarantees n*n accessible elements in A, B and C.
  * Raw pointers cannot reveal capacity; new callers should use the checked API.
- * Performs the same validation and returns PENDING for valid inputs. */
+ * Performs the same work as matrix_multiply_checked. */
 int matrix_multiply(const double *a, const double *b, double *c, size_t n);
 #endif
