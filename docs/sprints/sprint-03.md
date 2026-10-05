@@ -1,6 +1,6 @@
 # Sprint 3 Implementar las referencias secuenciales
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: en ejecución. Como integrante 3, completé y probé la multiplicación Go secuencial. La revisión de mi trabajo y los demás entregables del equipo siguen pendientes. Las asignaciones siguientes proceden de la [guía vigente](../Guia_Sprints.md); detallo mi avance en el registro individual.
 
 Semana 3 · 64 horas de equipo · 8 horas por integrante
 
@@ -37,3 +37,15 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+## Registro individual · I3 Giuliano · 05/10/2026
+
+- **Trabajo realizado:** completé mis dos tareas principales: implementar la multiplicación Go secuencial y añadir las pruebas del producto. Modifiqué [matrix.go](../../go_secuencial/matrix.go) y [matrix_test.go](../../go_secuencial/matrix_test.go), y actualicé el [README](../../go_secuencial/README.md) con el funcionamiento y la forma de comprobarlo.
+- **Multiplicación:** completé `Multiply`, que antes indicaba que el cálculo estaba pendiente. Ahora calcula A por B con el orden de bucles acordado y guarda el resultado en una matriz nueva. Conservé las comprobaciones de tamaños, datos y errores del Sprint 2. Comprobé que A y B permanecen intactas y que modificar el resultado no cambia las entradas.
+- **Preparación para la integración:** separé el cálculo de la preparación de las matrices. Dejé explicado en el README cómo Eva puede usar esa separación para medir el tiempo de cálculo y el tiempo total según el acuerdo del equipo.
+- **Pruebas matemáticas:** ejecuté los cinco casos compartidos: producto conocido de 2×2, escalar negativo, identidad, matriz cero y matriz impar de 3×3. Comparé todas las posiciones con los resultados esperados y la tolerancia acordada; los cinco pasaron. También añadí un caso con decimales cuyo resultado calculé manualmente.
+- **Pruebas de errores y uso repetido:** mantuve las pruebas de entradas inválidas y comprobé el orden en que se detectan sus errores. Añadí pruebas de una matriz multiplicada por sí misma y de varias llamadas seguidas, verificando que los resultados sean correctos e independientes. También comprobé que, si el cálculo produce valores fuera de lo admitido, se informa el error, se conservan las entradas y no se devuelve un resultado incompleto.
+- **Comprobación final:** ejecuté `gofmt -w matrix.go matrix_test.go`, `go test -count=1 -timeout=30s -v ./...` y `go vet ./...` desde `go_secuencial`. Todas las comprobaciones terminaron correctamente, con código 0. Revisé los cambios con `git diff --check`, que también pasó. Utilicé Go 1.27.0 en Windows de 64 bits.
+- **Incidencia resuelta:** al principio, Go no pudo escribir en su carpeta habitual de archivos temporales de compilación. Usé una carpeta local del proyecto y pude completar las pruebas. Apareció además un aviso de permisos de la telemetría de Go; las comprobaciones terminaron correctamente.
+- **Estado de mi entrega:** dejé la multiplicación y sus pruebas listas para la revisión de Sebastian (I2). La integración de argumentos, archivos, tiempos y CSV sigue a cargo de Eva (I4); el ejecutable todavía responde que el cálculo está pendiente. La actualización del script general de pruebas debe coordinarse con Roberto (I8). Mi entrega completa el núcleo y sus pruebas; el cierre del sprint depende de las demás entregas y revisiones.
+- **Pendientes personales:** me falta recibir la revisión de Sebastian y revisar el trabajo de Eva. También debo registrar mis horas reales y la issue y el PR de la entrega.

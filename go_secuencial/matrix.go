@@ -68,7 +68,8 @@ func (m Matrix) Validate() error {
 
 // Multiply requiere matrices válidas del mismo tamaño y no modifica A ni B.
 // Valida A, luego B y luego compara sus dimensiones. Ante un error devuelve
-// una matriz vacía. Con entradas válidas devuelve ErrPending hasta Sprint 3.
+// una matriz vacía. El resultado tiene memoria propia y solo valores finitos.
+// Para medir el kernel por separado, preparar C y usar multiplyKernel.
 func Multiply(a, b Matrix) (Matrix, error) {
 	if err := a.Validate(); err != nil {
 		return Matrix{}, fmt.Errorf("matriz A: %w", err)
@@ -79,5 +80,29 @@ func Multiply(a, b Matrix) (Matrix, error) {
 	if a.N != b.N {
 		return Matrix{}, fmt.Errorf("%w: A=%d, B=%d", ErrDimensionMismatch, a.N, b.N)
 	}
-	return Matrix{}, ErrPending
+	c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
+	clear(c.Data)
+	multiplyKernel(a, b, c)
+	if err := c.Validate(); err != nil {
+		return Matrix{}, fmt.Errorf("matriz C: %w", err)
+	}
+	return c, nil
+}
+
+// multiplyKernel acumula A*B en C con bucles i,k,j, sin reservas ni validaciones.
+// Requiere matrices válidas de igual dimensión, C previamente vaciada y sin
+// memoria compartida con A ni B. El llamador valida el resultado al terminar.
+// Separar el vaciado permite incluirlo en total_s y excluirlo de kernel_s.
+func multiplyKernel(a, b, c Matrix) {
+	n := a.N
+	for i := 0; i < n; i++ {
+		row := i * n
+		for k := 0; k < n; k++ {
+			value := a.Data[row+k]
+			bRow := k * n
+			for j := 0; j < n; j++ {
+				c.Data[row+j] += value * b.Data[bRow+j]
+			}
+		}
+	}
 }
