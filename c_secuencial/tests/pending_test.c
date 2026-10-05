@@ -72,8 +72,9 @@ static int check_matrix_contract(void) {
     REQUIRE(matrix_multiply_checked(&a, &b, values, 4) == MATRIX_INVALID_ARGUMENT);
     REQUIRE(matrix_multiply_checked(&a, &b, values + 1, 4) == MATRIX_INVALID_ARGUMENT);
     REQUIRE(matrix_multiply_checked(&a, &b, other, 4) == MATRIX_INVALID_ARGUMENT);
-    REQUIRE(matrix_multiply_checked(&a, &b, output, 4) == MATRIX_PENDING);
-    REQUIRE(matrix_multiply_checked(&a, &a, output, 4) == MATRIX_PENDING);
+    REQUIRE(matrix_multiply_checked(&a, &b, output, 4) == MATRIX_OK);
+    REQUIRE(matrix_multiply_checked(&a, &a, output, 4) == MATRIX_OK);
+    for (i = 0; i < 4; ++i) output[i] = -123.0;
     special = NAN;
     REQUIRE(matrix_multiply_checked(&non_finite, &scalar, output, 1) == MATRIX_NON_FINITE_VALUE);
     REQUIRE(matrix_multiply_checked(&scalar, &non_finite, output, 1) == MATRIX_NON_FINITE_VALUE);
