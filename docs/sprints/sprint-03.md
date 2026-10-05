@@ -37,3 +37,12 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+#### Integrante 8
+
+- Participantes y horas reales: Roberto (8 h: 3 h ejecución y auditoría de pruebas en referencias C y Go, 3 h ampliación de casos de regresión matemática y documentación de errores observados, 1 h coordinación de equipo, 1 h revisión cruzada asignada a I1).
+- Issues y pull requests: Rama de trabajo `feature/s03-i08-validacion-secuencial`.
+- Pruebas y evidencias: Entregable `docs/validacion_secuencial.md` finalizado con auditoría de `pending_test.c` (C) y `matrix_test.go`/`input_test.go` (Go), matriz de regresión (REG-01 a REG-08), verificación de LCG determinista y revisión cruzada de `c_secuencial/src/matrix.c`.
+- Bloqueos y decisiones: Se ratifica que las referencias secuenciales reportan correctamente el estado pendiente (`código 2` / `ErrPending`) sin corromper memoria ni emitir benchmarks prematuros antes de la integración algorítmica.
+- Revision y criterio de aceptacion: Entregable de I8 completado; listo para revisión cruzada formal por Integrante 7 (Andres).
+
