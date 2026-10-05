@@ -42,21 +42,27 @@ Las pruebas y mediciones de este reporte se ejecutaron directamente sobre la est
 
 ### 3.1. Go Secuencial (`go_secuencial`)
 
-Se ejecutó la suite completa de pruebas unitarias mediante el comando:
+Se ejecutó la suite completa de pruebas unitarias sobre la implementación del núcleo de Go (`feature/s03-i03-go-secuencial-multiplicacion-y-pruebas` por Giuliano, I3):
 ```powershell
-go test -v ./...
+go test -count=1 -timeout=30s -v ./...
 ```
-**Resultado global:** `PASS` (tiempo total: 0.229 s).
+**Resultado global:** `PASS` (tiempo total: 0.170 s).
 
 #### Detalle de cobertura funcional evaluada:
 | Prueba Unitaria | Casos Evaluados | Comportamiento Observado | Estado |
 | :--- | :--- | :--- | :---: |
-| `TestValidateDimension` | $N=0$, $N=-2$, $N=1$, $N=2$, mayor $N$ representable, desbordamiento de bytes y desbordamiento de conteo ($N \times N > \text{MaxInt}$). | Rechaza dimensiones nulas y negativas con `ErrInvalidDimension`. Detecta desbordamiento antes de multiplicar con `ErrSizeOverflow`. | **PASS** |
-| `TestMatrixValidate` | Matrices vacías, $N=-1$, slice `nil`, slice con longitud incompleta o sobrante, valores `math.NaN()`, $+\infty$, $-\infty$, y matrices válidas con ceros y negativos. | Rechaza cualquier valor no finito con `ErrNonFiniteValue` indicando el índice exacto del fallo. | **PASS** |
-| `TestMultiplyRejectsInvalidInputs` | Matrices con dimensiones dispares ($N_A \ne N_B$), matrices malformadas, datos truncados. | Devuelve `ErrDimensionMismatch` sin alterar los slices originales de $A$ ni $B$. | **PASS** |
-| `TestMultiplyReportsPending` | Multiplicación de dos matrices cuadradas válidas en el Sprint 3 inicial. | Devuelve `ErrPending` de forma controlada sin provocar *panic* ni fugas de memoria. | **PASS** |
-| `TestMultiplyPreservesInputs` | Comprobación de inmutabilidad de los datos de entrada tras la llamada. | Verifica que las matrices $A$ y $B$ permanecen 100% inalteradas en memoria. | **PASS** |
-| `TestReadMatricesLayoutContract` | Formatos de archivo: Unix LF, Windows CRLF, espacios al final, subnormales, cabeceras inválidas, líneas en blanco internas. | Cumple estrictamente con `docs/formato_datos.md`, rechazando archivos corruptos o dimensiones no cuadradas. | **PASS** |
+| `TestValidateDimension` | $N=0$, $N=-2$, $N=1$, $N=2$, mayor $N$ representable, desbordamiento de bytes y de conteo ($N \times N > \text{MaxInt}$). | Rechaza dimensiones nulas/negativas con `ErrInvalidDimension`. Detecta desbordamiento antes de multiplicar con `ErrSizeOverflow`. | **PASS** |
+| `TestMatrixValidate` | Matrices vacías, $N=-1$, slice `nil`, longitud incompleta o sobrante, valores `math.NaN()`, $+\infty$, $-\infty$, y matrices válidas con ceros y negativos. | Rechaza valores no finitos con `ErrNonFiniteValue` indicando el índice exacto del fallo. | **PASS** |
+| `TestMultiplyRejectsInvalidInputs` | Dimensiones dispares ($N_A \ne N_B$), matrices malformadas, datos truncados, no finitos en entradas. | Devuelve `ErrDimensionMismatch` o `ErrNonFiniteValue` sin alterar los slices originales de $A$ ni $B$. | **PASS** |
+| `TestMultiplyScalar` | Multiplicación escalar unitaria ($N=1$): $[-3] \times [4] = [-12]$. | Producto exacto bajo tolerancia $10^{-9}$. | **PASS** |
+| `TestMultiplyPreservesInputs` | Comprobación de inmutabilidad de $A$ y $B$ tras la llamada a `Multiply`. | Verifica que $A$ y $B$ permanecen 100% inalteradas en memoria. | **PASS** |
+| `TestMultiplySharedFixtures` | Los 5 fixtures compartidos del acuerdo: `producto2`, `escalar`, `identidad`, `cero`, `impar3`. | Compara celda a celda contra `*.expected.txt` con la regla $|C_c - C_e| \le 10^{-9} + 10^{-9}|C_e|$. Todos conformes. | **PASS** |
+| `TestMultiplyDecimals` | Multiplicación $2 \times 2$ con valores con punto flotante decimal y signos mixtos. | Coincidencia exacta con el cálculo manual de referencia. | **PASS** |
+| `TestMultiplyResultOwnsStorage` | Independencia de memoria: modificar $C$ tras la multiplicación. | Garantiza que alterar $C$ no modifica las entradas $A$ ni $B$. | **PASS** |
+| `TestMultiplySameInput` | Elevación al cuadrado ($A \times A$) con el mismo buffer de entrada. | Multiplica correctamente sin condiciones de carrera sobre $A$. | **PASS** |
+| `TestMultiplyRepeatedCalls` | Tres llamadas sucesivas sobre los mismos datos. | Resultados idénticos y reproducibles sin acumulación residual. | **PASS** |
+| `TestMultiplyRejectsNonFiniteResults` | Desbordamiento de producto a $\pm \infty$ o generación de `NaN`. | Retorna `ErrNonFiniteValue` en $C$ y no devuelve matrices parciales corruptas. | **PASS** |
+| `TestReadMatricesLayoutContract` | Formatos de archivo: Unix LF, Windows CRLF, espacios al final, subnormales, cabeceras inválidas, líneas en blanco internas. | Cumple estrictamente con `docs/formato_datos.md`. | **PASS** |
 | `TestGenerateValidatesArguments` | Semillas mínimas ($0$), máximas ($4294967295$), dimensiones límite. | Generación correcta dentro del rango flotante $[-1.0, 1.0]$. | **PASS** |
 
 ---
@@ -130,16 +136,44 @@ Durante las sesiones de prueba se verificó la robustez de ambas referencias ant
 
 ---
 
-## 6. Revisión Cruzada de Código: Integrante 1 (Yessly · `c_secuencial/src/matrix.c`)
+## 6. Revisión Cruzada de Código: Integrante 1 (Yessly · `feature/s03-i01-nucleo-c-secuencial`)
 
-En cumplimiento del rol de revisión cruzada ($I8 \rightarrow I1$), se auditó el archivo `c_secuencial/src/matrix.c`:
+En cumplimiento del rol de revisión cruzada ($I8 \rightarrow I1$) estipulado en `ACUERDO_SPRINT_3.md`, se auditó formalmente el Pull Request de Yessly (`feature/s03-i01-nucleo-c-secuencial`), inspeccionando `c_secuencial/src/matrix.c`, `c_secuencial/include/matrix.h`, `c_secuencial/tests/matrix_kernel_test.c` y `c_secuencial/tests/pending_test.c`.
 
-* **Puntos Fuertes Observados:**
-  1. La validación de dimensiones en `matrix_validate_dimension` previene multiplicaciones que desborden `size_t`.
-  2. La función `buffers_overlap` previene uno de los errores más comunes y peligrosos en C: que el usuario pase la misma matriz como entrada y salida ($C = A \times C$), lo que provocaría resultados corruptos por sobreescritura.
-  3. `matrix_allocate` utiliza `calloc` asegurando memoria a cero y `matrix_release` resetea los punteros a `NULL` para evitar punteros colgantes (*dangling pointers*).
-* **Observación para la integración:**
-  * El reemplazo de `return MATRIX_PENDING;` por el triple bucle canónico ($i, k, j$) en el Sprint 3 requerirá asegurar que la acumulación $C[i \times N + j] += A[i \times N + k] \times B[k \times N + j]$ se realice con una variable temporal en registro para optimizar la localidad temporal, tal como se sustentó en `docs/bibliografia.md`.
+### 6.1. Evaluación Técnica de la Implementación
+1. **Algoritmo de Multiplicación Canónico ($i \to k \to j$):**
+   * En `matrix_accumulate`, el orden de iteración implementado es estrictamente $i \to k \to j$.
+   * Se almacena el elemento `const double a_ik = a_row[k];` en una variable local de registro, accediendo a $B$ y $C$ mediante punteros contiguos por filas (`b_row` y `c_row`). Esto optimiza la tasa de aciertos de caché L1/L2 al mantener acceso secuencial en memoria, conforme a lo fundamentado en `docs/bibliografia.md`.
+2. **Desacoplamiento para el Protocolo de Medición (`kernel_s` vs `total_s`):**
+   * Se modularizó el cálculo en tres funciones independientes:
+     * `matrix_multiply_validate`: valida punteros, dimensiones y solapamiento sin modificar la memoria de salida.
+     * `matrix_clear`: limpia el buffer $C$ con `memset` a ceros (`+0.0` IEEE 754).
+     * `matrix_accumulate`: ejecuta exclusivamente las multiplicaciones y sumas.
+   * **Conformidad:** Cumple al 100% con la Sección 4 de `ACUERDO_SPRINT_3.md`, permitiendo a Sebastian (I2) aislar `kernel_s` (solo acumulación) de `total_s` (limpieza + cálculo).
+3. **Inmutabilidad y Detección de No Finitos:**
+   * Las matrices de entrada $A$ y $B$ se tratan como punteros `const double *`.
+   * La función `all_finite` examina cada elemento de $C$ con `isfinite()` antes de retornar `MATRIX_OK`. Si ocurre desbordamiento a $\pm\infty$ o `NaN`, retorna `MATRIX_NON_FINITE_VALUE`.
+
+### 6.2. Reproducción Experimental de Pruebas Unitarias
+Se compiló y ejecutó directamente el nuevo conjunto de pruebas `c_secuencial/tests/matrix_kernel_test.c`:
+```powershell
+gcc -I c_secuencial/include c_secuencial/src/matrix.c c_secuencial/tests/matrix_kernel_test.c -o matrix_kernel_test.exe
+./matrix_kernel_test.exe
+```
+**Salida obtenida:**
+```text
+OK: nucleo C secuencial (producto, identidad, cero, escalar, impar, repeticion, errores).
+```
+* **Comprobaciones superadas:** Producto conocido $2 \times 2 = [19, 22; 43, 50]$, escalar $1 \times 1 = -12.0$, elemento neutro multiplicativo ($I_2 \times B = B$), matriz nula ($0 \times B = 0$), impar $3 \times 3$, llamadas sucesivas sin acumulación residual, aliasing destructivo ($C=A$) y entradas no finitas.
+
+### 6.3. Observación y Acción Solicitada a Yessly (I1)
+* **Hallazgo:** Al compilar y correr `pending_test.c` en su rama, el test finaliza con código de salida `1`.
+* **Causa:** En `c_secuencial/tests/pending_test.c`, línea 185:
+  ```c
+  if (matrix_multiply(a, b, &c, 1) != MATRIX_PENDING || c != -123.0) return 1;
+  ```
+  Yessly actualizó correctamente las comprobaciones en `check_matrix_contract()` esperando `MATRIX_OK`, pero esta comprobación residual al final de `main()` todavía exigía `MATRIX_PENDING` y `c == -123.0`. Al llamar ahora al nuevo `matrix_multiply`, la función calcula el producto escalar (`c = -0.341583...`) y retorna `MATRIX_OK`, lo que dispara la condición de error `return 1;` y hace fallar `scripts/test_windows.ps1`.
+* **Siguiente acción recomendada:** Se notificó a Yessly en la revisión de su PR para que actualice la línea 185 de `pending_test.c` esperando `MATRIX_OK` y validando el valor de `c`. Con ese ajuste menor, su PR queda 100% aprobado.
 
 ---
 
