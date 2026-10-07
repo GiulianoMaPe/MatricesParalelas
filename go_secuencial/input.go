@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -155,4 +156,34 @@ func isDecimalFloat(token string) bool {
 		}
 	}
 	return i == len(token)
+}
+
+func WriteMatrix(writer io.Writer, m Matrix) error {
+	if writer == nil {
+		return ErrInvalidFixture
+	}
+	if err := m.Validate(); err != nil {
+		return err
+	}
+	n := m.N
+	if _, err := fmt.Fprintln(writer, n); err != nil {
+		return err
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if j > 0 {
+				if _, err := writer.Write([]byte{' '}); err != nil {
+					return err
+				}
+			}
+			val := m.Data[i*n+j]
+			if _, err := fmt.Fprintf(writer, "%.17g", val); err != nil {
+				return err
+			}
+		}
+		if _, err := writer.Write([]byte{'\n'}); err != nil {
+			return err
+		}
+	}
+	return nil
 }
