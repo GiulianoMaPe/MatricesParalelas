@@ -92,23 +92,40 @@ func TestMultiplyRejectsInvalidInputs(t *testing.T) {
 	}
 }
 
-func TestMultiplyReportsPending(t *testing.T) {
-	result, err := Multiply(Matrix{N: 1, Data: []float64{3}}, Matrix{N: 1, Data: []float64{4}})
-	if !errors.Is(err, ErrPending) || result.Data != nil || result.N != 0 {
-		t.Fatal("pending multiplication must not return a fake product", result, err)
-	}
-}
-
-func TestMultiplyPreservesInputs(t *testing.T) {
+func TestMultiplyCorrectness(t *testing.T) {
 	a := Matrix{N: 2, Data: []float64{1, -2, 0, 4}}
 	b := Matrix{N: 2, Data: []float64{5, 6, 7, 8}}
 	wantA := append([]float64(nil), a.Data...)
 	wantB := append([]float64(nil), b.Data...)
-	_, err := Multiply(a, b)
-	if !errors.Is(err, ErrPending) {
-		t.Fatalf("valid inputs should still report pending: %v", err)
+	c, err := Multiply(a, b)
+	if err != nil {
+		t.Fatalf("Multiply() error = %v; want nil", err)
 	}
-	if a.N != 2 || b.N != 2 || !reflect.DeepEqual(a.Data, wantA) || !reflect.DeepEqual(b.Data, wantB) {
+	if c.N != 2 {
+		t.Fatalf("C.N = %d; want 2", c.N)
+	}
+	wantC := []float64{1*5 + (-2)*7, 1*6 + (-2)*8, 0*5 + 4*7, 0*6 + 4*8}
+	if !equalValues(c.Data, wantC) {
+		t.Fatalf("C = %v; want %v", c.Data, wantC)
+	}
+	if !reflect.DeepEqual(a.Data, wantA) || !reflect.DeepEqual(b.Data, wantB) {
 		t.Fatal("Multiply modified its input matrices")
+	}
+}
+
+func TestMultiplySeed42(t *testing.T) {
+	a, b, err := Generate(2, 42)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, err := Multiply(a, b)
+	if err != nil {
+		t.Fatalf("Multiply() error = %v; want nil", err)
+	}
+	wantC := []float64{-0.361527, 0.185283, -0.535823, 0.445953}
+	for i, want := range wantC {
+		if math.Abs(c.Data[i]-want) > 1e-6 {
+			t.Fatalf("C[%d] = %.17g, want %.17g", i, c.Data[i], want)
+		}
 	}
 }
