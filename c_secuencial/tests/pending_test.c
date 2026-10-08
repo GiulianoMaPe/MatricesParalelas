@@ -290,7 +290,7 @@ int main(void) {
     }
     if (input_generate(a, b, 0, 42) != INPUT_INVALID) return 1;
     if (input_generate(NULL, b, 2, 42) != INPUT_INVALID) return 1;
-    if (matrix_multiply(a, b, &c, 1) != MATRIX_PENDING || c != -123.0) return 1;
+    if (matrix_multiply(fixture_escalar_a, fixture_escalar_b, &c, 1) != MATRIX_OK || c != -12.0) return 1;
     puts("OK: estados/valores LCG, fixtures y entradas malformadas.");
     return 0;
 }
