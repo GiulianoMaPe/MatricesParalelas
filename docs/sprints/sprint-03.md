@@ -32,8 +32,14 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+#### Integrante 7 (Andrés)
+
+- **Participantes y horas reales:** Andrés (3 h desarrollo generador Go y plan técnico; pendiente 3 h comparación cruzada con C, 1 h revisión de I8 y 1 h coordinación).
+- **Issues y pull requests:** Rama de trabajo `feature/s03-i07-generador-go`.
+- **Pruebas y evidencias:** 
+  - Entregable [`go_secuencial/input.go`](../../go_secuencial/input.go) implementado con LCG determinista ($a=1664525, c=1013904223$), validación de dimensiones ($N > 0$), desbordamiento protegido y continuidad estricta de estado entre matrices $A$ y $B$.
+  - Informe técnico de diseño disponible en [`docs/plan_generador_go.md`](../plan_generador_go.md).
+  - Batería de pruebas unitarias implementada en [`go_secuencial/input_test.go`](../../go_secuencial/input_test.go) cubriendo: validación de dimensiones, verificación de los 4 estados canónicos para `seed = 42` (`1083814273`, `378494188`, `2479403867`, `955863294`), vectores de control $2 \times 2$ ($A = [-0.363, 0.036, -0.215, 0.602]$, $B = [0.941, -0.453, -0.554, 0.579]$), rango numérico $[-1.0, 1.0]$, continuidad de estado y semillas extremas.
+- **Bloqueos y decisiones:** Se confirma que Go aprovecha la aritmética modular natural de `uint32` para el paso del LCG y la conversión explícita a `int64` para neutralizar riesgos de underflow al centrar en cero.
+- **Revisión y criterio de aceptación:** Subtarea 1 completada. Pendiente comparación de evidencia cruzada con la implementación de C (I6 Gerardo) y revisión cruzada de I8 Roberto.
+
