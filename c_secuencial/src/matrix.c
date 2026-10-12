@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 int matrix_validate_dimension(size_t n, size_t *elements, size_t *bytes) {
     size_t count;
@@ -61,8 +62,8 @@ static int buffers_overlap(const double *left, const double *right, size_t bytes
     return a <= b ? b - a < bytes : a - b < bytes;
 }
 
-int matrix_multiply_checked(const Matrix *a, const Matrix *b,
-                            double *c, size_t c_length) {
+int matrix_multiply_validate(const Matrix *a, const Matrix *b,
+                             const double *c, size_t c_length) {
     size_t bytes;
     int status = matrix_validate(a);
     if (status != MATRIX_OK) return status;
@@ -75,8 +76,44 @@ int matrix_multiply_checked(const Matrix *a, const Matrix *b,
     if (buffers_overlap(c, a->data, bytes) || buffers_overlap(c, b->data, bytes)) {
         return MATRIX_INVALID_ARGUMENT;
     }
-    /* Sprint 2 validates contracts; the mathematical kernel enters in S3. */
-    return MATRIX_PENDING;
+    return MATRIX_OK;
+}
+
+void matrix_clear(double *c, size_t length) {
+    /* All-bits-zero is +0.0 for IEEE-754 doubles. */
+    memset(c, 0, length * sizeof(*c));
+}
+
+void matrix_accumulate(const double *a, const double *b, double *c, size_t n) {
+    size_t i, k, j;
+    for (i = 0; i < n; ++i) {
+        const double *a_row = a + i * n;
+        double *c_row = c + i * n;
+        for (k = 0; k < n; ++k) {
+            const double a_ik = a_row[k];
+            const double *b_row = b + k * n;
+            for (j = 0; j < n; ++j) {
+                c_row[j] += a_ik * b_row[j];
+            }
+        }
+    }
+}
+
+static int all_finite(const double *values, size_t length) {
+    size_t i;
+    for (i = 0; i < length; ++i) {
+        if (!isfinite(values[i])) return 0;
+    }
+    return 1;
+}
+
+int matrix_multiply_checked(const Matrix *a, const Matrix *b,
+                            double *c, size_t c_length) {
+    int status = matrix_multiply_validate(a, b, c, c_length);
+    if (status != MATRIX_OK) return status;
+    matrix_clear(c, c_length);
+    matrix_accumulate(a->data, b->data, c, a->n);
+    return all_finite(c, c_length) ? MATRIX_OK : MATRIX_NON_FINITE_VALUE;
 }
 
 int matrix_multiply(const double *a, const double *b, double *c, size_t n) {

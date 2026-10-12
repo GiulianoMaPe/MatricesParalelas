@@ -72,8 +72,9 @@ static int check_matrix_contract(void) {
     REQUIRE(matrix_multiply_checked(&a, &b, values, 4) == MATRIX_INVALID_ARGUMENT);
     REQUIRE(matrix_multiply_checked(&a, &b, values + 1, 4) == MATRIX_INVALID_ARGUMENT);
     REQUIRE(matrix_multiply_checked(&a, &b, other, 4) == MATRIX_INVALID_ARGUMENT);
-    REQUIRE(matrix_multiply_checked(&a, &b, output, 4) == MATRIX_PENDING);
-    REQUIRE(matrix_multiply_checked(&a, &a, output, 4) == MATRIX_PENDING);
+    REQUIRE(matrix_multiply_checked(&a, &b, output, 4) == MATRIX_OK);
+    REQUIRE(matrix_multiply_checked(&a, &a, output, 4) == MATRIX_OK);
+    for (i = 0; i < 4; ++i) output[i] = -123.0;
     special = NAN;
     REQUIRE(matrix_multiply_checked(&non_finite, &scalar, output, 1) == MATRIX_NON_FINITE_VALUE);
     REQUIRE(matrix_multiply_checked(&scalar, &non_finite, output, 1) == MATRIX_NON_FINITE_VALUE);
@@ -289,7 +290,7 @@ int main(void) {
     }
     if (input_generate(a, b, 0, 42) != INPUT_INVALID) return 1;
     if (input_generate(NULL, b, 2, 42) != INPUT_INVALID) return 1;
-    if (matrix_multiply(a, b, &c, 1) != MATRIX_PENDING || c != -123.0) return 1;
+    if (matrix_multiply(fixture_escalar_a, fixture_escalar_b, &c, 1) != MATRIX_OK || c != -12.0) return 1;
     puts("OK: estados/valores LCG, fixtures y entradas malformadas.");
     return 0;
 }

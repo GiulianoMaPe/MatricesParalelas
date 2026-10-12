@@ -1,6 +1,6 @@
 # Go secuencial
 
-El núcleo de multiplicación secuencial está implementado y probado en el Sprint 3 (I3 · Giuliano). El generador y el lector de archivos funcionan desde el Sprint 2. La integración de argumentos, lectura/escritura, cronómetros y CSV en el ejecutable corresponde a I4 · Eva y sigue pendiente.
+El núcleo y el ejecutable Go secuencial están implementados y probados. El núcleo corresponde a I3 · Giuliano y la integración inicial a I4 · Eva. El 11/10/2026, I3 incorporó esa integración desde `main` y corrigió las observaciones de su revisión: tiempos, CSV, metadatos y argumentos. El generador y el lector funcionan desde el Sprint 2.
 
 ## Qué dejé listo
 
@@ -12,6 +12,8 @@ El núcleo de multiplicación secuencial está implementado y probado en el Spri
 | `multiplyKernel` | Acumula A×B en una C preparada, con bucles i,k,j. Separa el cálculo de reservas, validaciones y vaciado. |
 | `Generate` | Valida el tamaño y genera A y B con la semilla común. |
 | `ReadMatrices` | Lee archivos de prueba y rechaza datos malformados o errores de lectura. |
+| `WriteMatrix` | Guarda N y las filas de C con precisión suficiente para conservar los valores. |
+| Ejecutable | Procesa argumentos, valida el producto, guarda la matriz solicitada y emite CSV por stdout. |
 
 Se aceptan ceros y negativos; se rechazan NaN e infinitos en entradas y resultados. A y B son de solo lectura y C tiene memoria propia. Ante un tamaño inválido, el generador devuelve un error y matrices vacías. Comprobar el tamaño no garantiza que haya suficiente RAM.
 
@@ -26,7 +28,41 @@ go vet ./...
 
 El 05/10/2026 ambas comprobaciones terminaron con **código 0** con Go 1.27.0 en Windows amd64. Las pruebas comparan todas las celdas de los cinco fixtures compartidos (`producto2`, `escalar`, `identidad`, `cero`, `impar3`) con sus archivos esperados. También cubren decimales, entradas inválidas, orden de validación, conservación de A/B, independencia de C, A×A, llamadas repetidas y resultados NaN/Inf por desbordamiento. La comparación rechaza valores no finitos y aplica `abs(obtenido-esperado) <= 1e-9 + 1e-9*abs(esperado)`.
 
-El script `scripts/test_windows.ps1 -Version go_secuencial` conserva las comprobaciones del esqueleto y exige salida 2 ante una solicitud de cálculo. La comprobación del 01/10/2026 fue de entorno e interfaces. El ejecutable actual sigue aceptando solo `--smoke-test`; su integración y la actualización del script son entregas pendientes de I4 e I8. La evidencia actual del núcleo se registra en [Sprint 3](../docs/sprints/sprint-03.md).
+El 11/10/2026 también pasaron las comprobaciones del ejecutable en Debug y Release. Desde la raíz:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial -Configuration Release
+```
+
+El script compila, ejecuta las pruebas Go y comprueba los cinco fixtures mediante el ejecutable real, incluyendo sus archivos y CSV. Se actualizaron únicamente las expectativas de Go secuencial; las versiones pendientes mantienen sus comprobaciones de esqueleto. La evidencia se registra en [Sprint 3](../docs/sprints/sprint-03.md).
+
+## Uso del ejecutable
+
+Compilar desde `go_secuencial` dentro del repositorio para incluir el commit real en el binario:
+
+```powershell
+go build -buildvcs=true -o build/Release/go_secuencial.exe .
+./build/Release/go_secuencial.exe --n 2 --seed 42
+./build/Release/go_secuencial.exe --input ../tests/fixtures/producto2.input.txt --output build/Release/producto2.txt
+./build/Release/go_secuencial.exe --n 2 --seed 42 --repetition 0
+```
+
+- `--n` y `--seed` son obligatorios para generar entradas. Se aceptan semillas entre 0 y 4294967295 y números decimales sin signo.
+- `--input` lee las matrices del archivo y no se combina con N ni semilla. El CSV registra semilla 0 para esta modalidad.
+- `--output` guarda C en el formato común. Las matrices se escriben únicamente cuando se solicita esta opción; las rutas vacías se rechazan.
+- `--repetition` es opcional, entre 0 y 5. El valor predeterminado es 1; 0 identifica calentamiento y activa `is_warmup=true`.
+- `--smoke-test` se ejecuta solo y comprueba la instalación.
+
+Cada ejecución correcta emite en stdout una cabecera CSV de 20 campos y una fila con estado `OK`. Los errores se escriben en stderr, devuelven 1 y no generan una fila de medición. Las ejecuciones correctas devuelven 0. Se rechazan opciones repetidas, desconocidas o incompletas.
+
+## Validación y datos del equipo
+
+Antes de medir se calcula una referencia con bucles i,j,k. Después de medir se comparan todas las celdas con la tolerancia común y se rechazan NaN e infinitos. La referencia, la generación, las reservas, las comprobaciones y los archivos quedan fuera de los tiempos. Se comprueba memoria disponible para A, B, C y la referencia antes de generar matrices.
+
+Los datos de CPU, RAM visible y edición/build de Windows se consultan al sistema. Se fija `GOMAXPROCS=1` durante el cálculo y el CSV registra el valor efectivo. El commit se obtiene de los datos incluidos por Go al compilar; no se sustituye por `dev` ni por datos inventados. Si no se pueden obtener los metadatos, se informa el error.
+
+`go version -m build/Release/go_secuencial.exe` muestra el commit y si había cambios locales al compilar. Para las comprobaciones de desarrollo se permite un árbol modificado; una campaña oficial exige un árbol limpio y los metadatos completos del protocolo. La automatización de campañas sigue correspondiendo a S7/S8.
 
 ## Interfaz para integrar los cronómetros
 
@@ -40,4 +76,4 @@ Dejé las reglas en [las especificaciones comunes](../docs/especificaciones_c_go
 
 La revisión cruzada del núcleo de S3 corresponde a Sebastian (I2) y queda pendiente. Los datos de prueba están descritos en [formato_datos.md](../docs/formato_datos.md).
 
-El [contrato común](../docs/contrato.md) exige N en línea propia y N valores por fila, con LF/CRLF. ReadMatrices devuelve ErrInvalidFixture ante formato incorrecto y ErrFixtureIO ante fallo de lectura; ambos se convierten a salida 1. El [protocolo](../docs/protocolo_medicion.md) incluye el vaciado de C en total_s y lo excluye de kernel_s; validación e I/O quedan fuera de ambos. La instrumentación se implementará en S3.
+El [contrato común](../docs/contrato.md) exige N en línea propia y N valores por fila, con LF/CRLF. ReadMatrices devuelve ErrInvalidFixture ante formato incorrecto y ErrFixtureIO ante fallo de lectura; ambos se convierten a salida 1. La instrumentación implementada sigue el [protocolo](../docs/protocolo_medicion.md): el vaciado de C pertenece a total_s y queda fuera de kernel_s; validación e I/O quedan fuera de ambos.

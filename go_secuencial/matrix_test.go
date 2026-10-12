@@ -111,13 +111,26 @@ func TestMultiplyPreservesInputs(t *testing.T) {
 	b := Matrix{N: 2, Data: []float64{5, 6, 7, 8}}
 	wantA := append([]float64(nil), a.Data...)
 	wantB := append([]float64(nil), b.Data...)
-	_, err := Multiply(a, b)
+	c, err := Multiply(a, b)
 	if err != nil {
 		t.Fatalf("Multiply() error = %v", err)
 	}
 	if a.N != 2 || b.N != 2 || !reflect.DeepEqual(a.Data, wantA) || !reflect.DeepEqual(b.Data, wantB) {
 		t.Fatal("Multiply modified its input matrices")
 	}
+	assertMatrixClose(t, c, Matrix{N: 2, Data: []float64{-9, -10, 28, 32}})
+}
+
+func TestMultiplySeed42(t *testing.T) {
+	a, b, err := Generate(2, 42)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, err := Multiply(a, b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertMatrixClose(t, c, Matrix{N: 2, Data: []float64{-0.361527, 0.185283, -0.535823, 0.445953}})
 }
 
 func TestMultiplySharedFixtures(t *testing.T) {
