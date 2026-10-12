@@ -38,6 +38,15 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
 
+## Registro individual · I5 Fernando · 12/10/2026
+
+- **Rama y entregable:** preparé `feature/s03-i05-comparador-resultados`. El entregable es [`scripts/compare_results.ps1`](../../scripts/compare_results.ps1); el pull request permanece pendiente hasta revisar estos cambios.
+- **Comparación implementada:** el script valida UTF-8 sin BOM, dimensión, número exacto de filas y columnas, gramática decimal y valores finitos. Compara todas las celdas con `atol = 1e-9` y `rtol = 1e-9`, informa la primera diferencia y los errores absoluto y relativo máximos, y devuelve código 1 ante formato o resultado inválido.
+- **Pruebas automatizadas:** añadí [`tests/compare_results_test.ps1`](../../tests/compare_results_test.ps1) y lo integré en `scripts/test_windows.ps1`. Cubre los cinco fixtures, aceptación y rechazo alrededor de la tolerancia, dimensión distinta, `NaN` y cantidad incorrecta de valores por fila.
+- **Evidencia Go secuencial:** ejecuté `scripts/test_windows.ps1 -Version go_secuencial -Configuration Debug`; compilación, `go fmt`, `go vet`, `go test`, producto real, CSV y cinco fixtures terminaron con código 0. Después comparé las cinco salidas generadas por Go; `producto2`, `escalar`, `identidad`, `cero` e `impar3` resultaron `OK`, todos con `max_abs=0` y `max_rel=0`.
+- **Bloqueo de C secuencial:** la inspección de `c_secuencial/src/main.c` muestra que todavía no admite `--input`/`--output` y que su flujo actual devuelve código 2 aun cuando el núcleo ya está integrado. No pude confirmar ese comportamiento ejecutando C porque este equipo no encontró MSVC ni Build Tools. No es posible afirmar todavía la comparación ejecutable completa C-Go-referencia; el comparador queda preparado para recibir la salida C cuando I1/I2 completen esa integración.
+- **Horas, coordinación y revisión:** Fernando debe confirmar las horas reales. Quedan pendientes la revisión cruzada de este entregable por Eva (I4), mi revisión del generador C de Gerardo (I6) y la apertura del pull request.
+
 ## Registro individual · I3 Giuliano · 05/10/2026
 
 - **Distribución de horas:** organicé mis 8 h en 3 h para implementar la multiplicación, conservar las validaciones y documentar su uso; 3 h para añadir y ejecutar las pruebas matemáticas, de errores y de uso repetido; 1 h para revisar el ejecutable de Eva (I4); y 1 h para preparar el acuerdo de coordinación del sprint y definir las interfaces entre el núcleo y la integración.
