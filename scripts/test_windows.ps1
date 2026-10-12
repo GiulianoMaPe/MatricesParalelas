@@ -7,23 +7,7 @@ Assert-Windows
 $selected = if ($Version -eq 'all') { $script:Versions } else { @($Version) }
 $failures = @()
 
-function Assert-MatrixFixture([string]$Actual, [string]$Expected) {
-    $actualValues = [regex]::Split((Get-Content -LiteralPath $Actual -Raw).Trim(), '\s+')
-    $expectedValues = [regex]::Split((Get-Content -LiteralPath $Expected -Raw).Trim(), '\s+')
-    if ($actualValues.Length -ne $expectedValues.Length -or $actualValues[0] -ne $expectedValues[0]) {
-        throw "Dimensiones o cantidad de datos incorrectas: $Actual"
-    }
-    $culture = [System.Globalization.CultureInfo]::InvariantCulture
-    for ($index = 1; $index -lt $expectedValues.Length; $index++) {
-        $obtained = [double]::Parse($actualValues[$index], $culture)
-        $expected = [double]::Parse($expectedValues[$index], $culture)
-        if ([double]::IsNaN($obtained) -or [double]::IsInfinity($obtained) -or
-            [double]::IsNaN($expected) -or [double]::IsInfinity($expected) -or
-            [Math]::Abs($obtained - $expected) -gt (1e-9 + 1e-9 * [Math]::Abs($expected))) {
-            throw "Producto incorrecto en el elemento $index de $Actual"
-        }
-    }
-}
+Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$script:ProjectRoot\tests\compare_results_test.ps1")
 
 function Assert-SequentialCSV($Lines) {
     $rows = @($Lines | ConvertFrom-Csv)
@@ -75,7 +59,7 @@ foreach ($item in $selected) {
                 $csvLines = @(& $exe --input $inputPath --output $outputPath)
                 if ($LASTEXITCODE -ne 0) { throw "Go secuencial fallo en $fixture." }
                 Assert-SequentialCSV $csvLines
-                Assert-MatrixFixture $outputPath $expectedPath
+                Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\compare_results.ps1",'-Expected',$expectedPath,'-Actual',$outputPath)
             }
             Write-Host 'OK: go_secuencial (producto real, cinco fixtures y CSV validado).'
         } else {

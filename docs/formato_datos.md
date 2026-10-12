@@ -6,11 +6,11 @@ Texto UTF-8 sin BOM, separador decimal punto, espacios entre valores; sin coment
 * **Estructura de entrada:** Primera línea: entero positivo N. A continuación N filas de la matriz A y N filas de la matriz B, exactamente N números por fila. 
 * **Salida esperada:** N seguido de N filas de la matriz C (resultado).
 * **Manejo de caracteres:** Aceptar LF y CRLF, espacios/tabuladores por línea, blanco al final y ausencia de salto final; rechazar líneas vacías dentro de las matrices.
-* **Validación estricta:** Rechazar valores extra, faltantes, dimensiones inválidas, NaN e infinitos. Los cuatro lectores aplican estas reglas; su integración en la CLI sigue pendiente.
+* **Validación estricta:** Rechazar valores extra, faltantes, dimensiones inválidas, NaN e infinitos. Los cuatro lectores aplican estas reglas; Go secuencial ya los integra en su CLI y las otras versiones siguen pendientes.
 
 ## 2. Vectores de Control (Fixtures compartidos)
 
-Actualmente existen casos de prueba preparados a mano, **no resultados producidos por los esqueletos**. Hay lectores, pruebas de entradas malformadas y el fixture impar3. El multiplicador, el comparador y las pruebas de particiones ejecutables siguen pendientes.
+Los casos de prueba preparados a mano son las referencias independientes. Go secuencial ya produce resultados que se comparan contra ellas; las otras versiones y las pruebas de particiones ejecutables siguen pendientes.
 
 **Ejemplo de entrada:** `tests/fixtures/producto2.input.txt`:
 
