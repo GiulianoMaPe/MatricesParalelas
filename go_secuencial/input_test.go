@@ -37,6 +37,40 @@ func TestGenerateSeed42Vector(t *testing.T) {
 	}
 }
 
+func TestGenerateBoundarySeedVectors(t *testing.T) {
+	cases := []struct {
+		name  string
+		seed  uint32
+		wantA []float64
+		wantB []float64
+	}{
+		{
+			name:  "zero",
+			seed:  0,
+			wantA: []float64{0.525, 0.844, 0.642, -0.032},
+			wantB: []float64{0.360, -0.832, 0.853, -0.771},
+		},
+		{
+			name:  "maximum",
+			seed:  ^uint32(0),
+			wantA: []float64{0.832, -0.174, 0.670, -0.661},
+			wantB: []float64{0.975, -0.773, 0.964, -0.454},
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			a, b, err := Generate(2, tc.seed)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !equalValues(a.Data, tc.wantA) || !equalValues(b.Data, tc.wantB) {
+				t.Fatalf("Generate(2, %d) = A %v, B %v; want A %v, B %v",
+					tc.seed, a.Data, b.Data, tc.wantA, tc.wantB)
+			}
+		})
+	}
+}
+
 func TestReadSharedFixtures(t *testing.T) {
 	fixtures := []struct {
 		name string
