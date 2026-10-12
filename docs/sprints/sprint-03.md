@@ -37,3 +37,12 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+#### Integrante 8
+
+- Participantes y horas reales: Roberto (8 h: 3 h ejecución y auditoría de pruebas en referencias C y Go, 3 h ampliación de casos de regresión matemática y documentación de errores observados, 1 h coordinación de equipo según ACUERDO_SPRINT_3.md, 1 h revisión cruzada con evidencia a I1 Yessly).
+- Issues y pull requests: Rama de trabajo `feature/s03-i08-validacion-secuencial`.
+- Pruebas y evidencias: Entregable `docs/validacion_secuencial.md` completado y actualizado con auditoría empírica de `feature/s03-i03-go-secuencial-multiplicacion-y-pruebas` (I3 Giuliano, 5 fixtures compartidos PASS) y revisión cruzada reproducida de `feature/s03-i01-nucleo-c-secuencial` (I1 Yessly, `matrix_kernel_test.c` PASS, observación en `pending_test.c:185`).
+- Bloqueos y decisiones: Se reportó a Yessly la corrección en `pending_test.c` línea 185 para evitar el fallo de retorno 1 en `test_windows.ps1`. Se mantiene la coordinación con I3 Giuliano e I4 Eva para la integración final del script general de pruebas cuando los ejecutables principales estén enlazados.
+- Revision y criterio de aceptacion: Entregable de I8 finalizado con evidencia experimental rigurosa; listo para revisión cruzada formal por Integrante 7 (Andrés).
+
