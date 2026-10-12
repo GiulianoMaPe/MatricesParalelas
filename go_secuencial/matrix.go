@@ -68,7 +68,7 @@ func (m Matrix) Validate() error {
 
 // Multiply requiere matrices válidas del mismo tamaño y no modifica A ni B.
 // Valida A, luego B y luego compara sus dimensiones. Ante un error devuelve
-// una matriz vacía. Con entradas válidas devuelve ErrPending hasta Sprint 3.
+// una matriz vacía. Implementa bucles i,k,j estándar.
 func Multiply(a, b Matrix) (Matrix, error) {
 	if err := a.Validate(); err != nil {
 		return Matrix{}, fmt.Errorf("matriz A: %w", err)
@@ -79,5 +79,16 @@ func Multiply(a, b Matrix) (Matrix, error) {
 	if a.N != b.N {
 		return Matrix{}, fmt.Errorf("%w: A=%d, B=%d", ErrDimensionMismatch, a.N, b.N)
 	}
-	return Matrix{}, ErrPending
+	n := a.N
+	count := n * n
+	c := Matrix{N: n, Data: make([]float64, count)}
+	for i := 0; i < n; i++ {
+		for k := 0; k < n; k++ {
+			aik := a.Data[i*n+k]
+			for j := 0; j < n; j++ {
+				c.Data[i*n+j] += aik * b.Data[k*n+j]
+			}
+		}
+	}
+	return c, nil
 }
