@@ -3,7 +3,10 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
+	"math"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -16,246 +19,275 @@ type config struct {
 	seed       uint32
 	inputFile  string
 	outputFile string
+	repetition int
 }
 
 func parseArgs(args []string) (config, error) {
-	cfg := config{}
+	cfg := config{repetition: 1}
 	seen := make(map[string]bool)
 	for i := 0; i < len(args); i++ {
-		arg := args[i]
-		switch arg {
-		case "--smoke-test":
-			if cfg.smokeTest || seen["--smoke-test"] {
-				return cfg, fmt.Errorf("opción duplicada: --smoke-test")
-			}
+		option := args[i]
+		if seen[option] {
+			return cfg, fmt.Errorf("opción duplicada: %s", option)
+		}
+		seen[option] = true
+		if option == "--smoke-test" {
 			if len(args) != 1 {
 				return cfg, fmt.Errorf("--smoke-test no se combina con otras opciones")
 			}
 			cfg.smokeTest = true
-			seen["--smoke-test"] = true
-		case "--n":
-			if seen["--n"] {
-				return cfg, fmt.Errorf("opción duplicada: --n")
-			}
-			i++
-			if i >= len(args) {
-				return cfg, fmt.Errorf("--n requiere un valor")
-			}
-			n, err := strconv.ParseUint(args[i], 10, strconv.IntSize)
-			maxInt := int(^uint(0) >> 1)
-			if err != nil || n == 0 || n > uint64(maxInt) {
-				return cfg, fmt.Errorf("N inválido: %s", args[i])
-			}
-			cfg.n = int(n)
-			seen["--n"] = true
-		case "--seed":
-			if seen["--seed"] {
-				return cfg, fmt.Errorf("opción duplicada: --seed")
-			}
-			i++
-			if i >= len(args) {
-				return cfg, fmt.Errorf("--seed requiere un valor")
-			}
-			seed, err := strconv.ParseUint(args[i], 10, 32)
-			if err != nil || seed > 4294967295 {
-				return cfg, fmt.Errorf("semilla inválida: %s", args[i])
-			}
-			cfg.seed = uint32(seed)
-			seen["--seed"] = true
-		case "--input":
-			if seen["--input"] {
-				return cfg, fmt.Errorf("opción duplicada: --input")
-			}
-			i++
-			if i >= len(args) {
-				return cfg, fmt.Errorf("--input requiere un valor")
-			}
-			cfg.inputFile = args[i]
-			seen["--input"] = true
-		case "--output":
-			if seen["--output"] {
-				return cfg, fmt.Errorf("opción duplicada: --output")
-			}
-			i++
-			if i >= len(args) {
-				return cfg, fmt.Errorf("--output requiere un valor")
-			}
-			cfg.outputFile = args[i]
-			seen["--output"] = true
+			return cfg, nil
+		}
+		switch option {
+		case "--n", "--seed", "--input", "--output", "--repetition":
 		default:
-			return cfg, fmt.Errorf("opción desconocida: %s", arg)
+			return cfg, fmt.Errorf("opción desconocida: %s", option)
+		}
+		i++
+		if i >= len(args) || strings.TrimSpace(args[i]) == "" || strings.HasPrefix(args[i], "--") {
+			return cfg, fmt.Errorf("%s requiere un valor", option)
+		}
+		value := args[i]
+		switch option {
+		case "--n", "--seed", "--repetition":
+			if !isUnsignedDecimal(value) {
+				return cfg, fmt.Errorf("valor decimal sin signo requerido para %s: %s", option, value)
+			}
+			bits := strconv.IntSize
+			if option == "--seed" {
+				bits = 32
+			}
+			number, err := strconv.ParseUint(value, 10, bits)
+			if err != nil {
+				return cfg, fmt.Errorf("valor inválido para %s: %s", option, value)
+			}
+			switch option {
+			case "--n":
+				if number > uint64(int(^uint(0)>>1)) {
+					return cfg, ErrSizeOverflow
+				}
+				cfg.n = int(number)
+				if err := ValidateDimension(cfg.n); err != nil {
+					return cfg, err
+				}
+			case "--seed":
+				cfg.seed = uint32(number)
+			case "--repetition":
+				if number > 5 {
+					return cfg, fmt.Errorf("--repetition debe estar entre 0 y 5")
+				}
+				cfg.repetition = int(number)
+			}
+		case "--input":
+			cfg.inputFile = value
+		case "--output":
+			cfg.outputFile = value
 		}
 	}
-	if cfg.smokeTest {
-		return cfg, nil
-	}
-	hasGenerate := cfg.n > 0 || cfg.seed > 0 || seen["--n"] || seen["--seed"]
-	hasInput := cfg.inputFile != ""
-	if hasGenerate && hasInput {
-		return cfg, fmt.Errorf("--input no se combina con --n ni --seed")
-	}
-	if !hasGenerate && !hasInput {
-		return cfg, fmt.Errorf("faltan argumentos: use --n N --seed S o --input archivo")
-	}
-	if hasGenerate {
-		if cfg.n == 0 {
-			return cfg, fmt.Errorf("falta --n")
+	if seen["--input"] {
+		if seen["--n"] || seen["--seed"] {
+			return cfg, fmt.Errorf("--input no se combina con --n ni --seed")
 		}
-		if !seen["--seed"] {
-			return cfg, fmt.Errorf("falta --seed")
-		}
+	} else if !seen["--n"] || !seen["--seed"] {
+		return cfg, fmt.Errorf("use --n N --seed S o --input archivo")
 	}
 	return cfg, nil
 }
 
-func getCommitHash() string {
-	return "dev"
+type measurement struct {
+	start           time.Time
+	kernelS, totalS float64
 }
 
-func getHostname() string {
-	host, err := os.Hostname()
-	if err != nil {
-		return "unknown"
+// Los buffers ya están preparados. Solo el vaciado y el cálculo se cronometran.
+func measureProduct(a, b, c Matrix) measurement {
+	totalStart := time.Now()
+	clear(c.Data)
+	kernelStart := time.Now()
+	multiplyKernel(a, b, c)
+	kernelS := time.Since(kernelStart).Seconds()
+	totalS := time.Since(totalStart).Seconds()
+	return measurement{start: totalStart, kernelS: kernelS, totalS: totalS}
+}
+
+// referenceProduct usa i,j,k para validar todas las celdas con un cálculo separado.
+// Se ejecuta antes de iniciar los cronómetros.
+func referenceProduct(a, b Matrix) (Matrix, error) {
+	reference := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
+	for i := 0; i < a.N; i++ {
+		for j := 0; j < a.N; j++ {
+			var sum float64
+			for k := 0; k < a.N; k++ {
+				sum += a.Data[i*a.N+k] * b.Data[k*a.N+j]
+			}
+			reference.Data[i*a.N+j] = sum
+		}
 	}
-	return host
-}
-
-func getCPUModel() string {
-	return "unknown"
-}
-
-func getRAMGB() float64 {
-	var m runtime.MemStats
-	runtime.ReadMemStats(&m)
-	return float64(m.Sys) / (1024 * 1024 * 1024)
-}
-
-func getOSVersion() string {
-	return "Windows"
-}
-
-func buildCSV(timestamp, version, commit, hostname, cpuModel, osVersion, configuration string,
-	n int, seed uint32, kernelS, totalS float64, validationStatus string) string {
-	var buf strings.Builder
-	w := csv.NewWriter(&buf)
-	w.Comma = ','
-	record := []string{
-		timestamp,
-		version,
-		commit,
-		hostname,
-		cpuModel,
-		fmt.Sprintf("%.1f", getRAMGB()),
-		osVersion,
-		configuration,
-		strconv.Itoa(n),
-		strconv.FormatUint(uint64(seed), 10),
-		"1",
-		"1",
-		"1",
-		"1",
-		"1",
-		"0",
-		"false",
-		fmt.Sprintf("%.9f", kernelS),
-		fmt.Sprintf("%.9f", totalS),
-		validationStatus,
+	if err := reference.Validate(); err != nil {
+		return Matrix{}, fmt.Errorf("resultado de referencia: %w", err)
 	}
-	if err := w.Write(record); err != nil {
-		return ""
-	}
-	w.Flush()
-	return strings.TrimSpace(buf.String())
+	return reference, nil
 }
 
-func runSmokeTest() error {
-	fmt.Println("OK: prueba de instalacion Go. Algoritmo y contrato de argumentos implementados.")
+func validateProduct(got, want Matrix) error {
+	if err := got.Validate(); err != nil {
+		return fmt.Errorf("resultado: %w", err)
+	}
+	if err := want.Validate(); err != nil {
+		return fmt.Errorf("referencia: %w", err)
+	}
+	if got.N != want.N {
+		return ErrDimensionMismatch
+	}
+	for index, expected := range want.Data {
+		if math.Abs(got.Data[index]-expected) > 1e-9+1e-9*math.Abs(expected) {
+			return fmt.Errorf("resultado incorrecto en C[%d,%d]: obtenido %.17g, esperado %.17g", index/got.N, index%got.N, got.Data[index], expected)
+		}
+	}
 	return nil
 }
 
-func main() {
-	cfg, err := parseArgs(os.Args[1:])
+var csvHeader = []string{
+	"timestamp", "version", "commit", "hostname", "cpu_model", "ram_gb",
+	"os_version", "configuration", "n", "seed", "processes", "threads",
+	"observed_threads", "workers", "gomaxprocs", "repetition", "is_warmup",
+	"kernel_s", "total_s", "validation_status",
+}
+
+func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result measurement) error {
+	if math.IsNaN(result.kernelS) || math.IsInf(result.kernelS, 0) || result.kernelS < 0 ||
+		math.IsNaN(result.totalS) || math.IsInf(result.totalS, 0) || result.totalS < result.kernelS {
+		return fmt.Errorf("tiempos de medición inválidos")
+	}
+	record := []string{
+		result.start.UTC().Format(time.RFC3339), "go_secuencial", info.commit,
+		info.hostname, info.cpuModel, strconv.FormatFloat(float64(info.totalMemory)/(1<<30), 'f', 3, 64),
+		info.osVersion, "go_secuencial", strconv.Itoa(n), strconv.FormatUint(uint64(cfg.seed), 10),
+		"1", "1", "1", "1", strconv.Itoa(runtime.GOMAXPROCS(0)),
+		strconv.Itoa(cfg.repetition), strconv.FormatBool(cfg.repetition == 0),
+		strconv.FormatFloat(result.kernelS, 'f', 9, 64), strconv.FormatFloat(result.totalS, 'f', 9, 64), "OK",
+	}
+	w := csv.NewWriter(out)
+	if err := w.Write(csvHeader); err != nil {
+		return err
+	}
+	if err := w.Write(record); err != nil {
+		return err
+	}
+	w.Flush()
+	return w.Error()
+}
+
+func checkCapacity(n int, available uint64) error {
+	count, err := matrixElementCount(n)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
-	if cfg.smokeTest {
-		if err := runSmokeTest(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-		return
+	// A, B, C y referencia; dividir primero evita desbordar la estimación.
+	if uint64(count) > available/(4*8) {
+		return fmt.Errorf("memoria disponible insuficiente para N=%d", n)
 	}
+	return nil
+}
 
-	var a, b Matrix
-	var seed uint32
-	if cfg.inputFile != "" {
-		f, err := os.Open(cfg.inputFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error al abrir %s: %v\n", cfg.inputFile, err)
-			os.Exit(1)
+func loadMatrices(cfg config, available uint64) (Matrix, Matrix, error) {
+	if cfg.inputFile == "" {
+		if err := checkCapacity(cfg.n, available); err != nil {
+			return Matrix{}, Matrix{}, err
 		}
-		defer f.Close()
-		a, b, err = ReadMatrices(f)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error al leer %s: %v\n", cfg.inputFile, err)
-			os.Exit(1)
-		}
-		seed = 0
-	} else {
-		a, b, err = Generate(cfg.n, cfg.seed)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error al generar matrices: %v\n", err)
-			os.Exit(1)
-		}
-		seed = cfg.seed
+		return Generate(cfg.n, cfg.seed)
 	}
-
-	c := Matrix{N: a.N, Data: make([]float64, a.N*a.N)}
-	for i := range c.Data {
-		c.Data[i] = 0
-	}
-
-	totalStart := time.Now()
-	kernelStart := time.Now()
-	c, err = Multiply(a, b)
-	kernelS := time.Since(kernelStart).Seconds()
-	totalS := time.Since(totalStart).Seconds()
-
+	f, err := os.Open(cfg.inputFile)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error en multiplicacion: %v\n", err)
-		os.Exit(1)
+		return Matrix{}, Matrix{}, err
 	}
+	a, b, readErr := ReadMatrices(f)
+	closeErr := f.Close()
+	if readErr != nil {
+		return Matrix{}, Matrix{}, readErr
+	}
+	if closeErr != nil {
+		return Matrix{}, Matrix{}, closeErr
+	}
+	if err := checkCapacity(a.N, available); err != nil {
+		return Matrix{}, Matrix{}, err
+	}
+	return a, b, nil
+}
 
-	out := os.Stdout
+// Publicar la matriz solo después de escribirla y cerrar el archivo completo.
+func saveMatrix(path string, c Matrix) error {
+	f, err := os.CreateTemp(filepath.Dir(path), ".matrix-*.tmp")
+	if err != nil {
+		return err
+	}
+	temporary := f.Name()
+	defer os.Remove(temporary)
+	writeErr := WriteMatrix(f, c)
+	closeErr := f.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	return os.Rename(temporary, path)
+}
+
+func execute(cfg config, stdout io.Writer, info environmentInfo) error {
+	a, b, err := loadMatrices(cfg, info.availableMemory)
+	if err != nil {
+		return fmt.Errorf("entradas: %w", err)
+	}
+	if err := a.Validate(); err != nil {
+		return fmt.Errorf("matriz A: %w", err)
+	}
+	if err := b.Validate(); err != nil {
+		return fmt.Errorf("matriz B: %w", err)
+	}
+	if a.N != b.N {
+		return ErrDimensionMismatch
+	}
+	reference, err := referenceProduct(a, b)
+	if err != nil {
+		return err
+	}
+	c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
+	result := measureProduct(a, b, c)
+	if err := validateProduct(c, reference); err != nil {
+		return err
+	}
 	if cfg.outputFile != "" {
-		f, err := os.Create(cfg.outputFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error al crear %s: %v\n", cfg.outputFile, err)
-			os.Exit(1)
+		if err := saveMatrix(cfg.outputFile, c); err != nil {
+			return fmt.Errorf("archivo de salida: %w", err)
 		}
-		defer f.Close()
-		out = f
 	}
-	if err := WriteMatrix(out, c); err != nil {
-		fmt.Fprintf(os.Stderr, "error al escribir matriz: %v\n", err)
-		os.Exit(1)
-	}
+	return writeCSV(stdout, cfg, a.N, info, result)
+}
 
-	timestamp := time.Now().UTC().Format("2006-01-02T15:04:05Z")
-	csvLine := buildCSV(
-		timestamp,
-		"go_secuencial",
-		getCommitHash(),
-		getHostname(),
-		getCPUModel(),
-		getOSVersion(),
-		"go_secuencial",
-		a.N,
-		seed,
-		kernelS,
-		totalS,
-		"PENDING",
-	)
-	fmt.Fprintln(os.Stderr, csvLine)
+func runWithMetadata(args []string, stdout, stderr io.Writer, collect func() (environmentInfo, error)) int {
+	cfg, err := parseArgs(args)
+	if err == nil && cfg.smokeTest {
+		if _, err = fmt.Fprintln(stdout, "OK: prueba de instalación Go secuencial."); err == nil {
+			return 0
+		}
+	}
+	if err == nil {
+		var info environmentInfo
+		info, err = collect()
+		if err == nil {
+			previous := runtime.GOMAXPROCS(1)
+			defer runtime.GOMAXPROCS(previous)
+			err = execute(cfg, stdout, info)
+		}
+	}
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+	return 0
+}
+
+func main() {
+	os.Exit(runWithMetadata(os.Args[1:], os.Stdout, os.Stderr, collectEnvironment))
 }
