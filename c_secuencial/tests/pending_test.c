@@ -243,10 +243,34 @@ static int check_file_format_contract(void) {
     return 0;
 }
 
+static int check_generated_seed(uint32_t seed, const double *expected) {
+    double a[4], b[4], repeated_a[4], repeated_b[4];
+    size_t i;
+
+    if (input_generate(a, b, 2, seed) != 0 ||
+        input_generate(repeated_a, repeated_b, 2, seed) != 0) {
+        return 1;
+    }
+    for (i = 0; i < 4; ++i) {
+        if (fabs(a[i] - expected[i]) > 1e-15 ||
+            fabs(b[i] - expected[i + 4]) > 1e-15 ||
+            a[i] != repeated_a[i] || b[i] != repeated_b[i] ||
+            a[i] < -1.0 || a[i] > 1.0 || b[i] < -1.0 || b[i] > 1.0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 int main(void) {
     double a[4], b[4];
     const double want_a[4] = {-0.363, 0.036, -0.215, 0.602};
     const double want_b[4] = {0.941, -0.453, -0.554, 0.579};
+    const double want_seed_zero[8] = {0.525, 0.844, 0.642, -0.032,
+                                      0.360, -0.832, 0.853, -0.771};
+    const double want_seed_max[8] = {0.832, -0.174, 0.670, -0.661,
+                                     0.975, -0.773, 0.964, -0.454};
     const uint32_t want_states[8] = {1083814273u, 378494188u, 2479403867u, 955863294u,
                                      1613448261u, 110225632u, 1921058495u, 508781842u};
     const double fixture_producto_a[] = {1, 2, 3, 4}, fixture_producto_b[] = {5, 6, 7, 8};
@@ -279,6 +303,8 @@ int main(void) {
         if (a[i] - want_a[i] > 1e-15 || want_a[i] - a[i] > 1e-15) return 1;
         if (b[i] - want_b[i] > 1e-15 || want_b[i] - b[i] > 1e-15) return 1;
     }
+    if (check_generated_seed(0, want_seed_zero) != 0 ||
+        check_generated_seed(UINT32_MAX, want_seed_max) != 0) return 1;
     if (check_fixture("tests/fixtures/producto2.input.txt", 2, fixture_producto_a, fixture_producto_b) != 0) return 1;
     if (check_fixture("tests/fixtures/escalar.input.txt", 1, fixture_escalar_a, fixture_escalar_b) != 0) return 1;
     if (check_fixture("tests/fixtures/identidad.input.txt", 2, fixture_identidad_a, fixture_identidad_b) != 0) return 1;
