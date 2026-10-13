@@ -1,0 +1,67 @@
+{
+  "protocol_version": "1.2",
+  "campaign_id": null,
+  "phase": null,
+  "started_at_utc": null,
+  "operator": null,
+  "hostname": null,
+  "git": {
+    "commit_full": null,
+    "dirty": null,
+    "diff_file": null
+  },
+  "hardware": {
+    "cpu_model": null,
+    "physical_cores": null,
+    "logical_processors": null,
+    "ram_visible_bytes": null,
+    "ram_available_at_start_bytes": null,
+    "os_edition": null,
+    "os_build": null,
+    "power_source": null,
+    "power_plan": null
+  },
+  "build": {
+    "configuration": "Release",
+    "target": "x64",
+    "msvc_version": null,
+    "windows_sdk_version": null,
+    "msmpi_runtime_version": null,
+    "msmpi_sdk_version": null,
+    "go_version": null,
+    "goos": "windows",
+    "goarch": "amd64",
+    "effective_options_by_version": {
+      "c_secuencial": null,
+      "c_paralelo": null,
+      "go_secuencial": null,
+      "go_paralelo": null
+    },
+    "executable_sha256_by_version": {
+      "c_secuencial": null,
+      "c_paralelo": null,
+      "go_secuencial": null,
+      "go_paralelo": null
+    }
+  },
+  "experiment": {
+    "matrix_sizes": null,
+    "seed": 42,
+    "enabled_budgets": null,
+    "ordered_configurations": null,
+    "warmups_per_combination": 1,
+    "measured_repetitions": 5,
+    "order_policy": "N ascending, protocol table order; odd rounds forward, even rounds reverse",
+    "maximum_matrix_fraction_of_available_ram": 0.5,
+    "estimated_matrix_peak_bytes": null,
+    "timeout_per_run_seconds": null,
+    "campaign_machine_time_budget_seconds": null,
+    "omp_dynamic": "FALSE",
+    "omp_num_threads_by_configuration": null,
+    "gomaxprocs_by_configuration": null,
+    "excluded_combinations_and_reasons": [],
+    "plan_file": "plan.csv",
+    "observations_file": "mediciones.csv",
+    "log_file": "bitacora.txt"
+  }
+}

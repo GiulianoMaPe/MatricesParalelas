@@ -18,6 +18,7 @@ foreach ($item in $selected) {
             Push-Location $module
             try {
                 $arguments = @('build', '-o', (Join-Path $build "$item.exe"))
+                if ($item -eq 'go_secuencial') { $arguments += '-buildvcs=true' }
                 if ($Configuration -eq 'Debug') { $arguments += '-gcflags=all=-N -l' }
                 Invoke-Native $go ($arguments + '.')
             } finally { Pop-Location }

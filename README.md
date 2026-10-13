@@ -1,15 +1,14 @@
 # Multiplicación de matrices en Windows 11
 
 Repositorio para un equipo de ocho integrantes y diez sprints de desarrollo sobre
-una base técnica preparada. **Los cuatro algoritmos están pendientes**. Solo `--smoke-test` ejecuta
-una prueba de instalación; cualquier solicitud de cálculo termina con código 2,
-sin matrices ni tiempos ficticios.
+una base técnica preparada. Go secuencial ya ejecuta y valida el producto real; las
+otras versiones permanecen pendientes de integración completa.
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |
-| `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Esqueleto y prueba de instalación |
+| `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo implementado; CLI pendiente de integración |
 | `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | Esqueleto y prueba de 2 procesos × 2 hilos |
-| `go_secuencial` | Go windows/amd64 | Esqueleto y prueba de instalación |
+| `go_secuencial` | Go windows/amd64 | Producto, CLI, medición y fixtures integrados |
 | `go_paralelo` | Go, goroutines y canales | Esqueleto y prueba de sincronización |
 
 ## Empezar desde VS Code
@@ -60,11 +59,21 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\clean_windows.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\clean_windows.ps1 -Cache
 ```
 
-El contrato futuro será `--n N --seed SEED`, con `--workers W` en Go paralelo.
-**Esos argumentos aún no están implementados.** El script `bench_windows.ps1`
-documenta su futura interfaz y rechaza las mediciones con código 2 mientras no
-exista implementación y validación; tampoco se habilita solo editando `status.json`.
-No hay resultados experimentales en esta entrega.
+Para comparar una salida matricial con una referencia del mismo formato:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\compare_results.ps1 -Expected .\tests\fixtures\producto2.expected.txt -Actual .\ruta\producto2.output.txt
+```
+
+El comparador revisa dimensiones y todas las celdas con `atol = rtol = 1e-9`,
+rechaza valores no finitos y devuelve código 1 si el formato o algún resultado
+no cumple el contrato. Se ejecuta una vez por cada salida que se desea comprobar.
+
+El contrato es `--n N --seed SEED`, con `--workers W` en Go paralelo. Go secuencial
+ya implementa sus argumentos; las demás versiones deben completar su integración.
+El script `bench_windows.ps1` documenta su futura interfaz y rechaza las mediciones
+con código 2 mientras no exista implementación y validación; tampoco se habilita
+solo editando `status.json`. No hay resultados experimentales en esta entrega.
 
 ## Organización
 
@@ -99,8 +108,8 @@ no vuelven a asignarse como trabajo de desarrollo ya realizado.
 
 Las rutas acordadas son `docs/formato_datos.md` y `docs/protocolo_medicion.md`.
 Los diagnósticos, informes y scripts que aún no existen se crearán en el sprint
-asignado. En particular, `scripts/compare_results.ps1` corresponde a S3 y
-`scripts/summarize_results.ps1` a S7. `bench_windows.ps1` es solo una interfaz
+asignado. `scripts/compare_results.ps1` implementa la comparación de S3 y
+`scripts/summarize_results.ps1` corresponde a S7. `bench_windows.ps1` es solo una interfaz
 pendiente: S7 implementará la campaña real. El piloto se guardará en
 `resultados/piloto/`, separado de los datos oficiales de S8 en `resultados/raw/`.
 
@@ -109,9 +118,13 @@ pendiente: S7 implementará la campaña real. El piloto se guardará en
 Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
 [pruebas](tests/README.md), [protocolo de medición](docs/protocolo_medicion.md),
 [plan del equipo](docs/sprints/README.md) y [verificación de esta entrega](docs/verificacion-inicial.md).
-Las pruebas de instalación no demuestran corrección matemática. Faltan los
-multiplicadores, argumentos y validación de tamaños, generador común, lectores,
-particionado, cronómetros, comparador completo y campañas de medición.
+Las pruebas de instalación no demuestran corrección matemática. Los generadores
+y lectores ya aplican el contrato común; faltan multiplicadores e integraciones
+de las versiones aún pendientes, el particionado ejecutable, cronómetros y las
+campañas de medición. El contrato fija salida 0 para éxito, 1 para
+errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
+línea propia y N valores por fila. El protocolo distingue cálculo (`kernel_s`)
+de vaciado, reparto y coordinación incluidos en `total_s`.
 
 ## Primer commit y publicación
 
