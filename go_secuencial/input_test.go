@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"errors"
 	"math"
+	"os"
+	"path/filepath"
+	"strconv"
 	"testing"
 )
 
@@ -134,11 +137,8 @@ func TestGenerate_SemillasExtremas(t *testing.T) {
 		if len(a.Data) != 16 || len(b.Data) != 16 {
 			t.Errorf("Generate(4, %d) longitud de datos inválida", seed)
 		}
-	"os"
-	"path/filepath"
-	"strconv"
-	"testing"
-)
+	}
+}
 
 func TestGenerateSeed42Vector(t *testing.T) {
 	wantStates := []uint32{1083814273, 378494188, 2479403867, 955863294, 1613448261, 110225632, 1921058495, 508781842}
