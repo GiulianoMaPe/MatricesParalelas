@@ -115,7 +115,9 @@ Los cinco pares de archivos tienen dimensiones, cantidad de filas y valores
 coherentes con `docs/formato_datos.md`. Los casos cubren producto conocido,
 identidad, matriz cero, valor escalar negativo y dimension impar con valores
 positivos, negativos y cero. No se encontraron resultados esperados incorrectos.
-Esta validacion matematica es manual e independiente de los ejecutables. Los
-lectores de fixtures ya existen como funciones y aplican el contrato por lineas;
-su integracion en la CLI, el comparador y los algoritmos de multiplicacion siguen
-pendientes. Ver [formato comun](../../docs/formato_datos.md).
+Esta validacion matematica es manual e independiente de los ejecutables. En S3,
+las referencias C y Go secuenciales se ejecutaron con los cinco fixtures y sus
+salidas se compararon con estos resultados esperados; las cinco comparaciones
+pasaron. El lector, el comparador y los algoritmos secuenciales están integrados.
+La multiplicación paralela corresponde a los sprints posteriores. Ver
+[formato común](../../docs/formato_datos.md).

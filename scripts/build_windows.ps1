@@ -28,6 +28,21 @@ foreach ($item in $selected) {
             $options += if ($Configuration -eq 'Debug') { @('/Od','/Zi','/MDd') } else { @('/O2','/MD') }
             $linkOptions = @('/link','/MACHINE:X64')
             if ($Configuration -eq 'Debug') { $linkOptions += '/DEBUG' }
+            if ($item -eq 'c_secuencial') {
+                $commit = 'dev'
+                $git = Get-Command git.exe -ErrorAction SilentlyContinue
+                if ($git) {
+                    $resolvedCommit = & $git.Source -C $script:ProjectRoot rev-parse HEAD
+                    if ($LASTEXITCODE -eq 0 -and $resolvedCommit -match '^[0-9a-fA-F]{40}$') {
+                        $commit = $resolvedCommit.ToLowerInvariant()
+                    }
+                }
+                $buildInfo = Join-Path $build 'build_info.h'
+                $buildInfoText = "#define PROJECT_COMMIT `"$commit`"`r`n#define PROJECT_CONFIGURATION `"$Configuration`"`r`n"
+                [IO.File]::WriteAllText($buildInfo, $buildInfoText, [Text.UTF8Encoding]::new($false))
+                $options += @('/D_WIN32_WINNT=0x0600','/I',$build)
+                $linkOptions += 'advapi32.lib'
+            }
             if ($item -eq 'c_paralelo') {
                 $mpi = Assert-MPISdk
                 $options += @('/openmp','/I',$mpi.Include)

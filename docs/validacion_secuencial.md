@@ -7,6 +7,12 @@
 **Rama:** `feature/s03-i08-validacion-secuencial`  
 **Estado:** Completado · Revisión cruzada asignada a Integrante 7 (Andres)  
 
+**Actualización de cierre técnico (14/10/2026):** las dos referencias secuenciales
+están integradas en `main`. C pasó `scripts/test_windows.ps1` en Debug y Release;
+Go pasó en Debug. En ambas, el runner validó el CSV y comparó los cinco fixtures
+con sus resultados esperados; todas las comparaciones dieron `max_abs=0` y
+`max_rel=0`. La campaña de rendimiento oficial sigue fuera del alcance de S3.
+
 ---
 
 ## 1. Objetivo y Alcance
@@ -126,9 +132,9 @@ Como parte de la responsabilidad del Integrante 8, se formalizaron y ejecutaron 
 
 Durante las sesiones de prueba se verificó la robustez de ambas referencias ante situaciones anómalas:
 
-1. **Gestión del Código de Salida 2 (Estado Pendiente):**
-   * Al ejecutar cualquiera de los programas solicitando cálculo real (`--n 100 --seed 42`), ambos ejecutables rechazan la orden de forma controlada y retornan el código `2`.
-   * **Importancia:** Esto impide que se generen archivos CSV con tiempos artificiales o matrices erróneas antes de que los núcleos aritméticos de I1 e I3 sean integrados formalmente.
+1. **Códigos de salida y registro de métricas:**
+   * Las referencias secuenciales completan el cálculo válido con código `0`; los errores de argumentos, datos, memoria o resultado devuelven `1`. El código `2` queda reservado para operaciones que todavía estén pendientes en otras versiones.
+   * El CSV de 20 campos se emite solo después de validar el resultado; incluye `kernel_s`, `total_s` y `validation_status=OK`. El runner comprueba el esquema y los tiempos, pero sus valores no se presentan como una campaña experimental.
 2. **Consistencia en el manejo de decimales (Punto Flotante IEEE 754):**
    * En pruebas con números subnormales y exponenciales (por ejemplo, `1e-15` o `-2e-1`), los lectores de archivos de C y Go interpretaron los valores de forma unívoca, sin pérdida de precisión en los 64 bits.
 3. **Resistencia ante archivos de entrada malformados:**
@@ -166,19 +172,18 @@ OK: nucleo C secuencial (producto, identidad, cero, escalar, impar, repeticion, 
 ```
 * **Comprobaciones superadas:** Producto conocido $2 \times 2 = [19, 22; 43, 50]$, escalar $1 \times 1 = -12.0$, elemento neutro multiplicativo ($I_2 \times B = B$), matriz nula ($0 \times B = 0$), impar $3 \times 3$, llamadas sucesivas sin acumulación residual, aliasing destructivo ($C=A$) y entradas no finitas.
 
-### 6.3. Observación y Acción Solicitada a Yessly (I1)
-* **Hallazgo:** Al compilar y correr `pending_test.c` en su rama, el test finaliza con código de salida `1`.
-* **Causa:** En `c_secuencial/tests/pending_test.c`, línea 185:
-  ```c
-  if (matrix_multiply(a, b, &c, 1) != MATRIX_PENDING || c != -123.0) return 1;
-  ```
-  Yessly actualizó correctamente las comprobaciones en `check_matrix_contract()` esperando `MATRIX_OK`, pero esta comprobación residual al final de `main()` todavía exigía `MATRIX_PENDING` y `c == -123.0`. Al llamar ahora al nuevo `matrix_multiply`, la función calcula el producto escalar (`c = -0.341583...`) y retorna `MATRIX_OK`, lo que dispara la condición de error `return 1;` y hace fallar `scripts/test_windows.ps1`.
-* **Siguiente acción recomendada:** Se notificó a Yessly en la revisión de su PR para que actualice la línea 185 de `pending_test.c` esperando `MATRIX_OK` y validando el valor de `c`. Con ese ajuste menor, su PR queda 100% aprobado.
+### 6.3. Incidencia de pruebas resuelta
+
+La revisión inicial encontró una comprobación residual que esperaba
+`MATRIX_PENDING` en `pending_test.c`. Esa condición se corrigió antes de integrar
+las entregas. En el estado actual, el runner compila C, ejecuta las pruebas de
+contrato y corre el producto secuencial; ya no espera una salida pendiente. La
+validación de este checkout terminó con código 0 en Debug y Release.
 
 ---
 
 ## 7. Conclusiones
 
 1. **Robustez y Paridad:** Las referencias secuenciales en C y Go presentan una paridad del 100% en sus interfaces, contratos de validación y tratamiento de errores numéricos.
-2. **Generador Verificado:** El algoritmo determinista LCG genera exactamente las mismas matrices $A$ y $B$ en ambos lenguajes, garantizando que cuando los núcleos aritméticos se integren en el Sprint 3, las salidas serán perfectamente comparables bajo la tolerancia $10^{-9}$.
+2. **Generador Verificado:** Las pruebas de C y Go usan vectores de control comunes para N=2 con semillas 42, 0 y `UINT32_MAX`, y verifican continuidad del estado y rango. Además, cada referencia secuencial pasó los cinco fixtures compartidos bajo la tolerancia acordada.
 3. **Criterio de Aceptación:** El presente reporte cumple en su totalidad con los criterios de terminado del **Sprint 3** para el Integrante 8, quedando documentada la evidencia para el equipo y la cátedra.

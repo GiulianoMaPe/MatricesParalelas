@@ -1,12 +1,12 @@
 # Multiplicación de matrices en Windows 11
 
 Repositorio para un equipo de ocho integrantes y diez sprints de desarrollo sobre
-una base técnica preparada. Go secuencial ya ejecuta y valida el producto real; las
-otras versiones permanecen pendientes de integración completa.
+una base técnica preparada. C y Go secuenciales ya ejecutan y validan el producto
+real; C paralelo y Go paralelo siguen en desarrollo.
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |
-| `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo implementado; CLI pendiente de integración |
+| `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo, CLI, validación y métricas integrados |
 | `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | Esqueleto y prueba de 2 procesos × 2 hilos |
 | `go_secuencial` | Go windows/amd64 | Producto, CLI, medición y fixtures integrados |
 | `go_paralelo` | Go, goroutines y canales | Esqueleto y prueba de sincronización |
@@ -69,8 +69,9 @@ El comparador revisa dimensiones y todas las celdas con `atol = rtol = 1e-9`,
 rechaza valores no finitos y devuelve código 1 si el formato o algún resultado
 no cumple el contrato. Se ejecuta una vez por cada salida que se desea comprobar.
 
-El contrato es `--n N --seed SEED`, con `--workers W` en Go paralelo. Go secuencial
-ya implementa sus argumentos; las demás versiones deben completar su integración.
+El contrato secuencial es `--n N --seed SEED` o `--input archivo`, con `--output`
+opcional y `--repetition 0..5`. C y Go secuenciales implementan estas opciones;
+Go paralelo añade `--workers W`. Las dos versiones paralelas siguen en desarrollo.
 El script `bench_windows.ps1` documenta su futura interfaz y rechaza las mediciones
 con código 2 mientras no exista implementación y validación; tampoco se habilita
 solo editando `status.json`. No hay resultados experimentales en esta entrega.
@@ -119,9 +120,12 @@ Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
 [pruebas](tests/README.md), [protocolo de medición](docs/protocolo_medicion.md),
 [plan del equipo](docs/sprints/README.md) y [verificación de esta entrega](docs/verificacion-inicial.md).
 Las pruebas de instalación no demuestran corrección matemática. Los generadores
-y lectores ya aplican el contrato común; faltan multiplicadores e integraciones
-de las versiones aún pendientes, el particionado ejecutable, cronómetros y las
-campañas de medición. El contrato fija salida 0 para éxito, 1 para
+y lectores aplican el contrato común. C y Go secuenciales tienen el producto,
+la validación de resultados, el flujo de entrada/salida y las métricas integrados.
+C paralelo y Go paralelo siguen pendientes de integrar sus algoritmos; el
+particionado de C está diseñado, pero no conectado al flujo. Las campañas
+experimentales oficiales siguen programadas para S7 y S8.
+El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
 línea propia y N valores por fila. El protocolo distingue cálculo (`kernel_s`)
 de vaciado, reparto y coordinación incluidos en `total_s`.

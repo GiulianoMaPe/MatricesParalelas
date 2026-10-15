@@ -46,9 +46,9 @@ foreach ($item in $selected) {
         if ($item -eq 'c_paralelo') {
             Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\run_hybrid_windows.ps1",'-Configuration',$Configuration)
         } else { Invoke-Native $exe @('--smoke-test') }
-        if ($item -eq 'go_secuencial') {
+        if ($item -in @('c_secuencial','go_secuencial')) {
             $csvLines = @(& $exe --n 2 --seed 42)
-            if ($LASTEXITCODE -ne 0) { throw 'Go secuencial debe completar el calculo con codigo 0.' }
+            if ($LASTEXITCODE -ne 0) { throw "$item debe completar el calculo con codigo 0." }
             Assert-SequentialCSV $csvLines
             $outputs = Join-Path $build 'fixture-results'
             New-Item -ItemType Directory -Force -Path $outputs | Out-Null
@@ -57,11 +57,11 @@ foreach ($item in $selected) {
                 $expectedPath = Join-Path $script:ProjectRoot "tests\fixtures\$fixture.expected.txt"
                 $outputPath = Join-Path $outputs "$fixture.output.txt"
                 $csvLines = @(& $exe --input $inputPath --output $outputPath)
-                if ($LASTEXITCODE -ne 0) { throw "Go secuencial fallo en $fixture." }
+                if ($LASTEXITCODE -ne 0) { throw "$item fallo en $fixture." }
                 Assert-SequentialCSV $csvLines
                 Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\compare_results.ps1",'-Expected',$expectedPath,'-Actual',$outputPath)
             }
-            Write-Host 'OK: go_secuencial (producto real, cinco fixtures y CSV validado).'
+            Write-Host "OK: $item (producto real, cinco fixtures y CSV validado)."
         } else {
             & $exe --n 2 --seed 42
             if ($LASTEXITCODE -ne 2) { throw 'El esqueleto debe rechazar el calculo pendiente con codigo 2.' }

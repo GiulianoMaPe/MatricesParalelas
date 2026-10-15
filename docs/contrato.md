@@ -1,10 +1,10 @@
 # Contrato común de C y Go
 
-Versión unificada: 01/10/2026. Este documento reúne las reglas comunes conformes
-para S2. Las evaluaciones asistidas y el cierre documental están registrados en
-[Sprint 2](sprints/sprint-02.md). Los generadores y lectores están implementados
-como funciones; los ejecutables aún solo integran `--smoke-test`. El cálculo
-y las mediciones corresponden a los sprints posteriores.
+Versión unificada: 01/10/2026. Este documento reúne las reglas comunes acordadas
+en S2 y aplicadas por las referencias secuenciales completadas en S3. C y Go
+secuenciales generan o leen matrices, calculan el producto, validan el resultado
+y emiten métricas por ejecución. Las versiones paralelas se completan en sprints
+posteriores; las campañas experimentales oficiales se reservan para S7 y S8.
 
 ## Códigos de salida y errores
 
@@ -30,12 +30,11 @@ Los estados internos de funciones **no son códigos de salida del ejecutable**:
 | Go: `errors.Is(err, ErrPending)` | Pendiente: 2. |
 | Go: cualquier otro error | Error: 1. |
 
-Los dos generadores Go distinguen `ErrInvalidDimension` y `ErrSizeOverflow`.
-Los lectores Go devuelven `ErrInvalidFixture` para datos incorrectos y
-`ErrFixtureIO` para errores de lectura. C conserva sus estados simbólicos
-equivalentes. Con una dimensión válida los generadores entregan datos; no
-devuelven pendiente. La CLI de S3 aplicará estas conversiones; el esqueleto
-actual responde 2 a solicitudes de cálculo porque aún no integra los argumentos.
+Los generadores distinguen dimensión inválida y desbordamiento. Los lectores Go
+devuelven `ErrInvalidFixture` para datos incorrectos y `ErrFixtureIO` para
+errores de lectura; C conserva estados internos equivalentes. Las CLI
+secuenciales traducen esos errores a salida 1, producen 0 si el cálculo validado
+termina correctamente y reservan salida 2 para operaciones aún no implementadas.
 
 ## Matrices, argumentos y memoria
 
@@ -85,7 +84,9 @@ de control están en `formato_datos.md` y se prueban en ambos lenguajes.
 
 ## Cálculo y concurrencia
 
-La referencia C es independiente de MPI/OpenMP. Empezar con bucles i,k,j.
+La referencia C es independiente de MPI/OpenMP y usa bucles i,k,j. Las versiones
+secuenciales implementan el cálculo; el contrato de concurrencia que sigue
+describe el trabajo de los módulos paralelos.
 Vaciar C antes del cálculo en cada ejecución, incluido el calentamiento.
 
 En MPI, rank 0 prepara entradas; Bcast de B, Scatterv de filas de A, OpenMP

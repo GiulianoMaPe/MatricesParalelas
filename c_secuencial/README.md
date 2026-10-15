@@ -2,7 +2,7 @@
 
 Completé las interfaces de S2: validación de matrices, errores y reserva y liberación de memoria. El módulo ya genera entradas y lee archivos de prueba.
 
-En S3 dejé integrados los argumentos (`--n`, `--seed`) y el cronómetro en `src/main.c` y `src/timer.c`. La multiplicación sigue pendiente del PR #19.
+En S3 quedó integrado el ejecutable C secuencial: genera o lee matrices, multiplica, valida el resultado, guarda una matriz opcional y emite el CSV de métricas.
 
 ## Cómo probarlo
 
@@ -13,23 +13,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version c_secuencial -Configuration Release
 ```
 
-Ejecuté ambos comandos el 01/10/2026 y pasaron. `--smoke-test` comprueba la instalación y ahora además comprueba que `timer_seconds` avance de forma monótona; `--n` y `--seed` todavía devuelven pendiente (código 2) porque el núcleo del PR #19 aún no está en `main`.
+La validación más reciente pasó en Debug y Release. `--smoke-test` comprueba la instalación y que `timer_seconds` avance de forma monótona; `--n`/`--seed` y los cinco fixtures completan el producto y producen CSV válido.
 
 ## Lo que hace `src/main.c`
 
 - Parsea `--n <N>` y `--seed <SEED>`; `--smoke-test` solo se acepta como único argumento.
+- Acepta `--input <archivo>` en lugar de generación y `--output <archivo>` para guardar C; `--repetition 0..5` registra calentamiento y repetición.
 - Rechaza argumento faltante, desconocido, duplicado, mal formado, valor no numérico, fuera de rango, `n <= 0` y el desbordamiento de `n*n` o de bytes (los mismos códigos `MATRIX_*` de `matrix.h`, sin números mágicos).
 - Reserva A, B y C con `matrix_allocate` y libera todo en cada ruta de salida, incluida la falla de reserva (`MATRIX_NO_MEMORY`).
-- Genera A y B fuera de los cronómetros, valida antes de cualquier temporización y no escribe en C durante la validación.
-- Códigos de salida: 0 éxito, 1 error, 2 pendiente. Los errores internos `INPUT_*` se traducen a 1.
+- Generación, lectura, preparación y validación independiente del producto quedan fuera de los cronómetros.
+- `total_s` incluye vaciar C y calcular; `kernel_s` mide solo la acumulación i,k,j. Solo se emite `validation_status=OK` tras validar el resultado.
+- Códigos de salida: 0 éxito, 1 error y 2 solo si la operación solicitada estuviera pendiente. Los errores internos `INPUT_*` se traducen a 1.
 
-## Lo que falta (dependencia del PR #19)
+## Integración del núcleo y las métricas
 
-`matrix.h` en esta rama no declara `matrix_multiply_validate`, `matrix_clear` ni `matrix_accumulate`, así que `kernel_s` y `total_s` todavía no se pueden medir. No dupliqué ni inventé el núcleo: el flujo exacto a cablear (límites de `total_s` y `kernel_s` de `docs/protocolo_medicion.md` §3.1–3.3, comprobación de `kernel_s <= total_s` y salida de resultados) está documentado en el comentario del paso de multiplicación de `src/main.c`.
+`main.c` conecta `matrix_multiply_validate`, `matrix_clear` y `matrix_accumulate` de `matrix.c`. Compara el resultado con una referencia independiente antes de guardarlo o emitir la fila de métricas. La salida matricial se escribe en un temporal y se renombra solo cuando terminó correctamente.
 
 ## Evidencia de S3 (05/10/2026)
 
-Mi equipo no tiene MSVC instalado, así que `build_windows.ps1`/`test_windows.ps1` no pudieron ejecutarse aquí; compilé con GCC 16.2 (w64devkit portátil, fuera del repositorio) usando los mismos avisos estrictos: `-std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -O2`, sin un solo aviso. Queda pendiente repetir la compilación con MSVC x64 en una máquina con el toolchain del proyecto.
+La evidencia original de esta sección corresponde al entorno registrado por el integrante. Validación posterior en este checkout: `scripts/test_windows.ps1 -Version c_secuencial` terminó con código 0 tanto en Debug como en Release con MSVC x64; pasaron las pruebas de contrato, el smoke test, el cálculo generado, la validación del CSV y los cinco fixtures comparados.
 
 - `pending_test.exe`: pasa (contratos de dimensión, datos, memoria, LCG y fixtures).
 - `--smoke-test`: salida 0, con autocomprobación del cronómetro.
@@ -42,8 +44,8 @@ Mi equipo no tiene MSVC instalado, así que `build_windows.ps1`/`test_windows.ps
 - Cada matriz tiene tamaño positivo, exactamente N*N valores y ningún NaN o infinito.
 - Compruebo el tamaño antes de reservar memoria, con el mismo límite de Go en Windows x64.
 - `matrix_allocate` requiere una matriz vacía. `matrix_release` libera sus datos y la deja vacía otra vez. Solo libero memoria propia, nunca datos prestados ni dos copias del mismo puntero.
-- `matrix_multiply_checked` comprueba las entradas y la capacidad de salida. Todavía devuelve pendiente y conserva los datos.
-- Los códigos de salida acordados son 0 para éxito, 1 para error y 2 para pendiente. Los códigos internos de las funciones se traducirán al integrar el programa.
+- `matrix_multiply_checked` comprueba las entradas, calcula el producto y rechaza resultados no finitos. El ejecutable usa las funciones separadas para medir los límites definidos en el protocolo.
+- Los códigos de salida acordados son 0 para éxito, 1 para error y 2 para una operación aún no implementada.
 
 Dejé los detalles de las funciones en [matrix.h](include/matrix.h) y los acuerdos en la [propuesta C/Go](../docs/especificaciones_c_go_secuencial.md). Mis evidencias están en [S2](../docs/sprints/sprint-02.md). La [revisión técnica asistida para I8](../docs/revision_i08_sprints_01_02.md), realizada el 01/10/2026, registra resultado técnico conforme y una observación pendiente sobre horas declaradas.
 

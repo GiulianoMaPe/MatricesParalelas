@@ -1,5 +1,9 @@
 # Sprint 3 Implementar las referencias secuenciales
 
+> **Estado global actualizado (14/10/2026):** cierre técnico completado. El
+> primer párrafo y los registros individuales conservan el estado que tenían
+> cuando se redactaron; la síntesis vigente está en el registro de cierre.
+
 Estado: en ejecución. Como integrante 3, completé y probé la multiplicación Go secuencial y revisé el ejecutable integrado de Eva. Sebastian aceptó mi entrega y el trabajo de I4 queda conforme en su estado actual. El cierre de las demás entregas del equipo sigue pendiente. Las asignaciones siguientes proceden de la [guía vigente](../Guia_Sprints.md); detallo mi avance en el registro individual.
 
 Semana 3 · 64 horas de equipo · 8 horas por integrante
@@ -32,13 +36,28 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
+**Resultado:** Sprint 3 técnicamente completado. Las entregas de S3 están
+integradas en `main` (confirmación del equipo) y se cumplió el criterio de
+aceptación: las referencias secuenciales calculan correctamente, pasan los cinco
+fixtures compartidos y emiten las métricas acordadas.
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
-- 
+- **Participantes y horas reales:** se conservan los registros individuales tal
+  como fueron entregados; este cierre no agrega ni estima horas.
+- **Issues y pull requests:** el equipo confirmó que todos los PR de S3 están
+  integrados en `main`.
+- **Pruebas y evidencias:** `scripts/test_windows.ps1 -Version c_secuencial`
+  terminó con código 0 en Debug y Release. `scripts/test_windows.ps1 -Version
+  go_secuencial -Configuration Debug` terminó con código 0. En ambas versiones
+  pasaron las pruebas del módulo, el cálculo generado, la validación del CSV y
+  las comparaciones de `producto2`, `escalar`, `identidad`, `cero` e `impar3`
+  (`max_abs=0`, `max_rel=0`).
+- **Generadores:** las pruebas C y Go comparten vectores de control N=2 para las
+  semillas 42, 0 y `UINT32_MAX`; las pruebas de ambas versiones pasaron.
+- **Bloqueos y decisiones:** no quedan bloqueos técnicos de S3. La campaña
+  experimental oficial queda para S7/S8; las salidas CSV de estas pruebas no se
+  presentan como resultados de rendimiento.
+- **Revisión y criterio de aceptación:** conforme; producto y resultados
+  verificados antes de emitir `validation_status=OK` y las métricas.
 
 ## Registro individual · I3 Giuliano · 05/10/2026
 
