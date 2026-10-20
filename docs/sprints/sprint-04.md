@@ -53,6 +53,18 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Revision y criterio de aceptacion:** el núcleo cumple las comprobaciones de cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. El detector de carreras no reportó problemas. Revisé el estado disponible de I4: las ejecuciones con W=1,2,8 todavía devuelven código 2 por integración pendiente. Quedan pendientes la revisión y aceptación de Sebastian (I2), la revisión final del ejecutable de I4 y la coordinación con el equipo.
 
+## Registro individual · I6 Gerardo · 20/10/2026 · avance
+
+- **Participantes y horas reales:** Gerardo (I6). La asignación estima 3 h de pruebas, 3 h de verificación, 1 h de revisión y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** pendientes de registrar.
+
+- **Pruebas y evidencias:** organicé en [workers_test.go](../../go_paralelo/workers_test.go) las pruebas asignadas a I6: diez repeticiones por combinación de seis tamaños, tres semillas y cuatro cantidades de workers (720 productos comparados con una referencia secuencial); cobertura numérica de filas con 1, 2, 4, 8 y 32 workers para detectar trabajo perdido o acumulación duplicada; y ocho llamadas concurrentes con tamaños de pool distintos. La prueba concurrente comprueba terminación en un máximo de 10 s, estabilidad de los resultados, almacenamiento de salida independiente y que A/B no se modifiquen. `go test ./...` pasó en Windows. `go test -race ./...` no se pudo ejecutar porque CGO no está habilitado en el entorno (`-race requires cgo`). La prueba de instalación se conserva y repite el smoke test diez veces.
+
+- **Bloqueos y decisiones:** el detector de carreras queda pendiente hasta disponer de CGO habilitado y un compilador C compatible. No se duplicaron las pruebas: se trasladaron desde [workers_core_test.go](../../go_paralelo/workers_core_test.go) a la ubicación del entregable de I6.
+
+- **Revision y criterio de aceptacion:** el avance cubre repetición, tamaños variados, resultados estables, terminación y detección numérica de trabajo perdido o duplicado. Revisión cruzada por I7, horas reales, coordinación y cierre formal pendientes.
+
 #### Integrante 8
 
 - Participantes y horas reales: Roberto (8 h: 3 h documentación técnica de flujos de datos y sincronización de C híbrido MPI+OpenMP y Go concurrente CSP, 3 h mapeo a la rúbrica del curso, análisis de sobrecostes y prevención de fallos concurrentes, 1 h coordinación de acuerdos, 1 h revisión cruzada asignada a I1 Yessly).
