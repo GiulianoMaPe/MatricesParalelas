@@ -1,4 +1,4 @@
-# Sprint 4 Construir las versiones paralelas
+﻿# Sprint 4 Construir las versiones paralelas
 
 Estado: en ejecución. El núcleo Go paralelo de I3 está implementado y probado;
 la integración ejecutable de I4, la revisión por I2 y el cierre del equipo siguen
@@ -53,6 +53,18 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Revision y criterio de aceptacion:** el núcleo cumple las comprobaciones de cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. El detector de carreras no reportó problemas. Revisé el estado disponible de I4: las ejecuciones con W=1,2,8 todavía devuelven código 2 por integración pendiente. Quedan pendientes la revisión y aceptación de Sebastian (I2), la revisión final del ejecutable de I4 y la coordinación con el equipo.
 
+#### Integrante 4
+
+- **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de integración de flags/canal/WaitGroup, 3 h de pruebas con workers=1, varios workers y workers>filas, 1 h de revisión cruzada y 1 h de coordinación (8 h total). Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s04-i04-ejecutable-go-paralelo`. La creación de issues y del pull request sigue pendiente.
+
+- **Pruebas y evidencias:** implementé el ejecutable Go paralelo integrado en [main.go](../../go_paralelo/main.go) con parsing completo de flags (`--n`, `--seed`, `--input`, `--output`, `--workers`, `--repetition`, `--smoke-test`), medición separada de `kernel_s` (máximo de tiempos por worker) y `total_s` (incluye vaciado, creación de pool, despacho, `close(tasks)`, `wg.Wait()`), validación numérica contra producto de referencia (tolerancia $10^{-9} + 10^{-9}\cdot|esperado|$) y salida CSV de 20 campos conforme a `docs/protocolo_medicion.md`. Añadí [environment.go](../../go_paralelo/environment.go) y [environment_windows.go](../../go_paralelo/environment_windows.go) para recopilación de metadatos (commit, hostname, CPU, RAM, OS). Completé `matrix.go` con `matrixElementCount()` y moví allí `ErrInvalidDimension`/`ErrSizeOverflow`; agregué `WriteMatrix()` en `input.go`. Verificación ejecutada: workers=1 (equivalente secuencial), workers=2,4,8, workers>filas (N=4, W=8), fixtures compartidos (`producto2`, `escalar`, `identidad`, `cero`, `impar3`), repeticiones con warmup, `go test -race` sin advertencias, `go vet`, `go test` en Debug/Release con código 0 (Go 1.27.0, Windows amd64).
+
+- **Bloqueos y decisiones:** dependí de `multiplyParallelKernel` de I3 (Giuliano) en `workers.go` para la orquestación del pool, canal y `WaitGroup`; mi `main.go` llama a esa función y mide los tiempos. Se usó `runtime.GOMAXPROCS(workers)` por ejecución y se restaura tras `wg.Wait()`. La validación de referencia usa orden de bucles i,j,k (independiente del kernel i,k,j). El CSV usa `configuration=go_paralelo_W{W}`, `version=go_paralelo`, `processes=threads=observed_threads=1`, `gomaxprocs=workers`.
+
+- **Revision y criterio de aceptacion:** el ejecutable compila, acepta todos los flags requeridos, produce CSV válido con `validation_status=OK`, `kernel_s <= total_s`, tiempos finitos con 9 decimales, y pasa el detector de carreras. Casos probados: workers=1, múltiples workers, workers>filas. Queda pendiente revisión cruzada asignada a I1 (Yessly) y aceptación final del equipo.
+
 #### Integrante 8
 
 - Participantes y horas reales: Roberto (8 h: 3 h documentación técnica de flujos de datos y sincronización de C híbrido MPI+OpenMP y Go concurrente CSP, 3 h mapeo a la rúbrica del curso, análisis de sobrecostes y prevención de fallos concurrentes, 1 h coordinación de acuerdos, 1 h revisión cruzada asignada a I1 Yessly).
@@ -60,4 +72,3 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: Entregable `docs/arquitectura.md` completado y actualizado como documento maestro de ambos paralelos. Incluye análisis de particionado 1D (`partition.h`, algoritmos de cociente y resto, soporte de $P > N$, límite $N \le 46340$), comunicación colectiva MPI (`Bcast`, `Scatterv`, `Gatherv`), multihilo OpenMP (`MPI_THREAD_FUNNELED`, variables privadas de bucle), modelo CSP de Go (`chan Task`, `sync.WaitGroup`, pool acotado, inmutabilidad y ausencia de data races con `go test -race`), diagramas de secuencia Mermaid y matriz de invariantes globales.
 - Bloqueos y decisiones: Se unificó el criterio de cronometraje para que `kernel_s` aísle el cómputo puro del sobrecoste de comunicación en MPI y despacho en canales de Go, alineado con el protocolo de medición.
 - Revision y criterio de aceptacion: Entregable de I8 finalizado; listo para revisión formal por Integrante 7 (Andrés). Revisión cruzada a I1 Yessly pendiente a la publicación de su PR de comunicación MPI.
-

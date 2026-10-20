@@ -1,7 +1,8 @@
-package main
+﻿package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -9,13 +10,9 @@ import (
 	"unicode/utf8"
 )
 
-var ErrInvalidDimension = errors.New("la dimension debe ser positiva")
-var ErrSizeOverflow = errors.New("el tamaño de la matriz excede los limites")
 var ErrInvalidFixture = errors.New("fixture invalido")
 var ErrFixtureIO = errors.New("error al leer fixture")
 
-// Generate returns two row-major matrices using the shared uint32 LCG contract.
-// Dimension errors match go_secuencial; executable callers map any error to 1.
 func Generate(n int, seed uint32) (Matrix, Matrix, error) {
 	maxInt := int(^uint(0) >> 1)
 	if n <= 0 {
@@ -44,10 +41,6 @@ func nextState(state uint32) uint32 {
 	return 1664525*state + 1013904223
 }
 
-// ReadMatrices requires N on its own line, then N rows of A and N rows of B.
-// Each row has exactly N decimal values; LF/CRLF and trailing whitespace are
-// accepted. Invalid input returns empty matrices and ErrInvalidFixture; reader
-// failures return ErrFixtureIO. Neither error is an executable exit code.
 func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
 	if reader == nil {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
@@ -107,6 +100,36 @@ func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
 		}
 	}
 	return a, b, nil
+}
+
+func WriteMatrix(writer io.Writer, m Matrix) error {
+	if writer == nil {
+		return ErrInvalidFixture
+	}
+	if err := m.Validate(); err != nil {
+		return err
+	}
+	n := m.N
+	if _, err := fmt.Fprintln(writer, n); err != nil {
+		return err
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if j > 0 {
+				if _, err := writer.Write([]byte{' '}); err != nil {
+					return err
+				}
+			}
+			val := m.Data[i*n+j]
+			if _, err := fmt.Fprintf(writer, "%.17g", val); err != nil {
+				return err
+			}
+		}
+		if _, err := writer.Write([]byte{'\n'}); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func rowTokens(line string) []string {
