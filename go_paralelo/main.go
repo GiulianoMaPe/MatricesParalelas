@@ -11,9 +11,9 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		fmt.Println("OK: prueba de instalacion Go. Algoritmo y contrato de argumentos pendientes.")
+		fmt.Println("OK: prueba de instalacion Go. Integracion de argumentos y nucleo paralelo pendiente.")
 		return
 	}
-	fmt.Fprintln(os.Stderr, "PENDIENTE: multiplicacion y argumentos. Use --smoke-test para probar la instalacion.")
+	fmt.Fprintln(os.Stderr, "PENDIENTE: integracion CLI de multiplicacion y argumentos. Use --smoke-test para probar la instalacion.")
 	os.Exit(2)
 }

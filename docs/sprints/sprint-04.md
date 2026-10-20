@@ -1,6 +1,9 @@
 # Sprint 4 Construir las versiones paralelas
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: en ejecución. El núcleo Go paralelo de I3 está implementado y probado;
+la integración ejecutable de I4, la revisión por I2 y el cierre del equipo siguen
+pendientes. Las asignaciones siguientes conservan el plan; la evidencia realizada
+se distingue en el registro individual.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -37,6 +40,18 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+## Registro individual · I3 Giuliano · 19/10/2026
+
+- **Participantes y horas reales:** Giuliano (I3). El plan contempla 3 h de implementación, 3 h de pruebas, 1 h de revisión y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s04-i03-go-paralelo-workers`. La creación de issues y del pull request sigue pendiente.
+
+- **Pruebas y evidencias:** implementé el núcleo Go paralelo y la distribución de bloques de filas en [workers.go](../../go_paralelo/workers.go), junto con las validaciones en [matrix.go](../../go_paralelo/matrix.go). Añadí pruebas en [matrix_test.go](../../go_paralelo/matrix_test.go) y [workers_core_test.go](../../go_paralelo/workers_core_test.go). Los cinco fixtures compartidos pasaron con 1, 2, 4 y 8 workers. Verifiqué que todas las filas se calculen una vez, que cada bloque respete sus límites y que A/B permanezcan intactas. También pasaron 720 productos repetidos con distintos tamaños y semillas, casos de entradas inválidas, resultados no finitos y llamadas simultáneas. `go test`, `go vet`, `go test -race` y el script `test_windows.ps1` en Debug y Release terminaron con código 0, usando Go 1.27.0 en Windows amd64.
+
+- **Bloqueos y decisiones:** usé un pool acotado, un canal de bloques contiguos y `WaitGroup` para esperar a todos los workers. `Multiply` conserva su firma y `MultiplyParallel` permite elegir la cantidad de workers. Dejé en el [README](../../go_paralelo/README.md) las interfaces y la separación de tiempos para la integración de Eva (I4). Su CLI todavía está pendiente; los productos se verificaron mediante las pruebas del módulo.
+
+- **Revision y criterio de aceptacion:** el núcleo cumple las comprobaciones de cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. El detector de carreras no reportó problemas. Revisé el estado disponible de I4: las ejecuciones con W=1,2,8 todavía devuelven código 2 por integración pendiente. Quedan pendientes la revisión y aceptación de Sebastian (I2), la revisión final del ejecutable de I4 y la coordinación con el equipo.
 
 #### Integrante 8
 

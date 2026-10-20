@@ -9,7 +9,7 @@ real; C paralelo y Go paralelo siguen en desarrollo.
 | `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo, CLI, validación y métricas integrados |
 | `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | Esqueleto y prueba de 2 procesos × 2 hilos |
 | `go_secuencial` | Go windows/amd64 | Producto, CLI, medición y fixtures integrados |
-| `go_paralelo` | Go, goroutines y canales | Esqueleto y prueba de sincronización |
+| `go_paralelo` | Go, goroutines y canales | Núcleo de workers probado; integración CLI pendiente |
 
 ## Empezar desde VS Code
 
@@ -122,8 +122,9 @@ Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
 Las pruebas de instalación no demuestran corrección matemática. Los generadores
 y lectores aplican el contrato común. C y Go secuenciales tienen el producto,
 la validación de resultados, el flujo de entrada/salida y las métricas integrados.
-C paralelo y Go paralelo siguen pendientes de integrar sus algoritmos; el
-particionado de C está diseñado, pero no conectado al flujo. Las campañas
+C paralelo sigue pendiente de integrar su algoritmo; el particionado de C está
+diseñado, pero no conectado al flujo. Go paralelo tiene el núcleo de workers y
+pruebas matemáticas, pendiente de integrarlo en su ejecutable. Las campañas
 experimentales oficiales siguen programadas para S7 y S8.
 El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
