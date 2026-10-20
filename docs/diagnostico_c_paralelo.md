@@ -204,3 +204,18 @@ Revisé el programa, sus pruebas y este diagnóstico. Confirmé que distingue la
 Aclaré que el generador y el lector ya funcionan y que la cabecera contiene el diseño de S2. El reparto y la multiplicación siguen pendientes. También corregí el inventario: cuatro archivos C y tres cabeceras.
 
 Las pruebas de entradas y la instalación con dos procesos y dos hilos pasaron. El intento de cálculo devolvió 2, como corresponde al estado pendiente. Dejé mi revisión en [S1](sprints/sprint-01.md).
+
+---
+
+## Actualizacion 20/10/2026 (implementacion de S4)
+
+El diagnostico anterior describe el esqueleto de S3. A partir del 20/10/2026:
+
+- `src/partition.c` implementa `partition_split` y `partition_rows` con la division entera documentada en `include/partition.h` (filas/counts/desplazamientos, P>N admite filas vacias).
+- `src/matrix.c` implementa el nucleo local `i,k,j` con region OpenMP sobre filas locales y variable de hilos observados; no hay llamadas MPI dentro de la region.
+- `src/main.c` implementa la CLI (`--n/--seed`, `--input`, `--output`, `--repetition`, `--smoke-test`), `MPI_Init_thread(FUNNELED)`, `MPI_Bcast` de B, `MPI_Scatterv` de A, `MPI_Gatherv` de C, reduccion de tiempos con `MPI_Wtime`/`MPI_Reduce(MAX)`, validacion secuencial en el rango 0 y CSV de 20 columnas.
+- `tests/pending_test.c` ya no comprueba pendencia: cubre los 8 ejemplos de particion, 4480 pares N/P, fronteras 46340/46341, entradas LCG/fixtures y el nucleo local.
+- `scripts/run_hybrid_windows.ps1` parametriza P y T y permite `--input/--output`; `scripts/test_windows.ps1` valida los cinco fixtures, P=1, P>N, particiones no divisibles y el CSV.
+- `status.json` declara `algorithm=implemented` y `validation=pending`.
+
+Estado real: falta la compilacion estricta con MSVC, Windows SDK y MS-MPI y la ejecucion de las pruebas en ese entorno. En el equipo donde se escribio esta implementacion esas herramientas no estaban instaladas. La verificacion aritmetica independiente (`scripts/verify_partition_design.ps1`) si se ejecuto y paso.

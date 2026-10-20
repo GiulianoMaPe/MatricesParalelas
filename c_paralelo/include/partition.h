@@ -8,12 +8,10 @@
  * ============================================================================
  *
  *  Autor: Integrante 2 (Sebastian).  Fecha: 30/09/2026.
- *  Estado: DISENO. Este archivo es el entregable de Sprint 2 ("Diseno MPI con
- *  ejemplos verificables"). La implementacion entra en Sprint 4
- *  (c_paralelo/src/partition.c, junto con Scatterv/Gatherv de I1); hasta entonces
- *  partition_rows() devuelve PARTITION_PENDING (2); partition_split() solo
- *  esta declarada y tendra implementacion en S4. Ver docs/diagnostico_c_paralelo.md (seccion 6) y
- *  la evidencia de ejecucion en docs/sprints/sprint-02.md.
+ *  Estado: DISENO (S2) e IMPLEMENTACION (S4). c_paralelo/src/partition.c ya
+ *  implementa ambas funciones y c_paralelo/src/main.c las usa junto con
+ *  Scatterv/Gatherv. Ver docs/diagnostico_c_paralelo.md (seccion 6) y la
+ *  evidencia de ejecucion en docs/sprints/sprint-02.md.
  *
  *  NOTA DE CODIGO: este fichero es ASCII a proposito (regla de todos los .c/.h
  *  del proyecto: el compilador MSVC trabaja con la pagina de codigos por
@@ -97,7 +95,8 @@
  *  Retorno:
  *      PARTITION_OK (0)        vectores rellenados y invariantes cumplidos
  *      PARTITION_INVALID (1)   precondicion violada; vectores intactos
- *      PARTITION_PENDING (2)   modulo sin implementar (estado actual)
+ *      PARTITION_PENDING (2)   reservado para el contrato del esqueleto; las
+ *                              funciones implementadas no lo devuelven
  *
  *  El reparto se calcula con el mismo algoritmo en todos los ranks, por lo que
  *  no hace falta reducirlo por MPI; si el caller quiere cerrar el diseno debe
@@ -223,9 +222,9 @@
  * Fase 1: reparto en filas (unidades de fila, independiente de MPI).
  *   rows[i]        filas asignadas al proceso i       (0 <= rows[i] <= n)
  *   first_rows[i]  indice global de su primera fila   (0 <= first_rows[i] <= n)
- * Devuelve PARTITION_OK, PARTITION_INVALID (n < 1, n > INT_MAX,
- * processes < 1, puntero nulo)
- * o PARTITION_PENDING.  El llamador reserva "processes" entradas en cada vector.
+ * Devuelve PARTITION_OK o PARTITION_INVALID (n < 1, n > INT_MAX,
+ * processes < 1, puntero nulo). El llamador reserva "processes" entradas en
+ * cada vector.
  */
 int partition_split(size_t n, int processes, int *rows, int *first_rows);
 
@@ -233,10 +232,8 @@ int partition_split(size_t n, int processes, int *rows, int *first_rows);
  * Fase 2: counts y desplazamientos para MPI_Scatterv / MPI_Gatherv, EN
  * ELEMENTOS double (counts[i] = rows[i]*N, displacements[i] = first[i]*N).
  * Precondiciones adicionales: n*n sin desbordar size_t y n*n <= INT_MAX
- * (equivalente: n <= PARTITION_MAX_N).  Devuelve PARTITION_OK,
- * PARTITION_INVALID o PARTITION_PENDING.
- * Prototipo original del esqueleto: se conserva la firma para no romper
- * src/partition.c hasta su implementacion en Sprint 4.
+ * (equivalente: n <= PARTITION_MAX_N). Devuelve PARTITION_OK o
+ * PARTITION_INVALID. El prototipo original del esqueleto se conserva.
  */
 int partition_rows(size_t n, int processes, int *counts, int *displacements);
 

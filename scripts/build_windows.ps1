@@ -28,7 +28,7 @@ foreach ($item in $selected) {
             $options += if ($Configuration -eq 'Debug') { @('/Od','/Zi','/MDd') } else { @('/O2','/MD') }
             $linkOptions = @('/link','/MACHINE:X64')
             if ($Configuration -eq 'Debug') { $linkOptions += '/DEBUG' }
-            if ($item -eq 'c_secuencial') {
+            if ($item -in @('c_secuencial','c_paralelo')) {
                 $commit = 'dev'
                 $git = Get-Command git.exe -ErrorAction SilentlyContinue
                 if ($git) {

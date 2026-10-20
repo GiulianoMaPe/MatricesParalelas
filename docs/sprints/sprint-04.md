@@ -3,6 +3,7 @@
 Estado: en ejecución. El núcleo de I3 y la integración Go paralelo de I4 están
 implementados y probados en esta rama; la revisión técnica de I4 queda conforme.
 El cierre del equipo sigue pendiente.
+La comunicacion MPI y el nucleo OpenMP de C quedaron implementados el 20/10/2026; su compilacion y pruebas de runtime siguen pendientes.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -71,3 +72,15 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: Entregable `docs/arquitectura.md` completado y actualizado como documento maestro de ambos paralelos. Incluye análisis de particionado 1D (`partition.h`, algoritmos de cociente y resto, soporte de $P > N$, límite $N \le 46340$), comunicación colectiva MPI (`Bcast`, `Scatterv`, `Gatherv`), multihilo OpenMP (`MPI_THREAD_FUNNELED`, variables privadas de bucle), modelo CSP de Go (`chan Task`, `sync.WaitGroup`, pool acotado, inmutabilidad y ausencia de data races con `go test -race`), diagramas de secuencia Mermaid y matriz de invariantes globales.
 - Bloqueos y decisiones: Se unificó el criterio de cronometraje para que `kernel_s` aísle el cómputo puro del sobrecoste de comunicación en MPI y despacho en canales de Go, alineado con el protocolo de medición.
 - Revision y criterio de aceptacion: Entregable de I8 finalizado; listo para revisión formal por Integrante 7 (Andrés). Revisión cruzada a I1 Yessly pendiente a la publicación de su PR de comunicación MPI.
+
+## Registro individual - I1 Yessly - 20/10/2026
+
+- **Participantes y horas reales:** Yessly (I1). El plan contempla 3 h de implementacion, 3 h de pruebas, 1 h de revision y 1 h de coordinacion. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s04-i01-mpi-scatterv-gatherv`. La creacion de issues y del pull request queda pendiente.
+
+- **Pruebas y evidencias:** se implementaron `c_paralelo/src/partition.c` y el flujo MPI de `c_paralelo/src/main.c` (Bcast de B, Scatterv de A, Gatherv de C, validacion en el rango 0, CSV de 20 columnas y CLI). Se implemento tambien el nucleo local de `c_paralelo/src/matrix.c` como dependencia de integracion y se ampliaron `c_paralelo/tests/pending_test.c` y los scripts `run_hybrid_windows.ps1`/`test_windows.ps1`. La verificacion aritmetica del reparto (`scripts/verify_partition_design.ps1`) pasa: 8 ejemplos, 4480 pares N/P y fronteras 46340/46341. Las pruebas de runtime quedan pendientes porque el equipo de trabajo no tiene instalados MSVC, Windows SDK ni MS-MPI.
+
+- **Bloqueos y decisiones:** `status.json` queda con `algorithm=implemented` y `validation=pending`. Se fijo `N <= 46340` para respetar los `count`/desplazamientos `int` de MPI y se exige `OMP_NUM_THREADS` positivo con `OMP_DYNAMIC=FALSE`. La revision formal de FUNNELED, variables privadas y ausencia de MPI en la region OpenMP corresponde a I2 (Sebastian).
+
+- **Revision y criterio de aceptacion:** el reparto y la comunicacion cumplen el diseno de `partition.h` y las pruebas de particion pasan; falta compilar y ejecutar en un entorno con MSVC y MS-MPI para aceptar el entregable. La revision de I1 corresponde a I8 (Roberto) y la coordinacion de S4 a I4 (Eva). Queda pendiente tambien la revision de Giuliano (I3) por Sebastian (I2).
