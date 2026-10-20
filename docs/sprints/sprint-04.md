@@ -37,3 +37,12 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+#### Integrante 8
+
+- Participantes y horas reales: Roberto (8 h: 3 h documentación técnica de flujos de datos y sincronización de C híbrido MPI+OpenMP y Go concurrente CSP, 3 h mapeo a la rúbrica del curso, análisis de sobrecostes y prevención de fallos concurrentes, 1 h coordinación de acuerdos, 1 h revisión cruzada asignada a I1 Yessly).
+- Issues y pull requests: Rama de trabajo `feature/s04-i08-arquitectura-paralela`.
+- Pruebas y evidencias: Entregable `docs/arquitectura.md` completado y actualizado como documento maestro de ambos paralelos. Incluye análisis de particionado 1D (`partition.h`, algoritmos de cociente y resto, soporte de $P > N$, límite $N \le 46340$), comunicación colectiva MPI (`Bcast`, `Scatterv`, `Gatherv`), multihilo OpenMP (`MPI_THREAD_FUNNELED`, variables privadas de bucle), modelo CSP de Go (`chan Task`, `sync.WaitGroup`, pool acotado, inmutabilidad y ausencia de data races con `go test -race`), diagramas de secuencia Mermaid y matriz de invariantes globales.
+- Bloqueos y decisiones: Se unificó el criterio de cronometraje para que `kernel_s` aísle el cómputo puro del sobrecoste de comunicación en MPI y despacho en canales de Go, alineado con el protocolo de medición.
+- Revision y criterio de aceptacion: Entregable de I8 finalizado; listo para revisión formal por Integrante 7 (Andrés). Revisión cruzada a I1 Yessly pendiente a la publicación de su PR de comunicación MPI.
+

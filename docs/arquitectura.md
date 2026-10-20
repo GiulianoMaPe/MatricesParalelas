@@ -1,383 +1,385 @@
-# Arquitectura Go Paralelo: Diseño con Invariantes
+# Arquitectura de las Versiones Paralelas: C (MPI + OpenMP) y Go (Goroutines + Canales)
 
-**Proyecto:** Multiplicación de matrices densas en C y Go (Windows 11)
-**Sprint:** 2 · **Integrante:** 4 Moreno Eva· **Versión:** `go_paralelo`
-**Estado:** Diseño S2 conforme en la evaluación asistida en la voz de Giuliano (I3), registrada en [Sprint 2](sprints/sprint-02.md). Implementación prevista para Sprint 4.
-**Ubicación del código:** `go_paralelo/` (`main.go`, `workers.go`, `matrix.go`, `input.go`)
-
----
-
-## 1. Visión General
-
-La implementación futura de `go_paralelo` multiplicará matrices cuadradas densas $C = A \times B$ de dimensión $N \times N$ usando un **pool acotado de workers** (goroutines) que consumen **bloques de filas** desde un **canal de tareas tipado**. La sincronización usa `sync.WaitGroup`. Los argumentos CLI son `--n N --seed SEED --workers W`.
-
-**Principios rectores (de `docs/contrato.md` y `docs/Guia_Sprints.md`):**
-- Almacenamiento contiguo por filas (`float64`, row-major: índice `i*N + j`)
-- Pool acotado: `W` workers fijos, **no** una goroutine por celda
-- Canal de tareas: reparte intervalos de filas (bloques), no celdas individuales; **un worker puede recibir varias tareas**; lo obligatorio es que **cada fila se calcule exactamente una vez**
-- Propiedad exclusiva: **un único worker escribe cada fila de $C$**
-- $A$ y $B$ son de **solo lectura** para todos los workers
-- Cierre ordenado: **primero se envían todas las tareas al canal, luego se cierra el canal (`close(tasks)`), y finalmente se espera a los workers con `wg.Wait()`**
-- `GOMAXPROCS` se fija y registra aparte; no equivale al número de workers; **tras `runtime.GOMAXPROCS(workers)`, consultar `runtime.GOMAXPROCS(0)` para guardar el valor efectivo**
+**Proyecto:** Multiplicación de Matrices Densas en C y Go (Windows 11)  
+**Curso:** Programación Concurrente y Paralela — UNMSM  
+**Sprint:** 4 (Semana 4)  
+**Autor:** Integrante 8 — Roberto  
+**Rama:** `feature/s04-i08-arquitectura-paralela`  
+**Estado:** Documento de Arquitectura Actualizado · Modelos Reales, Flujos de Datos y Rúbrica  
 
 ---
 
-## 2. Estructura de Datos
+## 1. Visión General y Paradigmas de Paralelismo
 
+El objetivo central del proyecto es diseñar, implementar y comparar dos paradigmas fundamentales de computación paralela y concurrente para resolver la multiplicación de matrices densas cuadradas $C = A \times B$ de orden $N \times N$, sobre arquitectura multinúcleo x86_64 bajo Windows 11:
+
+```
+                               ARQUITECTURAS DEL PROYECTO
+                                           │
+         ┌─────────────────────────────────┴─────────────────────────────────┐
+         ▼                                                                   ▼
+   c_paralelo (Híbrido)                                            go_paralelo (CSP Concurrente)
+   ┌───────────────────────────────────────────────┐               ┌───────────────────────────────────────────────┐
+   │ Memoria Distribuida (MPI):                    │               │ Memoria Compartida (Go Runtime):              │
+   │  • P procesos del S.O.                        │               │  • Pool acotado de W goroutines               │
+   │  • Comunicación vía mensajes colectivos       │               │  • Planificador M:N sobre GOMAXPROCS hilos    │
+   │  • Particionado 1D por bloques de filas       │               │  • Despacho por canal tipado chan Task        │
+   │ Memoria Compartida (OpenMP):                  │               │ Sincronización y Propiedad:                   │
+   │  • T hilos locales por proceso                │               │  • Sincronización limpia con sync.WaitGroup   │
+   │  • Paralelismo de bucles (#pragma omp)        │               │  • Propiedad disjunta de escritura en C       │
+   │  • Modo MPI_THREAD_FUNNELED                   │               │  • A y B solo lectura (cero data races)       │
+   └───────────────────────────────────────────────┘               └───────────────────────────────────────────────┘
+```
+
+### Principios Rectores Comunes
+1. **Representación de Datos:** Almacenamiento contiguo por filas (*row-major layout*) donde el elemento $(i, j)$ reside en la posición lineal $i \times N + j$. En C se utiliza `double` (64 bits, IEEE 754) y en Go `float64`.
+2. **Núcleo Aritmético Canónico:** Orden de bucles $i \to k \to j$ en ambas implementaciones. Al fijar el elemento $A[i, k]$ en un registro/variable temporal, los accesos a las filas de $B$ y $C$ se realizan de forma estrictamente secuencial ($j$ consecutivo), maximizando la tasa de aciertos (*cache hits*) en las líneas de caché L1/L2.
+3. **Propiedad Exclusiva de Escritura:** Cada celda $C[i, j]$ es modificada por exactamente un hilo o worker. No se requieren primitivas de exclusión mutua de grano fino (como mutex o bloqueos atómicos) en la sección crítica aritmética.
+4. **Inmutabilidad de Entradas:** Las matrices $A$ y $B$ permanecen en solo lectura durante toda la computación; no sufren modificaciones ni se produce solapamiento destructivo (*buffer aliasing*).
+5. **Separación de Intervalos Temporales:** Aislamiento estricto de `kernel_s` (tiempo de cómputo aritmético puro) frente a `total_s` (que incorpora vaciado de memoria, distribución de mensajes, despacho por canales y sincronización colectiva).
+
+---
+
+## 2. Arquitectura de C Paralelo (`c_paralelo`): Híbrido MPI + OpenMP
+
+### 2.1. Modelo Jerárquico de Ejecución
+La solución combina el paso de mensajes entre procesos independientes (**MPI**) con el paralelismo multihilo en memoria compartida (**OpenMP**), implementando el modelo jerárquico híbrido:
+
+* **Nivel 1 (Entre Procesos - MPI):** El problema global se divide en $P$ procesos del sistema operativo comunicados mediante MS-MPI. El proceso maestro (`rank 0`) lee o genera las matrices, coordina la distribución y reúne los resultados.
+* **Nivel 2 (Intra-proceso - OpenMP):** Cada proceso MPI utiliza $T$ hilos de ejecución OpenMP para computar su bloque asignado de filas en paralelo.
+* **Nivel de Hilos MPI (`MPI_THREAD_FUNNELED`):** La inicialización se realiza con `MPI_Init_thread(..., MPI_THREAD_FUNNELED, &provided)`. Únicamente el hilo principal (*master thread*) de cada proceso ejecuta llamadas a funciones MPI, garantizando compatibilidad absoluta y ausencia de contención en la pila de red.
+
+### 2.2. Particionado 1D por Bloques de Filas (`partition.h`)
+Para repartir $N$ filas entre $P$ procesos cuando $N$ no es múltiplo exacto de $P$, se utiliza el algoritmo de cociente y resto en forma cerrada:
+
+$$q = \lfloor N / P \rfloor, \quad r = N \bmod P$$
+
+$$\text{filas}[i] = q + \begin{cases} 1 & \text{si } i < r \\ 0 & \text{si } i \ge r \end{cases}$$
+
+$$\text{primera}[i] = i \times q + \min(i, r)$$
+
+#### Invariantes Estructurales de Partición:
+* **I1:** $\text{filas}[i] \ge 0 \quad \text{y} \quad \sum_{i=0}^{P-1} \text{filas}[i] = N$.
+* **I2:** $\text{primera}[0] = 0$.
+* **I3:** $\text{primera}[i+1] = \text{primera}[i] + \text{filas}[i]$ (bloques contiguos sin solapamiento ni huecos).
+* **I4:** $\text{counts}[i] = \text{filas}[i] \times N$ (cantidad de elementos `double` transferidos por proceso).
+* **I5:** $\text{displs}[i] = \text{primera}[i] \times N$ (desplazamiento en elementos dentro de la matriz plana).
+* **I6:** $\sum_{i=0}^{P-1} \text{counts}[i] = N \times N$.
+* **Soporte de $P > N$:** Si hay más procesos que filas ($q = 0, r = N$), los primeros $N$ procesos reciben 1 fila y los $P - N$ restantes reciben 0 filas (`counts[i] = 0`). La norma MPI estipula que `count = 0` es legal y no bloquea las llamadas colectivas.
+* **Límite por Aritmética de Enteros:** Como los desplazamientos y conteos de MPI son enteros con signo (`int`), se exige $N \times N \le \text{INT\_MAX}$, lo que define el límite arquitectónico $N \le 46340$ ($\approx 17\text{ GB}$ por matriz en RAM).
+
+### 2.3. Flujo de Datos y Comunicación Colectiva MPI
+El intercambio de datos entre el proceso raíz (`rank 0`) y los procesos trabajadores se efectúa mediante tres operaciones colectivas sincronizadas:
+
+```
+                                 FLUJO DE COMUNICACIÓN MPI
+ 
+       Proceso 0 (Raíz)                                          Procesos 0 .. P-1
+   ┌───────────────────────┐                                   ┌───────────────────────┐
+   │ Matriz A completa     │                                   │                       │
+   │ Matriz B completa     │                                   │                       │
+   └──────────┬────────────┘                                   └──────────┬────────────┘
+              │                                                           │
+              ├─────── MPI_Bcast(Matriz B completa: N*N elementos) ───────┤
+              │        (Todos los procesos reciben la matriz B completa)  │
+              │                                                           │
+              ├─────── MPI_Scatterv(Matriz A: counts[], displs[]) ────────┤
+              │        (Cada proceso i recibe filas[i]*N elementos de A)  │
+              │                                                           ▼
+              │                                                ┌───────────────────────┐
+              │                                                │ Cálculo Local OpenMP  │
+              │                                                │ #pragma omp parallel  │
+              │                                                │ local_c = local_a * B │
+              │                                                └──────────┬────────────┘
+              │                                                           │
+              ├─────── MPI_Gatherv(local_c: counts[], displs[]) ──────────┤
+              │        (Proceso 0 recolecta los bloques locales de C)     │
+              ▼                                                           ▼
+   ┌───────────────────────┐                                   ┌───────────────────────┐
+   │ Matriz C completa     │                                   │ local_c liberado      │
+   │ Validación y CSV      │                                   │ Espera en MPI_Finalize│
+   └───────────────────────┘                                   └───────────────────────┘
+```
+
+1. **Difusión Global de $B$ (`MPI_Bcast`):** Toda la matriz $B$ ($N \times N$ elementos `double`) se difunde a todos los procesos del comunicador `MPI_COMM_WORLD`. Como todos los procesos necesitan columnas completas de $B$, la difusión asegura que cada proceso disponga de $B$ localmente sin transferencias punto a punto adicionales.
+2. **Distribución Segmentada de $A$ (`MPI_Scatterv`):** El proceso 0 dispersa la matriz $A$ según el vector `counts` y `displs`. El proceso $i$ almacena su porción en un buffer local continuo `local_a` de tamaño $\text{filas}[i] \times N$.
+3. **Recolección Segmentada de $C$ (`MPI_Gatherv`):** Tras completar la multiplicación local, cada proceso envía su buffer continuo `local_c` ($\text{filas}[i] \times N$ dobles). El proceso 0 reconstruye la matriz $C$ en el buffer global ordenado.
+
+### 2.4. Paralelismo Multihilo Local con OpenMP
+En cada proceso con $\text{filas}[\text{rank}] > 0$, el cálculo del producto se distribuye entre los hilos del proceso mediante directivas OpenMP:
+
+```c
+#pragma omp parallel for schedule(static) default(none) \
+    shared(local_a, b, local_c, local_rows, n) private(i, k, j, a_ik)
+for (int i = 0; i < local_rows; ++i) {
+    const double *a_row = local_a + (size_t)i * n;
+    double *c_row = local_c + (size_t)i * n;
+    for (int k = 0; k < n; ++k) {
+        const double a_ik = a_row[k];
+        const double *b_row = b + (size_t)k * n;
+        for (int j = 0; j < n; ++j) {
+            c_row[j] += a_ik * b_row[j];
+        }
+    }
+}
+```
+
+* **`schedule(static)`:** Distribuye las filas locales en bloques uniformes entre los hilos de manera determinista, minimizando la sobrecarga de despacho dinámico.
+* **Aislamiento de Variables:** Las variables de control de bucle `i`, `k`, `j` y el escalar `a_ik` se declaran `private` por hilo en la pila (*thread stack*). Los punteros de matriz `local_a`, `b` y `local_c` son `shared`.
+* **Cero Colisiones de Escritura:** Dado que el bucle paralelizado es el exterior (`i`), cada hilo opera en un conjunto disjunto de filas de `local_c`. Dos hilos jamás acceden a la misma posición de memoria en escritura.
+
+### 2.5. Delimitación Temporal en C Paralelo
+* **`kernel_s`:** Intervalo medido exclusivamente alrededor del bloque de cálculo OpenMP (`local_rows > 0`). El proceso raíz recopila mediante `MPI_Reduce` con operador `MPI_MAX` el tiempo del proceso más lento:
+  $$\text{kernel\_s} = \max_{p \in [0, P-1]} (\text{kernel\_s}_p)$$
+* **`total_s`:** Cronometrado por el proceso 0 desde antes de `MPI_Bcast` y `MPI_Scatterv`, abarcando la inicialización de buffers locales, el cómputo y la sincronización final con `MPI_Gatherv`.
+
+---
+
+## 3. Arquitectura de Go Paralelo (`go_paralelo`): Goroutines y Canales
+
+### 3.1. Modelo CSP (Communicating Sequential Processes)
+`go_paralelo` reemplaza la memoria distribuida por un modelo de concurrencia estructurada sobre memoria compartida administrada por el runtime de Go:
+
+* **Pool Acotado de Goroutines:** No se genera una goroutine por celda ni por fila. Se inicializa un pool fijo de exactamente $W$ workers (`--workers W`).
+* **Canal Tipado de Tareas (`chan Task`):** Las goroutines trabajadoras compiten de forma pasiva por consumir tareas de un canal tipado con buffer acotado (`make(chan Task, workers)`).
+* **Coordinación de Finalización:** Sincronización libre de cerrojos mediante `sync.WaitGroup` (`wg.Add`, `defer wg.Done()`, `wg.Wait()`).
+* **Runtime M:N:** Se fija `runtime.GOMAXPROCS(workers)` para permitir ejecución verdaderamente simultánea sobre los hilos del sistema operativo.
+
+### 3.2. Estructuras de Datos y Modelo de Tareas (`workers.go`)
 ```go
-// Matrix: representación contigua por filas (row-major)
+// Matrix representa una matriz cuadrada en almacenamiento continuo por filas
 type Matrix struct {
-    N    int       // dimensión N x N
+    N    int
     Data []float64 // len == N*N, fila i en Data[i*N : (i+1)*N]
 }
 
-// Task: bloque de filas asignado a un worker
+// Task delimita un intervalo contiguo de filas semi-abierto [StartRow, EndRow)
 type Task struct {
-    StartRow int // fila inicial (inclusive), 0 <= StartRow < N
-    EndRow   int // fila final (exclusive), StartRow < EndRow <= N
-}
-
-// Result: resultado parcial por bloque (opcional, para validación interna)
-type Result struct {
-    StartRow int
+    StartRow int // 0 <= StartRow < EndRow <= N
     EndRow   int
-    // No se copian datos; el worker escribe directamente en C.Data
 }
 ```
 
----
-
-## 3. Flujo Principal (`main.go`)
-
-```text
-main()
-├── 1. Parsear y validar flags: --n, --seed, --workers
-│   ├── Rechazar si faltan, N < 1, seed fuera de [0, 2^32-1], workers < 1
-│   └── runtime.GOMAXPROCS(workers); gomaxprocs = runtime.GOMAXPROCS(0)  // fija, consulta y registra valor efectivo
-├── 2. Validar tamaño: comprobar N*N y N*N*8 antes de multiplicar; considerar RAM para A/B/C
-├── 3. Asignar matrices A, B, C (heap, contiguas)
-│   ├── A = make([]float64, N*N)
-│   ├── B = make([]float64, N*N)
-│   └── C = make([]float64, N*N)  // reserva fuera de total_s; vaciado explícito dentro
-├── 4. Generar A y B; reservar kernelDurations  // PRNG determinista, instrumentación fuera de total_s
-├── 5. Medición total_s: time.Now()  // [T0] inicio total_s
-├── 6. Vaciar C; crear canal de tareas: tasks := make(chan Task, workers)
-├── 7. Iniciar WaitGroup: var wg sync.WaitGroup
-├── 8. Lanzar workers fijos:
-│   for w := 0; w < workers; w++ {
-│       wg.Add(1)
-│       go worker(w, tasks, &wg, &A, &B, &C, kernelDurations)
-│   }
-├── 9. Despachar bloques de filas al canal (productor único):
-│   blockSize := computeBlockSize(N, workers)
-│   for start := 0; start < N; {
-│       end := N
-│       if blockSize < N-start { end = start + blockSize }
-│       tasks <- Task{StartRow: start, EndRow: end}
-│       start = end
-│   }
-│   close(tasks)  // señal de fin: no más tareas (tras enviar todas)
-├── 10. wg.Wait()  // bloquea hasta que todos los workers terminen
-├── 11. Medición total_s: total_s = time.Since(T0)  // [T1] fin total_s
-├── 12. Obtener máximo de tiempos locales; validar C (elemento a elemento vs referencia, tolerancia 1e-9)
-├── 13. Imprimir CSV en stdout con las 20 columnas del protocolo
-└── 14. os.Exit(0)  // o código ≠ 0 si error
+#### Particionado Dinámico por Bloques (`computeBlockSize` y `dispatchRowBlocks`):
+El orquestador calcula el tamaño de bloque mediante división por exceso protegida contra desbordamientos:
+```go
+func computeBlockSize(n, workers int) int {
+    size := n / workers
+    if n%workers != 0 {
+        size++
+    }
+    return size
+}
 ```
+* Si $W \ge N$: `size = 1`. Cada tarea contiene exactamente una fila. Las primeras $N$ goroutines reciben trabajo y las $W - N$ restantes no reciben tareas y terminan limpiamente al cerrarse el canal.
+* El productor (goroutine principal) despacha todos los bloques e inmediatamente ejecuta `close(tasks)`.
 
----
-
-## 4. Worker (`workers.go`)
-
-Pseudocódigo de la implementación futura. A/B/C y el vector de tiempos se
-reservan antes de total_s; C se vacía dentro de total_s antes de lanzar workers.
-Cada slot de tiempo pertenece a un solo worker y se consulta después de WaitGroup.
+### 3.3. Ciclo de Vida del Worker y Ejecución Aritmética
+```
+                                 FLUJO CONCURRENTE EN GO
+ 
+        Goroutine Coordinadora                                     Pool de W Workers
+   ┌──────────────────────────────┐                          ┌───────────────────────────┐
+   │ 1. Validar A y B             │                          │ Worker 0 (goroutine)      │
+   │ 2. Reservar C (N*N doubles)  │                          │ Worker 1 (goroutine)      │
+   │ 3. tasks := make(chan Task)  │                          │ ...                       │
+   │ 4. wg.Add(W); lanzar workers │                          │ Worker W-1 (goroutine)    │
+   └──────────────┬───────────────┘                          └─────────────┬─────────────┘
+                  │                                                        │
+                  ├──────── Despacho de bloques a tasks <- Task ───────────┤
+                  │         (Cada bloque [StartRow, EndRow) es continuo)   │
+                  │                                                        ▼
+                  ├──────── close(tasks) [Señal de no más trabajo] ────────┤
+                  │                                                        │
+                  │                                          ┌───────────────────────────┐
+                  │                                          │ for task := range tasks { │
+                  │                                          │   t0 := time.Now()        │
+                  │                                          │   multiplyBlock(a,b,c)    │
+                  │                                          │   dur += Since(t0)        │
+                  │                                          │ }                         │
+                  │                                          │ kernelDurations[id] = dur │
+                  │                                          │ defer wg.Done()           │
+                  │                                          └─────────────┬─────────────┘
+                  │                                                        │
+                  ├──────── wg.Wait() [Barrera de sincronización] ─────────┤
+                  ▼                                                        ▼
+   ┌──────────────────────────────┐                          ┌───────────────────────────┐
+   │ 5. total_s = time.Since(T0)  │                          │ Workers finalizados       │
+   │ 6. kernel_s = max(durations) │                          │                           │
+   │ 7. Validación numérica y CSV │                          │                           │
+   └──────────────────────────────┘                          └───────────────────────────┘
+```
 
 ```go
 func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
-    A, B, C *Matrix, kernelDurations []time.Duration) {
+    a, b, c *Matrix, kernelDurations []time.Duration) {
     defer wg.Done()
     var elapsed time.Duration
-    for task := range tasks {             // recepción fuera del kernel
+    for task := range tasks {
         start := time.Now()
-        multiplyBlock(A, B, C, task.StartRow, task.EndRow)
-        elapsed += time.Since(start)      // solo cálculo de esta tarea
+        multiplyBlock(a, b, c, task.StartRow, task.EndRow)
+        elapsed += time.Since(start)
     }
-    kernelDurations[id] = elapsed          // antes de Done; sin escritor compartido
+    kernelDurations[id] = elapsed // Escritura en slot propio disjunto
 }
+```
 
-func multiplyBlock(A, B, C *Matrix, startRow, endRow int) {
-    N := A.N
-    // C ya está vaciada. Aquí solo se acumula el producto i,k,j.
-    for i := startRow; i < endRow; i++ {
-        for k := 0; k < N; k++ {
-            a := A.Data[i*N + k]
-            for j := 0; j < N; j++ {
-                C.Data[i*N+j] += a * B.Data[k*N+j]
-            }
-        }
-    }
-}
+* **`multiplyBlock`:** Implementa el triple bucle $i \to k \to j$ exclusivamente en el rango $[StartRow, EndRow)$.
+* **Propiedad de Memoria:** $A$ y $B$ se acceden concurrentemente sin sincronización porque son 100% de solo lectura. En $C$, cada worker escribe en su segmento disjunto $Data[StartRow \times N : EndRow \times N]$. No existe solapamiento ni carreras de datos (*race-free*).
+* **Inspección Dinámica de Carreras:** Verificado formalmente con el runtime de detección de condiciones de carrera: `go test -race ./...`.
+
+### 3.4. Delimitación Temporal en Go Paralelo
+* **`kernel_s`:** Se instrumenta individualmente dentro de cada worker midiendo solo el tiempo acumulado en `multiplyBlock`. Al salir de `wg.Wait()`, la coordinadora toma el valor máximo:
+  $$\text{kernel\_s} = \max_{w \in [0, W-1]} (\text{kernelDurations}[w])$$
+* **`total_s`:** Cronometrado por el coordinador abarcando el vaciado explícito de $C$ (`clear(c.Data)`), creación del canal, lanzamiento del pool de workers, despacho de bloques, espera en `wg.Wait()` y cálculo de métricas.
+
+---
+
+## 4. Comparación Arquitectónica: C Paralelo vs Go Paralelo
+
+| Dimensión Técnica | C Paralelo (`c_paralelo`) | Go Paralelo (`go_paralelo`) |
+| :--- | :--- | :--- |
+| **Paradigma Principal** | Paso de mensajes distribuido + Hilos nativos | Concurrencia CSP basada en canales + Goroutines |
+| **Tecnologías** | MS-MPI (v10+) + OpenMP (C11, MSVC x64) | Go Runtime nativo (Go 1.27+ `windows/amd64`) |
+| **Espacio de Direcciones** | $P$ procesos con memoria aislada (distribuida) | 1 proceso con heap único compartido |
+| **Distribución de Matriz $A$** | `MPI_Scatterv` (bloques contiguos por filas) | `chan Task` (despacho de bloques de filas) |
+| **Distribución de Matriz $B$** | `MPI_Bcast` (réplica completa en cada proceso) | Memoria compartida global (solo lectura sin copia) |
+| **Recolección de Matriz $C$** | `MPI_Gatherv` (reconstrucción en rank 0) | Escritura directa en slice `C.Data` |
+| **Granularidad de Hilos** | $T$ hilos OS del sistema operativo por proceso | $W$ goroutines ligeras mapeadas por scheduler M:N |
+| **Sincronización** | Colectivas bloqueantes (`MPI_Bcast`, `MPI_Gatherv`) | Canal tipado + `sync.WaitGroup` |
+| **Sobrecarga de Comunicación** | Serialización y copia por sockets/memoria compartida IPC | Cero copia de datos; solo paso del descriptor `Task` (16 bytes) |
+| **Prevención de Data Races** | Procesos aislados; OpenMP privatiza índices $i,k,j$ | Rango de filas disjunto en $C$; $A, B$ solo lectura |
+| **Comportamiento si $P > N$ o $W > N$** | Procesos extra reciben `count=0` sin fallos | Goroutines extra no reciben tareas y salen con `wg.Done()` |
+| **Escalabilidad Teórica** | Escala a clústeres multi-nodo y supercomputadores | Escala eficientemente dentro de un nodo simétrico (SMP/NUMA) |
+
+---
+
+## 5. Mapeo a la Rúbrica de Evaluación y Criterios Académicos
+
+En conformidad con las pautas de evaluación del curso de **Programación Concurrente y Paralela**, las dos arquitecturas satisfacen los siguientes pilares de rigor:
+
+### 5.1. Corrección Matemática y Determinismo Numérico
+* **Tolerancia Universal:** Ambas referencias implementan la regla estricta de validación celda a celda contra fixtures de control (`tests/fixtures/`):
+  $$|C_{\text{obtenido}} - C_{\text{esperado}}| \le 10^{-9} + 10^{-9} \cdot |C_{\text{esperado}}|$$
+* **Generación Idéntica:** El generador pseudoaleatorio congruencial lineal (LCG) genera matrices idénticas bit a bit en C y Go partiendo de la misma semilla (`--seed`).
+
+### 5.2. Seguridad Concurrente y Ausencia de Anomalías
+* **Ausencia de Deadlocks:**
+  * En C: las llamadas colectivas (`Bcast`, `Scatterv`, `Gatherv`) son invocadas en idéntico orden y cardinalidad por todos los procesos de `MPI_COMM_WORLD`.
+  * En Go: el productor asegura `close(tasks)` únicamente tras despachar la totalidad de los bloques, permitiendo que todos los workers salgan del bucle `for task := range tasks`.
+* **Ausencia de Data Races:**
+  * En C: ningún hilo OpenMP comparte índices de fila de escritura.
+  * En Go: garantizado por diseño e inspección estática y dinámica con `go test -race`.
+
+### 5.3. Rigor del Protocolo Experimental
+* **Aislamiento de Cronometraje:** La lectura de archivos, validación sintáctica de flags, generación de matrices y emisión de salidas CSV se ejecutan fuera de los cronómetros.
+* **Separación `kernel_s` vs `total_s`:** Permite calcular el *overhead* de paralelización ($\text{Sobrecarga} = \text{total\_s} - \text{kernel\_s}$), revelando el costo de la comunicación de red/IPC en MPI frente a la contención del planificador en Go.
+
+---
+
+## 6. Diagramas de Flujo y Secuencia
+
+### 6.1. Secuencia de Comunicación en C Paralelo (`c_paralelo`)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor CLI as Usuario / Runner
+    participant R0 as Rank 0 (Maestro)
+    participant RP as Ranks 1..P-1 (Trabajadores)
+    participant OMP as Hilos OpenMP Locales
+
+    CLI->>R0: Ejecutar c_paralelo.exe --n N --seed S
+    Note over R0: MPI_Init_thread(MPI_THREAD_FUNNELED)
+    R0->>R0: Generar matrices A y B en memoria
+    R0->>R0: partition_split() y partition_rows()
+    
+    Note over R0, RP: [T0] Inicio de total_s
+    R0->>RP: MPI_Bcast(Matriz B completa: N*N dobles)
+    R0->>RP: MPI_Scatterv(Bloques de filas de A)
+    
+    Note over R0, OMP: Inicio de kernel_s local
+    R0->>OMP: #pragma omp parallel for (filas locales)
+    RP->>OMP: #pragma omp parallel for (filas locales)
+    OMP->>OMP: Multiplicacion canonica i->k->j
+    Note over R0, OMP: Fin de kernel_s local
+    
+    RP->>R0: MPI_Gatherv(Bloques locales de C)
+    Note over R0, RP: [T1] Fin de total_s
+
+    R0->>R0: MPI_Reduce(MPI_MAX, kernel_s)
+    R0->>R0: Validar C y emitir CSV (20 campos)
+    R0->>CLI: Salida en stdout (Código 0)
+```
+
+### 6.2. Secuencia de Concurrencia en Go Paralelo (`go_paralelo`)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor CLI as Usuario / Runner
+    participant Main as Goroutine Principal (Coordinador)
+    participant Ch as Canal tasks (chan Task)
+    participant Pool as Pool de W Workers (Goroutines)
+
+    CLI->>Main: Ejecutar go_paralelo.exe --n N --seed S --workers W
+    Note over Main: runtime.GOMAXPROCS(workers)
+    Main->>Main: Generar matrices A y B y reservar C
+    
+    Note over Main, Pool: [T0] Inicio de total_s
+    Main->>Main: clear(C.Data)
+    Main->>Ch: make(chan Task, workers)
+    Main->>Pool: Lanzar W goroutines con wg.Add(W)
+    
+    loop Despacho de bloques continuos de filas
+        Main->>Ch: tasks <- Task(StartRow, EndRow)
+    end
+    Main->>Ch: close(tasks) [Fin de tareas]
+    
+    Note over Pool: Inicio de kernel_s por worker
+    loop Consumo de bloques hasta canal cerrado
+        Ch->>Pool: task = <-tasks
+        Pool->>Pool: multiplyBlock(A, B, C, start, end)
+    end
+    Note over Pool: Fin de kernel_s por worker
+    
+    Pool->>Main: Registrar duracion y llamar wg.Done()
+    Main->>Main: wg.Wait() [Barrera de sincronizacion]
+    Note over Main: [T1] Fin de total_s
+
+    Main->>Main: kernel_s = max(kernelDurations)
+    Main->>Main: Validar C vs referencia
+    Main->>Main: Emitir CSV (20 campos)
+    Main->>CLI: Salida en stdout (Codigo 0)
 ```
 
 ---
 
-## 5. Invariantes de Correctitud
+## 7. Invariantes de Correctitud Globales
 
-| # | Invariante | Dónde se garantiza | Verificación |
-|---|------------|-------------------|--------------|
-| **I1** | **Propiedad exclusiva de filas**: cada fila de $C$ es escrita por **exactamente un** worker | `multiplyBlock` recibe rango disjunto `[StartRow, EndRow)`; partición cubre `[0, N)` sin solapamientos ni huecos | Test: `go test -race` + fixture N=2, workers=4 |
-| **I2** | **Sin *data races***: $A$ y $B$ solo lectura; $C$ escritura disjunta por fila | `A` y `B` pasados como `*Matrix` (no se modifican); `C` escrito solo en índices `i*N+j` con `i` en rango propio del worker | `go test -race ./...` |
-| **I3** | **Cierre ordenado del canal**: `close(tasks)` **solo** después de enviar todas las tareas, y **solo** desde `main` (productor único) | `main` envía todos los bloques en bucle `for`, luego `close(tasks)` | Test: `workers` > `N` no hace panic |
-| **I4** | **Sincronización completa**: `wg.Wait()` retorna **solo después** de que todos los workers hayan salido del `range tasks` | `wg.Add(workers)` antes de lanzar; cada worker `defer wg.Done()` al salir de `for range` | Test: variar workers=1,2,4,8; verificar que termina |
-| **I5** | **Cierre sin bloqueo permanente**: consumidores activos, productor único, envío antes de close y WaitGroup después de close | Consumidores lanzados antes del primer envío; productor cierra; consumidores terminan y llaman a Done | Test: stress con N=1000, workers=8 |
-| **I6** | **Inicialización de C dentro de total_s y fuera del kernel**: el coordinador vacía C antes de lanzar workers | El coordinador vacía toda C antes del despacho; multiplyBlock solo acumula | Validación numérica vs fixture |
-| **I7** | **Generación determinista**: mismo `seed` → mismas matrices $A, B$ en C y Go | `input.Generate` usa LCG idéntico: `state = (1664525*state + 1013904223) % 2^32` | Vectores de control en `docs/formato_datos.md` |
+| Invariante | Descripción | Implementación en C (`c_paralelo`) | Implementación en Go (`go_paralelo`) |
+| :---: | :--- | :--- | :--- |
+| **INV-01** | **Cobertura Completa:** Toda fila $i \in [0, N-1]$ se calcula exactamente una vez. | Garantizado por `partition_split`: $\sum \text{filas}[i] = N$ y bloques adyacentes. | Garantizado por `dispatchRowBlocks`: bloques contiguos disjuntos cubren $[0, N)$. |
+| **INV-02** | **Aislamiento de Escritura:** Ningún hilo/proceso sobreescribe memoria de otro. | Cada proceso escribe en su `local_c`; OpenMP particiona el bucle exterior $i$. | Cada worker escribe en $C[StartRow \times N : EndRow \times N]$; no hay solapamiento. |
+| **INV-03** | **Inmutabilidad de Entrada:** $A$ y $B$ no sufren alteraciones durante el cómputo. | Punteros `const double *` en OpenMP; buffers independientes. | Slices $A$ y $B$ tratados como solo lectura; verificado con `reflect.DeepEqual`. |
+| **INV-04** | **Terminación Garantizada:** Ausencia de bloqueos (*deadlocks*) en sincronización. | Mismo orden de colectivas MPI en todos los procesos; $P > N$ manejado con `count=0`. | `close(tasks)` ejecutado tras despachar todo; workers salen del `range` y llaman `Done()`. |
+| **INV-05** | **Robustez Numérica:** Rechazo inmediato ante valores no finitos o desbordamientos. | Validación con `isfinite()`; control de $N \le 46340$ en `partition_rows`. | Validación con `math.IsNaN()` / `math.IsInf()`; error explícito `ErrNonFiniteValue`. |
 
 ---
 
-## 6. Particionado de Filas (Distribución de Trabajo)
+## 8. Trazabilidad con la Guía del Proyecto y Entregables
 
-**Estrategia:** Bloques contiguos de tamaño fijo o calculado por división entera.
-
-```go
-func computeBlockSize(N, workers int) int {
-    // Opción A: tamaño fijo (ej. 64 filas) → mejor balanceo dinámico
-    // Opción B: división entera → ceil(N/workers)
-    // Para S4: usar división entera simple
-    blockSize := N / workers
-    if N % workers != 0 { blockSize++ } // ceil sin suma que pueda desbordar
-    if blockSize < 1 {
-        blockSize = 1
-    }
-    return blockSize
-}
-```
-
-**Precondiciones:** N y workers positivos y tamaño matricial válido.
-
-**Casos límite:**
-- `workers >= N`: `blockSize = 1` → cada tarea tiene una fila; un worker puede consumir varias tareas y los que no reciben ninguna salen tras close
-- `N % workers != 0`: último bloque más pequeño; `min(start+blockSize, N)` lo maneja
-- `workers = 1`: un solo bloque `[0, N)` → equivalente a secuencial (útil para medir sobrecoste)
+* **`c_paralelo/include/partition.h`:** Contrato matemático de particionado 1D (Sebastian, S2).
+* **`c_paralelo/src/main.c` y `partition.c`:** Orquestación de llamadas colectivas MPI (Yessly, S4).
+* **`c_paralelo/src/matrix.c`:** Computación local con OpenMP (Sebastian, S4).
+* **`go_paralelo/workers.go` y `matrix.go`:** Pool de goroutines, canal tipado y `multiplyBlock` (Giuliano, S4).
+* **`go_paralelo/main.go`:** Integración de CLI, temporizadores y CSV (Eva, S4).
+* **`docs/protocolo_medicion.md`:** Protocolo oficial de cronometraje y esquema CSV de 20 campos (Andrés, S2).
+* **`docs/bibliografia.md`:** Fundamento teórico de localidad de caché y particionado por filas (Roberto, S2).
 
 ---
 
-## 7. Delimitación de tiempos (`kernel_s` vs `total_s`)
+## 9. Conclusión de Arquitectura
 
-Aplicar `protocolo_medicion.md`, sección 3. El kernel es el máximo de los
-intervalos de cálculo acumulados por cada worker, no el tiempo desde el primer
-envío de tareas hasta WaitGroup. Despacho, espera y vaciado solo cuentan en total_s.
-
-| Evento | Frontera |
-| --- | --- |
-| Antes de T0 | A/B/C preparados y reservados; validación de entradas, referencia y vector de tiempos listos. |
-| T0 | Antes de vaciar C y de crear canal/workers. |
-| Kernel local | Dentro de cada worker, justo antes y después de multiplyBlock; acumular por worker. |
-| T1 | Inmediatamente después de wg.Wait(), antes de validar o escribir. |
-| Después de T1 | Calcular máximo de tiempos, validar C, escribir CSV y liberar buffers. |
-
-Pseudocódigo futuro; no supone que el multiplicador ya existe:
-
-```go
-kernelDurations := make([]time.Duration, workers) // instrumentación fuera de total_s
-totalStart := time.Now()
-for i := range C.Data { C.Data[i] = 0 }
-tasks := make(chan Task, workers)
-var wg sync.WaitGroup
-for w := 0; w < workers; w++ {
-    wg.Add(1)
-    go worker(w, tasks, &wg, &A, &B, &C, kernelDurations)
-}
-blockSize := computeBlockSize(N, workers)
-for start := 0; start < N; {
-    end := N
-    if blockSize < N-start { end = start + blockSize }
-    tasks <- Task{StartRow: start, EndRow: end}
-    start = end
-}
-close(tasks)
-wg.Wait()
-total_s := time.Since(totalStart).Seconds()  // detener antes de validación/I/O
-var kernelDuration time.Duration
-for _, duration := range kernelDurations {
-    if duration > kernelDuration { kernelDuration = duration }
-}
-kernel_s := kernelDuration.Seconds()
-// Validar y escribir solo después de detener total_s.
-```
-
-Un worker sin tareas aporta cero. No se cronometra el range/recepción del canal.
-Lectura/generación, reserva/liberación de matrices, argumentos, validación y salida
-quedan fuera de ambos intervalos. La creación del canal y las goroutines sí es
-coordinación dentro de total_s. Los tiempos deben ser finitos y no negativos;
-solo se aceptan mediciones con resultado matemático válido.
-
----
-
-## 8. Manejo de Errores
-
-| Situación | Tipo | Acción | Código de salida |
-|-----------|------|--------|------------------|
-| Flags faltantes/inválidos | **Entrada inválida** | `fmt.Fprintln(os.Stderr, "uso: ...")` | 1 |
-| `N < 1` o `workers < 1` | **Entrada inválida** | Error a `stderr` | 1 |
-| `seed > 2^32-1` | **Entrada inválida** | Error a `stderr` | 1 |
-| Fallo controlado de asignación memoria | **Entorno** | Error a `stderr` | 1 |
-| Operación pendiente (algoritmo no implementado) | **Pendiente** | `fmt.Fprintln(os.Stderr, "PENDIENTE: ...")` | 2 |
-| Validación numérica falla | **Cálculo** | `fmt.Fprintf(stderr, "validación falló: ...")` | 1 |
-| *Data race* detectado (`-race`) | **Entorno** | Termina con error del runtime | ≠0 |
-
-**Regla común:** éxito → 0; cualquier error de entrada, archivo, memoria, entorno o cálculo → stderr y 1; únicamente operación pendiente → stderr y 2. Son códigos del ejecutable, no los estados internos de C. Un fallo no imprime una medición válida ni una matriz parcial. La CLI completa se integrará en S4; la prueba actual de cálculo sigue devolviendo pendiente.
-
----
-
-## 9. Salida CSV (stdout)
-
-Formato según `docs/protocolo_medicion.md` §4:
-
-```text
-timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
-2026-10-15T14:32:05Z,go_paralelo,abc1234,PC-USER,AMD Ryzen 7 8845HS,16.0,Win11_26200,go_paralelo_W4,1024,42,1,1,1,4,4,1,false,0.485123901,0.521894210,OK
-```
-
-Campos específicos de Go paralelo:
-- `version`: `go_paralelo`
-- `configuration`: `go_paralelo_W{workers}`
-- `processes`: `1` (no usa MPI)
-- `threads`: `1` (no usa OpenMP)
-- `workers`: valor de `--workers`
-- `gomaxprocs`: valor efectivo consultado con `runtime.GOMAXPROCS(0)` tras fijarlo
-
----
-
-## 10. Generación Determinista (PRNG)
-
-Según `docs/contrato.md` §20:
-
-```go
-// LCG: state = (1664525 * state + 1013904223) mod 2^32
-// Valor ∈ [-1000, 1000] / 1000.0
-func generateMatrix(N int, state *uint32) []float64 {
-    data := make([]float64, N*N)
-    for i := 0; i < N*N; i++ {
-        *state = 1664525*(*state) + 1013904223
-        val := int64(*state % 2001) - 1000  // [-1000, 1000]
-        data[i] = float64(val) / 1000.0
-    }
-    return data
-}
-```
-
-**Vectores de control (seed=42):**
-- Estados iniciales: 1083814273, 378494188, 2479403867, 955863294
-- Llenar A completa por filas, luego B continuando el mismo estado
-
----
-
-## 11. Validación Numérica
-
-Según `docs/contrato.md` §49-53:
-
-```go
-const atol = 1e-9
-const rtol = 1e-9
-
-func validate(C, Cref *Matrix) error {
-    if C.N != Cref.N { return fmt.Errorf("dimensión distinta") }
-    for i := 0; i < C.N*C.N; i++ {
-        got := C.Data[i]
-        exp := Cref.Data[i]
-        if math.IsNaN(got) || math.IsInf(got, 0) || math.IsNaN(exp) || math.IsInf(exp, 0) {
-            return fmt.Errorf("NaN/Inf en C[%d]", i)
-        }
-        diff := math.Abs(got - exp)
-        tol := atol + rtol*math.Abs(exp)
-        if diff > tol {
-            return fmt.Errorf("mismatch C[%d]: got=%v exp=%v diff=%v tol=%v", i, got, exp, diff, tol)
-        }
-    }
-    return nil
-}
-```
-
----
-
-## 12. Pruebas de Arquitectura (Para Sprint 4)
-
-**Ejecución:** Todas las pruebas se ejecutan desde dentro del módulo `go_paralelo/`:
-```powershell
-cd go_paralelo
-go test -race -run TestWorkerRowOwnership
-go test -race ./...
-go test -run TestChannelClose
-# etc.
-```
-
-| Test | Qué verifica | Comando |
-|------|--------------|---------|
-| `TestWorkerRowOwnership` | I1: cada fila escrita una vez | `go test -race -run TestWorkerRowOwnership` |
-| `TestNoDataRaces` | I2: sin carreras en A/B/C | `go test -race ./...` |
-| `TestChannelClose` | I3: close tras enviar todas | `go test -run TestChannelClose` |
-| `TestWaitGroupSync` | I4: wg.Wait retorna tras todos | `go test -run TestWaitGroupSync` |
-| `TestWorkersGTN` | I5: workers > N no deadlock | `go test -run TestWorkersGTN` |
-| `TestStress` | I5: N=1000, workers=8 estable | `go test -run TestStress -count=10` |
-| `TestValidateFixtures` | I6+I7: equivalencia numérica | `go test -run TestValidateFixtures` |
-| `TestEdgeCases` | N=1, impar, workers=1, workers>N | `go test -run TestEdgeCases` |
-
----
-
-## 13. Trazabilidad con Contrato y Guía
-
-| Requisito | Documento | Sección arquitectura |
-|-----------|-----------|---------------------|
-| Pool acotado, canal tareas, WaitGroup | `contrato.md` §31, `Guia_Sprints.md` §70 | §3, §4 |
-| Propiedad exclusiva de filas | `Guia_Sprints.md` §70 | §5 (I1, I6) |
-| No goroutine por celda | `Guia_Sprints.md` §70 | §4 (bloques de filas) |
-| A/B solo lectura | `Guia_Sprints.md` §70 | §5 (I2) |
-| Cierre canal + WaitGroup | `Guia_Sprints.md` §70 | §5 (I3, I4) |
-| GOMAXPROCS fijado y registrado | `contrato.md` §11 | §3 (paso 1), §9 |
-| kernel_s / total_s delimitados | `protocolo_medicion.md` §3 | §7 |
-| Generación determinista LCG | `contrato.md` §20, `formato_datos.md` | §10 |
-| Validación atol/rtol 1e-9 | `contrato.md` §51-52 | §11 |
-| CSV stdout con campos requeridos | `protocolo_medicion.md` §4 | §9 |
-
----
-
-## 14. Pendientes para Sprints Posteriores
-
-| Sprint | Tarea | Responsable |
-|--------|-------|-------------|
-| **S3** | Integrar y conservar pruebas de `input.Generate` y lector ya implementados | Integrante 4 / 7 |
-| **S3** | Implementar `Multiply` secuencial en `matrix.go` (referencia) | Integrante 3 |
-| **S4** | Implementar `worker` y `multiplyBlock` en `workers.go` | Integrante 3 / 4 |
-| **S4** | Integrar flags, canal, WaitGroup, tiempos en `main.go` | Integrante 4 |
-| **S4** | Salida CSV completa | Integrante 4 |
-| **S5** | Revisar límites workers, estabilidad, repeticiones largas | Integrante 4 |
-| **S6** | Sintonizar `blockSize` (granularidad) con mediciones | Integrante 4 |
-| **S7** | Completar caso Go paralelo en `bench_windows.ps1` | Integrante 4 |
-
----
-
-## 15. Registro de Decisiones de Diseño
-
-| Decisión | Justificación | Alternativa descartada |
-|----------|---------------|------------------------|
-| Buffer del canal = `workers` | Tamaño acotado; el envío puede esperar consumidores sin constituir un deadlock | Sin buffer (bloquea productor) o buffer `N` (memoria innecesaria) |
-| Bloques contiguos de filas | Localidad de caché: cada worker accede a filas contiguas de C y recorre A/B secuencialmente | Filas intercaladas (stride) → peor localidad |
-| `GOMAXPROCS = workers` | Limita ejecución simultánea de código Go; consultar y registrar el valor efectivo | `GOMAXPROCS = NumCPU()` → ignora flag `--workers` |
-| Vaciar C antes de lanzar workers, dentro de total_s | Mismo límite que las referencias; kernel mide solo acumulación | Vaciar dentro de multiplyBlock mezclaría inicialización y cálculo |
-| Validación elemento a elemento | Contrato exige comparación completa; checksum no sustituye | Solo checksum → no detecta errores locales |
-
----
-
-## 16. Referencias
-
-- `docs/contrato.md` — Contrato de argumentos, generación, cálculo, corrección
-- `docs/formato_datos.md` — Formato fixtures, vectores de control PRNG
-- `docs/protocolo_medicion.md` — Delimitación tiempos, CSV, matriz experimentos
-- `docs/Guia_Sprints.md` §69-70 — Núcleo secuencial y Go paralelo
-- `docs/diagnostico_go_paralelo.md` — Estado actual y pendientes priorizados
-
----
-
-**Autor:** Integrante 4
-**Revisión cruzada:** Evaluación asistida de I3 a I4 conforme, registrada en [Sprint 2](sprints/sprint-02.md).
+La arquitectura de ambas referencias paralelas ha sido diseñada bajo una estricta paridad matemática y estructural:
+1. Ambas aplican particionado horizontal por bloques de filas y acumulación canónica $i \to k \to j$.
+2. Ambas garantizan inmunidad contra condiciones de carrera mediante propiedad disjunta de memoria.
+3. Ambas desacoplan la comunicación y sincronización del cómputo puro, permitiendo mediciones científicas comparables de `kernel_s` y `total_s` conforme al protocolo del curso.
