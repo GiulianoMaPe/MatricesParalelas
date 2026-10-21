@@ -155,7 +155,7 @@ var csvHeader = []string{
 	"kernel_s", "total_s", "validation_status",
 }
 
-func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result measurement, workers int, gomaxprocsUsed int, kernelS float64, repetition int, isWarmup bool, firstRow bool) error {
+func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result measurement, workers int, gomaxprocsUsed int, kernelS float64) error {
 	if math.IsNaN(kernelS) || math.IsInf(kernelS, 0) || kernelS < 0 ||
 		math.IsNaN(result.totalS) || math.IsInf(result.totalS, 0) || result.totalS < kernelS {
 		return fmt.Errorf("tiempos de medici\u00f3n inv\u00e1lidos")
@@ -165,14 +165,12 @@ func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result mea
 		info.hostname, info.cpuModel, strconv.FormatFloat(float64(info.totalMemory)/(1<<30), 'f', 3, 64),
 		info.osVersion, fmt.Sprintf("go_paralelo_W%d", workers), strconv.Itoa(n), strconv.FormatUint(uint64(cfg.seed), 10),
 		"1", "1", "1", strconv.Itoa(workers), strconv.Itoa(gomaxprocsUsed),
-		strconv.Itoa(repetition), strconv.FormatBool(isWarmup),
+		strconv.Itoa(cfg.repetition), strconv.FormatBool(cfg.repetition == 0),
 		strconv.FormatFloat(kernelS, 'f', 9, 64), strconv.FormatFloat(result.totalS, 'f', 9, 64), "OK",
 	}
 	w := csv.NewWriter(out)
-	if firstRow {
-		if err := w.Write(csvHeader); err != nil {
-			return err
-		}
+	if err := w.Write(csvHeader); err != nil {
+		return err
 	}
 	if err := w.Write(record); err != nil {
 		return err
@@ -255,50 +253,32 @@ func execute(cfg config, stdout io.Writer, info environmentInfo) error {
 	}
 
 	kernelDurations := make([]time.Duration, cfg.workers)
-	firstRow := true
+	c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
+	previous := runtime.GOMAXPROCS(cfg.workers)
+	gomaxprocsUsed := runtime.GOMAXPROCS(0)
 
-	for rep := 0; rep <= cfg.repetition; rep++ {
-		isWarmup := (rep == 0)
-		repetitionLabel := rep
+	totalStart := time.Now()
+	clear(c.Data)
+	multiplyParallelKernel(a, b, c, cfg.workers, kernelDurations)
+	totalS := time.Since(totalStart).Seconds()
 
-		c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
-
-		totalStart := time.Now()
-		clear(c.Data)
-
-		previous := runtime.GOMAXPROCS(cfg.workers)
-
-		multiplyParallelKernel(a, b, c, cfg.workers, kernelDurations)
-
-		totalS := time.Since(totalStart).Seconds()
-
-		runtime.GOMAXPROCS(previous)
-
-		var maxKernel time.Duration
-		for _, d := range kernelDurations {
-			if d > maxKernel {
-				maxKernel = d
-			}
-		}
-		kernelS := maxKernel.Seconds()
-
-		if err := validateProduct(c, reference); err != nil {
-			return err
-		}
-		if cfg.outputFile != "" {
-			if err := saveMatrix(cfg.outputFile, c); err != nil {
-				return fmt.Errorf("archivo de salida: %w", err)
-			}
-		}
-		if err := writeCSV(stdout, cfg, a.N, info, measurement{start: totalStart, totalS: totalS}, cfg.workers, cfg.workers, kernelS, repetitionLabel, isWarmup, firstRow); err != nil {
-			return err
-		}
-		firstRow = false
-		for i := range kernelDurations {
-			kernelDurations[i] = 0
+	runtime.GOMAXPROCS(previous)
+	var maxKernel time.Duration
+	for _, d := range kernelDurations {
+		if d > maxKernel {
+			maxKernel = d
 		}
 	}
-	return nil
+	kernelS := maxKernel.Seconds()
+	if err := validateProduct(c, reference); err != nil {
+		return err
+	}
+	if cfg.outputFile != "" {
+		if err := saveMatrix(cfg.outputFile, c); err != nil {
+			return fmt.Errorf("archivo de salida: %w", err)
+		}
+	}
+	return writeCSV(stdout, cfg, a.N, info, measurement{start: totalStart, totalS: totalS}, cfg.workers, gomaxprocsUsed, kernelS)
 }
 
 func runWithMetadata(args []string, stdout, stderr io.Writer, collect func() (environmentInfo, error)) int {
@@ -327,9 +307,4 @@ func runWithMetadata(args []string, stdout, stderr io.Writer, collect func() (en
 
 func main() {
 	os.Exit(runWithMetadata(os.Args[1:], os.Stdout, os.Stderr, collectEnvironment))
-		fmt.Println("OK: prueba de instalacion Go. Integracion de argumentos y nucleo paralelo pendiente.")
-		return
-	}
-	fmt.Fprintln(os.Stderr, "PENDIENTE: integracion CLI de multiplicacion y argumentos. Use --smoke-test para probar la instalacion.")
-	os.Exit(2)
 }

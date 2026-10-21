@@ -40,11 +40,14 @@ func matrixElementCount(n int) (int, error) {
 	return elements, nil
 }
 
+// ValidateDimension comprueba N*N elementos y N*N*8 bytes antes de multiplicar.
+// No reserva memoria ni garantiza que haya suficiente RAM disponible.
 func ValidateDimension(n int) error {
 	_, err := matrixElementCount(n)
 	return err
 }
 
+// Validate comprueba dimensión, longitud y valores finitos, en ese orden.
 func (m Matrix) Validate() error {
 	elements, err := matrixElementCount(m.N)
 	if err != nil {
@@ -52,26 +55,6 @@ func (m Matrix) Validate() error {
 	}
 	if len(m.Data) != elements {
 		return fmt.Errorf("%w: esperados %d, recibidos %d", ErrInvalidDataLength, elements, len(m.Data))
-// ValidateDimension comprueba N*N elementos y N*N*8 bytes antes de multiplicar.
-// No reserva memoria ni garantiza que haya suficiente RAM disponible.
-func ValidateDimension(n int) error {
-	if n <= 0 {
-		return fmt.Errorf("%w: N=%d", ErrInvalidDimension, n)
-	}
-	maxInt := int(^uint(0) >> 1)
-	if n > maxInt/n || n*n > maxInt/8 {
-		return fmt.Errorf("%w: N=%d", ErrSizeOverflow, n)
-	}
-	return nil
-}
-
-// Validate comprueba dimensión, longitud y valores finitos, en ese orden.
-func (m Matrix) Validate() error {
-	if err := ValidateDimension(m.N); err != nil {
-		return err
-	}
-	if len(m.Data) != m.N*m.N {
-		return fmt.Errorf("%w: esperados %d, recibidos %d", ErrInvalidDataLength, m.N*m.N, len(m.Data))
 	}
 	for index, value := range m.Data {
 		if math.IsNaN(value) || math.IsInf(value, 0) {
