@@ -1,7 +1,8 @@
-﻿package main
+package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"io"
 	"math"
@@ -77,6 +78,10 @@ func parseArgs(args []string) (config, error) {
 				if number == 0 {
 					return cfg, fmt.Errorf("--workers debe ser mayor que cero")
 				}
+				const maxWorkers = 1024
+				if number > maxWorkers {
+					return cfg, fmt.Errorf("--workers excede el l\u00edmite m\u00e1ximo (%d)", maxWorkers)
+				}
 				cfg.workers = int(number)
 			case "--repetition":
 				if number > 5 {
@@ -150,7 +155,7 @@ var csvHeader = []string{
 	"kernel_s", "total_s", "validation_status",
 }
 
-func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result measurement, workers int, kernelS float64) error {
+func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result measurement, workers int, gomaxprocsUsed int, kernelS float64, repetition int, isWarmup bool, firstRow bool) error {
 	if math.IsNaN(kernelS) || math.IsInf(kernelS, 0) || kernelS < 0 ||
 		math.IsNaN(result.totalS) || math.IsInf(result.totalS, 0) || result.totalS < kernelS {
 		return fmt.Errorf("tiempos de medici\u00f3n inv\u00e1lidos")
@@ -159,13 +164,15 @@ func writeCSV(out io.Writer, cfg config, n int, info environmentInfo, result mea
 		result.start.UTC().Format(time.RFC3339), "go_paralelo", info.commit,
 		info.hostname, info.cpuModel, strconv.FormatFloat(float64(info.totalMemory)/(1<<30), 'f', 3, 64),
 		info.osVersion, fmt.Sprintf("go_paralelo_W%d", workers), strconv.Itoa(n), strconv.FormatUint(uint64(cfg.seed), 10),
-		"1", "1", "1", strconv.Itoa(workers), strconv.Itoa(runtime.GOMAXPROCS(0)),
-		strconv.Itoa(cfg.repetition), strconv.FormatBool(cfg.repetition == 0),
+		"1", "1", "1", strconv.Itoa(workers), strconv.Itoa(gomaxprocsUsed),
+		strconv.Itoa(repetition), strconv.FormatBool(isWarmup),
 		strconv.FormatFloat(kernelS, 'f', 9, 64), strconv.FormatFloat(result.totalS, 'f', 9, 64), "OK",
 	}
 	w := csv.NewWriter(out)
-	if err := w.Write(csvHeader); err != nil {
-		return err
+	if firstRow {
+		if err := w.Write(csvHeader); err != nil {
+			return err
+		}
 	}
 	if err := w.Write(record); err != nil {
 		return err
@@ -248,9 +255,11 @@ func execute(cfg config, stdout io.Writer, info environmentInfo) error {
 	}
 
 	kernelDurations := make([]time.Duration, cfg.workers)
+	firstRow := true
 
 	for rep := 0; rep <= cfg.repetition; rep++ {
 		isWarmup := (rep == 0)
+		repetitionLabel := rep
 
 		c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
 
@@ -261,9 +270,9 @@ func execute(cfg config, stdout io.Writer, info environmentInfo) error {
 
 		multiplyParallelKernel(a, b, c, cfg.workers, kernelDurations)
 
-		runtime.GOMAXPROCS(previous)
-
 		totalS := time.Since(totalStart).Seconds()
+
+		runtime.GOMAXPROCS(previous)
 
 		var maxKernel time.Duration
 		for _, d := range kernelDurations {
@@ -281,13 +290,13 @@ func execute(cfg config, stdout io.Writer, info environmentInfo) error {
 				return fmt.Errorf("archivo de salida: %w", err)
 			}
 		}
-		if err := writeCSV(stdout, cfg, a.N, info, measurement{start: totalStart, totalS: totalS}, cfg.workers, kernelS); err != nil {
+		if err := writeCSV(stdout, cfg, a.N, info, measurement{start: totalStart, totalS: totalS}, cfg.workers, cfg.workers, kernelS, repetitionLabel, isWarmup, firstRow); err != nil {
 			return err
 		}
+		firstRow = false
 		for i := range kernelDurations {
 			kernelDurations[i] = 0
 		}
-		_ = isWarmup
 	}
 	return nil
 }
@@ -308,7 +317,7 @@ func runWithMetadata(args []string, stdout, stderr io.Writer, collect func() (en
 	}
 	if err != nil {
 		fmt.Fprintln(stderr, err)
-		if strings.Contains(err.Error(), "pendiente") || strings.Contains(err.Error(), "PENDING") {
+		if errors.Is(err, ErrPending) {
 			return 2
 		}
 		return 1
