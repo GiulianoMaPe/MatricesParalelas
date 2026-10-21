@@ -327,9 +327,4 @@ func runWithMetadata(args []string, stdout, stderr io.Writer, collect func() (en
 
 func main() {
 	os.Exit(runWithMetadata(os.Args[1:], os.Stdout, os.Stderr, collectEnvironment))
-		fmt.Println("OK: prueba de instalacion Go. Integracion de argumentos y nucleo paralelo pendiente.")
-		return
-	}
-	fmt.Fprintln(os.Stderr, "PENDIENTE: integracion CLI de multiplicacion y argumentos. Use --smoke-test para probar la instalacion.")
-	os.Exit(2)
 }

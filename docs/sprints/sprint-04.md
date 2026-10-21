@@ -1,9 +1,8 @@
 ﻿# Sprint 4 Construir las versiones paralelas
 
-Estado: en ejecución. El núcleo Go paralelo de I3 está implementado y probado;
-la integración ejecutable de I4, la revisión por I2 y el cierre del equipo siguen
-pendientes. Las asignaciones siguientes conservan el plan; la evidencia realizada
-se distingue en el registro individual.
+Estado: en ejecución. El núcleo de I3 y el ejecutable de I4 están integrados en
+main. Quedan dos observaciones de protocolo de la revisión de I4, la aceptación
+de I3 por I2 y el cierre del equipo. La evidencia está en los registros individuales.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -45,13 +44,13 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Participantes y horas reales:** Giuliano (I3). El plan contempla 3 h de implementación, 3 h de pruebas, 1 h de revisión y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s04-i03-go-paralelo-workers`; [PR #29 hacia main](https://github.com/GiulianoMaPe/MatricesParalelas/pull/29) abierto. La creación de issues sigue pendiente.
+- **Issues y pull requests:** rama de trabajo `feature/s04-i03-go-paralelo-workers`; [PR #29](https://github.com/GiulianoMaPe/MatricesParalelas/pull/29) integrado en main. La creación de issues sigue pendiente.
 
 - **Pruebas y evidencias:** implementé el núcleo Go paralelo y la distribución de bloques de filas en [workers.go](../../go_paralelo/workers.go), junto con las validaciones en [matrix.go](../../go_paralelo/matrix.go). Añadí pruebas en [matrix_test.go](../../go_paralelo/matrix_test.go) y [workers_core_test.go](../../go_paralelo/workers_core_test.go). Los cinco fixtures compartidos pasaron con 1, 2, 4 y 8 workers. Verifiqué que todas las filas se calculen una vez, que cada bloque respete sus límites y que A/B permanezcan intactas. También pasaron 720 productos repetidos con distintos tamaños y semillas, casos de entradas inválidas, resultados no finitos y llamadas simultáneas. `go test`, `go vet`, `go test -race` y el script `test_windows.ps1` en Debug y Release terminaron con código 0, usando Go 1.27.0 en Windows amd64.
 
-- **Bloqueos y decisiones:** usé un pool acotado, un canal de bloques contiguos y `WaitGroup` para esperar a todos los workers. `Multiply` conserva su firma y `MultiplyParallel` permite elegir la cantidad de workers. Dejé en el [README](../../go_paralelo/README.md) las interfaces y la separación de tiempos para la integración de Eva (I4). Su CLI todavía está pendiente; los productos se verificaron mediante las pruebas del módulo.
+- **Bloqueos y decisiones:** usé un pool acotado, un canal de bloques contiguos y `WaitGroup` para esperar a todos los workers. `Multiply` conserva su firma y `MultiplyParallel` permite elegir la cantidad de workers. Dejé en el [README](../../go_paralelo/README.md) las interfaces y la separación de tiempos. Eva (I4) ya conectó el núcleo con su CLI, integrada en main mediante el [PR #30](https://github.com/GiulianoMaPe/MatricesParalelas/pull/30). Al actualizar mi rama con main corregí restos del merge en `main.go` y `matrix.go` que impedían compilar.
 
-- **Revision y criterio de aceptacion:** el núcleo cumple las comprobaciones de cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. El detector de carreras no reportó problemas. Revisé el estado disponible de I4: las ejecuciones con W=1,2,8 todavía devuelven código 2 por integración pendiente. Quedan pendientes la revisión y aceptación de Sebastian (I2), la revisión final del ejecutable de I4 y la coordinación con el equipo.
+- **Revision y criterio de aceptacion:** el núcleo cumple cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. Revisé la entrega de Eva (I4) el 20/10/2026, incluida su corrección `bb0262f`: pasaron los cinco fixtures con W=1,2,4,8, `go vet`, `go test -race` y los scripts Debug/Release, con código 0 y sin carreras reportadas. Se corrigieron el panic de workers fuera de rango, la clasificación de errores y los campos del CSV. Quedan dos ajustes para dar conformidad completa a I4: ejecutar solo la repetición solicitada por `--repetition` y configurar `GOMAXPROCS` antes de iniciar `total_s`. La revisión técnica de I4 está realizada; su conformidad final, la revisión y aceptación de Sebastian (I2) sobre mi núcleo y la coordinación del equipo siguen pendientes.
 
 #### Integrante 4
 
