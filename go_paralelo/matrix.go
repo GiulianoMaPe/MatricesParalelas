@@ -11,6 +11,8 @@ import (
 var ErrPending = errors.New("pendiente: algoritmo no implementado")
 
 var (
+	ErrInvalidDimension  = errors.New("la dimension debe ser positiva")
+	ErrSizeOverflow      = errors.New("el tamaño de la matriz excede los limites")
 	ErrInvalidWorkers    = errors.New("la cantidad de workers debe ser positiva")
 	ErrInvalidDataLength = errors.New("la cantidad de datos no coincide con la dimension")
 	ErrNonFiniteValue    = errors.New("la matriz contiene NaN o infinito")
@@ -23,6 +25,33 @@ type Matrix struct {
 	Data []float64
 }
 
+func matrixElementCount(n int) (int, error) {
+	if n <= 0 {
+		return 0, fmt.Errorf("%w: N=%d", ErrInvalidDimension, n)
+	}
+	maxInt := int(^uint(0) >> 1)
+	if n > maxInt/n {
+		return 0, fmt.Errorf("%w: N=%d", ErrSizeOverflow, n)
+	}
+	elements := n * n
+	if elements > maxInt/8 {
+		return 0, fmt.Errorf("%w: N=%d", ErrSizeOverflow, n)
+	}
+	return elements, nil
+}
+
+func ValidateDimension(n int) error {
+	_, err := matrixElementCount(n)
+	return err
+}
+
+func (m Matrix) Validate() error {
+	elements, err := matrixElementCount(m.N)
+	if err != nil {
+		return err
+	}
+	if len(m.Data) != elements {
+		return fmt.Errorf("%w: esperados %d, recibidos %d", ErrInvalidDataLength, elements, len(m.Data))
 // ValidateDimension comprueba N*N elementos y N*N*8 bytes antes de multiplicar.
 // No reserva memoria ni garantiza que haya suficiente RAM disponible.
 func ValidateDimension(n int) error {

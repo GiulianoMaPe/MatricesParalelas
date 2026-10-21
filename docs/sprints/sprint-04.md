@@ -1,4 +1,4 @@
-# Sprint 4 Construir las versiones paralelas
+﻿# Sprint 4 Construir las versiones paralelas
 
 Estado: en ejecución. El núcleo Go paralelo de I3 está implementado y probado;
 la integración ejecutable de I4, la revisión por I2 y el cierre del equipo siguen
@@ -52,6 +52,18 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - **Bloqueos y decisiones:** usé un pool acotado, un canal de bloques contiguos y `WaitGroup` para esperar a todos los workers. `Multiply` conserva su firma y `MultiplyParallel` permite elegir la cantidad de workers. Dejé en el [README](../../go_paralelo/README.md) las interfaces y la separación de tiempos para la integración de Eva (I4). Su CLI todavía está pendiente; los productos se verificaron mediante las pruebas del módulo.
 
 - **Revision y criterio de aceptacion:** el núcleo cumple las comprobaciones de cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. El detector de carreras no reportó problemas. Revisé el estado disponible de I4: las ejecuciones con W=1,2,8 todavía devuelven código 2 por integración pendiente. Quedan pendientes la revisión y aceptación de Sebastian (I2), la revisión final del ejecutable de I4 y la coordinación con el equipo.
+
+#### Integrante 4
+
+- **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de integración de flags/canal/WaitGroup, 3 h de pruebas con workers=1, varios workers y workers>filas, 1 h de revisión cruzada y 1 h de coordinación (8 h total). Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s04-i04-ejecutable-go-paralelo`. La creación de issues y del pull request sigue pendiente.
+
+- **Pruebas y evidencias:** implementé el ejecutable Go paralelo integrado en [main.go](../../go_paralelo/main.go) con parsing completo de flags (`--n`, `--seed`, `--input`, `--output`, `--workers`, `--repetition`, `--smoke-test`), medición separada de `kernel_s` (máximo de tiempos por worker) y `total_s` (incluye vaciado, creación de pool, despacho, `close(tasks)`, `wg.Wait()`), validación numérica contra producto de referencia (tolerancia $10^{-9} + 10^{-9}\cdot|esperado|$) y salida CSV de 20 campos conforme a `docs/protocolo_medicion.md`. Añadí [environment.go](../../go_paralelo/environment.go) y [environment_windows.go](../../go_paralelo/environment_windows.go) para recopilación de metadatos (commit, hostname, CPU, RAM, OS). Completé `matrix.go` con `matrixElementCount()` y moví allí `ErrInvalidDimension`/`ErrSizeOverflow`; agregué `WriteMatrix()` en `input.go`. Verificación ejecutada: workers=1 (equivalente secuencial), workers=2,4,8, workers>filas (N=4, W=8), fixtures compartidos (`producto2`, `escalar`, `identidad`, `cero`, `impar3`), repeticiones con warmup, `go test -race` sin advertencias, `go vet`, `go test` en Debug/Release con código 0 (Go 1.27.0, Windows amd64).
+
+- **Bloqueos y decisiones:** dependí de `multiplyParallelKernel` de I3 (Giuliano) en `workers.go` para la orquestación del pool, canal y `WaitGroup`; mi `main.go` llama a esa función y mide los tiempos. Se usó `runtime.GOMAXPROCS(workers)` por ejecución y se restaura tras `wg.Wait()`. La validación de referencia usa orden de bucles i,j,k (independiente del kernel i,k,j). El CSV usa `configuration=go_paralelo_W{W}`, `version=go_paralelo`, `processes=threads=observed_threads=1`, `gomaxprocs=workers`.
+
+- **Revision y criterio de aceptacion:** el ejecutable compila, acepta todos los flags requeridos, produce CSV válido con `validation_status=OK`, `kernel_s <= total_s`, tiempos finitos con 9 decimales, y pasa el detector de carreras. Casos probados: workers=1, múltiples workers, workers>filas. Queda pendiente revisión cruzada asignada a I1 (Yessly) y aceptación final del equipo.
 
 #### Integrante 8
 
