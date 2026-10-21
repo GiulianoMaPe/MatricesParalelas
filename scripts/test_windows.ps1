@@ -113,7 +113,11 @@ foreach ($item in $selected) {
         } else {
             & $exe --n 2 --seed 42
             if ($LASTEXITCODE -ne 2) { throw 'El esqueleto debe rechazar el calculo pendiente con codigo 2.' }
-            Write-Host "OK: $item (entorno y rechazo de operaciones pendientes; no valida multiplicacion)."
+            if ($item -eq 'go_paralelo') {
+                Write-Host "OK: $item (pruebas Go del nucleo y entorno; CLI de calculo pendiente)."
+            } else {
+                Write-Host "OK: $item (entorno y rechazo de operaciones pendientes; no valida multiplicacion)."
+            }
         }
     } catch {
         $failures += $item
