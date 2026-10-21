@@ -24,17 +24,13 @@ function Assert-SequentialCSV($Lines) {
         $kernel -lt 0 -or $total -lt $kernel) { throw 'Tiempos Go secuencial incorrectos.' }
 }
 
-function Assert-ParallelCSV($Lines, $Workers) {
+function Assert-ParallelCSV($Lines, $Workers, [int]$Repetition = 1) {
     $rows = @($Lines | ConvertFrom-Csv)
-    # warmup + mediciones = repetition + 1 filas
-    # pero el script usa --repetition 1 por defecto, así que 2 filas (warmup + 1 medición)
-    # La primera es warmup (repetition=0, is_warmup=true), la segunda medición (repetition=1, is_warmup=false)
-    if ($rows.Count -lt 2) { throw "CSV Go paralelo: se esperaban al menos 2 filas (warmup + medición), hay $($rows.Count)." }
-    $warmup = $rows[0]
-    $measure = $rows[1]
-    if ($warmup.repetition -ne '0' -or $warmup.is_warmup -ne 'true' -or
-        $measure.repetition -ne '1' -or $measure.is_warmup -ne 'false') {
-        throw "CSV Go paralelo: warmup o medición mal etiquetados. warmup: rep=$($warmup.repetition) warm=$($warmup.is_warmup), measure: rep=$($measure.repetition) warm=$($measure.is_warmup)"
+    if ($rows.Count -ne 1) { throw "CSV Go paralelo: se esperaba una fila por ejecucion, hay $($rows.Count)." }
+    $measure = $rows[0]
+    $expectedWarmup = if ($Repetition -eq 0) { 'true' } else { 'false' }
+    if ($measure.repetition -ne $Repetition.ToString() -or $measure.is_warmup -ne $expectedWarmup) {
+        throw "CSV Go paralelo: repeticion o calentamiento incorrectos. rep=$($measure.repetition), warmup=$($measure.is_warmup)"
     }
     if ($measure.validation_status -ne 'OK' -or
         $measure.workers -ne $Workers.ToString() -or
@@ -109,6 +105,11 @@ foreach ($item in $selected) {
             $csvLines = @(& $exe --n 2 --seed 42 --workers 4)
             if ($LASTEXITCODE -ne 0) { throw "go_paralelo workers>filas debe completar con codigo 0." }
             Assert-ParallelCSV $csvLines 4
+            foreach ($repetition in @(0,5)) {
+                $csvLines = @(& $exe --n 2 --seed 42 --workers 1 --repetition $repetition)
+                if ($LASTEXITCODE -ne 0) { throw "go_paralelo fallo en repeticion $repetition con un worker." }
+                Assert-ParallelCSV $csvLines 1 $repetition
+            }
             Write-Host "OK: $item (producto real, cinco fixtures, workers>filas y CSV validado)."
         } else {
             & $exe --n 2 --seed 42

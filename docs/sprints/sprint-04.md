@@ -1,8 +1,8 @@
 ﻿# Sprint 4 Construir las versiones paralelas
 
-Estado: en ejecución. El núcleo de I3 y el ejecutable de I4 están integrados en
-main. Quedan dos observaciones de protocolo de la revisión de I4, la aceptación
-de I3 por I2 y el cierre del equipo. La evidencia está en los registros individuales.
+Estado: en ejecución. El núcleo de I3 y la integración Go paralelo de I4 están
+implementados y probados en esta rama; la revisión técnica de I4 queda conforme.
+La aceptación de I3 por I2 y el cierre del equipo siguen pendientes.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -50,7 +50,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Bloqueos y decisiones:** usé un pool acotado, un canal de bloques contiguos y `WaitGroup` para esperar a todos los workers. `Multiply` conserva su firma y `MultiplyParallel` permite elegir la cantidad de workers. Dejé en el [README](../../go_paralelo/README.md) las interfaces y la separación de tiempos. Eva (I4) ya conectó el núcleo con su CLI, integrada en main mediante el [PR #30](https://github.com/GiulianoMaPe/MatricesParalelas/pull/30). Al actualizar mi rama con main corregí restos del merge en `main.go` y `matrix.go` que impedían compilar.
 
-- **Revision y criterio de aceptacion:** el núcleo cumple cobertura exclusiva de filas, resultados correctos y terminación con uno, varios y más workers que filas. Revisé la entrega de Eva (I4) el 20/10/2026, incluida su corrección `bb0262f`: pasaron los cinco fixtures con W=1,2,4,8, `go vet`, `go test -race` y los scripts Debug/Release, con código 0 y sin carreras reportadas. Se corrigieron el panic de workers fuera de rango, la clasificación de errores y los campos del CSV. Quedan dos ajustes para dar conformidad completa a I4: ejecutar solo la repetición solicitada por `--repetition` y configurar `GOMAXPROCS` antes de iniciar `total_s`. La revisión técnica de I4 está realizada; su conformidad final, la revisión y aceptación de Sebastian (I2) sobre mi núcleo y la coordinación del equipo siguen pendientes.
+- **Revision y criterio de aceptacion:** revisé la integración de Eva (I4) el 20/10/2026 y completé los ajustes de repetición y cronometraje: cada invocación ejecuta solo la repetición solicitada, emite una cabecera y una fila CSV, y configura `GOMAXPROCS` fuera de `total_s`, registrando su valor efectivo. Verifiqué los cinco fixtures con W=1,2,4,8, el cierre y espera de workers, los errores de entrada y las repeticiones 0 a 5. `go vet`, `go test -race` y los scripts Debug/Release terminaron con código 0, sin carreras reportadas. Mi revisión del ejecutable Go paralelo de I4 queda conforme al Sprint 4 en su estado actual. La revisión y aceptación de Sebastian (I2) sobre mi núcleo y la coordinación del equipo siguen pendientes.
 
 #### Integrante 4
 
