@@ -99,14 +99,16 @@ go vet ./...
 go test -race -count=1 -timeout=120s ./...
 ```
 
-Las pruebas de I3 están en `matrix_test.go` y `workers_core_test.go`, dejando
-`workers_test.go` disponible para la ampliación de I6. Cubren los cinco fixtures
-con W=1,2,4,8, conteo de asignaciones por fila, límites de escritura de los
-bloques, entradas preservadas, errores, resultados no finitos, workers sin
-tareas, varias tareas por worker, reutilización de buffers y llamadas
-simultáneas. Se repiten 720 productos para N=1,2,3,5,17,64, semillas 0,42 y
-UINT32_MAX, W=1,2,4,8 y diez repeticiones, comparados con una referencia `i,j,k`.
-La tolerancia es `abs(got-want) <= 1e-9 + 1e-9*abs(want)`; NaN/Inf se rechazan.
+Las pruebas de equivalencia y del núcleo están en `matrix_test.go` y
+`workers_core_test.go`; las pruebas asignadas a I6 están en `workers_test.go`.
+Cubren los cinco fixtures con W=1,2,4,8, conteo de asignaciones por fila,
+límites de escritura de los bloques, entradas preservadas, errores, resultados
+no finitos, workers sin tareas, varias tareas por worker y reutilización de
+buffers. I6 añade verificación de filas calculadas una sola vez, llamadas
+concurrentes terminadas y productos repetidos para seis tamaños, tres semillas
+y cuatro cantidades de workers: 720 productos comparados con una referencia
+`i,j,k`, diez repeticiones por combinación. La tolerancia es
+`abs(got-want) <= 1e-9 + 1e-9*abs(want)`; NaN/Inf se rechazan.
 
 En Windows, `-race` requiere un compilador C compatible disponible para Go.
 Los scripts del repositorio fijan cachés locales; si la carpeta temporal habitual
