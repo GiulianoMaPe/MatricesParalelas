@@ -75,12 +75,12 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro individual - I1 Yessly - 20/10/2026
 
-- **Participantes y horas reales:** Yessly (I1). El plan contempla 3 h de implementacion, 3 h de pruebas, 1 h de revision y 1 h de coordinacion. Las horas reales quedan pendientes de confirmar.
-
-- **Issues y pull requests:** rama de trabajo `feature/s04-i01-mpi-scatterv-gatherv`. La creacion de issues y del pull request queda pendiente.
-
-- **Pruebas y evidencias:** se implementaron `c_paralelo/src/partition.c` y el flujo MPI de `c_paralelo/src/main.c` (Bcast de B, Scatterv de A, Gatherv de C, validacion en el rango 0, CSV de 20 columnas y CLI). Se implemento tambien el nucleo local de `c_paralelo/src/matrix.c` como dependencia de integracion y se ampliaron `c_paralelo/tests/pending_test.c` y los scripts `run_hybrid_windows.ps1`/`test_windows.ps1`. La verificacion aritmetica del reparto (`scripts/verify_partition_design.ps1`) pasa: 8 ejemplos, 4480 pares N/P y fronteras 46340/46341. Las pruebas de runtime quedan pendientes porque el equipo de trabajo no tiene instalados MSVC, Windows SDK ni MS-MPI.
-
-- **Bloqueos y decisiones:** `status.json` queda con `algorithm=implemented` y `validation=pending`. Se fijo `N <= 46340` para respetar los `count`/desplazamientos `int` de MPI y se exige `OMP_NUM_THREADS` positivo con `OMP_DYNAMIC=FALSE`. La revision formal de FUNNELED, variables privadas y ausencia de MPI en la region OpenMP corresponde a I2 (Sebastian).
-
-- **Revision y criterio de aceptacion:** el reparto y la comunicacion cumplen el diseno de `partition.h` y las pruebas de particion pasan; falta compilar y ejecutar en un entorno con MSVC y MS-MPI para aceptar el entregable. La revision de I1 corresponde a I8 (Roberto) y la coordinacion de S4 a I4 (Eva). Queda pendiente tambien la revision de Giuliano (I3) por Sebastian (I2).
+#### Integrante 1
+- **Rama / PR:** `feature/s04-i01-comunicacion-mpi`
+- **Horas declaradas:** 8 h (3 h comunicación/partición, 3 h pruebas P=1,2,4, P>N, no divisibles, 1 h revisión I2, 1 h coordinación)
+- **Evidencia de ejecución:**  
+  - `check_env_windows.ps1`: Entorno completo validado (MSVC, MS-MPI Runtime v10.1, Go 1.27.3).  
+  - `build_windows.ps1 -Version all`: Compilación exitosa de las 4 versiones.  
+  - `test_windows.ps1 -Version all` y `run_hybrid_windows.ps1`: Pasados con éxito.  
+  - Validaciones de comunicación MPI: Ejecuciones con `mpiexec` (-n 1, -n 2, -n 4) en fixtures, caso $P > N$ ($N=3, P=8$) y no divisibles ($N=7, P=3$ y $N=33, P=4$) con coincidencia $10^{-9}$ celda a celda respecto a `c_secuencial`.
+- **Revisión cruzada a I2:** Código de Sebastián validado. Llamadas MPI fuera de regiones OpenMP, uso de `MPI_THREAD_FUNNELED` y cálculo de desplazamientos/counts correcto en elementos double.
