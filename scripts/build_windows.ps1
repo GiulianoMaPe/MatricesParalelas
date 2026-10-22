@@ -60,6 +60,15 @@ foreach ($item in $selected) {
                 Push-Location $testBuild
                 try { Invoke-MSVC $cl ($options + $testSources + '/Fe:pending_test.exe' + $linkOptions) }
                 finally { Pop-Location }
+                if ($item -eq 'c_paralelo') {
+                    $partitionSources = @(
+                        (Join-Path $module 'src\partition.c'),
+                        (Join-Path $module 'tests\partition_test.c')
+                    )
+                    Push-Location $testBuild
+                    try { Invoke-MSVC $cl ($options + $partitionSources + '/Fe:partition_test.exe' + $linkOptions) }
+                    finally { Pop-Location }
+                }
             }
         }
     } catch {
