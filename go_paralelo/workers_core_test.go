@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math"
-	"reflect"
 	"sync"
 	"testing"
 	"time"
@@ -133,28 +132,6 @@ func TestWorkersWithoutTasksFinishAndResetDurations(t *testing.T) {
 	}
 }
 
-func TestWorkerRowOwnership(t *testing.T) {
-	// Nonzero rows expose missing work and double accumulation. Partition
-	// counts above check assignments independently of the numerical product.
-	for _, n := range []int{1, 2, 3, 5, 8, 17} {
-		a := Matrix{N: n, Data: make([]float64, n*n)}
-		for i := range a.Data {
-			a.Data[i] = 1
-		}
-		for _, workers := range []int{1, 2, 4, 8, 32} {
-			got, err := MultiplyParallel(a, a, workers)
-			if err != nil {
-				t.Fatal(err)
-			}
-			for i, value := range got.Data {
-				if value != float64(n) {
-					t.Fatalf("N=%d W=%d C[%d]=%v, want %d", n, workers, i, value, n)
-				}
-			}
-		}
-	}
-}
-
 func TestParallelKernelReusesPreparedBuffers(t *testing.T) {
 	a, b, err := Generate(7, 0)
 	if err != nil {
@@ -180,65 +157,5 @@ func TestParallelKernelReusesPreparedBuffers(t *testing.T) {
 			}
 		}
 		assertMatrixClose(t, c, want)
-	}
-}
-
-func TestMultiplyParallelRepeatedSizes(t *testing.T) {
-	for _, n := range []int{1, 2, 3, 5, 17, 64} {
-		for _, seed := range []uint32{0, 42, ^uint32(0)} {
-			a, b, err := Generate(n, seed)
-			if err != nil {
-				t.Fatal(err)
-			}
-			want := referenceProduct(a, b)
-			for _, workers := range []int{1, 2, 4, 8} {
-				t.Run(fmt.Sprintf("N%d/seed%d/W%d", n, seed, workers), func(t *testing.T) {
-					for repeat := 0; repeat < 10; repeat++ {
-						got, err := MultiplyParallel(a, b, workers)
-						if err != nil {
-							t.Fatal(err)
-						}
-						assertMatrixClose(t, got, want)
-					}
-				})
-			}
-		}
-	}
-}
-
-func TestConcurrentCallsShareReadOnlyInputs(t *testing.T) {
-	a, b, err := Generate(17, 42)
-	if err != nil {
-		t.Fatal(err)
-	}
-	aBefore := append([]float64(nil), a.Data...)
-	bBefore := append([]float64(nil), b.Data...)
-	want := referenceProduct(a, b)
-	type result struct {
-		matrix Matrix
-		err    error
-	}
-	results := make(chan result, 8)
-	for workers := 1; workers <= 8; workers++ {
-		go func(w int) {
-			got, err := MultiplyParallel(a, b, w)
-			results <- result{got, err}
-		}(workers)
-	}
-	var previous Matrix
-	for call := 0; call < 8; call++ {
-		r := <-results
-		if r.err != nil {
-			t.Fatal(r.err)
-		}
-		assertMatrixClose(t, r.matrix, want)
-		if previous.Data != nil && previous.Data[0] != 12345 {
-			t.Fatal("concurrent calls share output storage")
-		}
-		r.matrix.Data[0] = 12345
-		previous = r.matrix
-	}
-	if !reflect.DeepEqual(a.Data, aBefore) || !reflect.DeepEqual(b.Data, bBefore) {
-		t.Fatal("concurrent calls modified A/B")
 	}
 }

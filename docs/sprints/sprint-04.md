@@ -3,7 +3,11 @@
 Estado: en ejecución. El núcleo de I3 y la integración Go paralelo de I4 están
 implementados y probados en esta rama; la revisión técnica de I4 queda conforme.
 El cierre del equipo sigue pendiente.
-La comunicacion MPI y el nucleo OpenMP de C quedaron implementados el 20/10/2026; su compilacion y pruebas de runtime siguen pendientes.
+La comunicación MPI y el núcleo OpenMP de C quedaron implementados el 20/10/2026.
+El 22/10/2026 la validación de I5 compiló y ejecutó la batería C completa en
+Debug y Release con MSVC/MS-MPI, incluidos P=1, P>N y repartos no divisibles;
+véase el [reporte de particionado](../../c_paralelo/tests/reporte_particionado.md).
+Las revisiones cruzadas y el cierre del equipo siguen pendientes.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -65,6 +69,20 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Revision y criterio de aceptacion:** el ejecutable compila, acepta todos los flags requeridos, produce CSV válido con `validation_status=OK`, `kernel_s <= total_s`, tiempos finitos con 9 decimales, y pasa el detector de carreras. Casos probados: workers=1, múltiples workers, workers>filas. Queda pendiente revisión cruzada asignada a I1 (Yessly) y aceptación final del equipo.
 
+- **Revisión cruzada a I5 (Fernando) · 22/10/2026:** revisé el [PR #34](https://github.com/GiulianoMaPe/MatricesParalelas/pull/34) (`feature/s04-i05-pruebas-particionado-c`, commit `96e192b`). `partition_test.c` comprueba los ejemplos (a), (b), (g), (h) e (i) de [partition.h](../../c_paralelo/include/partition.h) con los valores esperados del contrato: repartos no divisibles 10/4 y 7/3, procesos sin filas 3/5 y 4/8 y la frontera 46340/46341. Verifica además contigüidad, cobertura y counts/desplazamientos en elementos double (invariantes I2–I8), y el rechazo de N=0, P=0 y punteros nulos sin modificar buffers. La integración en `build_windows.ps1` y `test_windows.ps1` conserva `pending_test.exe` y solo añade `partition_test.exe` para `c_paralelo`. Compilé `partition.c` + `partition_test.c` con GCC 10.3.0 (TDM-GCC) en Debug (`-O0 -g`) y Release (`-O2 -DNDEBUG`) con `-std=c11 -Wall -Wextra -Werror -pedantic`; ambos ejecutables terminaron con código 0, sin advertencias adicionales con `-Wconversion -Wsign-conversion -Wshadow`. Para comprobar que la prueba detecta errores reales, inyecté cuatro fallos en `partition.c` (resto asignado con `<=`, límite `N >= 46340`, escritura en buffers antes de validar y desplazamientos en filas en lugar de elementos): la prueba falló en los cuatro casos. No reproduje la batería MPI/OpenMP con MSVC/MS-MPI porque mi equipo no tiene Windows SDK ni MS-MPI instalados; para esa parte me apoyo en la evidencia Debug/Release del [reporte de particionado C](../../c_paralelo/tests/reporte_particionado.md). Resolví el conflicto de este registro con main conservando la sección actualizada de I1 y la de I5. Revisión conforme para el alcance de I5.
+
+## Registro individual · I6 Gerardo · 20/10/2026 · avance
+
+- **Participantes y horas reales:** Gerardo (I6). La asignación estima 3 h de pruebas, 3 h de verificación, 1 h de revisión y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** pendientes de registrar.
+
+- **Pruebas y evidencias:** organicé en [workers_test.go](../../go_paralelo/workers_test.go) las pruebas asignadas a I6: diez repeticiones por combinación de seis tamaños, tres semillas y cuatro cantidades de workers (720 productos comparados con una referencia secuencial); cobertura numérica de filas con 1, 2, 4, 8 y 32 workers para detectar trabajo perdido o acumulación duplicada; y ocho llamadas concurrentes con tamaños de pool distintos. La prueba concurrente comprueba terminación en un máximo de 10 s, estabilidad de los resultados, almacenamiento de salida independiente y que A/B no se modifiquen. `go test ./...` pasó en Windows. `go test -race ./...` no se pudo ejecutar porque CGO no está habilitado en el entorno (`-race requires cgo`). La prueba de instalación se conserva y repite el smoke test diez veces.
+
+- **Bloqueos y decisiones:** el detector de carreras queda pendiente hasta disponer de CGO habilitado y un compilador C compatible. No se duplicaron las pruebas: se trasladaron desde [workers_core_test.go](../../go_paralelo/workers_core_test.go) a la ubicación del entregable de I6.
+
+- **Revision y criterio de aceptacion:** el avance cubre repetición, tamaños variados, resultados estables, terminación y detección numérica de trabajo perdido o duplicado. Revisión cruzada por I7, horas reales, coordinación y cierre formal pendientes.
+
 #### Integrante 8
 
 - Participantes y horas reales: Roberto (8 h: 3 h documentación técnica de flujos de datos y sincronización de C híbrido MPI+OpenMP y Go concurrente CSP, 3 h mapeo a la rúbrica del curso, análisis de sobrecostes y prevención de fallos concurrentes, 1 h coordinación de acuerdos, 1 h revisión cruzada asignada a I1 Yessly).
@@ -99,3 +117,21 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - **Revisión a I8 (Roberto):** Revisé exhaustivamente [`docs/arquitectura.md`](../arquitectura.md). La fundamentación de los paradigmas híbrido (MPI+OpenMP) y CSP (goroutines, canales, WaitGroup) es matemáticamente sólida y exhaustiva. Los invariantes de particionado $I1-I6$ en `partition.h`, el tratamiento de $P > N$, el orden canónico $i \to k \to j$ y la delimitación estricta de cronometraje entre `kernel_s` y `total_s` se alinean a la perfección con la rúbrica y el protocolo de medición. El entregable de I8 queda **CONFORME**.
 - **Revisión y criterio de aceptación:** Mi entregable técnico (`docs/equivalencia.md`), las evidencias experimentales y la revisión cruzada quedan completadas y conformes al Sprint 4.
 
+#### Integrante 1
+- **Rama / PR:** `feature/s04-i01-comunicacion-mpi`
+- **Horas declaradas:** 8 h (3 h comunicación/partición, 3 h pruebas P=1,2,4, P>N, no divisibles, 1 h revisión I2, 1 h coordinación)
+- **Evidencia de ejecución:**  
+  - `check_env_windows.ps1`: Entorno completo validado (MSVC, MS-MPI Runtime v10.1, Go 1.27.3).  
+  - `build_windows.ps1 -Version all`: Compilación exitosa de las 4 versiones.  
+  - `test_windows.ps1 -Version all` y `run_hybrid_windows.ps1`: Pasados con éxito.  
+  - Validaciones de comunicación MPI: Ejecuciones con `mpiexec` (-n 1, -n 2, -n 4) en fixtures, caso $P > N$ ($N=3, P=8$) y no divisibles ($N=7, P=3$ y $N=33, P=4$) con coincidencia $10^{-9}$ celda a celda respecto a `c_secuencial`.
+- **Revisión cruzada a I2:** Código de Sebastián validado. Llamadas MPI fuera de regiones OpenMP, uso de `MPI_THREAD_FUNNELED` y cálculo de desplazamientos/counts correcto en elementos double.
+
+#### Integrante 5 (Fernando)
+
+- **Trabajo y pruebas:** preparé `c_paralelo/tests/partition_test.c` para comprobar repartos no divisibles (`N=10/P=4`, `N=7/P=3`), procesos sin filas (`N=3/P=5`, `N=4/P=8`), el límite válido `N=46340`, el inválido `N=46341` y argumentos inválidos. Comprueba `rows`, `first_rows`, `counts`, `displacements`, continuidad y cobertura; ante entradas inválidas, verifica que los buffers no cambien.
+- **Integración:** añadí `partition_test.exe` como prueba separada a `scripts/build_windows.ps1` y `scripts/test_windows.ps1` para `c_paralelo`; `pending_test.exe` se mantiene y sigue ejecutándose sin reemplazos. La prueba unitaria dedicada compila `partition.c` junto con `partition_test.c`.
+- **Evidencia inicial:** `partition.c` + `partition_test.c` se compilaron y ejecutaron con GCC en Debug (`-O0 -g`) y Release (`-O2 -DNDEBUG`), con `-std=c11 -Wall -Wextra -Werror -pedantic`; ambos ejecutables terminaron con código 0. Esta evidencia se amplía con la validación oficial siguiente.
+- **Validación oficial · 22/10/2026:** sobre el commit `3151e4be0b57f57f53ee695f9cded51420661e98`, `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test_windows.ps1 -Version c_paralelo -Configuration Debug` y el mismo comando con `-Configuration Release` terminaron con código **0**, usando MSVC x64 19.51.36257.0, Windows SDK 10.0.26100.0 y MS-MPI Runtime 10.1.12498.52. Pasaron `pending_test.exe` (ocho ejemplos, 4480 pares N/P y núcleo local), `partition_test.exe`, el smoke test con dos procesos/dos hilos y `MPI_THREAD_FUNNELED`, los cinco fixtures en nueve configuraciones por compilación (incluidos P=1, P>N y reparto impar no divisible) y la comprobación automática del CSV. Las 18 comparaciones de matrices dieron `max_abs=0` y `max_rel=0`. También pasó `verify_partition_design.ps1` con código 0. El detalle, los comandos y la matriz de casos están en el [reporte de particionado C](../../c_paralelo/tests/reporte_particionado.md).
+- **Bloqueo resuelto:** MSVC y MS-MPI ya están instalados. El intento dentro del entorno restringido fallaba al iniciar el binario mediante `mpiexec` con `Error (5) Acceso denegado` (código -4); las baterías completas pasaron al ejecutarse fuera de ese entorno, sin cambiar código ni permisos de archivos. La falta de herramientas registrada inicialmente deja de ser un bloqueo actual.
+- **Revisión y aceptación:** validación técnica Debug/Release completada para el alcance de I5. Sigue pendiente la revisión cruzada de Eva (I4) a Fernando (I5), así como registrar la revisión de Fernando a Gerardo (I6), las horas reales y los enlaces de issue/PR. La aceptación final del equipo y el cierre del Sprint 4 continúan pendientes.

@@ -120,7 +120,12 @@ foreach ($item in $selected) {
             } finally { Pop-Location }
         } else {
             Push-Location $script:ProjectRoot
-            try { Invoke-Native (Join-Path $build 'tests\pending_test.exe') }
+            try {
+                Invoke-Native (Join-Path $build 'tests\pending_test.exe')
+                if ($item -eq 'c_paralelo') {
+                    Invoke-Native (Join-Path $build 'tests\partition_test.exe')
+                }
+            }
             finally { Pop-Location }
         }
         if ($item -eq 'c_paralelo') {
