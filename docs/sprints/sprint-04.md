@@ -1,4 +1,4 @@
-﻿# Sprint 4 Construir las versiones paralelas
+# Sprint 4 Construir las versiones paralelas
 
 Estado: en ejecución. El núcleo de I3 y la integración Go paralelo de I4 están
 implementados y probados en esta rama; la revisión técnica de I4 queda conforme.
@@ -92,6 +92,30 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Revision y criterio de aceptacion: Entregable de I8 finalizado; listo para revisión formal por Integrante 7 (Andrés). Revisión cruzada a I1 Yessly pendiente a la publicación de su PR de comunicación MPI.
 
 ## Registro individual - I1 Yessly - 20/10/2026
+
+- **Participantes y horas reales:** Yessly (I1). El plan contempla 3 h de implementacion, 3 h de pruebas, 1 h de revision y 1 h de coordinacion. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s04-i01-mpi-scatterv-gatherv`. La creacion de issues y del pull request queda pendiente.
+
+- **Pruebas y evidencias:** se implementaron `c_paralelo/src/partition.c` y el flujo MPI de `c_paralelo/src/main.c` (Bcast de B, Scatterv de A, Gatherv de C, validacion en el rango 0, CSV de 20 columnas y CLI). Se implemento tambien el nucleo local de `c_paralelo/src/matrix.c` como dependencia de integracion y se ampliaron `c_paralelo/tests/pending_test.c` y los scripts `run_hybrid_windows.ps1`/`test_windows.ps1`. La verificacion aritmetica del reparto (`scripts/verify_partition_design.ps1`) pasa: 8 ejemplos, 4480 pares N/P y fronteras 46340/46341. Las pruebas de runtime quedan pendientes porque el equipo de trabajo no tiene instalados MSVC, Windows SDK ni MS-MPI.
+
+- **Bloqueos y decisiones:** `status.json` queda con `algorithm=implemented` y `validation=pending`. Se fijo `N <= 46340` para respetar los `count`/desplazamientos `int` de MPI y se exige `OMP_NUM_THREADS` positivo con `OMP_DYNAMIC=FALSE`. La revision formal de FUNNELED, variables privadas y ausencia de MPI en la region OpenMP corresponde a I2 (Sebastian).
+
+- **Revision y criterio de aceptacion:** el reparto y la comunicacion cumplen el diseno de `partition.h` y las pruebas de particion pasan; falta compilar y ejecutar en un entorno con MSVC y MS-MPI para aceptar el entregable. La revision de I1 corresponde a I8 (Roberto) y la coordinacion de S4 a I4 (Eva). Queda pendiente tambien la revision de Giuliano (I3) por Sebastian (I2).
+
+## Registro individual · I7 Andrés · 21/10/2026
+
+- **Participantes y horas reales:** Andrés (I7). Total: 8 h reales (3 h ejecución y comparación exhaustiva de salidas en los 5 fixtures con las referencias y paralelos; 3 h investigación de discrepancias, punto flotante y redacción del reporte técnico `docs/equivalencia.md`; 1 h revisión cruzada formal a Roberto I8 sobre `docs/arquitectura.md`; 1 h coordinación de acuerdos del equipo).
+- **Issues y pull requests:** rama de trabajo `feature/s04-i07-reporte-equivalencia`. Pull request listo para apertura.
+- **Entregable principal:** [`docs/equivalencia.md`](../equivalencia.md) (Reporte de equivalencia de cuatro versiones).
+- **Pruebas y evidencias:**
+  - Se verificó celda por celda la equivalencia numérica entre `c_secuencial`, `go_secuencial` y `go_paralelo` ($W \in \{1, 2, 4, 8\}$ workers) frente a los 5 fixtures oficiales (`escalar`, `identidad`, `cero`, `producto2`, `impar3`) usando [`scripts/compare_results.ps1`](../../scripts/compare_results.ps1).
+  - En todas las pruebas se obtuvo $max\_abs = 0.0$ y $max\_rel = 0.0$ con código de salida 0, satisfaciendo holgadamente la tolerancia acordada ($atol=10^{-9}, rtol=10^{-9}$).
+  - Se evaluaron escenarios de sobre-concurrencia ($W=4, 8$ con $N=1, 2$) y particionado no divisible ($N=3$ con 2, 4 y 8 workers), confirmando que no se presentan carreras de datos, corrupciones ni desbordamientos de buffer.
+  - Se contrastó el cálculo con el generador LCG ($N=2, \text{semilla}=42$), verificando idéntica salida de matrices ($A, B, C$) y cabecera/filas CSV conformes con `validation_status = OK`.
+- **Bloqueos y decisiones:** Se determinó formalmente que la coincidencia exacta binaria ($max\_abs=0$) es consecuencia de la descomposición 1D por filas puras y del orden uniforme de acumulación secuencial sobre el índice interno $k$ (sin reducción paralela en $k$), asegurando que cada celda tenga un único escritor.
+- **Revisión a I8 (Roberto):** Revisé exhaustivamente [`docs/arquitectura.md`](../arquitectura.md). La fundamentación de los paradigmas híbrido (MPI+OpenMP) y CSP (goroutines, canales, WaitGroup) es matemáticamente sólida y exhaustiva. Los invariantes de particionado $I1-I6$ en `partition.h`, el tratamiento de $P > N$, el orden canónico $i \to k \to j$ y la delimitación estricta de cronometraje entre `kernel_s` y `total_s` se alinean a la perfección con la rúbrica y el protocolo de medición. El entregable de I8 queda **CONFORME**.
+- **Revisión y criterio de aceptación:** Mi entregable técnico (`docs/equivalencia.md`), las evidencias experimentales y la revisión cruzada quedan completadas y conformes al Sprint 4.
 
 #### Integrante 1
 - **Rama / PR:** `feature/s04-i01-comunicacion-mpi`
