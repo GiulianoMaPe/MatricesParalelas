@@ -106,11 +106,14 @@ El intercambio de datos entre el proceso raíz (`rank 0`) y los procesos trabaja
 3. **Recolección Segmentada de $C$ (`MPI_Gatherv`):** Tras completar la multiplicación local, cada proceso envía su buffer continuo `local_c` ($\text{filas}[i] \times N$ dobles). El proceso 0 reconstruye la matriz $C$ en el buffer global ordenado.
 
 ### 2.4. Paralelismo Multihilo Local con OpenMP
-En cada proceso con $\text{filas}[\text{rank}] > 0$, el cálculo del producto se distribuye entre los hilos del proceso mediante directivas OpenMP:
+En cada proceso con $\text{filas}[\text{rank}] > 0$, el cálculo del producto se
+distribuye entre los hilos del proceso mediante directivas OpenMP. El fragmento
+siguiente es esquemático: `matrix_accumulate_rows` usa una región `omp parallel`,
+un `omp single` para observar el número de hilos y `omp for schedule(static)`
+para repartir las filas, con barrera implícita al finalizar.
 
 ```c
-#pragma omp parallel for schedule(static) default(none) \
-    shared(local_a, b, local_c, local_rows, n) private(i, k, j, a_ik)
+#pragma omp parallel for schedule(static)
 for (int i = 0; i < local_rows; ++i) {
     const double *a_row = local_a + (size_t)i * n;
     double *c_row = local_c + (size_t)i * n;
@@ -131,7 +134,11 @@ for (int i = 0; i < local_rows; ++i) {
 ### 2.5. Delimitación Temporal en C Paralelo
 * **`kernel_s`:** Intervalo medido exclusivamente alrededor del bloque de cálculo OpenMP (`local_rows > 0`). El proceso raíz recopila mediante `MPI_Reduce` con operador `MPI_MAX` el tiempo del proceso más lento:
   $$\text{kernel\_s} = \max_{p \in [0, P-1]} (\text{kernel\_s}_p)$$
-* **`total_s`:** Cronometrado por el proceso 0 desde antes de `MPI_Bcast` y `MPI_Scatterv`, abarcando la inicialización de buffers locales, el cómputo y la sincronización final con `MPI_Gatherv`.
+* **`total_s`:** Cada proceso mide desde antes de `MPI_Bcast` y `MPI_Scatterv`
+  hasta después de `MPI_Gatherv`, incluyendo el vaciado local y el cálculo.
+  El proceso 0 recibe el máximo de estos tiempos mediante `MPI_Reduce(MPI_MAX)`,
+  fuera del intervalo medido. La reserva de memoria y la barrera inicial quedan
+  fuera de `total_s`.
 
 ---
 
@@ -171,7 +178,10 @@ func computeBlockSize(n, workers int) int {
     return size
 }
 ```
-* Si $W \ge N$: `size = 1`. Cada tarea contiene exactamente una fila. Las primeras $N$ goroutines reciben trabajo y las $W - N$ restantes no reciben tareas y terminan limpiamente al cerrarse el canal.
+* Si $W \ge N$: `size = 1`. Se generan N tareas de una fila. Cualquier worker
+  puede consumirlas y un mismo worker puede ejecutar varias; no se garantiza
+  que sean las primeras N goroutines ni que N workers distintos reciban trabajo.
+  Todos terminan al agotar el canal cerrado y notifican `wg.Done()`.
 * El productor (goroutine principal) despacha todos los bloques e inmediatamente ejecuta `close(tasks)`.
 
 ### 3.3. Ciclo de Vida del Worker y Ejecución Aritmética
@@ -226,12 +236,19 @@ func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
 
 * **`multiplyBlock`:** Implementa el triple bucle $i \to k \to j$ exclusivamente en el rango $[StartRow, EndRow)$.
 * **Propiedad de Memoria:** $A$ y $B$ se acceden concurrentemente sin sincronización porque son 100% de solo lectura. En $C$, cada worker escribe en su segmento disjunto $Data[StartRow \times N : EndRow \times N]$. No existe solapamiento ni carreras de datos (*race-free*).
-* **Inspección Dinámica de Carreras:** Verificado formalmente con el runtime de detección de condiciones de carrera: `go test -race ./...`.
+* **Inspección Dinámica de Carreras:** `go test -race ./...` no reportó carreras
+  en las ejecuciones comprobadas; la reproducción del 28/10/2026 está en el
+  [cierre de S4](sprints/sprint-04.md). El detector no constituye una prueba formal
+  para todas las ejecuciones posibles.
 
 ### 3.4. Delimitación Temporal en Go Paralelo
 * **`kernel_s`:** Se instrumenta individualmente dentro de cada worker midiendo solo el tiempo acumulado en `multiplyBlock`. Al salir de `wg.Wait()`, la coordinadora toma el valor máximo:
   $$\text{kernel\_s} = \max_{w \in [0, W-1]} (\text{kernelDurations}[w])$$
-* **`total_s`:** Cronometrado por el coordinador abarcando el vaciado explícito de $C$ (`clear(c.Data)`), creación del canal, lanzamiento del pool de workers, despacho de bloques, espera en `wg.Wait()` y cálculo de métricas.
+* **`total_s`:** Cronometrado por el coordinador desde el vaciado explícito de
+  $C$ (`clear(c.Data)`) hasta el retorno de `wg.Wait()`, incluyendo la creación
+  del canal, el lanzamiento del pool y el despacho. La reserva de buffers,
+  `GOMAXPROCS`, el cálculo del máximo de tiempos, la validación y la salida
+  quedan fuera del intervalo.
 
 ---
 
@@ -249,7 +266,7 @@ func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
 | **Sincronización** | Colectivas bloqueantes (`MPI_Bcast`, `MPI_Gatherv`) | Canal tipado + `sync.WaitGroup` |
 | **Sobrecarga de Comunicación** | Serialización y copia por sockets/memoria compartida IPC | Cero copia de datos; solo paso del descriptor `Task` (16 bytes) |
 | **Prevención de Data Races** | Procesos aislados; OpenMP privatiza índices $i,k,j$ | Rango de filas disjunto en $C$; $A, B$ solo lectura |
-| **Comportamiento si $P > N$ o $W > N$** | Procesos extra reciben `count=0` sin fallos | Goroutines extra no reciben tareas y salen con `wg.Done()` |
+| **Comportamiento si $P > N$ o $W > N$** | Procesos extra reciben `count=0` sin fallos | N tareas de una fila; el reparto entre workers depende del planificador y todos notifican `wg.Done()` |
 | **Escalabilidad Teórica** | Escala a clústeres multi-nodo y supercomputadores | Escala eficientemente dentro de un nodo simétrico (SMP/NUMA) |
 
 ---

@@ -5,7 +5,14 @@
 **Sprint:** 4 (Semana 4)  
 **Autor:** Integrante 7 — Andrés  
 **Rama:** `feature/s04-i07-reporte-equivalencia`  
-**Estado:** Reporte Experimental y Teórico Conforme · Evidencia Multiplataforma Completa  
+**Estado:** Equivalencia conforme en los casos comprobados en Windows; alcance S4
+
+**Actualización del cierre · 28/10/2026:** el [acta general de S4](sprints/sprint-04.md)
+registra la reproducción en Debug y Release sobre `main` (`2f22e3a`), el detector
+de carreras y los límites de la herramienta auxiliar. La evidencia de C paralelo
+incluye el [reporte de I5](../c_paralelo/tests/reporte_particionado.md), ejecutado
+en una PC distinta a la de I7. Se corrigieron tres valores transcritos del producto
+LCG de la sección 6 tras comprobarlo entre las cuatro versiones.
 
 ---
 
@@ -21,7 +28,7 @@ Se evalúa la precisión numérica celda por celda frente a los cinco casos can�
 
 ### Hallazgo Principal
 > **Conclusión de Equivalencia:** En todas las ejecuciones sobre los fixtures oficiales y matrices generadas con distintas configuraciones de concurrencia ($W \in \{1, 2, 4, 8\}$ workers en Go, y particiones MPI/OpenMP), el error absoluto máximo observado es **$max\_abs = 0$** y el error relativo máximo es **$max\_rel = 0$**. 
-> No existen discrepancias numéricas ni degradación por redondeo debido a que cada versión mantiene la propiedad matemática de **un único escritor por celda** y el mismo orden de acumulación secuencial sobre el índice interno $k$.
+> No se observaron discrepancias en esos casos. Cada versión mantiene **un único escritor por celda** y el mismo orden de acumulación secuencial sobre $k$. Este resultado no garantiza identidad binaria para cualquier matriz o compilador; la aceptación se rige por la tolerancia acordada.
 
 ---
 
@@ -63,7 +70,12 @@ Se emplean los 5 fixtures estandarizados en [`tests/fixtures/`](../tests/fixture
 
 ## 4. Resultados Experimentales de Validación
 
-Todas las pruebas fueron ejecutadas en el entorno oficial de desarrollo sobre **Windows 11 (AMD Ryzen 7 8845HS, 8 núcleos físicos, 16 hilos lógicos)**.
+I7 registró las comparaciones de C secuencial y ambos Go en **Windows 11
+(AMD Ryzen 7 8845HS, 8 núcleos físicos, 16 hilos lógicos)**. Las filas de C
+paralelo se apoyan en la evidencia MPI de I1/I5, cuyo entorno se documenta por
+separado en el reporte de particionado. La reproducción del cierre del 28/10
+usa el entorno indicado en el acta general; no se mezclan estas PCs para
+comparar rendimiento.
 
 ### 4.1. Tabla General de Equivalencia en Fixtures
 
@@ -111,7 +123,10 @@ Todas las pruebas fueron ejecutadas en el entorno oficial de desarrollo sobre **
 ### 5.1. ¿Por qué la coincidencia es exacta ($max\_abs = 0$)?
 En computación paralela, la multiplicación de matrices suele presentar discrepancias mínimas ($10^{-16} \sim 10^{-14}$) debido a que la suma en coma flotante no es asociativa:
 $$(a + b) + c \ne a + (b + c)$$
-Sin embargo, en este proyecto se logró una **identidad binaria perfecta** ($max\_abs = 0, max\_rel = 0$) gracias a tres factores de diseño arquitectónico unificados:
+En los casos registrados se obtuvo **igualdad numérica de las salidas comparadas**
+($max\_abs = 0, max\_rel = 0$). El diseño conserva el orden de las operaciones
+por celda mediante estos tres mecanismos; el comparador no inspecciona los bits
+de la representación IEEE-754 ni demuestra identidad binaria general:
 
 1. **Descomposición 1D por Filas Completas:**  
    Tanto en C (particionado MPI con `partition.c`) como en Go (despacho de bloques de filas `Task` en `workers.go`), la partición del trabajo se realiza **únicamente a lo largo de las filas $i$**.  
@@ -144,11 +159,17 @@ $$\text{val} = \frac{(X \bmod 2001) - 1000}{1000.0}$$
 * **Valores de Entrada $A$:** `[-0.363, 0.036, -0.215, 0.602]`
 * **Valores de Entrada $B$:** `[0.941, -0.453, -0.554, 0.579]`
 * **Producto $C$ Calculado en C y Go:**
-  $$C = \begin{bmatrix} -0.361555 & 0.185303 \\ -0.535793 & 0.445953 \end{bmatrix}$$
+  $$C = \begin{bmatrix} -0.361527 & 0.185283 \\ -0.535823 & 0.445953 \end{bmatrix}$$
 * **Resultado de Comparación:**  
   * C secuencial vs. Go secuencial: $max\_abs = 0.0$
   * Go secuencial vs. Go paralelo ($W=1, 2, 4, 8$): $max\_abs = 0.0$
+  * Go secuencial vs. C paralelo ($P=2, T=2$): $max\_abs = 0.0$
   * `validation_status`: **OK** en todas las ejecuciones CSV registradas.
+
+Las seis comparaciones cruzadas de este caso se reprodujeron el 28/10/2026 en
+Release, usando `--n 2 --seed 42 --output archivo` y `compare_results.ps1`;
+terminaron con código 0 y `max_abs=max_rel=0`. La matriz mostrada se redondea
+a seis decimales; los archivos conservan los valores con precisión de `double`.
 
 ---
 
@@ -157,7 +178,7 @@ $$\text{val} = \frac{(X \bmod 2001) - 1000}{1000.0}$$
 | Criterio Evaluado | Estado | Observación |
 | :--- | :---: | :--- |
 | **5 Fixtures Canónicos** | **CONFORME** | $max\_abs = 0.0$, $max\_rel = 0.0$ en todas las versiones. |
-| **Tolerancia $10^{-9}$** | **CONFORME** | Coincidencia exacta estricta en 64 bits. |
+| **Tolerancia $10^{-9}$** | **CONFORME** | Todas las salidas comprobadas cumplen `atol=rtol=1e-9`. |
 | **Independencia de Workers** | **CONFORME** | Variar $W \in \{1, 2, 4, 8\}$ no altera el producto final. |
 | **Casos Impar y Escalar** | **CONFORME** | Correcta gestión de particiones no divisibles y $N=1$. |
 | **Invariante de Formato CSV** | **CONFORME** | Cabecera oficial de 20 columnas y `validation_status = OK`. |

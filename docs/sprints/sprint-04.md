@@ -1,13 +1,12 @@
 # Sprint 4 Construir las versiones paralelas
 
-Estado: en ejecución. El núcleo de I3 y la integración Go paralelo de I4 están
-implementados y probados en esta rama; la revisión técnica de I4 queda conforme.
-El cierre del equipo sigue pendiente.
-La comunicación MPI y el núcleo OpenMP de C quedaron implementados el 20/10/2026.
-El 22/10/2026 la validación de I5 compiló y ejecutó la batería C completa en
-Debug y Release con MSVC/MS-MPI, incluidos P=1, P>N y repartos no divisibles;
-véase el [reporte de particionado](../../c_paralelo/tests/reporte_particionado.md).
-Las revisiones cruzadas y el cierre del equipo siguen pendientes.
+**Estado al 28/10/2026: cierre técnico completado; cierre administrativo pendiente.**
+Las ocho entregas están integradas en `main` y cumplen la aceptación funcional
+de S4. El registro de cierre siguiente reúne la revisión general, la trazabilidad
+y las pruebas reproducidas sobre `2f22e3a`. Los registros individuales se conservan
+como evidencia histórica: sus pendientes técnicos y su distribución de horas
+quedan actualizados por esta síntesis. Las cuatro revisiones personales sin
+evidencia siguen pendientes.
 
 Semana 4 · 64 horas de equipo · 8 horas por integrante
 
@@ -39,11 +38,161 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+### Resultado y base revisada
+
+**Sprint 4 técnicamente completado.** Las cuatro versiones coinciden con los
+cinco fixtures compartidos; el híbrido ejecuta MPI y OpenMP, y Go paralelo cierra
+el canal y espera a todos sus trabajadores antes de validar o escribir C.
+La revisión general y las pruebas automatizadas no sustituyen las revisiones
+personales del ciclo ni constituyen firmas de los integrantes.
+
+- **Base:** `main` y `origin/main` coinciden en
+  `2f22e3a23aad5d248a2f999dae1d280c24001bf1`, comprobado mediante
+  `git fetch origin main` y `git rev-list --left-right --count main...origin/main`
+  (resultado `0 0`). El cierre documental se publica directamente en `main`
+  por instrucción del responsable del repositorio.
+- **Alcance:** dos tareas principales por integrante, ocho entregables técnicos
+  integrados. La evidencia procede del código, los PR, las revisiones publicadas
+  y las pruebas ejecutadas el 28/10/2026.
+- **Coordinación prevista:** Eva (I4), según el ciclo de
+  [responsabilidades](README.md). Esta acta no atribuye a Eva una aprobación
+  personal ni horas adicionales.
+
+### Tareas y trazabilidad de las ocho entregas
+
+| Integrante | Entrega revisada | Integración en main | Resultado técnico |
+| --- | --- | --- | --- |
+| I1 · Yessly | `partition.c`, `main.c`: Bcast, Scatterv y Gatherv; P=1, P>N y restos | [PR #33](https://github.com/GiulianoMaPe/MatricesParalelas/pull/33), `bb6a4dc` | Conforme |
+| I2 · Sebastian | `matrix.c`: filas locales con OpenMP, variables de bucle privadas y MPI fuera de la región paralela | Commit `dd5891d`, incluido en [PR #33](https://github.com/GiulianoMaPe/MatricesParalelas/pull/33); no hay PR exclusivo de I2 | Conforme |
+| I3 · Giuliano | `workers.go`: pool acotado, bloques contiguos, cobertura y único escritor por fila | [PR #29](https://github.com/GiulianoMaPe/MatricesParalelas/pull/29) y ajustes del [PR #32](https://github.com/GiulianoMaPe/MatricesParalelas/pull/32) | Conforme |
+| I4 · Eva | `main.go`: flags, integración del canal/WaitGroup, repetición, tiempos y CSV | [PR #30](https://github.com/GiulianoMaPe/MatricesParalelas/pull/30) y [PR #32](https://github.com/GiulianoMaPe/MatricesParalelas/pull/32) | Conforme |
+| I5 · Fernando | `partition_test.c` y [reporte de particionado](../../c_paralelo/tests/reporte_particionado.md): counts, desplazamientos y bloques vacíos | [PR #34](https://github.com/GiulianoMaPe/MatricesParalelas/pull/34), `865f901` | Conforme |
+| I6 · Gerardo | `workers_test.go`: 720 productos repetidos, cobertura de filas y ocho llamadas concurrentes | [PR #31](https://github.com/GiulianoMaPe/MatricesParalelas/pull/31), `f46a6af` | Conforme; detector de carreras reproducido en este cierre |
+| I7 · Andrés | [Equivalencia](../equivalencia.md) y herramienta auxiliar de comparación | [PR #35](https://github.com/GiulianoMaPe/MatricesParalelas/pull/35), `2f22e3a` | Equivalencia conforme; limitación de la herramienta auxiliar indicada abajo |
+| I8 · Roberto | [Arquitectura](../arquitectura.md): flujos MPI/OpenMP y Go, sincronización y relación con el diseño | [PR #28](https://github.com/GiulianoMaPe/MatricesParalelas/pull/28), `2888afa` | Conforme |
+
+La consulta de GitHub no encontró issues del repositorio. Se conserva la
+trazabilidad real por PR y commits; no se crean issues retroactivas ni se toma
+el texto de ejemplo «Closes #1» del PR #33 como una issue existente.
+
+### Pruebas y criterio de aceptación
+
+Entorno de reproducción: Windows x64, build 26300, AMD Ryzen 5 3600, 15.912 GiB
+de RAM; MSVC 14.51.36231, Windows SDK 10.0.26100.0, MS-MPI Runtime
+10.1.12498.52, Go 1.27.0 windows/amd64. El detector de carreras se ejecutó con
+`CGO_ENABLED=1` y GCC 15.1.0 de `C:\msys64\ucrt64\bin`.
+
+| Comprobación | Resultado observado el 28/10/2026 |
+| --- | --- |
+| `test_windows.ps1 -Version all -Configuration Debug` | C secuencial y ambos Go conformes. El comando global devolvió 1 al no poder lanzar MPI dentro del entorno restringido; no se registra como una ejecución global exitosa. |
+| `test_windows.ps1 -Version c_paralelo -Configuration Debug`, fuera del entorno restringido | Código 0; compilación, ambas pruebas C, smoke MPI/OpenMP, nueve comparaciones y CSV conformes. |
+| `test_windows.ps1 -Version all -Configuration Release`, fuera del entorno restringido | Código 0; las cuatro versiones pasan las pruebas del módulo, los fixtures y las comprobaciones de CSV. |
+| `verify_partition_design.ps1` | Código 0; ocho ejemplos, 4480 pares N/P y fronteras 46340/46341. |
+| `go test -race -count=1 -timeout=120s ./...`, desde `go_paralelo` | Código 0, sin carreras reportadas; incluye las pruebas de I6 y resuelve su limitación inicial de CGO. |
+| LCG N=2, seed=42, Release: C secuencial, Go paralelo W=1,2,4,8 y C paralelo P=2/T=2 frente a Go secuencial | Seis comparaciones adicionales con código 0 y `max_abs=max_rel=0`; se corrigieron tres valores transcritos en el ejemplo de `docs/equivalencia.md`. |
+
+Las comparaciones Debug y Release cubren `producto2`, `escalar`, `identidad`,
+`cero` e `impar3` en las cuatro versiones: 24 comparaciones por configuración,
+48 en total contra los resultados esperados, todas con `max_abs=0` y `max_rel=0`
+a tolerancia `atol=rtol=1e-9`. Para C paralelo
+se comprueban P=1, P>N, reparto no divisible y T=1 o 2; las pruebas Go cubren
+W=1,2,4,8, workers mayores que filas, terminación y resultados estables.
+Los CSV comprobados tienen una fila por invocación, validación `OK` y tiempos
+finitos con `0 <= kernel_s <= total_s`; Go verifica además calentamiento y
+repeticiones. `go vet` y las pruebas de ambos módulos Go pasaron en Debug y Release.
+
+La inspección de `main.c` y `matrix.c` confirma `MPI_THREAD_FUNNELED`, las
+colectivas llamadas por el hilo inicial y la región OpenMP sobre filas locales.
+En `workers.go`, el productor despacha bloques disjuntos, cierra `tasks` y llama
+a `wg.Wait()`; cada trabajador escribe su propio tiempo y las filas asignadas.
+La validación numérica y la escritura quedan fuera de los intervalos medidos.
+Se ajustó `docs/arquitectura.md` al código: máximo de tiempos locales MPI,
+límites de `total_s` en Go, fragmento OpenMP esquemático y consumo dinámico de
+tareas sin prometer una asignación fija a los primeros N workers.
+
+Los logs locales de esta revisión están en `.cache/sprint-04-cierre/`, ignorado
+por Git; los comandos anteriores permiten reproducirlos. La evidencia anterior
+de I5 del 22/10 permanece en su reporte y no se confunde con esta reproducción.
+
+### Horas y revisiones cruzadas
+
+Se consolida una distribución de **8 h por integrante y 64 h para el equipo**.
+I1, I7 e I8 conservan sus 8 h declaradas. Para I2, I3, I4, I5 e I6 se incorpora
+una distribución estimada, reconstruida a solicitud del responsable según las
+tareas entregadas; no procede de un registro de tiempo real. Las horas de
+revisión asignadas no sustituyen la conformidad pendiente de cada revisor.
+
+| Integrante | Implementación o documentación | Pruebas o análisis | Revisión cruzada | Coordinación | Total | Origen |
+| --- | --- | --- | --- | --- | --- | --- |
+| I1 · Yessly | 3 h: comunicación MPI y partición | 3 h: P=1, P>N y repartos no divisibles | 1 h: I2 | 1 h: acuerdos de integración C | **8 h** | Declaración individual existente |
+| I2 · Sebastian | 3,5 h: núcleo local OpenMP e integración con MPI | 2,5 h: FUNNELED, variables privadas y filas locales | 1 h: I3 | 1 h: interfaces del híbrido con I1 | **8 h** | Estimación reconstruida para el cierre |
+| I3 · Giuliano | 4 h: pool de workers, despacho y ajustes de integración | 2 h: cobertura de filas, entradas y estabilidad | 1 h: I4 | 1 h: contrato del núcleo con I4 | **8 h** | Estimación reconstruida para el cierre |
+| I4 · Eva | 3,5 h: CLI, archivos, repetición y CSV | 2 h: workers=1, varios workers y workers>filas | 1 h: I5 | 1,5 h: integración Go y coordinación de S4 | **8 h** | Estimación reconstruida para el cierre |
+| I5 · Fernando | 2,5 h: pruebas de particionado y conexión con los scripts | 3,5 h: Debug/Release, counts, desplazamientos y reporte | 1 h: I6 | 1 h: integración y evidencia del híbrido | **8 h** | Estimación reconstruida para el cierre |
+| I6 · Gerardo | 3 h: batería de concurrencia y organización de pruebas | 3 h: repeticiones, terminación y estabilidad numérica | 1 h: I7 | 1 h: cobertura acordada con I3/I4 | **8 h** | Estimación reconstruida para el cierre |
+| I7 · Andrés | 3 h: ejecución y comparación de fixtures | 3 h: discrepancias y reporte de equivalencia | 1 h: I8 | 1 h: acuerdos del equipo | **8 h** | Declaración individual existente |
+| I8 · Roberto | 3 h: flujos de datos y sincronización | 3 h: rúbrica, sobrecostes y fallos concurrentes | 1 h: I1 | 1 h: acuerdos de arquitectura | **8 h** | Declaración individual existente |
+| **Equipo** | **25,5 h** | **22 h** | **8 h** | **8,5 h** | **64 h** | **24 h declaradas y 40 h estimadas** |
+
+Esta tabla actualiza los pendientes de distribución de horas de los registros
+históricos inferiores. Las pruebas de reproducción realizadas para este cierre
+se documentan como evidencia general y no se añaden a las horas individuales.
+
+| Revisión prevista | Evidencia disponible | Estado del registro |
+| --- | --- | --- |
+| I1 → I2 | Registro de I1: FUNNELED, MPI fuera de OpenMP y counts/desplazamientos | Conforme registrado |
+| I2 → I3 | No se encontró conformidad personal en el acta ni revisión publicada del PR #29/#32 | Pendiente de I2 |
+| I3 → I4 | Registro de I3 y ajustes/pruebas del PR #32 | Conforme registrado |
+| I4 → I5 | Registro de I4 y aprobación de Eva en el PR #34 del 22/10/2026 | Conforme registrado |
+| I5 → I6 | No se encontró el registro personal de revisión | Pendiente de I5 |
+| I6 → I7 | No se encontró el registro personal de revisión; solicitar revisor no equivale a aprobar | Pendiente de I6 |
+| I7 → I8 | Registro de I7: revisión de `docs/arquitectura.md` | Conforme registrado |
+| I8 → I1 | No se encontró el registro personal de revisión | Pendiente de I8 |
+
+La asignación I1 → I4 mencionada en el registro histórico de Eva no corresponde
+al ciclo vigente: I4 es revisada por I3, cuya conformidad ya está documentada.
+El registro consolidado de I2 se incluye debajo: su implementación se acredita
+por `dd5891d` y su revisión por I1; queda pendiente su revisión personal de I3.
+
+### Decisiones y continuidad hacia S5
+
+- No quedan bloqueos funcionales identificados en la batería de aceptación S4.
+  El error MPI `Error (5) Acceso denegado` / código -4 se resolvió al ejecutar
+  los mismos scripts fuera del entorno restringido, sin cambiar el algoritmo.
+- `validation=passed` en los módulos paralelos representa los casos comprobados
+  en S4. La validación integral de errores, límites y estabilidad sigue siendo
+  trabajo de [S5](sprint-05.md), que ya puede comenzar.
+- `test_equivalencia.ps1` solo ejecuta tres versiones, omite binarios ausentes
+  y no agrega los fallos en un código de salida global fiable. Por ello este
+  cierre usa `test_windows.ps1`, sus comparaciones explícitas y los tests Go.
+  I6 debe incorporar en S5 la cobertura completa y la propagación de fallos;
+  I7 debe mantener el alcance de su reporte ligado a las evidencias realmente
+  ejecutadas. La coincidencia observada en fixtures no garantiza identidad
+  binaria para cualquier matriz, compilador o configuración.
+- La campaña y las conclusiones de rendimiento corresponden a S7/S8. Los CSV
+  producidos aquí validan funcionamiento y formato; no son mediciones oficiales.
+- La distribución de horas queda registrada en la tabla del cierre, con un
+  máximo de 8 h por integrante y su origen declarado o estimado. Para completar
+  el cierre administrativo, I2/I5/I6/I8 registran sus revisiones pendientes y
+  la coordinación I4 consolida esas conformidades.
+
+**Dictamen:** objetivo técnico de S4 cumplido y entregables listos para la
+validación integral de S5. El acta conserva pendientes administrativos explícitos
+y no declara una aceptación personal unánime que no está documentada.
+
+## Registro individual consolidado · I2 Sebastian · cierre del 28/10/2026
+
+- **Trabajo y trazabilidad:** integración del núcleo OpenMP de filas locales en
+  `c_paralelo/src/matrix.c`, commit `dd5891d`, incluido en el PR #33. Las llamadas
+  MPI se mantienen fuera de la región OpenMP y se usa `MPI_THREAD_FUNNELED`.
+- **Distribución estimada:** 3,5 h de implementación, 2,5 h de verificación,
+  1 h asignada a revisión de I3 y 1 h de coordinación con I1: **8 h**. Este
+  desglose se reconstruye para el cierre y no acredita horas medidas.
+- **Evidencia técnica:** revisión de I1 registrada y pruebas generales Debug y
+  Release del híbrido conformes, con nueve comparaciones de fixtures por
+  configuración, P=1, P>N y casos no divisibles.
+- **Revisión pendiente:** no se encontró una conformidad personal de I2 sobre
+  I3; la hora asignada a revisión no se toma como evidencia de su ejecución.
 
 ## Registro individual · I3 Giuliano · 19/10/2026
 

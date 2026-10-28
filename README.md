@@ -1,15 +1,17 @@
 # Multiplicación de matrices en Windows 11
 
 Repositorio para un equipo de ocho integrantes y diez sprints de desarrollo sobre
-una base técnica preparada. C y Go secuenciales ya ejecutan y validan el producto
-real; C paralelo y Go paralelo siguen en desarrollo.
+una base técnica preparada. Las cuatro versiones ejecutan y validan el producto
+real. El [cierre técnico del Sprint 4](docs/sprints/sprint-04.md) reúne la
+equivalencia, las pruebas y los pendientes administrativos; S5 continúa con la
+validación integral y el manejo de errores.
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |
 | `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo, CLI, validación y métricas integrados |
-| `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | Esqueleto y prueba de 2 procesos × 2 hilos |
+| `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | MPI/OpenMP, CLI, fixtures y casos de particionado validados en S4 |
 | `go_secuencial` | Go windows/amd64 | Producto, CLI, medición y fixtures integrados |
-| `go_paralelo` | Go, goroutines y canales | Núcleo de workers probado; integración CLI pendiente |
+| `go_paralelo` | Go, goroutines y canales | Workers, CLI, fixtures y concurrencia validados en S4 |
 
 ## Empezar desde VS Code
 
@@ -71,7 +73,8 @@ no cumple el contrato. Se ejecuta una vez por cada salida que se desea comprobar
 
 El contrato secuencial es `--n N --seed SEED` o `--input archivo`, con `--output`
 opcional y `--repetition 0..5`. C y Go secuenciales implementan estas opciones;
-Go paralelo añade `--workers W`. Las dos versiones paralelas siguen en desarrollo.
+Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
+`scripts/run_hybrid_windows.ps1 -Processes P -Threads T`.
 El script `bench_windows.ps1` documenta su futura interfaz y rechaza las mediciones
 con código 2 mientras no exista implementación y validación; tampoco se habilita
 solo editando `status.json`. No hay resultados experimentales en esta entrega.
@@ -95,7 +98,7 @@ MatricesParalelas/                 raíz actual del proyecto
 
 El [árbol completo](docs/arbol-proyecto.txt) enumera los archivos preparados.
 `build/` y `.cache/` son locales, ignorados y recreados por los scripts.
-La [guía vigente](docs/guia-extraida.txt) define el
+El [plan vigente del equipo](docs/sprints/README.md) define el
 plan de desarrollo. Los diez documentos de sprint corresponden a esa versión.
 La preparación técnica previa queda fuera de las 640 horas del equipo.
 
@@ -122,9 +125,9 @@ Consultar [contrato](docs/contrato.md), [fixtures](docs/formato_datos.md),
 Las pruebas de instalación no demuestran corrección matemática. Los generadores
 y lectores aplican el contrato común. C y Go secuenciales tienen el producto,
 la validación de resultados, el flujo de entrada/salida y las métricas integrados.
-C paralelo sigue pendiente de integrar su algoritmo; el particionado de C está
-diseñado, pero no conectado al flujo. Go paralelo tiene el núcleo de workers y
-pruebas matemáticas, pendiente de integrarlo en su ejecutable. Las campañas
+C paralelo integra el particionado, la comunicación MPI y el núcleo OpenMP;
+Go paralelo integra los workers con su ejecutable. Ambos cumplen la aceptación
+funcional de S4. S5 amplía la validación de errores y estabilidad. Las campañas
 experimentales oficiales siguen programadas para S7 y S8.
 El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en

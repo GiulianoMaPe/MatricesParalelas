@@ -1,7 +1,6 @@
 # Diez sprints, ocho integrantes
 
-Los archivos sprint-01.md a sprint-10.md corresponden a la
-[guía vigente extraída](../guia-extraida.txt):
+Los archivos sprint-01.md a sprint-10.md registran el plan de desarrollo:
 dos subtareas de 3 h por integrante, 1 h de revisión y 1 h de coordinación por semana.
 Son 8 h/persona/sprint, 64 h/equipo/sprint, 80 h/persona y 640 h/equipo en total.
 La preparación técnica previa del responsable queda fuera de estas 640 horas.
@@ -63,8 +62,15 @@ existan los futuros entregables no significa que falte instalar herramientas.
 
 ## Cierre y evidencias
 
-Los registros de cierre continúan pendientes hasta que cada entregable cumpla el
-contrato, pase sus pruebas y otra persona lo revise. Conservar evidencias individuales
+El cierre de cada sprint exige que cada entregable cumpla el contrato, pase sus
+pruebas y otra persona lo revise. Conservar evidencias individuales
 en `sprint-NN.md`. Una prueba de instalación no valida un algoritmo ni cierra S1;
 el nuevo S1 exige diagnósticos funcionales, pendientes priorizados y casos de
 referencia comprobados. No aceptar tiempos con salidas matemáticas incorrectas.
+
+Al 28/10/2026, el [Sprint 4](sprint-04.md) tiene su cierre técnico completado
+sobre `main` (`2f22e3a`): ocho entregables integrados y equivalencia funcional
+comprobada en las cuatro versiones. El acta consolida 8 h por integrante
+(24 h declaradas y 40 h estimadas) e identifica las cuatro revisiones personales
+que faltan para completar el cierre administrativo. La validación
+integral y el manejo de errores continúan en [Sprint 5](sprint-05.md).
