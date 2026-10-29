@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -67,24 +68,23 @@ func Generate(n int, seed uint32) (Matrix, Matrix, error) {
 // accepted. Invalid input returns empty matrices and ErrInvalidFixture; reader
 // failures return ErrFixtureIO. Neither error is an executable exit code.
 func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
+	return readMatrices(reader, nil)
+}
+
+// checkSize lets the executable check capacity from N before reading matrix
+// rows or allocating their storage. The public reader only checks arithmetic.
+func readMatrices(reader io.Reader, checkSize func(int) error) (Matrix, Matrix, error) {
 	if reader == nil {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
 	}
-	content, err := io.ReadAll(reader)
+	buffer := bufio.NewReader(reader)
+	headerLine, err := requiredFixtureLine(buffer)
 	if err != nil {
-		return Matrix{}, Matrix{}, ErrFixtureIO
+		return Matrix{}, Matrix{}, fmt.Errorf("cabecera: %w", err)
 	}
-	if !utf8.Valid(content) {
-		return Matrix{}, Matrix{}, ErrInvalidFixture
-	}
-	text := strings.ReplaceAll(string(content), "\r\n", "\n")
-	if strings.ContainsRune(text, '\r') {
-		return Matrix{}, Matrix{}, ErrInvalidFixture
-	}
-	lines := strings.Split(text, "\n")
-	header := rowTokens(lines[0])
+	header := rowTokens(headerLine)
 	if len(header) != 1 || !isUnsignedDecimal(header[0]) {
-		return Matrix{}, Matrix{}, ErrInvalidFixture
+		return Matrix{}, Matrix{}, fmt.Errorf("%w: cabecera debe contener solo N decimal sin signo", ErrInvalidFixture)
 	}
 	dimension, err := strconv.ParseUint(header[0], 10, strconv.IntSize)
 	maxInt := int(^uint(0) >> 1)
@@ -92,39 +92,80 @@ func ReadMatrices(reader io.Reader) (Matrix, Matrix, error) {
 		return Matrix{}, Matrix{}, ErrInvalidFixture
 	}
 	n := int(dimension)
-	if n > maxInt/n || n*n > maxInt/8 || n > (maxInt-1)/2 || len(lines) < 1+2*n {
-		return Matrix{}, Matrix{}, ErrInvalidFixture
+	if err := ValidateDimension(n); err != nil {
+		return Matrix{}, Matrix{}, fmt.Errorf("%w: %w", ErrInvalidFixture, err)
 	}
-	for _, line := range lines[1 : 1+2*n] {
-		if len(rowTokens(line)) != n {
-			return Matrix{}, Matrix{}, ErrInvalidFixture
+	if checkSize != nil {
+		if err := checkSize(n); err != nil {
+			return Matrix{}, Matrix{}, err
 		}
 	}
-	for _, line := range lines[1+2*n:] {
+	// Grow only from actual rows, so a truncated file with a huge but
+	// representable N cannot trigger a full N*N allocation from its header.
+	matrices := [2]Matrix{{N: n}, {N: n}}
+	for matrixIndex := range matrices {
+		matrix := &matrices[matrixIndex]
+		for row := 0; row < n; row++ {
+			line, err := requiredFixtureLine(buffer)
+			if err != nil {
+				return Matrix{}, Matrix{}, fmt.Errorf("matriz %c, fila %d: %w", 'A'+matrixIndex, row+1, err)
+			}
+			tokens := rowTokens(line)
+			if len(tokens) != n {
+				return Matrix{}, Matrix{}, fmt.Errorf("%w: matriz %c, fila %d: esperados %d valores, recibidos %d", ErrInvalidFixture, 'A'+matrixIndex, row+1, n, len(tokens))
+			}
+			for column, token := range tokens {
+				if !isDecimalFloat(token) {
+					return Matrix{}, Matrix{}, fmt.Errorf("%w: matriz %c, fila %d, columna %d: decimal invalido", ErrInvalidFixture, 'A'+matrixIndex, row+1, column+1)
+				}
+				value, parseErr := strconv.ParseFloat(token, 64)
+				if parseErr != nil || math.IsInf(value, 0) || math.IsNaN(value) {
+					return Matrix{}, Matrix{}, fmt.Errorf("%w: matriz %c, fila %d, columna %d: valor fuera de rango finito", ErrInvalidFixture, 'A'+matrixIndex, row+1, column+1)
+				}
+				matrix.Data = append(matrix.Data, value)
+			}
+		}
+	}
+	for {
+		line, err := readFixtureLine(buffer)
+		if err == io.EOF {
+			return matrices[0], matrices[1], nil
+		}
+		if err != nil {
+			return Matrix{}, Matrix{}, fmt.Errorf("final del archivo: %w", err)
+		}
 		if strings.Trim(line, " \t") != "" {
-			return Matrix{}, Matrix{}, ErrInvalidFixture
+			return Matrix{}, Matrix{}, fmt.Errorf("%w: datos extra despues de B", ErrInvalidFixture)
 		}
 	}
-	count := n * n
-	a := Matrix{N: n, Data: make([]float64, count)}
-	b := Matrix{N: n, Data: make([]float64, count)}
-	for row, line := range lines[1 : 1+2*n] {
-		for column, token := range rowTokens(line) {
-			if !isDecimalFloat(token) {
-				return Matrix{}, Matrix{}, ErrInvalidFixture
-			}
-			value, parseErr := strconv.ParseFloat(token, 64)
-			if parseErr != nil || math.IsInf(value, 0) || math.IsNaN(value) {
-				return Matrix{}, Matrix{}, ErrInvalidFixture
-			}
-			if row < n {
-				a.Data[row*n+column] = value
-			} else {
-				b.Data[(row-n)*n+column] = value
-			}
-		}
+}
+
+// ReadString supports long rows without Scanner's default token limit.
+// A partial last line is valid only at EOF, never on another reader failure.
+func readFixtureLine(reader *bufio.Reader) (string, error) {
+	line, err := reader.ReadString('\n')
+	if err != nil && err != io.EOF {
+		return "", fmt.Errorf("%w: %w", ErrFixtureIO, err)
 	}
-	return a, b, nil
+	if err == io.EOF && len(line) == 0 {
+		return "", io.EOF
+	}
+	if strings.HasSuffix(line, "\n") {
+		line = strings.TrimSuffix(line, "\n")
+		line = strings.TrimSuffix(line, "\r")
+	}
+	if !utf8.ValidString(line) || strings.ContainsRune(line, '\r') {
+		return "", fmt.Errorf("%w: UTF-8 invalido o CR aislado", ErrInvalidFixture)
+	}
+	return line, nil
+}
+
+func requiredFixtureLine(reader *bufio.Reader) (string, error) {
+	line, err := readFixtureLine(reader)
+	if err == io.EOF {
+		return "", fmt.Errorf("%w: archivo incompleto", ErrInvalidFixture)
+	}
+	return line, err
 }
 
 func rowTokens(line string) []string {
@@ -186,25 +227,27 @@ func WriteMatrix(writer io.Writer, m Matrix) error {
 	if err := m.Validate(); err != nil {
 		return err
 	}
+	// Flush also detects an underlying short write without an explicit error.
+	out := bufio.NewWriter(writer)
 	n := m.N
-	if _, err := fmt.Fprintln(writer, n); err != nil {
+	if _, err := fmt.Fprintln(out, n); err != nil {
 		return err
 	}
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
 			if j > 0 {
-				if _, err := writer.Write([]byte{' '}); err != nil {
+				if err := out.WriteByte(' '); err != nil {
 					return err
 				}
 			}
 			val := m.Data[i*n+j]
-			if _, err := fmt.Fprintf(writer, "%.17g", val); err != nil {
+			if _, err := fmt.Fprintf(out, "%.17g", val); err != nil {
 				return err
 			}
 		}
-		if _, err := writer.Write([]byte{'\n'}); err != nil {
+		if err := out.WriteByte('\n'); err != nil {
 			return err
 		}
 	}
-	return nil
+	return out.Flush()
 }
