@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -242,13 +243,105 @@ func TestReadMatricesAcceptsCRLFAndDecimalForms(t *testing.T) {
 
 func TestReadMatricesRejectsMalformedInputs(t *testing.T) {
 	for _, input := range []string{
-		"", "x 1 2", "0 1 2", "-1 1 2", "1 1", "1 1 2 3", "1 NaN 2", "1 +Inf 2", "1 0x1p2 2", "1 1e 2", "1 1e9999 2", "1 1 2 extra",
+		"", "x\n1\n2", "0\n1\n2", "-1\n1\n2", "1\n1", "1\n1 2\n3",
+		"1\nNaN\n2", "1\n+Inf\n2", "1\n0x1p2\n2", "1\n1e\n2", "1\n1e9999\n2", "1\n1\n2 extra",
 	} {
 		t.Run(input, func(t *testing.T) {
 			if _, _, err := ReadMatrices(bytes.NewBufferString(input)); !errors.Is(err, ErrInvalidFixture) {
 				t.Fatalf("ReadMatrices(%q) error = %v, want ErrInvalidFixture", input, err)
 			}
 		})
+	}
+}
+
+// Values are checked by bits: the product tolerance would hide loss of
+// subnormals, signed zero and the last significant digits of a float64.
+func TestReadMatricesDecimalBoundaries(t *testing.T) {
+	cases := []struct {
+		token string
+		want  float64
+	}{
+		{"1.7976931348623157e308", math.MaxFloat64},
+		{"-1.7976931348623157e308", -math.MaxFloat64},
+		{"2.2250738585072014e-308", math.Float64frombits(0x0010000000000000)},
+		{"4.9406564584124654e-324", math.SmallestNonzeroFloat64},
+		{"-4.9406564584124654e-324", -math.SmallestNonzeroFloat64},
+		{"1e-9999", 0},
+		{"-1e-9999", math.Copysign(0, -1)},
+		{"-0", math.Copysign(0, -1)},
+		{"+0.000e+10", 0},
+		{".5", 0.5},
+		{"2.", 2},
+		{"+1.25E-2", 0.0125},
+	}
+	for _, tc := range cases {
+		t.Run(tc.token, func(t *testing.T) {
+			a, b, err := ReadMatrices(strings.NewReader("1\n" + tc.token + "\n" + tc.token))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Float64bits(a.Data[0]) != math.Float64bits(tc.want) || math.Float64bits(b.Data[0]) != math.Float64bits(tc.want) {
+				t.Fatalf("token %q: A=%g B=%g, want bits %x", tc.token, a.Data[0], b.Data[0], math.Float64bits(tc.want))
+			}
+		})
+	}
+}
+
+func TestReadMatricesRejectsInvalidTokensInEitherMatrix(t *testing.T) {
+	for _, token := range []string{"NaN", "nan", "Inf", "-Infinity", "1e309", "-1e309", "0x1p2", "1_000", "1,5", ".", "+", "1e+", "1#comment", "\x001", "\ufeff1", "1\v", "1\f"} {
+		for _, input := range []string{"1\n" + token + "\n2", "1\n2\n" + token} {
+			t.Run(strconv.Quote(input), func(t *testing.T) {
+				a, b, err := ReadMatrices(strings.NewReader(input))
+				if !errors.Is(err, ErrInvalidFixture) || a.N != 0 || b.N != 0 || a.Data != nil || b.Data != nil {
+					t.Fatalf("invalid token returned A=%v B=%v err=%v", a, b, err)
+				}
+			})
+		}
+	}
+}
+
+func TestReadMatricesRejectsInvalidDimensionAndTail(t *testing.T) {
+	for _, dimension := range []string{"0", "-1", "+1", "1.5", "1073741824", "18446744073709551616"} {
+		if a, b, err := ReadMatrices(strings.NewReader(dimension + "\n1\n2")); !errors.Is(err, ErrInvalidFixture) || a.Data != nil || b.Data != nil {
+			t.Fatalf("dimension %q returned A=%v B=%v err=%v", dimension, a, b, err)
+		}
+	}
+	for _, tail := range []string{"\r", "\x00", "\ufeff", "\u00a0", "\xff", "#comment", "3"} {
+		a, b, err := ReadMatrices(strings.NewReader("1\n1\n2\n" + tail))
+		if !errors.Is(err, ErrInvalidFixture) || a.Data != nil || b.Data != nil {
+			t.Fatalf("tail %q returned A=%v B=%v err=%v", tail, a, b, err)
+		}
+	}
+}
+
+func TestMatrixFormatRoundTripPreservesRowsAndBits(t *testing.T) {
+	a := Matrix{N: 3, Data: []float64{math.MaxFloat64, 0.1, math.Copysign(0, -1), -3.25, math.SmallestNonzeroFloat64, 6, 7, 8, 9}}
+	b := Matrix{N: 3, Data: []float64{10, -11, 12, 13, 14, -15, 16, -math.SmallestNonzeroFloat64, 18}}
+	var first, second bytes.Buffer
+	if err := WriteMatrix(&first, a); err != nil {
+		t.Fatal(err)
+	}
+	if err := WriteMatrix(&second, b); err != nil {
+		t.Fatal(err)
+	}
+	// Output contains one matrix. Join A and B rows under a single N header.
+	input := first.String() + strings.SplitN(second.String(), "\n", 2)[1]
+	for iteration := 0; iteration < 3; iteration++ {
+		gotA, gotB, err := ReadMatrices(strings.NewReader(input))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for matrixIndex, got := range []Matrix{gotA, gotB} {
+			want := []Matrix{a, b}[matrixIndex]
+			if got.N != want.N || len(got.Data) != len(want.Data) {
+				t.Fatalf("incorrect shape: %+v", got)
+			}
+			for index, value := range want.Data {
+				if math.Float64bits(got.Data[index]) != math.Float64bits(value) {
+					t.Fatalf("matrix %d row %d column %d: got %g want %g", matrixIndex, index/want.N, index%want.N, got.Data[index], value)
+				}
+			}
+		}
 	}
 }
 
