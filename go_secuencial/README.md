@@ -77,3 +77,37 @@ Dejé las reglas en [las especificaciones comunes](../docs/especificaciones_c_go
 La revisión cruzada del núcleo de S3 corresponde a Sebastian (I2) y queda pendiente. Los datos de prueba están descritos en [formato_datos.md](../docs/formato_datos.md).
 
 El [contrato común](../docs/contrato.md) exige N en línea propia y N valores por fila, con LF/CRLF. ReadMatrices devuelve ErrInvalidFixture ante formato incorrecto y ErrFixtureIO ante fallo de lectura; ambos se convierten a salida 1. La instrumentación implementada sigue el [protocolo](../docs/protocolo_medicion.md): el vaciado de C pertenece a total_s y queda fuera de kernel_s; validación e I/O quedan fuera de ambos.
+
+## Sprint 5 · formatos, índices y errores
+
+El 29/10/2026, I3 revisó la compatibilidad de entrada/salida con C secuencial.
+El lector procesa una fila a la vez, conserva la gramática común y reutiliza
+`ValidateDimension` antes de almacenar datos. No conserva una copia textual del
+archivo completo ni reserva N*N elementos a partir de una cabecera incompleta.
+Las filas se incorporan en orden a A y después B; se admiten filas mayores de
+64 KiB, LF/CRLF mezclados y ausencia de salto final.
+
+La CLI comprueba la memoria disponible para A/B/C/referencia desde la cabecera,
+antes de construir las matrices de un archivo. La API pública `ReadMatrices`
+conserva su firma y verifica límites aritméticos; no consulta memoria del sistema.
+La comprobación de capacidad estima los cuatro buffers, no toda la memoria del
+proceso: las filas de texto, el crecimiento de slices y cambios concurrentes de
+RAM disponible siguen requiriendo margen. No se garantiza recuperar un OOM del runtime.
+
+Los errores de formato identifican matriz/fila/columna cuando corresponde;
+las posiciones del diagnóstico empiezan en 1. Los fallos del lector conservan
+`ErrFixtureIO` y su causa original mediante `errors.Is`, incluso después de
+recibir datos parciales. Cualquier fallo devuelve matrices vacías.
+
+`WriteMatrix` conserva `%.17g`, valida antes de escribir y usa un buffer cuyo
+vaciado propaga errores y escrituras incompletas (`io.ErrShortWrite`). Un writer
+genérico puede haber recibido bytes antes de fallar. `saveMatrix` evita publicar
+esa matriz incompleta escribiendo/cerrando un temporal antes de reemplazar el destino.
+
+Las pruebas Go comprueban extremos por bits (incluidos subnormales y cero con
+signo), orden de filas, errores de I/O y capacidad insuficiente. La batería
+[go_secuencial_io_test.ps1](../tests/go_secuencial_io_test.ps1) realiza 148
+ejecuciones C/Go por configuración, verificando aceptación/rechazo, productos,
+CSV y conservación de salidas anteriores. Pasó en Debug y Release. Las
+[instrucciones](../tests/README.md) permiten reproducirla; la evidencia y las
+revisiones personales pendientes se registran en [Sprint 5](../docs/sprints/sprint-05.md).
