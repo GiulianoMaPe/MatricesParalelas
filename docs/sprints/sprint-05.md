@@ -42,7 +42,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de revisión de límites de workers y propiedad de buffers, 3 h de repeticiones largas y corrección de bloqueos o resultados variables, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s05-i04-go-paralelo-estable`. La creación del pull request queda pendiente; su revisión corresponde a I3 (Giuliano) según la rotación.
+- **Issues y pull requests:** rama de trabajo `feature/s05-i04-go-paralelo-estable`; [PR #37](https://github.com/GiulianoMaPe/MatricesParalelas/pull/37). Su revisión corresponde a I3 (Giuliano) según la rotación.
 
 - **Revisión inicial:** el tope de 1024 workers solo existía como constante local de `parseArgs`. `MultiplyParallel` aceptaba cualquier valor positivo: con `workers=1e9` intentaba reservar el vector de tiempos (unos 8 GB) y lanzar mil millones de goroutines, en lugar de devolver un error. Además, las precondiciones de `multiplyParallelKernel` (un slot de tiempo por worker, N*N elementos en A, B y C, y C sin memoria compartida con A/B) solo estaban documentadas: al violarlas se producía un *panic* de índice o un C corrupto, no un error. El reparto ya era determinista (un escritor por fila, orden `i,k,j`), pero las pruebas comparaban solo con tolerancia y con 5 a 10 repeticiones.
 
