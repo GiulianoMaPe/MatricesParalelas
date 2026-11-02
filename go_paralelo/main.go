@@ -78,9 +78,8 @@ func parseArgs(args []string) (config, error) {
 				if number == 0 {
 					return cfg, fmt.Errorf("--workers debe ser mayor que cero")
 				}
-				const maxWorkers = 1024
-				if number > maxWorkers {
-					return cfg, fmt.Errorf("--workers excede el l\u00edmite m\u00e1ximo (%d)", maxWorkers)
+				if number > MaxWorkers {
+					return cfg, fmt.Errorf("--workers excede el l\u00edmite m\u00e1ximo (%d)", MaxWorkers)
 				}
 				cfg.workers = int(number)
 			case "--repetition":
@@ -254,6 +253,9 @@ func execute(cfg config, stdout io.Writer, info environmentInfo) error {
 
 	kernelDurations := make([]time.Duration, cfg.workers)
 	c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
+	if err := validateKernelBuffers(a, b, c, cfg.workers, kernelDurations); err != nil {
+		return err
+	}
 	previous := runtime.GOMAXPROCS(cfg.workers)
 	gomaxprocsUsed := runtime.GOMAXPROCS(0)
 

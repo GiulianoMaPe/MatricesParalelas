@@ -14,6 +14,9 @@ var (
 	ErrInvalidDimension  = errors.New("la dimension debe ser positiva")
 	ErrSizeOverflow      = errors.New("el tamaño de la matriz excede los limites")
 	ErrInvalidWorkers    = errors.New("la cantidad de workers debe ser positiva")
+	ErrTooManyWorkers    = errors.New("la cantidad de workers excede el limite")
+	ErrInvalidDurations  = errors.New("el vector de tiempos debe tener un slot por worker")
+	ErrBufferAlias       = errors.New("la matriz C comparte memoria con A o B")
 	ErrInvalidDataLength = errors.New("la cantidad de datos no coincide con la dimension")
 	ErrNonFiniteValue    = errors.New("la matriz contiene NaN o infinito")
 	ErrDimensionMismatch = errors.New("las matrices deben tener la misma dimension")
@@ -75,8 +78,8 @@ func Multiply(a, b Matrix) (Matrix, error) {
 // A/B son de solo lectura; el llamador no debe modificarlas durante la operación.
 // Esta función incluye reservas y validaciones: no es la frontera del kernel.
 func MultiplyParallel(a, b Matrix, workers int) (Matrix, error) {
-	if workers <= 0 {
-		return Matrix{}, fmt.Errorf("%w: workers=%d", ErrInvalidWorkers, workers)
+	if err := validateWorkers(workers); err != nil {
+		return Matrix{}, err
 	}
 	if err := a.Validate(); err != nil {
 		return Matrix{}, fmt.Errorf("matriz A: %w", err)
@@ -89,6 +92,9 @@ func MultiplyParallel(a, b Matrix, workers int) (Matrix, error) {
 	}
 	c := Matrix{N: a.N, Data: make([]float64, len(a.Data))}
 	durations := make([]time.Duration, workers)
+	if err := validateKernelBuffers(a, b, c, workers, durations); err != nil {
+		return Matrix{}, err
+	}
 	clear(c.Data)
 	multiplyParallelKernel(a, b, c, workers, durations)
 	if err := c.Validate(); err != nil {
