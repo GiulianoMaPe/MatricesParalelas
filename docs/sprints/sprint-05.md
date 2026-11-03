@@ -37,3 +37,12 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+#### Integrante 8
+
+- Participantes y horas reales: Roberto (8 h: 3 h reproducción de la batería de pruebas en segunda PC física independiente, 3 h análisis de casos negativos, códigos de salida y elaboración del acta, 1 h coordinación general, 1 h revisión cruzada asignada a I1 Yessly).
+- Issues y pull requests: Rama de trabajo `feature/s05-i08-validacion-independiente`.
+- Pruebas y evidencias: Entregable `docs/validacion_independiente.md` completado con evidencia empírica en Windows 11 (AMD Ryzen 5 7600X, 16 GB DDR5, host `PC-PETEL`). Se ejecutaron las suites de equivalencia (`test_equivalencia.ps1` en Debug y Release: 25 casos OK con $max\_abs = 0.0$ y $max\_rel = 0.0$), pruebas unitarias Go (`go_secuencial` y `go_paralelo` PASS), pruebas de invariantes de partición C (`partition_test.c` y `verify_partition_design.ps1` PASS con 0 fallos), y matriz de inyección de errores (ERR-01 a ERR-10) confirmando que entradas inválidas terminan limpiamente con código 1 en < 50 ms.
+- Bloqueos y decisiones: Se certifica que las cuatro referencias cumplen los contratos numéricos y de cronometría monotónica. La lógica algorítmica de C se comprobó de forma independiente con GCC C11 ante la falta de enlace con MSVC en esta máquina.
+- Revision y criterio de aceptacion: Entregable de I8 finalizado y conforme; listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly pendiente a la publicación de su PR de C secuencial.
+
