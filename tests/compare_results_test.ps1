@@ -44,6 +44,7 @@ try {
 
     $reference = Join-Path $temporary 'reference.txt'
     $withinTolerance = Join-Path $temporary 'within.txt'
+    $zeroReferenceWithinAbsoluteTolerance = Join-Path $temporary 'zero-within-atol.txt'
     $outsideTolerance = Join-Path $temporary 'outside.txt'
     $wrongDimension = Join-Path $temporary 'dimension.txt'
     $notFinite = Join-Path $temporary 'nan.txt'
@@ -60,6 +61,7 @@ try {
     $missing = Join-Path $temporary 'missing.txt'
     [IO.File]::WriteAllText($reference, "1`n1`n", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($withinTolerance, "1`n1.0000000015`n", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($zeroReferenceWithinAbsoluteTolerance, "1`n0.0000000005`n", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($outsideTolerance, "1`n1.0000000021`n", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($wrongDimension, "2`n1 0`n0 1`n", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($notFinite, "1`nNaN`n", [Text.UTF8Encoding]::new($false))
@@ -75,6 +77,9 @@ try {
     [IO.File]::WriteAllText($extraRow, "1`n1`n2`n", [Text.UTF8Encoding]::new($false))
 
     Invoke-Comparator -Expected $reference -Actual @($withinTolerance) -ExpectedExit 0 -Name 'doble tolerancia acepta limite' -OutputPattern '^OK:.*max_abs=.*max_rel='
+    $zeroReference = Join-Path $temporary 'zero-reference.txt'
+    [IO.File]::WriteAllText($zeroReference, "1`n0`n", [Text.UTF8Encoding]::new($false))
+    Invoke-Comparator -Expected $zeroReference -Actual @($zeroReferenceWithinAbsoluteTolerance) -ExpectedExit 0 -Name 'valor esperado cero acepta por tolerancia absoluta' -OutputPattern '^OK:.*max_abs=.*; max_rel=Infinity'
     Invoke-Comparator -Expected $reference -Actual @($outsideTolerance) -ExpectedExit 1 -Name 'doble tolerancia rechaza diferencia' -OutputPattern 'ERROR:.*primera diferencia=.*max_abs=.*max_rel='
     Invoke-Comparator -Expected $reference -Actual @($wrongDimension) -ExpectedExit 1 -Name 'dimension diferente' -OutputPattern 'ERROR:.*Dimension\s+obtenida'
     Invoke-Comparator -Expected $reference -Actual @($notFinite) -ExpectedExit 1 -Name 'NaN rechazado' -OutputPattern 'ERROR:.*Valor invalido'
@@ -99,5 +104,5 @@ if ($failures.Count -gt 0) {
     foreach ($failure in $failures) { [Console]::Error.WriteLine("ERROR: $failure") }
     exit 1
 }
-Write-Output 'OK: compare_results.ps1 (5 fixtures, tolerancia y formato estricto).'
+Write-Output 'OK: compare_results.ps1 (5 fixtures, tolerancias, valores cero y formato estricto).'
 exit 0

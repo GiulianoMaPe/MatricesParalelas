@@ -37,3 +37,11 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+## Registro individual · I5 Fernando
+
+- **Entregable:** [Informe de validación numérica](../validacion_numerica.md).
+- **Pruebas:** `tests/compare_results_test.ps1`, Go secuencial Debug y Go paralelo Debug reproducidos; cinco fixtures por versión, todos con código 0 y `max_abs=max_rel=0`.
+- **Criterio:** `atol=rtol=1e-9`; añadida cobertura explícita de esperado cero, diferencia aceptada por `atol` y `max_rel=Infinity`.
+- **Evidencia C:** se recopilaron en el informe resultados previos del reporte de equivalencia y del reporte de particionado; la compilación local queda pendiente porque no se dispone de MSVC configurado. No se instaló software.
+- **Revisión cruzada, coordinación, horas reales e issue/PR:** pendientes de registrar por el equipo.
