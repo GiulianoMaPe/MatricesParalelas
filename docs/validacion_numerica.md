@@ -1,8 +1,8 @@
 # Informe de validación numérica — Sprint 5, I5
 
-**Responsable:** Fernando Saire (Integrante 5)  
-**Rama:** `feature/s05-i05-validacion-numerica`  
-**Comparador:** [`scripts/compare_results.ps1`](../scripts/compare_results.ps1)  
+**Responsable:** Fernando Saire (Integrante 5)
+**Rama:** `feature/s05-i05-validacion-numerica`
+**Comparador:** [`scripts/compare_results.ps1`](../scripts/compare_results.ps1)
 **Pruebas del comparador:** [`tests/compare_results_test.ps1`](../tests/compare_results_test.ps1)
 
 ## Alcance y procedencia de la evidencia
