@@ -201,16 +201,13 @@ func loadMatrices(cfg config, available uint64) (Matrix, Matrix, error) {
 	if err != nil {
 		return Matrix{}, Matrix{}, err
 	}
-	a, b, readErr := ReadMatrices(f)
+	a, b, readErr := readMatrices(f, func(n int) error { return checkCapacity(n, available) })
 	closeErr := f.Close()
 	if readErr != nil {
 		return Matrix{}, Matrix{}, readErr
 	}
 	if closeErr != nil {
 		return Matrix{}, Matrix{}, closeErr
-	}
-	if err := checkCapacity(a.N, available); err != nil {
-		return Matrix{}, Matrix{}, err
 	}
 	return a, b, nil
 }
