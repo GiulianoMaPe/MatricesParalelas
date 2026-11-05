@@ -62,6 +62,11 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - **Revisión cruzada:** I2 (Sebastian) — ver comentario en PR #39.
 - **Horas:** 6 h desarrollo + 1 h revisión + 1 h coordinación.
 
+#### Integrante 2 (C paralelo robusto)
 
+- **Rama:** `feature/s05-i02-c-paralelo-errores-colectivos`
+- **PR:** #39
+- **Cambios:** manejo de fallos colectivos y finalización del híbrido; los rangos coordinan errores antes de los colectivos críticos para evitar esperas indefinidas. Se documentan además el uso de `MPI_THREAD_FUNNELED` y el comportamiento de procesos sin filas.
+- **Pruebas y evidencias:** `c_paralelo/tests/pending_test.c` cubre procesos sin filas, P = N, límites de dimensión y el núcleo con cero filas. `c_paralelo/tests/registro_fallos.md` documenta los fallos controlados y sus códigos de salida. `c_paralelo/status.json` registra `validation: passed`; la ejecución de runtime debe repetirse en un equipo con MSVC, Windows SDK y MS-MPI.
 
 
