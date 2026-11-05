@@ -46,3 +46,22 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Bloqueos y decisiones: Se certifica que las cuatro referencias cumplen los contratos numéricos y de cronometría monotónica. La lógica algorítmica de C se comprobó de forma independiente con GCC C11 ante la falta de enlace con MSVC en esta máquina.
 - Revision y criterio de aceptacion: Entregable de I8 finalizado y conforme; listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly pendiente a la publicación de su PR de C secuencial.
 
+#### Integrante 1 (C secuencial robusto)
+
+- **Rama:** `feature/s05-i01-c-secuencial-robusto`
+- **PR:** #40
+- **Cambios:**
+  - `MATRIX_MAX_N = 4096` en `matrix.h`, coherente con la campaña N ∈ {512, 1024, 2048, 4096}.
+  - `matrix_validate_buffer_capacity(n, k, *bytes)` con verificación de overflow en `size_t` y `PTRDIFF_MAX`.
+  - Rechazo determinista (exit 1) en `parse_options`, `input_read`, `input_generate`, `matrix_allocate` para `n > MATRIX_MAX_N`.
+  - Ganchos `matrix_set_alloc_limit` / `matrix_reset_alloc_limit` documentados como solo para tests.
+  - `tests/pending_test.c`: casos negativos (N=0, negativo, no numérico, N>4096, semilla fuera de rango, punteros NULL, fallos simulados de reserva).
+  - `docs/contrato.md`: aclara límite C=4096 vs Go sin tope fijo.
+  - `.gitignore`: `tests/outputs/` ignorado.
+- **Pruebas (Debug + Release):** `check_env_windows.ps1` OK, `build_windows.ps1 -Debug -Tests` OK, `build_windows.ps1 -Release` OK, `test_windows.ps1` OK (5 fixtures, tolerancia 1e-9).
+- **Revisión cruzada:** I2 (Sebastian) — ver comentario en PR #39.
+- **Horas:** 6 h desarrollo + 1 h revisión + 1 h coordinación.
+
+
+
+
