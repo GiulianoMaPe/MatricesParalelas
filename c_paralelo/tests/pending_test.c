@@ -531,11 +531,18 @@ static int check_partition_errors_extended(void) {
     int rows[2] = {71, 72}, first_rows[2] = {81, 82};
     int counts[2] = {91, 92}, displacements[2] = {101, 102};
 
-    /* N > PARTITION_MAX_N se rechaza sin tocar buffers. */
-    if (partition_split((size_t)46341, 1, rows, first_rows) != PARTITION_INVALID ||
+    /* Los indices de filas de partition_split admiten N hasta INT_MAX. */
+    if (partition_split((size_t)INT_MAX + 1, 1, rows, first_rows) != PARTITION_INVALID ||
         rows[0] != 71 || first_rows[0] != 81) {
-        fputs("partition_split no rechazo N=46341 sin modificar buffers\n",
+        fputs("partition_split no rechazo N>INT_MAX sin modificar buffers\n",
               stderr);
+        return 1;
+    }
+    /* N=46341 cabe como filas, pero N*N excede los counts MPI de int. */
+    if (partition_split((size_t)46341, 1, rows, first_rows) != PARTITION_OK ||
+        rows[0] != 46341 || first_rows[0] != 0 ||
+        rows[1] != 72 || first_rows[1] != 82) {
+        fputs("partition_split fallo con N=46341 P=1\n", stderr);
         return 1;
     }
     if (partition_rows((size_t)46341, 1, counts, displacements) !=
