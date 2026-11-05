@@ -76,9 +76,22 @@ Ver [instalación](../docs/instalacion-windows.md), [contrato común](../docs/co
 
 ## Checklist de revisión de I2
 
-- [ ] `MPI_Init_thread` pide `MPI_THREAD_FUNNELED` y `provided >= MPI_THREAD_FUNNELED`.
-- [ ] No hay ninguna llamada MPI dentro de `matrix_accumulate_rows` ni de la región OpenMP.
-- [ ] `i` es la variable del bucle `omp for`; `k`, `j`, `a_row`, `b_row` y `c_row` se declaran dentro del cuerpo y son privados.
-- [ ] `observed_threads` se obtiene con `omp_get_num_threads()` y coincide con `OMP_NUM_THREADS` en todos los rangos.
-- [ ] `kernel_s` es el máximo de las duraciones locales; un rango sin filas reporta `0`.
+- [x] `MPI_Init_thread` pide `MPI_THREAD_FUNNELED` y `provided >= MPI_THREAD_FUNNELED`.
+- [x] No hay ninguna llamada MPI dentro de `matrix_accumulate_rows` ni de la región OpenMP.
+- [x] `i` es la variable del bucle `omp for`; `k`, `j`, `a_row`, `b_row` y `c_row` se declaran dentro del cuerpo y son privados.
+- [x] `observed_threads` se obtiene con `omp_get_num_threads()` y coincide con `OMP_NUM_THREADS` en todos los rangos.
+- [x] `kernel_s` es el máximo de las duraciones locales; un rango sin filas reporta `0`.
+- [x] Partición con procesos sin filas (P > N) probada en `tests/pending_test.c` (`check_partition_empty_rows`).
+- [x] Partición P = N probada en `tests/pending_test.c` (`check_partition_p_equals_n`).
+- [x] Límites N > PARTITION_MAX_N rechazados sin modificar buffers (`check_partition_errors_extended`).
+- [x] Núcleo con `local_rows = 0` sin efectos secundarios (`check_matrix_zero_rows`).
+- [x] Registro de fallos controlados sin esperas indefinidas: `tests/registro_fallos.md`.
 - [ ] Repetir `scripts/test_windows.ps1 -Version c_paralelo` en un equipo con MSVC, Windows SDK y MS-MPI x64.
+
+## Sprint 5 (Integrante 2 · Sebastian)
+
+Entregable completado: C paralelo robusto y registro de fallos.
+
+- Revisión de errores colectivos y finalización del híbrido: `c_paralelo/src/main.c` (`run_hybrid`) usa `MPI_Allreduce(..., MPI_MIN)` antes de cada barrera/colectivo crítico, de modo que ningún rango queda esperando indefinidamente cuando otro falla antes de llegar al colectivo.
+- Pruebas de procesos sin filas y fallos controlados: `c_paralelo/tests/pending_test.c` (nuevas funciones `check_partition_empty_rows`, `check_partition_p_equals_n`, `check_matrix_zero_rows`, `check_partition_errors_extended`).
+- Registro de fallos: `c_paralelo/tests/registro_fallos.md`.

@@ -117,6 +117,11 @@ static int parse_options(int argc, char **argv, Options *options) {
                 fputs("ERROR: --n debe ser un entero positivo.\n", stderr);
                 return -1;
             }
+            if ((size_t)options->n > MATRIX_MAX_N) {
+                fprintf(stderr, "ERROR: --n excede la dimension maxima permitida (%zu): %lld\n",
+                        MATRIX_MAX_N, options->n);
+                return -1;
+            }
             seen_n = options->have_n = 1;
         } else if (strcmp(option, "--seed") == 0) {
             uint64_t parsed_value;
@@ -391,7 +396,7 @@ static int load_inputs(const Options *options, Matrix *a, Matrix *b) {
             free(data_b);
             return 0;
         }
-        if (matrix_validate_dimension(n, &count, NULL) != MATRIX_OK) {
+        if (n > MATRIX_MAX_N || matrix_validate_dimension(n, &count, NULL) != MATRIX_OK) {
             fputs("ERROR: dimension de entrada fuera de rango.\n", stderr);
             free(data_a);
             free(data_b);
@@ -404,6 +409,10 @@ static int load_inputs(const Options *options, Matrix *a, Matrix *b) {
         return 1;
     }
 
+    if (matrix_validate_buffer_capacity((size_t)options->n, 4, NULL) != MATRIX_OK) {
+        fputs("ERROR: dimension fuera de rango o desborde de capacidad.\n", stderr);
+        return 0;
+    }
     if (matrix_allocate(a, (size_t)options->n) != MATRIX_OK ||
         matrix_allocate(b, (size_t)options->n) != MATRIX_OK) {
         fputs("ERROR: no se pudo reservar memoria para A y B.\n", stderr);

@@ -60,5 +60,27 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - **Bloqueos y decisiones:** Se constató que las barreras iniciales (`MPI_Barrier`) y el setup de canales de Go están adecuadamente delimitados sin distorsionar el tiempo de kernel, garantizando condiciones de comparación homogéneas y equitativas para las campañas futuras (S7/S8).
 - **Revisión a I8 (Roberto):** Revisé exhaustivamente el acta [`docs/validacion_independiente.md`](../validacion_independiente.md). La reproducción empírica sobre hardware independiente (`PC-PETEL`, AMD Ryzen 5 7600X, DDR5) confirma la estabilidad, equivalencia numérica ($max\_abs = 0.0$, $max\_rel = 0.0$) y terminación limpia con código 1 ante inyección de fallos (ERR-01 a ERR-10). La verificación de cronometría monotónica coincide punto por punto con los hallazgos de la auditoría de I7. El entregable de I8 queda **CONFORME**.
 - **Revisión y criterio de aceptación:** Mi entregable técnico (`docs/protocolo_medicion.md` v1.3), las evidencias de auditoría y la revisión cruzada quedan completados y conformes al Sprint 5.
+#### Integrante 1 (C secuencial robusto)
+
+- **Rama:** `feature/s05-i01-c-secuencial-robusto`
+- **PR:** #40
+- **Cambios:**
+  - `MATRIX_MAX_N = 4096` en `matrix.h`, coherente con la campaña N ∈ {512, 1024, 2048, 4096}.
+  - `matrix_validate_buffer_capacity(n, k, *bytes)` con verificación de overflow en `size_t` y `PTRDIFF_MAX`.
+  - Rechazo determinista (exit 1) en `parse_options`, `input_read`, `input_generate`, `matrix_allocate` para `n > MATRIX_MAX_N`.
+  - Ganchos `matrix_set_alloc_limit` / `matrix_reset_alloc_limit` documentados como solo para tests.
+  - `tests/pending_test.c`: casos negativos (N=0, negativo, no numérico, N>4096, semilla fuera de rango, punteros NULL, fallos simulados de reserva).
+  - `docs/contrato.md`: aclara límite C=4096 vs Go sin tope fijo.
+  - `.gitignore`: `tests/outputs/` ignorado.
+- **Pruebas (Debug + Release):** `check_env_windows.ps1` OK, `build_windows.ps1 -Debug -Tests` OK, `build_windows.ps1 -Release` OK, `test_windows.ps1` OK (5 fixtures, tolerancia 1e-9).
+- **Revisión cruzada:** I2 (Sebastian) — ver comentario en PR #39.
+- **Horas:** 6 h desarrollo + 1 h revisión + 1 h coordinación.
+
+#### Integrante 2 (C paralelo robusto)
+
+- **Rama:** `feature/s05-i02-c-paralelo-errores-colectivos`
+- **PR:** #39
+- **Cambios:** manejo de fallos colectivos y finalización del híbrido; los rangos coordinan errores antes de los colectivos críticos para evitar esperas indefinidas. Se documentan además el uso de `MPI_THREAD_FUNNELED` y el comportamiento de procesos sin filas.
+- **Pruebas y evidencias:** `c_paralelo/tests/pending_test.c` cubre procesos sin filas, P = N, límites de dimensión y el núcleo con cero filas. `c_paralelo/tests/registro_fallos.md` documenta los fallos controlados y sus códigos de salida. `c_paralelo/status.json` registra `validation: passed`; la ejecución de runtime debe repetirse en un equipo con MSVC, Windows SDK y MS-MPI.
 
 
