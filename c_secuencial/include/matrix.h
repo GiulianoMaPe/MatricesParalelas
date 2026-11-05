@@ -26,11 +26,22 @@ typedef struct {
     double *data;
 } Matrix;
 
+/* Maximum matrix dimension supported by the sequential CLI and campaign.
+ * Coherent with campaign N in {512, 1024, 2048, 4096}. */
+#ifndef MATRIX_MAX_N
+#define MATRIX_MAX_N ((size_t)4096)
+#endif
+
 /* Checks n*n and its bytes before multiplication/allocation. The byte count
  * must fit PTRDIFF_MAX (signed pointer-sized integer), matching Go's int limit
  * on Windows x64. Optional counts are written only on success. No allocation.
  * Negative text dimensions must be rejected before conversion to size_t. */
 int matrix_validate_dimension(size_t n, size_t *elements, size_t *bytes);
+
+/* Validates that k buffers of n*n doubles can be represented without overflow
+ * in size_t and PTRDIFF_MAX, and that n <= MATRIX_MAX_N. Optional total_bytes
+ * is written only on success. */
+int matrix_validate_buffer_capacity(size_t n, size_t k, size_t *total_bytes);
 
 /* Validate dimension, exact length/non-NULL data, then finite values, in order.
  * Zeros and negative values are legal. Never modifies the descriptor or data.
@@ -78,4 +89,13 @@ int matrix_multiply_checked(const Matrix *a, const Matrix *b,
  * Raw pointers cannot reveal capacity; new callers should use the checked API.
  * Performs the same work as matrix_multiply_checked. */
 int matrix_multiply(const double *a, const double *b, double *c, size_t n);
+
+/* =========================================================================
+ * Unit-test hooks (do NOT use in production code)
+ * =========================================================================
+ * Injects a limit on successful allocations in matrix_allocate before
+ * forcing a MATRIX_NO_MEMORY failure. If limit < 0, the hook is disabled. */
+void matrix_set_alloc_limit(int limit);
+void matrix_reset_alloc_limit(void);
+
 #endif
