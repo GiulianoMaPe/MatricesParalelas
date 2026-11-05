@@ -38,6 +38,24 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Bloqueos y decisiones: sin bloqueo técnico de I3; revisión personal, coordinación y aceptación del equipo pendientes.
 - Revision y criterio de aceptacion: pendiente.
 
+## Registro individual · I4 Eva · 02/11/2026
+
+- **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de revisión de límites de workers y propiedad de buffers, 3 h de repeticiones largas y corrección de bloqueos o resultados variables, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s05-i04-go-paralelo-estable`; [PR #37](https://github.com/GiulianoMaPe/MatricesParalelas/pull/37). Su revisión corresponde a I3 (Giuliano) según la rotación.
+
+- **Revisión inicial:** el tope de 1024 workers solo existía como constante local de `parseArgs`. `MultiplyParallel` aceptaba cualquier valor positivo: con `workers=1e9` intentaba reservar el vector de tiempos (unos 8 GB) y lanzar mil millones de goroutines, en lugar de devolver un error. Además, las precondiciones de `multiplyParallelKernel` (un slot de tiempo por worker, N*N elementos en A, B y C, y C sin memoria compartida con A/B) solo estaban documentadas: al violarlas se producía un *panic* de índice o un C corrupto, no un error. El reparto ya era determinista (un escritor por fila, orden `i,k,j`), pero las pruebas comparaban solo con tolerancia y con 5 a 10 repeticiones.
+
+- **Cambios:** en [workers.go](../../go_paralelo/workers.go) añadí `MaxWorkers` (1024) como tope único para la API y la CLI, `validateWorkers` y `validateKernelBuffers`, que comprueba en O(1) las precondiciones del kernel e incluye el solapamiento parcial entre subslices del mismo arreglo. `multiplyParallelKernel` no cambió. En [matrix.go](../../go_paralelo/matrix.go) añadí `ErrTooManyWorkers`, `ErrInvalidDurations` y `ErrBufferAlias`; `MultiplyParallel` rechaza `workers > MaxWorkers` antes de reservar memoria. En [main.go](../../go_paralelo/main.go), `parseArgs` usa `MaxWorkers` y `execute` llama a `validateKernelBuffers` antes de fijar `GOMAXPROCS` y de iniciar `total_s`, de modo que la medición no cambia. Documenté el tope, la propiedad de cada buffer y el determinismo en el [README](../../go_paralelo/README.md).
+
+- **Pruebas y evidencias:** añadí [workers_stability_test.go](../../go_paralelo/workers_stability_test.go) sin modificar las pruebas de I3 ni de I6. Cubre repeticiones largas con igualdad bit a bit frente a W=1 (N=1, 2, 3, 17, 64, 129; tres semillas; W=1, 2, 3, 4, 8, 16, N+1 y 1024; unos 20 600 productos por corrida), ausencia de fugas de goroutines, terminación con plazo de 30 s bajo `GOMAXPROCS`=1 y 2, límites de workers en la API y la CLI, trece casos de buffers inválidos o con memoria compartida, y salidas idénticas byte a byte entre corridas del ejecutable. Resultados con Go 1.27.1 en Windows amd64, todos con código 0: `gofmt -l` sin archivos, `go vet ./...` sin avisos, `go test -count=1 ./...` (3,7 s), `go test -race -count=3 ./...` (122 s, sin carreras, con TDM-GCC 10.3.0) y la corrida larga `go test -run 'LongRepetitions|NoGoroutineLeak|Terminates|WorkerLimits|ValidateKernelBuffers|CLIRepeated' -count=5 -timeout 20m ./...` (18 s). `scripts/test_windows.ps1 -Version go_paralelo` pasó en Debug y Release, con los cinco fixtures en `max_abs=0` y `max_rel=0`. El ejecutable Release completó 250 corridas con `impar3` y 50 con N=129, seed 42 (W=1, 2, 4, 8 y 1024): todas con `validation_status=OK` y un único SHA-256 de salida por caso; `--workers 1025` terminó con código 1 en 52 ms.
+
+- **Comprobación de las pruebas:** en una copia aparte inyecté cinco fallos en `workers.go`: no esperar a los workers, no cerrar el canal, aceptar 1025 workers, no detectar memoria compartida y no comprobar los slots de tiempo. Las pruebas nuevas fallaron en los cinco casos; el canal sin cerrar se reportó a los 30 s como "posible bloqueo".
+
+- **Bloqueos y decisiones:** no se encontraron bloqueos ni resultados variables en el código actual; los cambios convierten precondiciones asumidas en errores verificados. El valor de workers solicitado no se reduce cuando supera N, para que el CSV conserve el valor pedido. La comprobación de solapamiento usa `unsafe.SliceData` solo para comparar direcciones y no recorre datos.
+
+- **Revisión y criterio de aceptación:** el entregable cumple los criterios del sprint para Go paralelo: la batería pasa, los fallos esperados terminan con error y sin esperas indefinidas, y los resultados son reproducibles bit a bit. Quedan pendientes la revisión de I3 (Giuliano), mi revisión cruzada de `docs/validacion_numerica.md` de I5 (Fernando) cuando se publique, las horas reales y la aceptación del equipo.
+
 ## Registro de I3 · Giuliano · 29/10/2026
 
 **Entrega técnica:** Go secuencial consistente en formatos, orden de datos y
