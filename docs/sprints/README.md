@@ -73,4 +73,12 @@ sobre `main` (`2f22e3a`): ocho entregables integrados y equivalencia funcional
 comprobada en las cuatro versiones. El acta consolida 8 h por integrante
 (24 h declaradas y 40 h estimadas) e identifica las cuatro revisiones personales
 que faltan para completar el cierre administrativo. La validación
-integral y el manejo de errores continúan en [Sprint 5](sprint-05.md).
+integral y el manejo de errores se completaron en [Sprint 5](sprint-05.md).
+
+Al 05/11/2026, S5 tiene el cierre técnico completado: siete PR integrados y
+batería común ampliada durante el cierre para completar la asignación de I6.
+Debug y Release pasan en las cuatro versiones, incluidos 98 errores controlados
+y 296 invocaciones de compatibilidad C/Go entre ambas configuraciones. El
+responsable confirmó 8 h reales por integrante (64 h); el acta reconstruye el
+desglose e identifica cuatro conformidades personales aún pendientes:
+I3→I4, I5→I6, I6→I7 e I8→I1. S6 parte de esta base para optimizar con evidencia.

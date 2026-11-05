@@ -33,13 +33,14 @@ espera indefinidamente ni participa en colectivos con buffers inválidos.
   `first_rows[rank] == rank`, `counts[rank] == N` y
   `displacements[rank] == rank * N`.
 
-### 3. Límites de dimensión (N > PARTITION_MAX_N)
+### 3. Límites de dimensión e índices
 
 **Archivo:** `tests/pending_test.c` → `check_partition_errors_extended()`
 
-- `partition_split` y `partition_rows` rechazan `N = 46341` con
-  `PARTITION_INVALID` y **no modifican los buffers de salida** (los valores
-  centinela se conservan).
+- `partition_split` rechaza N>INT_MAX y `partition_rows` rechaza N=46341 con
+  `PARTITION_INVALID` sin modificar los buffers de salida (centinelas intactos).
+- `partition_split` admite N=46341, P=1: cuenta filas, sin convertirlas en
+  counts MPI de N*N elementos; los elementos fuera del rango siguen intactos.
 - `N = 1, P = 1` es válido y cubre la única fila.
 
 ### 4. Núcleo local con local_rows = 0
@@ -72,7 +73,21 @@ rango se queda esperando en un colectivo que otro nunca alcanza:
 - `1` (EXIT_ERROR): error controlado, mensaje en stderr, sin CSV válido.
 - `2` (EXIT_PENDING): reservado, no usado para el cálculo.
 
-## Revisión cruzada pendiente
+## Actualización de integración · 05/11/2026
+
+La integración corrigió la expectativa del test extendido: `partition_split`
+rechaza N>INT_MAX, mientras que `partition_rows` rechaza N=46341 porque N*N
+excede INT_MAX. La primera función sí admite N=46341 como cantidad de filas,
+según el contrato de `partition.h`. Se comprueba también que no modifica los
+elementos ajenos al rango de procesos solicitado.
+
+La batería S5 añade 13 casos de error del híbrido por configuración, con P=3,
+T=2 y timeout de 15 s. Incluye lectura inexistente/truncada, valores no finitos,
+fallo de escritura después del cómputo y configuración OpenMP inválida. Debug y
+Release pasaron; ver el [acta de cierre](../../docs/sprints/sprint-05.md).
+La revisión I1→I2 consta en el [PR #39](https://github.com/GiulianoMaPe/MatricesParalelas/pull/39#pullrequestreview-5791888637).
+
+## Registro histórico de revisión pendiente
 
 - Revisado por: Integrante 3 (Giuliano) — revisar formal y ejecutar en equipo con MSVC, Windows SDK y MS-MPI x64.
 - Ejecución: `scripts/test_windows.ps1 -Version c_paralelo` (unitarias sin MPI) y ejecución híbrida con `mpiexec` (requiere MS-MPI Runtime).
