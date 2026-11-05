@@ -172,3 +172,34 @@ afirma que otras personas hayan revisado, coordinado o reproducido la entrega.
   confirmación. Se mantiene la estimación de 8 h sin declararlas realizadas.
 - No se abrieron issues ni PR en esta ejecución; el registro final del equipo
   debe añadir sus enlaces cuando existan.
+
+#### Integrante 8
+
+- Participantes y horas reales: Roberto (8 h: 3 h reproducción de la batería de pruebas en segunda PC física independiente, 3 h análisis de casos negativos, códigos de salida y elaboración del acta, 1 h coordinación general, 1 h revisión cruzada asignada a I1 Yessly).
+- Issues y pull requests: Rama de trabajo `feature/s05-i08-validacion-independiente`.
+- Pruebas y evidencias: Entregable `docs/validacion_independiente.md` completado con evidencia empírica en Windows 11 (AMD Ryzen 5 7600X, 16 GB DDR5, host `PC-PETEL`). Se ejecutaron las suites de equivalencia (`test_equivalencia.ps1` en Debug y Release: 25 casos OK con $max\_abs = 0.0$ y $max\_rel = 0.0$), pruebas unitarias Go (`go_secuencial` y `go_paralelo` PASS), pruebas de invariantes de partición C (`partition_test.c` y `verify_partition_design.ps1` PASS con 0 fallos), y matriz de inyección de errores (ERR-01 a ERR-10) confirmando que entradas inválidas terminan limpiamente con código 1 en < 50 ms.
+- Bloqueos y decisiones: Se certifica que las cuatro referencias cumplen los contratos numéricos y de cronometría monotónica. La lógica algorítmica de C se comprobó de forma independiente con GCC C11 ante la falta de enlace con MSVC en esta máquina.
+- Revision y criterio de aceptacion: Entregable de I8 finalizado y conforme; listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly pendiente a la publicación de su PR de C secuencial.
+
+#### Integrante 1 (C secuencial robusto)
+
+- **Rama:** `feature/s05-i01-c-secuencial-robusto`
+- **PR:** #40
+- **Cambios:**
+  - `MATRIX_MAX_N = 4096` en `matrix.h`, coherente con la campaña N ∈ {512, 1024, 2048, 4096}.
+  - `matrix_validate_buffer_capacity(n, k, *bytes)` con verificación de overflow en `size_t` y `PTRDIFF_MAX`.
+  - Rechazo determinista (exit 1) en `parse_options`, `input_read`, `input_generate`, `matrix_allocate` para `n > MATRIX_MAX_N`.
+  - Ganchos `matrix_set_alloc_limit` / `matrix_reset_alloc_limit` documentados como solo para tests.
+  - `tests/pending_test.c`: casos negativos (N=0, negativo, no numérico, N>4096, semilla fuera de rango, punteros NULL, fallos simulados de reserva).
+  - `docs/contrato.md`: aclara límite C=4096 vs Go sin tope fijo.
+  - `.gitignore`: `tests/outputs/` ignorado.
+- **Pruebas (Debug + Release):** `check_env_windows.ps1` OK, `build_windows.ps1 -Debug -Tests` OK, `build_windows.ps1 -Release` OK, `test_windows.ps1` OK (5 fixtures, tolerancia 1e-9).
+- **Revisión cruzada:** I2 (Sebastian) — ver comentario en PR #39.
+- **Horas:** 6 h desarrollo + 1 h revisión + 1 h coordinación.
+
+#### Integrante 2 (C paralelo robusto)
+
+- **Rama:** `feature/s05-i02-c-paralelo-errores-colectivos`
+- **PR:** #39
+- **Cambios:** manejo de fallos colectivos y finalización del híbrido; los rangos coordinan errores antes de los colectivos críticos para evitar esperas indefinidas. Se documentan además el uso de `MPI_THREAD_FUNNELED` y el comportamiento de procesos sin filas.
+- **Pruebas y evidencias:** `c_paralelo/tests/pending_test.c` cubre procesos sin filas, P = N, límites de dimensión y el núcleo con cero filas. `c_paralelo/tests/registro_fallos.md` documenta los fallos controlados y sus códigos de salida. `c_paralelo/status.json` registra `validation: passed`; la ejecución de runtime debe repetirse en un equipo con MSVC, Windows SDK y MS-MPI.
