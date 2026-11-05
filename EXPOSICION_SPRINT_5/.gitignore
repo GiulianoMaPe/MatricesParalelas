@@ -1,0 +1,11 @@
+# Resultados locales regenerados al abrir las demostraciones.
+/salidas/*
+!/salidas/.gitkeep
+
+# Excepciones limitadas a los binarios y evidencia de este paquete.
+!/c_secuencial/c_secuencial.exe
+!/c_paralelo/c_paralelo.exe
+!/go_secuencial/go_secuencial.exe
+!/go_paralelo/go_paralelo.exe
+!/evidencia_debug.log
+!/evidencia_release.log

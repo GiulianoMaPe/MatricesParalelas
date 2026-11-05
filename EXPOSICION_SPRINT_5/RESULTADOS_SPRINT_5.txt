@@ -1,0 +1,18 @@
+Evidencia del cierre tecnico del 05/11/2026.
+
+                                    Debug   Release   Total
+Productos frente a fixtures           24       24       48
+Errores controlados                   49       49       98
+Invocaciones de compatibilidad C/Go   148      148      296
+
+Ambas baterias generales terminaron con codigo 0.
+Las 48 comparaciones de fixtures dieron max_abs=0 y max_rel=0.
+Go paralelo: detector -race aprobado durante la integracion.
+Estas cifras son pruebas funcionales; no una campana de rendimiento.
+
+Horas confirmadas: 8 por integrante; 64 de equipo.
+Cierre tecnico completado. Conformidades personales pendientes:
+Giuliano -> Eva; Fernando -> Gerardo; Gerardo -> Andres; Roberto -> Yessly.
+
+Esta pantalla muestra evidencia historica, no vuelve a ejecutar la bateria.
+Fuentes en el proyecto: docs/sprints/sprint-05.md y logs copiados en esta carpeta.

@@ -1,0 +1,23 @@
+{
+    "Commit":  "9c5caab83b2e4000c7a4fe5d0d68f9310348ecdd",
+    "PreparadoUTC":  "2026-11-05T22:59:31.5175694Z",
+    "Configuracion":  "Release",
+    "Ejecutables":  [
+                        {
+                            "Archivo":  "c_secuencial/c_secuencial.exe",
+                            "SHA256":  "7769D97FE5EA3E4220FC4E27D17E0E8EA644F4DD78B3CE9DE5D491E284375CD7"
+                        },
+                        {
+                            "Archivo":  "c_paralelo/c_paralelo.exe",
+                            "SHA256":  "1202AAA753D2EB4694E13839F8B871B5B1884E05FF133AE514BA0CC8843D4996"
+                        },
+                        {
+                            "Archivo":  "go_secuencial/go_secuencial.exe",
+                            "SHA256":  "B0EC0661C2C893DE4A4E76F5C14D26D483EE1CB6AF9C18486665C30064356F10"
+                        },
+                        {
+                            "Archivo":  "go_paralelo/go_paralelo.exe",
+                            "SHA256":  "30285BE4BF64E4F62617238101CA72D4C889F9B64514A1E22E98B553E7DA26AD"
+                        }
+                    ]
+}
