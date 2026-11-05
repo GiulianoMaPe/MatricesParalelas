@@ -1,4 +1,11 @@
 {
   "algorithm": "implemented",
-  "validation": "passed"
+  "validation": "passed",
+  "sprint5_integrante_2": {
+    "errores_colectivos_revisados": true,
+    "procesos_sin_filas_probados": true,
+    "fallos_controlados_sin_esperas_indefinidas": true,
+    "registro_fallos": "tests/registro_fallos.md",
+    "pruebas_unitarias": "tests/pending_test.c"
+  }
 }
