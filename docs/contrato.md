@@ -121,3 +121,12 @@ sección 3, y la arquitectura debe seguirlos:
   C secuencial QueryPerformanceCounter/Frequency y MPI MPI_Wtime.
 - Las métricas deben ser finitas y no negativas; una ejecución fallida o pendiente
   no produce una medición aceptada. Arranque del lanzador se mide aparte.
+
+## Límites de dimensión por implementación (Sprint 5)
+
+- **C secuencial** (`c_secuencial`): limita N a `MATRIX_MAX_N = 4096` (constante
+  fija en `matrix.h`). Cualquier N > 4096 — ya sea por `--n`, `--input` o
+  `input_generate` — produce salida 1. No depende de la RAM disponible.
+- **Go secuencial y Go paralelo**: no imponen un tope fijo de N más allá del
+  desbordamiento aritmético de `n*n` y `PTRDIFF_MAX`. El límite efectivo queda
+  determinado por la memoria disponible en tiempo de ejecución.
