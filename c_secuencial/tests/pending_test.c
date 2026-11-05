@@ -13,6 +13,58 @@
     } \
 } while (0)
 
+static int check_robustness_contract(void) {
+    Matrix m1 = {0, 0, NULL}, m2 = {0, 0, NULL};
+    size_t total_bytes = 0;
+    double values[4] = {1.0, 2.0, 3.0, 4.0};
+    double other[4] = {5.0, 6.0, 7.0, 8.0};
+    double output[4] = {0.0, 0.0, 0.0, 0.0};
+
+    /* Validacion de capacidad de multiples buffers */
+    REQUIRE(matrix_validate_buffer_capacity(0, 4, &total_bytes) == MATRIX_INVALID_DIMENSION);
+    REQUIRE(matrix_validate_buffer_capacity(MATRIX_MAX_N + 1, 4, &total_bytes) == MATRIX_INVALID_DIMENSION);
+    REQUIRE(matrix_validate_buffer_capacity(2, 0, &total_bytes) == MATRIX_OK && total_bytes == 0);
+    REQUIRE(matrix_validate_buffer_capacity(2, 4, &total_bytes) == MATRIX_OK && total_bytes == 16 * sizeof(double));
+    REQUIRE(matrix_validate_buffer_capacity(2, SIZE_MAX, &total_bytes) == MATRIX_SIZE_OVERFLOW);
+
+    /* Rechazo de dimension que excede MATRIX_MAX_N */
+    REQUIRE(matrix_allocate(&m1, MATRIX_MAX_N + 1) == MATRIX_INVALID_DIMENSION);
+    REQUIRE(m1.data == NULL && m1.n == 0 && m1.length == 0);
+
+    /* Punteros NULL en matrix_multiply */
+    REQUIRE(matrix_multiply(NULL, other, output, 2) == MATRIX_INVALID_DATA_LENGTH);
+    REQUIRE(matrix_multiply(values, NULL, output, 2) == MATRIX_INVALID_DATA_LENGTH);
+    REQUIRE(matrix_multiply(values, other, NULL, 2) == MATRIX_INVALID_DATA_LENGTH);
+
+    /* Fallo de asignacion simulada con limite 0: falla la primera reserva */
+    matrix_set_alloc_limit(0);
+    REQUIRE(matrix_allocate(&m1, 2) == MATRIX_NO_MEMORY);
+    REQUIRE(m1.data == NULL && m1.n == 0 && m1.length == 0);
+
+    /* Fallo de asignacion simulada con limite 1: primera reserva OK, segunda falla */
+    matrix_set_alloc_limit(1);
+    REQUIRE(matrix_allocate(&m1, 2) == MATRIX_OK);
+    REQUIRE(m1.data != NULL && m1.n == 2);
+    REQUIRE(matrix_allocate(&m2, 2) == MATRIX_NO_MEMORY);
+    REQUIRE(m2.data == NULL && m2.n == 0);
+    matrix_release(&m1);
+    matrix_release(&m2);
+    REQUIRE(m1.data == NULL && m2.data == NULL);
+
+    /* Restaurar comportamiento normal del allocador */
+    matrix_reset_alloc_limit();
+    REQUIRE(matrix_allocate(&m1, 2) == MATRIX_OK);
+    REQUIRE(matrix_allocate(&m2, 2) == MATRIX_OK);
+    matrix_release(&m1);
+    matrix_release(&m2);
+
+    /* input_generate con n > MATRIX_MAX_N */
+    REQUIRE(input_generate(values, other, MATRIX_MAX_N + 1, 42) == INPUT_INVALID);
+
+    puts("OK: contratos S5 de robustez (capacidad k buffers, limites fijos y fallos simulados).");
+    return 0;
+}
+
 static int check_matrix_contract(void) {
     double values[4] = {1.0, -2.0, 0.0, 4.0};
     double other[4] = {5.0, 6.0, 7.0, 8.0};
@@ -89,7 +141,7 @@ static int check_matrix_contract(void) {
 
     REQUIRE(matrix_allocate(NULL, 1) == MATRIX_INVALID_ARGUMENT);
     REQUIRE(matrix_allocate(&owned, 0) == MATRIX_INVALID_DIMENSION);
-    REQUIRE(matrix_allocate(&owned, SIZE_MAX) == MATRIX_SIZE_OVERFLOW);
+    REQUIRE(matrix_allocate(&owned, SIZE_MAX) == MATRIX_INVALID_DIMENSION);
     REQUIRE(owned.data == NULL && owned.n == 0 && owned.length == 0);
     REQUIRE(matrix_allocate(&owned, 2) == MATRIX_OK);
     REQUIRE(owned.n == 2 && owned.length == 4 && matrix_validate(&owned) == MATRIX_OK);
@@ -209,6 +261,8 @@ static int check_file_format_contract(void) {
         FORMAT_CASE("1\n1e9999\n2", 0, 0, 0),
         FORMAT_CASE("1\n0x1p2\n2", 0, 0, 0),
         FORMAT_CASE("1\n1e\n2", 0, 0, 0),
+        FORMAT_CASE("4097\n1\n2", 0, 0, 0),
+        FORMAT_CASE("1000000\n1\n2", 0, 0, 0),
         FORMAT_CASE("18446744073709551615\n1\n2", 0, 0, 0)
     };
 #undef FORMAT_CASE
@@ -284,6 +338,7 @@ int main(void) {
     size_t i;
 
     if (check_matrix_contract() != 0) return 1;
+    if (check_robustness_contract() != 0) return 1;
     {
         FILE *stream = tmpfile();
         double *same_output = NULL;
