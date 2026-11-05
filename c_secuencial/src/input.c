@@ -175,7 +175,7 @@ int input_read(FILE *stream, double **a, double **b, size_t *n) {
     if (token == NULL || !parse_dimension(token, &dimension) ||
         next_row_token(&cursor) != NULL) goto done;
     if (matrix_validate_dimension(dimension, &count, NULL) != MATRIX_OK ||
-        dimension > SIZE_MAX / 2) goto done;
+        dimension > MATRIX_MAX_N || dimension > SIZE_MAX / 2) goto done;
     matrix_a = (double *)malloc(count * sizeof(double));
     matrix_b = (double *)malloc(count * sizeof(double));
     if (matrix_a == NULL || matrix_b == NULL) {
@@ -226,7 +226,7 @@ int input_generate(double *a, double *b, size_t n, uint32_t seed) {
     size_t count, i;
     uint32_t state = seed;
 
-    if (a == NULL || b == NULL ||
+    if (a == NULL || b == NULL || n > MATRIX_MAX_N ||
         matrix_validate_dimension(n, &count, NULL) != MATRIX_OK) {
         return INPUT_INVALID;
     }

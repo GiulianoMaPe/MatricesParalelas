@@ -430,6 +430,142 @@ static int check_local_rows(void) {
     return 0;
 }
 
+static int check_partition_empty_rows(void) {
+    /* P > N: varios ranks se quedan sin filas (rows = 0, count = 0). */
+    static const int n = 3;
+    static const int processes = 5;
+    int rows[5] = {71, 72, 73, 74, 75};
+    int first_rows[5] = {81, 82, 83, 84, 85};
+    int counts[5] = {91, 92, 93, 94, 95};
+    int displacements[5] = {101, 102, 103, 104, 105};
+    int total_rows = 0, total_elements = 0;
+    int rank;
+
+    if (partition_split((size_t)n, processes, rows, first_rows) != PARTITION_OK) {
+        fputs("partition_split fallo con P > N\n", stderr);
+        return 1;
+    }
+    if (partition_rows((size_t)n, processes, counts, displacements) != PARTITION_OK) {
+        fputs("partition_rows fallo con P > N\n", stderr);
+        return 1;
+    }
+    /* Los primeros n ranks reciben una fila, el resto cero filas. */
+    for (rank = 0; rank < processes; ++rank) {
+        int expected_rows = rank < n ? 1 : 0;
+        int expected_first = rank < n ? rank : n;
+        if (rows[rank] != expected_rows || first_rows[rank] != expected_first) {
+            fprintf(stderr, "rank %d: rows=%d first=%d (esperado %d %d)\n",
+                    rank, rows[rank], first_rows[rank], expected_rows,
+                    expected_first);
+            return 1;
+        }
+    }
+    /* Invariante: las filas cubren toda la matriz exactamente una vez. */
+    for (rank = 0; rank < processes; ++rank) {
+        total_rows += rows[rank];
+        total_elements += counts[rank];
+    }
+    if (total_rows != n) {
+        fprintf(stderr, "filas totales %d != N=%d\n", total_rows, n);
+        return 1;
+    }
+    if (total_elements != n * n) {
+        fprintf(stderr, "elementos totales %d != N*N=%d\n", total_elements,
+                n * n);
+        return 1;
+    }
+    /* El ultimo desplazamiento mas su count debe cubrir N*N. */
+    if (displacements[processes - 1] + counts[processes - 1] != n * n) {
+        fprintf(stderr, "el reparto no cubre toda la matriz N=%d P=%d\n", n,
+                processes);
+        return 1;
+    }
+    return 0;
+}
+
+static int check_partition_p_equals_n(void) {
+    /* P = N: cada rango recibe exactamente una fila. */
+    static const size_t n = 4;
+    static const int processes = 4;
+    int rows[4], first_rows[4], counts[4], displacements[4];
+    int rank;
+
+    if (partition_split(n, processes, rows, first_rows) != PARTITION_OK ||
+        partition_rows(n, processes, counts, displacements) != PARTITION_OK) {
+        fputs("partition fallo con P = N\n", stderr);
+        return 1;
+    }
+    for (rank = 0; rank < processes; ++rank) {
+        if (rows[rank] != 1 || first_rows[rank] != rank ||
+            counts[rank] != (int)n || displacements[rank] != rank * (int)n) {
+            fprintf(stderr, "rank %d: rows=%d first=%d count=%d disp=%d\n",
+                    rank, rows[rank], first_rows[rank], counts[rank],
+                    displacements[rank]);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static int check_matrix_zero_rows(void) {
+    /* Nucleo con local_rows = 0: no debe tocar memoria ni reportar hilos. */
+    const double a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const double b[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+    double c[1] = {123.0};
+    int observed = 99;
+
+    matrix_accumulate_rows(a, b, c, 0, 3, &observed);
+    if (!close_enough(c[0], 123.0, 0.0)) {
+        fputs("matrix_accumulate_rows modifico C con local_rows=0\n", stderr);
+        return 1;
+    }
+    if (observed != 1) {
+        fprintf(stderr, "observed_threads=%d con local_rows=0 (esperado 1)\n",
+                observed);
+        return 1;
+    }
+    return 0;
+}
+
+static int check_partition_errors_extended(void) {
+    int rows[2] = {71, 72}, first_rows[2] = {81, 82};
+    int counts[2] = {91, 92}, displacements[2] = {101, 102};
+
+    /* Los indices de filas de partition_split admiten N hasta INT_MAX. */
+    if (partition_split((size_t)INT_MAX + 1, 1, rows, first_rows) != PARTITION_INVALID ||
+        rows[0] != 71 || first_rows[0] != 81) {
+        fputs("partition_split no rechazo N>INT_MAX sin modificar buffers\n",
+              stderr);
+        return 1;
+    }
+    /* N=46341 cabe como filas, pero N*N excede los counts MPI de int. */
+    if (partition_split((size_t)46341, 1, rows, first_rows) != PARTITION_OK ||
+        rows[0] != 46341 || first_rows[0] != 0 ||
+        rows[1] != 72 || first_rows[1] != 82) {
+        fputs("partition_split fallo con N=46341 P=1\n", stderr);
+        return 1;
+    }
+    if (partition_rows((size_t)46341, 1, counts, displacements) !=
+        PARTITION_INVALID ||
+        counts[0] != 91 || displacements[0] != 101) {
+        fputs("partition_rows no rechazo N=46341 sin modificar buffers\n",
+              stderr);
+        return 1;
+    }
+    /* n = 1, P = 1 es valido y cubre la unica fila. */
+    if (partition_split(1, 1, rows, first_rows) != PARTITION_OK ||
+        rows[0] != 1 || first_rows[0] != 0) {
+        fputs("partition_split fallo con N=1 P=1\n", stderr);
+        return 1;
+    }
+    if (partition_rows(1, 1, counts, displacements) != PARTITION_OK ||
+        counts[0] != 1 || displacements[0] != 0) {
+        fputs("partition_rows fallo con N=1 P=1\n", stderr);
+        return 1;
+    }
+    return 0;
+}
+
 int main(void) {
     if (check_input_core() != 0) {
         fputs("FALLO: generador, fixtures o formato de entrada.\n", stderr);
@@ -447,6 +583,18 @@ int main(void) {
         fputs("FALLO: validacion de particion.\n", stderr);
         return 1;
     }
+    if (check_partition_empty_rows() != 0) {
+        fputs("FALLO: particion con filas vacias (P > N).\n", stderr);
+        return 1;
+    }
+    if (check_partition_p_equals_n() != 0) {
+        fputs("FALLO: particion P = N.\n", stderr);
+        return 1;
+    }
+    if (check_partition_errors_extended() != 0) {
+        fputs("FALLO: validacion extendida de particion.\n", stderr);
+        return 1;
+    }
     if (check_matrix_core() != 0) {
         fputs("FALLO: nucleo matricial completo.\n", stderr);
         return 1;
@@ -455,6 +603,10 @@ int main(void) {
         fputs("FALLO: nucleo de filas locales.\n", stderr);
         return 1;
     }
-    puts("OK: entradas, particion (8 ejemplos + 4480 casos) y nucleo local.");
+    if (check_matrix_zero_rows() != 0) {
+        fputs("FALLO: nucleo con filas vacias.\n", stderr);
+        return 1;
+    }
+    puts("OK: entradas, particion (8 ejemplos + 4480 casos + filas vacias) y nucleo local.");
     return 0;
 }
