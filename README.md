@@ -2,16 +2,17 @@
 
 Repositorio para un equipo de ocho integrantes y diez sprints de desarrollo sobre
 una base técnica preparada. Las cuatro versiones ejecutan y validan el producto
-real. El [cierre técnico del Sprint 4](docs/sprints/sprint-04.md) reúne la
-equivalencia, las pruebas y los pendientes administrativos; S5 continúa con la
-validación integral y el manejo de errores.
+real. El [cierre del Sprint 5](docs/sprints/sprint-05.md) reúne la validación
+integral, los errores controlados y 64 horas confirmadas. El cierre técnico está
+completado; quedan cuatro conformidades personales para el cierre administrativo.
+S6 continúa con la optimización sustentada por mediciones.
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |
 | `c_secuencial` | MSVC x64, independiente de MPI/OpenMP | Núcleo, CLI, validación y métricas integrados |
-| `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | MPI/OpenMP, CLI, fixtures y casos de particionado validados en S4 |
+| `c_paralelo` | MSVC x64, MS-MPI y `/openmp` | MPI/OpenMP, particionado y errores colectivos validados en S5 |
 | `go_secuencial` | Go windows/amd64 | Producto, CLI, medición y fixtures integrados |
-| `go_paralelo` | Go, goroutines y canales | Workers, CLI, fixtures y concurrencia validados en S4 |
+| `go_paralelo` | Go, goroutines y canales | Workers, buffers, estabilidad y errores validados en S5 |
 
 ## Empezar desde VS Code
 
@@ -47,7 +48,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1 
 Se puede sustituir `all` por cualquiera de las cuatro carpetas. Si una versión
 falla, `all` intenta las demás y devuelve error global; no oculta faltantes.
 `test_windows.ps1` compila primero, ejecuta las pruebas C disponibles y, para Go,
-`go fmt`, `go vet`, `go test` y el ejecutable. Las cachés están en `.cache/`.
+`go fmt`, `go vet`, `go test` y el ejecutable. Comprueba los errores controlados
+de cada versión; con `-Version all` integra también las 148 invocaciones de
+compatibilidad C/Go por configuración. Las cachés están en `.cache/`.
 Debug/Release tienen salidas separadas; los objetos de pruebas C van en `tests/`
 dentro del build de la configuración.
 
@@ -127,7 +130,8 @@ y lectores aplican el contrato común. C y Go secuenciales tienen el producto,
 la validación de resultados, el flujo de entrada/salida y las métricas integrados.
 C paralelo integra el particionado, la comunicación MPI y el núcleo OpenMP;
 Go paralelo integra los workers con su ejecutable. Ambos cumplen la aceptación
-funcional de S4. S5 amplía la validación de errores y estabilidad. Las campañas
+funcional de S4. S5 completa la batería integral, los errores y la estabilidad.
+Las campañas
 experimentales oficiales siguen programadas para S7 y S8.
 El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en

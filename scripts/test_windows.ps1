@@ -10,9 +10,10 @@ $failures = @()
 
 Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$script:ProjectRoot\tests\compare_results_test.ps1")
 
-function Assert-SequentialCSV($Lines) {
+function Assert-SequentialCSV($Lines, [string]$Version) {
     $rows = @($Lines | ConvertFrom-Csv)
-    if ($rows.Count -ne 1 -or $rows[0].validation_status -ne 'OK' -or
+    if ($rows.Count -ne 1 -or @($rows[0].PSObject.Properties).Count -ne 20 -or
+        $rows[0].version -ne $Version -or $rows[0].validation_status -ne 'OK' -or
         $rows[0].gomaxprocs -ne '1' -or $rows[0].repetition -ne '1' -or
         $rows[0].is_warmup -ne 'false' -or $rows[0].commit -notmatch '^[0-9a-f]{7,40}$') {
         throw 'CSV Go secuencial incorrecto.'
@@ -27,13 +28,13 @@ function Assert-SequentialCSV($Lines) {
 
 function Assert-ParallelCSV($Lines, $Workers, [int]$Repetition = 1) {
     $rows = @($Lines | ConvertFrom-Csv)
-    if ($rows.Count -ne 1) { throw "CSV Go paralelo: se esperaba una fila por ejecucion, hay $($rows.Count)." }
+    if ($rows.Count -ne 1 -or @($rows[0].PSObject.Properties).Count -ne 20) { throw "CSV Go paralelo: se esperaba una fila por ejecucion, hay $($rows.Count)." }
     $measure = $rows[0]
     $expectedWarmup = if ($Repetition -eq 0) { 'true' } else { 'false' }
     if ($measure.repetition -ne $Repetition.ToString() -or $measure.is_warmup -ne $expectedWarmup) {
         throw "CSV Go paralelo: repeticion o calentamiento incorrectos. rep=$($measure.repetition), warmup=$($measure.is_warmup)"
     }
-    if ($measure.validation_status -ne 'OK' -or
+    if ($measure.version -ne 'go_paralelo' -or $measure.validation_status -ne 'OK' -or
         $measure.workers -ne $Workers.ToString() -or
         $measure.gomaxprocs -ne $Workers.ToString() -or
         $measure.configuration -ne "go_paralelo_W$Workers" -or
@@ -48,16 +49,16 @@ function Assert-ParallelCSV($Lines, $Workers, [int]$Repetition = 1) {
         $kernel -lt 0 -or $total -lt $kernel) { throw 'Tiempos Go paralelo incorrectos.' }
 }
 
-function Assert-HybridCSV($Lines, [int]$Processes, [int]$Threads) {
+function Assert-HybridCSV($Lines, [int]$Processes, [int]$Threads, [int]$N = 2, [uint32]$Seed = 42) {
     $rows = @($Lines | ConvertFrom-Csv)
-    if ($rows.Count -ne 1) { throw 'CSV c_paralelo debe contener una fila.' }
+    if ($rows.Count -ne 1 -or @($rows[0].PSObject.Properties).Count -ne 20) { throw 'CSV c_paralelo debe contener una fila.' }
     $row = $rows[0]
     if ($row.version -ne 'c_paralelo' -or
         $row.processes -ne "$Processes" -or
         $row.threads -ne "$Threads" -or
         $row.observed_threads -ne "$Threads" -or
         $row.configuration -ne "c_paralelo_P${Processes}_T${Threads}" -or
-        $row.n -ne '2' -or $row.seed -ne '42' -or
+        $row.n -ne "$N" -or $row.seed -ne "$Seed" -or
         $row.workers -ne '1' -or $row.repetition -ne '1' -or
         $row.is_warmup -ne 'false' -or
         $row.validation_status -ne 'OK' -or
@@ -147,7 +148,9 @@ foreach ($item in $selected) {
                 $inputPath = Join-Path $script:ProjectRoot "tests\fixtures\$($case.Fixture).input.txt"
                 $expectedPath = Join-Path $script:ProjectRoot "tests\fixtures\$($case.Fixture).expected.txt"
                 $outputPath = Join-Path $outputs "$($case.Fixture)-P$($case.P)-T$($case.T).output.txt"
-                Invoke-HybridFixture -Processes $case.P -Threads $case.T -InputPath $inputPath -OutputPath $outputPath
+                $csvLines = @(Invoke-HybridFixture -Processes $case.P -Threads $case.T -InputPath $inputPath -OutputPath $outputPath)
+                $fixtureN = @{ producto2=2; escalar=1; identidad=2; cero=2; impar3=3 }
+                Assert-HybridCSV $csvLines $case.P $case.T $fixtureN[$case.Fixture] 0
                 Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\compare_results.ps1",'-Expected',$expectedPath,'-Actual',$outputPath)
             }
             $csvLines = @(Get-HybridCsv -Processes 2 -Threads 2 -N 2 -Seed 42)
@@ -157,7 +160,7 @@ foreach ($item in $selected) {
             Invoke-Native $exe @('--smoke-test')
             $csvLines = @(& $exe --n 2 --seed 42)
             if ($LASTEXITCODE -ne 0) { throw "$item debe completar el calculo con codigo 0." }
-            Assert-SequentialCSV $csvLines
+            Assert-SequentialCSV $csvLines $item
             $outputs = Join-Path $build 'fixture-results'
             New-Item -ItemType Directory -Force -Path $outputs | Out-Null
             foreach ($fixture in @('producto2','escalar','identidad','cero','impar3')) {
@@ -166,7 +169,7 @@ foreach ($item in $selected) {
                 $outputPath = Join-Path $outputs "$fixture.output.txt"
                 $csvLines = @(& $exe --input $inputPath --output $outputPath)
                 if ($LASTEXITCODE -ne 0) { throw "$item fallo en $fixture." }
-                Assert-SequentialCSV $csvLines
+                Assert-SequentialCSV $csvLines $item
                 Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\compare_results.ps1",'-Expected',$expectedPath,'-Actual',$outputPath)
             }
             Write-Host "OK: $item (producto real, cinco fixtures y CSV validado)."
@@ -206,10 +209,15 @@ foreach ($item in $selected) {
                 Write-Host "OK: $item (entorno y rechazo de operaciones pendientes; no valida multiplicacion)."
             }
         }
+        Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$script:ProjectRoot\tests\sprint05_errors_test.ps1",'-Version',$item,'-Configuration',$Configuration)
     } catch {
         $failures += $item
         Write-Warning "$item : $($_.Exception.Message)"
     }
 }
 if ($failures.Count) { [Console]::Error.WriteLine("Pruebas incompletas: $($failures -join ', ')."); exit 1 }
+if ($Version -eq 'all') {
+    Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$script:ProjectRoot\tests\go_secuencial_io_test.ps1",'-Configuration',$Configuration)
+    Write-Host "OK: bateria integral S5 $Configuration (4 versiones, 24 comparaciones, 49 errores controlados y 148 ejecuciones C/Go)."
+}
 exit 0

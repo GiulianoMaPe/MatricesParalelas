@@ -18,7 +18,8 @@ silenciosamente.
 Los generadores usan los mismos vectores de control y los lectores aplican el
 [formato común](../docs/formato_datos.md). El cierre técnico de S4 y sus pruebas
 de equivalencia están registrados en [sprint-04.md](../docs/sprints/sprint-04.md).
-S5 amplía casos negativos, manejo de errores y validación integral. Las pruebas
+El [cierre técnico de S5](../docs/sprints/sprint-05.md) integra casos negativos,
+manejo de errores y validación integral. Las pruebas
 de instalación por sí solas no verifican la corrección matemática.
 
 Los códigos del ejecutable son 0 para éxito, 1 para cualquier error y 2 solo para
@@ -27,7 +28,8 @@ Las fronteras de los cronómetros se especifican en el [protocolo](../docs/proto
 
 ## Sprint 5 · I3: compatibilidad de entrada/salida C y Go secuenciales
 
-`go_secuencial_io_test.ps1` es una batería independiente para integrar con I6.
+`go_secuencial_io_test.ps1` puede ejecutarse de forma independiente y ya está
+integrada en `test_windows.ps1 -Version all` durante el cierre de S5.
 Requiere binarios recién compilados de las dos versiones secuenciales. Desde la raíz:
 
 ```powershell
@@ -55,3 +57,35 @@ para detectar pérdida de subnormales o del signo de cero que la tolerancia de
 productos no detectaría. También inyectan errores de lectura/escritura y
 capacidad insuficiente. El acta y las limitaciones están en
 [sprint-05.md](../docs/sprints/sprint-05.md).
+
+## Batería integral de Sprint 5
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version all -Configuration Debug
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version all -Configuration Release
+```
+
+Cada comando compila las cuatro versiones, ejecuta las pruebas del comparador
+y de cada módulo, verifica 24 productos frente a los fixtures y valida sus CSV
+(20 columnas, versión, configuración y tiempos finitos). El híbrido incluye
+P=1, P>N, reparto no divisible y T=1/2. Después de cada versión ejecuta
+`sprint05_errors_test.ps1`: 11 casos comunes, más tres de workers Go y dos de
+MPI, **49 casos por configuración**. Si los cuatro módulos pasan, ejecuta las
+148 invocaciones de compatibilidad secuencial. Cualquier fallo devuelve 1.
+
+Los casos negativos exigen código 1, stdout vacío, stderr y conservación de
+la salida previa; incluyen lectura truncada, NaN, producto no finito y salida
+que apunta a un directorio. MPI usa P=3/T=2 y comprueba el límite de N y la
+configuración OpenMP inválida. Cada invocación tiene timeout de 15 s; al vencer
+se termina el árbol de ese proceso y falla la prueba. El diagnóstico identifica
+versión y caso. Los archivos y `summary.csv` quedan en
+`<versión>/build/<configuración>/s05-errors/<id>/`.
+
+Para repetir solo los errores de un binario recién compilado:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\sprint05_errors_test.ps1 -Version c_paralelo -Configuration Debug
+```
+
+MPI requiere permiso para lanzar procesos de MS-MPI. Una restricción del
+entorno se reporta como fallo; no se omite la prueba ni se presenta como éxito.

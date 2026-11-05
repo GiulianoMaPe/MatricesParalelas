@@ -1,6 +1,10 @@
 # Sprint 5 Integrar y fortalecer la corrección
 
-Estado: entrega técnica de I3 implementada y validada el 29/10/2026; revisión personal de I2 y entregas/cierre del equipo pendientes. Las asignaciones siguientes son el plan de desarrollo de la [guía vigente](../guia-extraida.txt); la evidencia ejecutada se distingue en el registro de I3.
+**Estado al 05/11/2026: cierre técnico completado; cuatro conformidades personales pendientes para el cierre administrativo.**
+El acta reúne las siete entregas recibidas por PR y completa la integración
+prevista para I6. El responsable confirma **8 h reales por integrante (64 h)**;
+la distribución por actividad se reconstruye abajo. Los registros individuales
+se conservan como evidencia histórica; esta síntesis actualiza sus pendientes.
 
 Semana 5 · 64 horas de equipo · 8 horas por integrante
 
@@ -32,11 +36,131 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: entrega técnica de I3 registrada abajo; horas reales y resto del equipo pendientes.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: I3 validado en Debug/Release (296 ejecuciones C/Go); batería integral del equipo pendiente.
-- Bloqueos y decisiones: sin bloqueo técnico de I3; revisión personal, coordinación y aceptación del equipo pendientes.
-- Revision y criterio de aceptacion: pendiente.
+### Dictamen, base y trazabilidad
+
+**Aceptación técnica de S5 conforme:** las cuatro versiones pasan la batería
+común, los errores comprobados terminan sin bloqueos y existe evidencia
+reproducible. Las pruebas no garantizan recuperación ante agotamiento real de
+RAM ni ante fallos arbitrarios del servicio MPI.
+
+Base integrada: `2fe48acb056c79e181b106316384ae4fa94b971b`, tras fusionar los PR
+#36–#42. La verificación de cierre añade sobre esa base los cambios de
+`test_windows.ps1` y `sprint05_errors_test.ps1` publicados junto a esta acta.
+Coordinación prevista del sprint: Fernando (I5).
+
+| Integrante | Entrega y evidencia | Integración | Resultado técnico |
+| --- | --- | --- | --- |
+| I1 · Yessly | Capacidad, overflow, N máximo 4096 y reserva simulada en C secuencial | [PR #40](https://github.com/GiulianoMaPe/MatricesParalelas/pull/40) | Conforme |
+| I2 · Sebastian | P>N, P=N, finalización colectiva y [registro de fallos](../../c_paralelo/tests/registro_fallos.md) | [PR #39](https://github.com/GiulianoMaPe/MatricesParalelas/pull/39), test corregido en `184a4f6` | Conforme |
+| I3 · Giuliano | Lector por filas, capacidad temprana, errores I/O y compatibilidad C/Go | [PR #36](https://github.com/GiulianoMaPe/MatricesParalelas/pull/36) | Conforme |
+| I4 · Eva | Workers acotados, buffers sin alias, estabilidad y terminación | [PR #37](https://github.com/GiulianoMaPe/MatricesParalelas/pull/37) | Conforme |
+| I5 · Fernando | Tolerancias y [validación numérica](../validacion_numerica.md), con reproducción C por Eva | [PR #42](https://github.com/GiulianoMaPe/MatricesParalelas/pull/42) | Conforme |
+| I6 · Gerardo, asignación del plan | Integración de batería común, errores, CSV y compatibilidad C/Go | Completada durante este cierre con asistencia de Codex; no se encontró PR S5 de I6 | Conforme técnicamente; revisión personal pendiente |
+| I7 · Andrés | [Protocolo v1.3](../protocolo_medicion.md) y fronteras temporales | [PR #41](https://github.com/GiulianoMaPe/MatricesParalelas/pull/41) | Conforme |
+| I8 · Roberto | [Acta de validación independiente](../validacion_independiente.md) | [PR #38](https://github.com/GiulianoMaPe/MatricesParalelas/pull/38) | Conforme para la base y alcance documentados |
+
+GitHub no devolvió issues del repositorio; se conserva la trazabilidad por PR
+y commits sin crear issues retroactivas. Los siete PR de S5 están fusionados.
+La reproducción de I8 corresponde a `ebf1fca`, con Go y comprobaciones
+algorítmicas C mediante GCC; no certifica por sí sola los binarios MSVC/MPI del
+cierre actual. Se complementa con la reproducción C de I4 del 04/11 y las
+ejecuciones locales siguientes.
+
+### Integración pendiente resuelta para I6
+
+`test_windows.ps1` aún no incluía la batería de I3 ni una suite común de errores
+S5. Se completó esa integración a solicitud del responsable, sin atribuirla a
+una entrega personal publicada por Gerardo:
+
+- Comprobación de versión y 20 campos CSV, y de cada fixture MPI con su N,
+  semilla, procesos, hilos y tiempos finitos `0 <= kernel_s <= total_s`.
+- `tests/sprint05_errors_test.ps1`: 11 errores comunes por versión; tres límites
+  de workers Go y dos casos MPI (N=46341 y OpenMP dinámico inválido).
+  Son **49 invocaciones por configuración**.
+- Cada error exige código 1, stdout vacío, stderr y conservación de una salida
+  anterior. Un límite de 15 s por invocación detecta bloqueo y termina el árbol
+  de ese proceso. MPI usa P=3/T=2, incluidos procesos sin filas cuando N=2.
+- `-Version all` integra las **148 invocaciones C/Go** de I3 después de validar
+  las cuatro versiones. Si alguna falla, devuelve 1 y no compara con binarios
+  incompletos o antiguos. Se informa la versión y el caso exacto.
+- Evidencia por caso en `<version>/build/<configuración>/s05-errors/<id>/`:
+  stdout, stderr y `summary.csv`; los binarios y logs permanecen ignorados.
+
+En la integración previa se corrigió un test C: `partition_split` admite filas
+hasta INT_MAX; `partition_rows` exige además N*N <= INT_MAX. Rechazar N=46341 en
+ambas funciones contradecía `partition.h`. La regresión ahora prueba los dos
+límites sin restringir el algoritmo.
+
+### Verificación reproducible del 05/11/2026
+
+Entorno local: Windows x64 build 26300.9711, AMD Ryzen 5 3600, 15.912 GiB RAM,
+MSVC x64/Windows SDK, MS-MPI 10.1 y Go 1.27.0 windows/amd64. El detector de
+carreras de la integración empleó GCC 15.1.0 con CGO y el directorio
+`C:\msys64\ucrt64\bin` al principio del PATH del proceso.
+
+| Comprobación | Resultado |
+| --- | --- |
+| `test_windows.ps1 -Version all -Configuration Debug` | Código 0; cuatro versiones, 24 productos con max_abs=max_rel=0, 49 errores controlados y 148 invocaciones C/Go |
+| `test_windows.ps1 -Version all -Configuration Release` | Código 0; cuatro versiones, 24 productos con max_abs=max_rel=0, 49 errores controlados y 148 invocaciones C/Go |
+| Compatibilidad secuencial, incluida en ambos comandos | 148 invocaciones por configuración; 296 en total; gramática, errores, destino previo y nueve pares LCG |
+| `go test -race -count=1 -timeout=180s ./...`, en Go paralelo, durante la integración | Código 0; 44.134 s; sin carreras reportadas |
+| Auditoría del código/protocolo | Lectura/generación, referencia, validación, salida y CSV fuera de los cronómetros; cómputo y coordinación según el protocolo |
+
+Los logs locales están en `.cache/sprint-05-cierre/debug.log` y `release.log`.
+Los intentos previos de lanzar MPI dentro del aislamiento fallaron por acceso
+denegado y se repitieron fuera de él; no se registran como éxitos globales.
+Reproducción desde la raíz, en un entorno con acceso al lanzador MS-MPI:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version all -Configuration Debug
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version all -Configuration Release
+```
+
+### Horas confirmadas y distribución
+
+El responsable confirmó **8 h reales por integrante, 64 h de equipo**. El
+desglose se reconstruye según las tareas; no procede de un cronometraje por
+actividad ni acredita por sí mismo las conformidades personales pendientes.
+
+| Integrante | Desarrollo, integración o documentación | Pruebas y análisis | Revisión cruzada | Coordinación | Total |
+| --- | --- | --- | --- | --- | --- |
+| I1 · Yessly | 3 h: límites y capacidad C | 3 h: overflow y reserva | 1 h: I2 | 1 h: interfaces C | **8 h** |
+| I2 · Sebastian | 2,5 h: errores colectivos y registro | 3,5 h: P>N, P=N y finalización | 1 h: I3 | 1 h: híbrido | **8 h** |
+| I3 · Giuliano | 3,5 h: lector, capacidad y writer Go | 2,5 h: formato y compatibilidad C/Go | 1 h: I4 | 1 h: contrato I/O | **8 h** |
+| I4 · Eva | 3 h: workers y buffers | 3 h: estabilidad, carreras y reproducción C | 1 h: I5 | 1 h: integración Go | **8 h** |
+| I5 · Fernando | 2,5 h: tolerancias e informe | 3,5 h: comparador y error máximo | 1 h: I6 | 1 h: coordinación S5 | **8 h** |
+| I6 · Gerardo | 3,5 h: integración prevista de la batería | 2,5 h: casos y códigos de salida | 1 h: I7 | 1 h: automatización | **8 h** |
+| I7 · Andrés | 3 h: auditoría y protocolo | 3 h: fronteras e invariantes | 1 h: I8 | 1 h: acuerdos de medición | **8 h** |
+| I8 · Roberto | 3 h: reproducción independiente | 3 h: fallos, diferencias y acta | 1 h: I1 | 1 h: evidencia | **8 h** |
+| **Equipo** | **24 h** | **24 h** | **8 h** | **8 h** | **64 h** |
+
+### Revisiones personales y cierre administrativo
+
+| Revisión prevista | Evidencia disponible | Estado |
+| --- | --- | --- |
+| I1 → I2 | [Aprobación de Yessly en #39](https://github.com/GiulianoMaPe/MatricesParalelas/pull/39#pullrequestreview-5791888637); test de límites corregido después y validado automáticamente | Registrada |
+| I2 → I3 | [Aprobación de Sebastian en #36](https://github.com/GiulianoMaPe/MatricesParalelas/pull/36#pullrequestreview-5779441056) | Conforme |
+| I3 → I4 | Inspección inicial histórica, sin conformidad personal final publicada | Pendiente |
+| I4 → I5 | Revisión de Eva del 04/11 en el registro individual y el informe numérico | Conforme |
+| I5 → I6 | Batería completada en este cierre; falta revisión de Fernando | Pendiente |
+| I6 → I7 | No se encontró conformidad personal de Gerardo | Pendiente |
+| I7 → I8 | Conformidad expresa de Andrés en el registro de I7 | Conforme |
+| I8 → I1 | El registro de I8 la dejaba pendiente; no hay conformidad publicada en #40 | Pendiente |
+
+**Para completar el cierre administrativo faltan las cuatro conformidades
+I3→I4, I5→I6, I6→I7 e I8→I1.** El cierre técnico asistido y la confirmación de
+horas no sustituyen esas revisiones ni se presentan como firmas del equipo.
+
+S6 puede partir de esta base validada; cada optimización deberá conservar la
+batería y aportar medición antes/después. La campaña piloto S7, los datos
+oficiales S8 y el análisis posterior no pertenecen a S5. El control temprano de
+capacidad en el lector de Go paralelo y los límites de OOM/transacción entre
+archivo y stdout se conservan como mejoras y limitaciones documentadas.
+
+## Registros individuales históricos
+
+Los apartados siguientes conservan las declaraciones originales y sus fechas.
+Para el estado vigente de PR, horas y revisiones prevalece el acta anterior.
 
 ## Registro individual · I5 Fernando
 
