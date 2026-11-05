@@ -15,6 +15,32 @@ int matrix_validate_dimension(size_t n, size_t *elements, size_t *bytes) {
     return MATRIX_OK;
 }
 
+int matrix_validate_buffer_capacity(size_t n, size_t k, size_t *total_bytes) {
+    size_t count, bytes;
+    int status;
+    if (n > MATRIX_MAX_N) return MATRIX_INVALID_DIMENSION;
+    status = matrix_validate_dimension(n, &count, &bytes);
+    if (status != MATRIX_OK) return status;
+    if (k > 0) {
+        if (bytes > SIZE_MAX / k) return MATRIX_SIZE_OVERFLOW;
+        if (bytes > (size_t)PTRDIFF_MAX / k) return MATRIX_SIZE_OVERFLOW;
+        if (total_bytes != NULL) *total_bytes = bytes * k;
+    } else {
+        if (total_bytes != NULL) *total_bytes = 0;
+    }
+    return MATRIX_OK;
+}
+
+static int s_alloc_limit = -1;
+
+void matrix_set_alloc_limit(int limit) {
+    s_alloc_limit = limit;
+}
+
+void matrix_reset_alloc_limit(void) {
+    s_alloc_limit = -1;
+}
+
 int matrix_validate(const Matrix *matrix) {
     size_t count, i;
     int status;
@@ -37,8 +63,13 @@ int matrix_allocate(Matrix *matrix, size_t n) {
     if (matrix == NULL || matrix->data != NULL || matrix->n != 0 || matrix->length != 0) {
         return MATRIX_INVALID_ARGUMENT;
     }
+    if (n > MATRIX_MAX_N) return MATRIX_INVALID_DIMENSION;
     status = matrix_validate_dimension(n, &count, NULL);
     if (status != MATRIX_OK) return status;
+    if (s_alloc_limit >= 0) {
+        if (s_alloc_limit == 0) return MATRIX_NO_MEMORY;
+        --s_alloc_limit;
+    }
     data = (double *)calloc(count, sizeof(*data));
     if (data == NULL) return MATRIX_NO_MEMORY;
     matrix->n = n;
