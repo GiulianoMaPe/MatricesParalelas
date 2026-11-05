@@ -38,6 +38,16 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Bloqueos y decisiones: sin bloqueo técnico de I3; revisión personal, coordinación y aceptación del equipo pendientes.
 - Revision y criterio de aceptacion: pendiente.
 
+## Registro individual · I5 Fernando
+
+- **Entregable:** [Informe de validación numérica](../validacion_numerica.md).
+- **Pruebas:** `tests/compare_results_test.ps1`, Go secuencial Debug y Go paralelo Debug reproducidos; cinco fixtures por versión, todos con código 0 y `max_abs=max_rel=0`.
+- **Criterio:** `atol=rtol=1e-9`; añadida cobertura explícita de esperado cero, diferencia aceptada por `atol` y `max_rel=Infinity`.
+- **Evidencia C:** se recopilaron en el informe resultados previos del reporte de equivalencia y del reporte de particionado; la compilación local queda pendiente porque no se dispone de MSVC configurado. No se instaló software.
+- **Revisión cruzada, coordinación, horas reales e issue/PR:** pendientes de registrar por el equipo.
+- **Reproducción de C completada por I4 (Eva) · 04/11/2026:** sobre el commit `6c76be6`, con MSVC x64 14.43.34808, Windows SDK 10.0.26100.0, MS-MPI Runtime y SDK 10.1.12498.52 y Go 1.27.1. `test_windows.ps1` terminó con código 0 para `c_secuencial` y `c_paralelo` en Debug y Release, y para `-Version all` en Debug y Release (24 comparaciones por compilación). Todas dieron `max_abs=0` y `max_rel=0`. El detalle está en el [informe](../validacion_numerica.md#reproducción-de-c-y-ejecución-conjunta).
+- **Revisión cruzada de I4 (Eva) a I5 · 04/11/2026:** el criterio documentado coincide con [docs/contrato.md](../contrato.md) (`1e-9 + 1e-9·|esperado|`) y con `scripts/compare_results.ps1` (`atol=rtol=1e-9`). El caso nuevo de esperado cero es correcto: `tests/compare_results_test.ps1` pasa con código 0. Para comprobar que detecta errores reales, fijé temporalmente `atol=0` en el comparador y el caso falló, como corresponde; después restauré el comparador. Completé el informe con la reproducción de C y la ejecución conjunta. Revisión conforme para el alcance de I5. Quedan pendientes el pull request, las horas reales y la aceptación del equipo.
+
 ## Registro individual · I4 Eva · 02/11/2026
 
 - **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de revisión de límites de workers y propiedad de buffers, 3 h de repeticiones largas y corrección de bloqueos o resultados variables, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
