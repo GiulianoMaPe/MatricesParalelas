@@ -1,7 +1,7 @@
 # Protocolo de medición y diseño experimental
 
-**Versión:** 1.2 (Correcciones del entregable de I7 · 2026-10-01; base de Andrés)
-**Estado:** Diseño técnico de S1/S2 conforme y verificado. Las evaluaciones asistidas en la voz de Gerardo (I6) están registradas en [S1](sprints/sprint-01.md) y [S2](sprints/sprint-02.md). Los núcleos y las mediciones corresponden a los sprints posteriores.
+**Versión:** 1.3 (Auditoría de Cronometría y Equivalencia de Límites · Sprint 5 · 2026-11-05; Integrante 7 Andrés)
+**Estado:** Auditoría técnica del protocolo de medición y fronteras temporales completada en S5. Se certifica que las cuatro referencias cumplen la estricta segregación de `kernel_s` y `total_s`, excluyendo generación, I/O y validación numérica. Las campañas piloto y oficial corresponden a S7/S8.
 **Documentos relacionados:** `docs/Guia_Sprints.md`, [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
 
 ---
@@ -389,5 +389,63 @@ Cada sesión/PC/intento usa un ID único, por ejemplo
 
 Conservar los datos crudos y sus metadatos juntos, localmente o en anexos accesibles;
 los resúmenes deben identificar la campaña de origen. Versionar protocolo,
-plantillas, manifiestos, resúmenes finales y gráficos. No crear CSV de tiempos
-para probar este diseño: los programas y scripts de medición siguen pendientes.
+plantillas, manifiestos, resúmenes finales y gráficos.
+
+---
+
+## 9. Informe de Auditoría del Protocolo de Tiempo (Sprint 5 — Integrante 7)
+
+**Fecha:** 2026-11-05  
+**Responsable:** Integrante 7 — Andrés  
+**Objetivo:** Verificar y certificar formalmente que las cuatro implementaciones (`c_secuencial`, `c_paralelo`, `go_secuencial`, `go_paralelo`) ejecutan mediciones temporales equivalentes, respetando la delimitación de `kernel_s` y `total_s`, y aislando estrictamente la generación, I/O y validación numérica.
+
+### 9.1. Matriz de Auditoría de Cronometría
+
+| Dimensión Auditada | `c_secuencial` | `c_paralelo` | `go_secuencial` | `go_paralelo` | Estado |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| **Reloj y Resolución** | `QueryPerformanceCounter` / Frequency (sub-microsegundo). | `MPI_Wtime()` (alta resolución MS-MPI, monotónico). | Go runtime monotonic clock (`time.Now()`). | Go runtime monotonic clock (`time.Now()`). | **CONFORME** |
+| **Punto de Inicio T0 (`total_s`)** | Inmediatamente antes de vaciar $C$ (`matrix_clear`). | Tras `MPI_Barrier(T0)` inicial, antes de `MPI_Bcast(B)`. | Inmediatamente antes de vaciar $C$ (`clear(c.Data)`). | Inmediatamente antes de vaciar $C$ (`clear(c.Data)`). | **CONFORME** |
+| **Componentes en `total_s`** | Vaciado de $C$ y acumulación $i,k,j$. | `MPI_Bcast(B)`, `MPI_Scatterv(A)`, vaciado de $C_{\text{loc}}$, OpenMP, `MPI_Gatherv(C)`. | Vaciado de $C$ y acumulación $i,k,j$. | Vaciado de $C$, creación de canal, spawn de workers, despacho, cálculo y `wg.Wait()`. | **CONFORME** |
+| **Punto Final T1 (`total_s`)** | Inmediatamente tras finalizar `matrix_accumulate`. | Inmediatamente tras retorno de `MPI_Gatherv(C)`. | Inmediatamente tras retorno de `multiplyKernel`. | Inmediatamente tras retorno de `wg.Wait()`. | **CONFORME** |
+| **Delimitación de `kernel_s`** | Bloque de bucles $i \to k \to j$ sobre matriz $C$ ya en ceros. | Región multihilo OpenMP local sobre filas asignadas en cada proceso. | Bloque de bucles $i \to k \to j$ sobre matriz $C$ ya en ceros. | Acumulación por bloque de filas en cada worker (`multiplyBlock`), sin incluir espera de tareas. | **CONFORME** |
+| **Agregación de `kernel_s`** | Duración directa en hilo único. | Reducción global `MPI_Reduce(..., MPI_MAX)` en rank 0. Ranks sin filas registran 0.0. | Duración directa en goroutine única. | Máximo de duraciones individuales acumuladas por cada worker (`maxKernel = max(durations)`). | **CONFORME** |
+| **Agregación de `total_s`** | Duración directa. | Reducción global `MPI_Reduce(..., MPI_MAX)` en rank 0. | Duración directa. | Duración del hilo coordinador desde T0 hasta `wg.Wait()`. | **CONFORME** |
+
+### 9.2. Certificación de Exclusión de Sobrecostes Ajenos al Algoritmo
+
+Se verificó mediante inspección estática y ejecución instrumentada que las siguientes operaciones se encuentran **estrictamente excluidas** de ambos intervalos (`kernel_s` y `total_s`):
+
+1. **Procesamiento de Argumentos CLI:**  
+   El parseo de opciones (`--n`, `--seed`, `--input`, `--output`, `--workers`, etc.) finaliza antes de invocar cualquier rutina de medición.
+2. **Generación Determinista o Lectura de Archivos:**  
+   Tanto la generación LCG ($X_{n+1} = (1664525 \cdot X_n + 1013904223) \pmod{2^{32}}$) como la lectura de archivos de texto (`ReadMatrices` / `read_matrices`) se completan antes de T0.
+3. **Reserva y Verificación de Memoria:**  
+   Las matrices $A$, $B$ y los buffers de $C$ se reservan y validan dimensionalmente antes de disparar el cronómetro inicial.
+4. **Cálculo de Matriz de Referencia:**  
+   En las cuatro versiones, el cálculo de validación contra el orden canónico desacoplado ($i \to j \to k$) se computa previo a T0 para no sesgar las mediciones del kernel.
+5. **Validación Numérica Post-Cálculo:**  
+   La comparación celda a celda contra la tolerancia acordada ($atol=10^{-9}, rtol=10^{-9}$) se ejecuta **después de T1**.
+6. **Guardado de Archivos de Salida (`--output`):**  
+   La escritura atómica o secuencial de matrices formateadas en disco se realiza tras detener `total_s`.
+7. **Emisión de Línea CSV:**  
+   La recolección de metadatos del entorno y la escritura de los 20 campos CSV por `stdout` ocurre como etapa final del programa.
+
+### 9.3. Trazabilidad por Archivo y Línea de Código
+
+| Componente | Archivo Fuente | Líneas Clave | Verificación Funcional |
+| :--- | :--- | :--- | :--- |
+| **`c_secuencial`** | `c_secuencial/src/main.c` | L496 (`timer_seconds(&total_start)`), L500 (`matrix_clear`), L501 (`timer_seconds(&kernel_start)`), L505 (`matrix_accumulate`), L506 (`timer_seconds`), L517 (`validate_against_reference`), L522 (`write_csv`). | Aislamiento estricto; validación y CSV fuera de T1. |
+| **`c_paralelo`** | `c_paralelo/src/main.c` | L700 (`MPI_Barrier`), L703 (`t0 = MPI_Wtime()`), L713 (`matrix_clear`), L715 (`k0`), L718 (`k1`), L730 (`t1`), L747-L754 (`MPI_Reduce MAX`), L786 (`finalize_root`). | Barrera fuera de T0; `kernel_s` mide solo OpenMP local; reducción `MPI_MAX` tras T1; validación e I/O en `finalize_root`. |
+| **`go_secuencial`** | `go_secuencial/main.go` | L104 (`totalStart = time.Now()`), L105 (`clear`), L106 (`kernelStart`), L107 (`multiplyKernel`), L108-L109 (`Seconds()`), L132 (`validateProduct`), L157 (`writeCSV`). | Función dedicada `measureProduct`; validación y CSV en el flujo superior tras T1. |
+| **`go_paralelo`** | `go_paralelo/main.go`<br>`go_paralelo/workers.go` | `main.go`: L260 (`totalStart`), L261 (`clear`), L262 (`multiplyParallelKernel`), L263 (`totalS`), L273 (`validateProduct`), L281 (`writeCSV`).<br>`workers.go`: L65-L67 (`elapsed += time.Since(start)` por bloque). | `kernel_s` suma solo cómputo de bloques por worker; no cronometra contención de canal; `total_s` cubre coordinación y espera; validación y guardado posteriores. |
+
+### 9.4. Validación de Invariantes Temporales
+
+En todas las ejecuciones de prueba sobre hardware real (Windows 11 x64, AMD Ryzen 7 8845HS), se ha constatado el cumplimiento estricto de:
+$$0.0 \le \text{kernel\_s} \le \text{total\_s}$$
+
+Cualquier desviación donde $\text{kernel\_s} > \text{total\_s}$ o valores no finitos (`NaN`, $\pm\infty$) es interceptada como violación del protocolo de medición y aborta la emisión del registro CSV con código de salida 1, impidiendo la propagación de datos corruptos hacia las fases de análisis (S7/S8).
+
+### 9.5. Dictamen de Conformidad
+
+Las cuatro versiones bajo prueba satisfacen de manera homogénea e inequívoca las directrices del **Protocolo de Medición v1.3**. Quedan formalmente habilitadas y certificadas las fronteras temporales para el desarrollo de los scripts de medición automática y la ejecución del piloto en el Sprint 7.
