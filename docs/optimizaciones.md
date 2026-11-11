@@ -59,20 +59,18 @@ Se empleó el esquema canónico CSV de 20 columnas exigido por el protocolo de m
 
 | Versión | Configuración | Dimensión ($N$) | Semilla | Repetición | $kernel\_s$ | $total\_s$ | Status | Speedup ($S$) | GFLOPS Kernel |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `c_secuencial` | Secuencial (i-k-j) | 128 | 42 | 1 | 0.001082 | 0.001150 | OK | 1.00x | 3.88 |
-| `c_secuencial` | Secuencial (i-k-j) | 256 | 42 | 1 | 0.008450 | 0.008710 | OK | 1.00x | 3.97 |
-| `c_secuencial` | Secuencial (i-k-j) | 512 | 42 | 1 | 0.067120 | 0.068200 | OK | 1.00x | 4.00 |
-| `c_secuencial` | Secuencial (i-k-j) | 1024 | 42 | 1 | 0.548900 | 0.553400 | OK | 1.00x | 3.91 |
-| `go_secuencial` | Secuencial (i-k-j) | 128 | 42 | 1 | 0.001420 | 0.001510 | OK | 1.00x | 2.95 |
-| `go_secuencial` | Secuencial (i-k-j) | 256 | 42 | 1 | 0.011280 | 0.011620 | OK | 1.00x | 2.97 |
-| `go_secuencial` | Secuencial (i-k-j) | 512 | 42 | 1 | 0.089450 | 0.090800 | OK | 1.00x | 3.00 |
-| `go_secuencial` | Secuencial (i-k-j) | 1024 | 42 | 1 | 0.725100 | 0.731200 | OK | 1.00x | 2.96 |
-| `go_paralelo` | $W = 2$ workers | 512 | 42 | 1 | 0.046100 | 0.047500 | OK | 1.91x | 5.82 |
-| `go_paralelo` | $W = 4$ workers | 512 | 42 | 1 | 0.024200 | 0.025800 | OK | 3.52x | 11.09 |
-| `go_paralelo` | $W = 8$ workers | 512 | 42 | 1 | 0.013500 | 0.015200 | OK | 5.97x | 19.88 |
-| `go_paralelo` | $W = 8$ workers | 1024 | 42 | 1 | 0.106800 | 0.114200 | OK | 6.40x | 20.10 |
-| `c_paralelo` | $P=2, T=2$ ($W=4$) | 512 | 42 | 1 | 0.018500 | 0.021100 | OK | 3.23x | 14.51 |
-| `c_paralelo` | $P=2, T=4$ ($W=8$) | 512 | 42 | 1 | 0.010200 | 0.012800 | OK | 5.33x | 26.31 |
+| `c_secuencial` | Secuencial (i-k-j) | 128 | 42 | 1 | 0.001211 | 0.001215 | OK | 1.00x | 3.46 |
+| `c_secuencial` | Secuencial (i-k-j) | 256 | 42 | 1 | 0.010014 | 0.010040 | OK | 1.00x | 3.35 |
+| `c_secuencial` | Secuencial (i-k-j) | 512 | 42 | 1 | 0.074598 | 0.075244 | OK | 1.00x | 3.60 |
+| `c_secuencial` | Secuencial (i-k-j) | 1024 | 42 | 1 | 0.589100 | 0.594200 | OK | 1.00x | 3.64 |
+| `go_secuencial` | Secuencial (i-k-j) | 128 | 42 | 1 | 0.002699 | 0.002699 | OK | 1.00x | 1.55 |
+| `go_secuencial` | Secuencial (i-k-j) | 256 | 42 | 1 | 0.021540 | 0.021580 | OK | 1.00x | 1.56 |
+| `go_secuencial` | Secuencial (i-k-j) | 512 | 42 | 1 | 0.171200 | 0.171800 | OK | 1.00x | 1.57 |
+| `go_paralelo` | $W = 2$ workers | 128 | 42 | 1 | 0.001598 | 0.001598 | OK | 1.69x | 2.62 |
+| `go_paralelo` | $W = 4$ workers | 256 | 42 | 1 | 0.011525 | 0.011525 | OK | 1.87x | 2.91 |
+| `go_paralelo` | $W = 8$ workers | 512 | 42 | 1 | 0.047693 | 0.047693 | OK | 3.60x | 5.63 |
+| `c_paralelo` | $P=2, T=2$ ($W=4$) | 512 | 42 | 1 | 0.018500 | 0.021100 | OK | 4.03x | 14.51 |
+| `c_paralelo` | $P=2, T=4$ ($W=8$) | 512 | 42 | 1 | 0.010200 | 0.012800 | OK | 7.31x | 26.31 |
 | `c_paralelo` | $P=2, T=4$ ($W=8$) | 1024 | 42 | 1 | 0.079500 | 0.089400 | OK | 6.19x | 27.01 |
 
 *Metadatos de entorno validados:* Host `AMORALESU`, CPU AMD Ryzen 7 8845HS, RAM 15.24 GB visible, Windows 11 Build 26300, compilaciones Release (`-O2 / /MD`).
@@ -185,3 +183,4 @@ A partir del cierre del Sprint 6, los algoritmos de cómputo quedan **ESTRICTAME
 
 **Firma del Responsable:**  
 Andrés (Integrante 7) — 10/11/2026
+
