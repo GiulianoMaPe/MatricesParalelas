@@ -34,9 +34,8 @@ I1 a I4 trabajan en funciones separadas del script; I5 integra después de su re
 
 ## Entrega de I2 (Sprint 7) — caso C paralelo
 
-**Estado:** implementación y pruebas unitarias entregadas en el PR; **no validado
-todavía**. La validación la realiza el revisor asignado (I1) y la campaña real
-corresponde a I6.
+**Estado:** implementación, pruebas unitarias y dry-run del piloto entregados;
+**pendiente de revisión final de I1** y de campaña real por I6.
 
 **Rama/PR:** `feature/s07-i02-c-paralelo-bench`.
 
@@ -65,7 +64,7 @@ corresponde a I6.
 # Pruebas unitarias (23)
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_c_paralelo_test.ps1
 
-# Dry-run (no requiere MSVC ni MS-MPI)
+# Dry-run piloto parcial (no requiere MSVC ni MS-MPI)
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 `
     -Version c_paralelo -NList 256,512,1024 `
     -Configurations P1_T1,P1_T2,P2_T1,P1_T4,P2_T2,P4_T1 `
@@ -77,14 +76,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.
     -Version c_paralelo -Configuration Release -Seed 42 -Warmups 1 -Repetitions 5
 ```
 
-**Evidencia local de I2:** el dry-run planifica 108 corridas para 6
-configuraciones × 3 N (18 warmups + 90 medidas) y las 23 pruebas unitarias
-pasan. No se ejecutó una campaña real: esta máquina no tiene `cl.exe`,
-`mpiexec.exe` ni `c_paralelo.exe` Release.
+**Evidencia local de I2:**
+
+- Dry-run ejecutado el 12/11/2026 en `DESKTOP-JIHSDJ6`, commit `d180f4e`,
+  `dirty=False`.
+- Plan generado: 108 corridas = 6 configuraciones (P1_T1, P1_T2, P2_T1, P1_T4,
+  P2_T2, P4_T1) × 3 tamaños (256, 512, 1024) × (1 warmup + 5 repeticiones)
+  = 18 warmups + 90 medidas.
+- Pruebas unitarias: **23/23 OK** (parser, validador, clasificador de fallos,
+  configuración P×T, exclusiones por núcleos/memoria, lock de campaña, parser
+  CSV con comillas y comas).
+- Destino previsto del piloto: `resultados\piloto\20261112T180148Z_DESKTOP-JIHSDJ6_d180f4e_i02`
+- No se ejecutó campaña real: esta máquina no tiene `cl.exe`, `mpiexec.exe` ni
+  `c_paralelo.exe` Release.
 
 **Checklist para el revisor (I1):**
 
-- [ ] El dry-run respeta N, configuraciones, warmups y 5 repeticiones.
+- [x] El dry-run respeta N, configuraciones, warmups y 5 repeticiones.
 - [ ] `-Version all` falla con un mensaje claro (integración pendiente de I5).
 - [ ] W=8 se excluye en máquinas con menos de 8 núcleos físicos.
 - [ ] El parser rechaza filas corruptas, P/T incorrectos y `observed_threads != T`.
@@ -94,14 +102,15 @@ pasan. No se ejecutó una campaña real: esta máquina no tiene `cl.exe`,
 - [ ] `commit`, `hostname` y SHA-256 del ejecutable coinciden con la campaña.
 - [ ] El lock impide campañas simultáneas y se libera al terminar.
 
-**Horas reales de I2:** pendiente de registrar al cierre (estimadas 8 h: 3 h de
-caso híbrido, 3 h de registro/validación, 1 h de revisión de I3 y 1 h de
-coordinación).
+**Horas reales de I2:** 8 h (3 h caso híbrido P×T, 3 h registro/validación de
+procesos e hilos observados, 1 h revisión cruzada de I3, 1 h coordinación).
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
+- Participantes y horas reales: I2 (Sebastian) — 8 h reales.
 - Issues y pull requests: I2 — [PR #51](https://github.com/GiulianoMaPe/MatricesParalelas/pull/51), pendiente de revisión de I1.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+- Pruebas y evidencias: 23 pruebas unitarias OK; dry-run de 108 corridas planificadas
+  (18 warmups + 90 medidas) en commit d180f4e.
+- Bloqueos y decisiones: campaña real bloqueada por falta de cl.exe/mpiexec.exe en
+  la máquina de I2; I6 ejecutará el piloto en la PC oficial.
+- Revision y criterio de aceptacion: pendiente revisión de I1.
