@@ -47,8 +47,8 @@ por bits observada en ciertos fixtures no reemplaza este contrato.
 
 ## Qué verifica la evidencia local
 
-La [evidencia de S6](../resultados/diagnostico/s06/) conserva comandos, salidas y
-códigos. El [acta](sprints/sprint-06.md) identifica los directorios exactos.
+La evidencia de S6 conserva comandos, salidas y
+códigos. El acta identifica los directorios exactos.
 
 - Go: pruebas completas de ambos módulos, fixtures, contratos de CLI con
   metadatos inyectados por las pruebas, `go vet` y `go test -race`.
