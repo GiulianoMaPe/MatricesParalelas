@@ -1,6 +1,6 @@
-# Sprint 7 Automatizar los experimentos
+﻿# Sprint 7 Automatizar los experimentos
 
-Estado: implementación local de I3 disponible, con aceptación Windows y revisión cruzada pendientes. Las demás entregas y el cierre de equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
+Estado: entrega técnica local de I3 validada en Windows; revisión cruzada I2→I3 pendiente. Las demás entregas y el cierre de equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -53,11 +53,39 @@ I1 a I4 trabajan en funciones separadas del script; I5 integra después de su re
   con Release recién compilado. No se acredita todavía aceptación Windows.
 - Integración: I5 puede invocar `Invoke-GoSequentialMeasurement` para cada fila
   del plan general. `all`, C y Go paralelo mantienen salida 2 sin mediciones.
-- Revisión I2→I3 y coordinación con I5: pendientes; horas reales no declaradas.
+- Revisión I2→I3 y coordinación con I5: pendientes de confirmación humana.
   No se ejecutó el piloto ni se completaron tareas de otros integrantes.
 
-- Participantes y horas reales: pendiente.
+- Participantes y horas reales: I3 · Giuliano · **8 h reales**, declaradas por el integrante el 12/11/2026. Desglose no declarado; no se presume revisión ni coordinación completadas.
 - Issues y pull requests: pendiente.
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+### Actualización I3 · aceptación Windows · 12/11/2026
+
+- **Aceptación técnica individual ejecutada:** Windows PowerShell 5.1.26100.9711,
+  Go Release recién compilado, `tests/bench_go_secuencial_test.ps1 -WithExecutable`:
+  **81/81 casos OK**, incluidos 6 lotes reales, N=1/3/17 y semillas
+  0/4294967295 (un calentamiento y cinco medidas por lote).
+- Refactorización: despacho común en `scripts/bench_windows.ps1` y funciones
+  separadas en `bench_c_secuencial.ps1`, `bench_c_paralelo.ps1`,
+  `bench_go_secuencial.ps1`, `bench_go_paralelo.ps1`. Se conservan las funciones
+  de I1/I2/I4; se excluyó el despacho duplicado y el separador `=======` presentes
+  en la fuente remota de I2. No se importaron esos errores a la entrega.
+- Regresión Windows: I2 **23/23**, I4 **26/26**. Despachos reales de C secuencial
+  N=1, Go paralelo N=1/W=1 y Go secuencial N=256 terminan con código 0.
+  C paralelo N=1/P1_T1 genera su plan con `-DryRun`, código 0; esto no acredita
+  una campaña MPI real ni reemplaza la aceptación de I2.
+- Compatibilidad: `Repetitions` conserva el rango público 1..1000 de I2.
+  El caso Go secuencial exige exactamente 5 y calentamiento 1 antes de medir.
+  `all` rechaza sin mediciones: la campaña intercalada corresponde a I5.
+- [Evidencia persistente](../../resultados/diagnostico/s07-i03/aceptacion_windows_20261112/aceptacion.json):
+  entorno, commit de compilación, hash, logs, resumen de pruebas y CSV/bitácoras
+  de seis lotes reales más el ensayo N=256. Son ensayos de aceptación, no el piloto oficial.
+- **Horas reales I3: 8 h**, confirmadas por Giuliano; sin desglose inventado.
+- **Pendiente para aprobar/cerrar I3:** revisión y aprobación reales de I2 y
+  confirmación de coordinación con I5. La corrección queda local, sin publicación
+  ni aprobación atribuida a terceros. El sprint completo del equipo sigue abierto.
+- El registro anterior describe el estado previo; esta actualización sustituye
+  sus pendientes técnicos de Windows e integración individual y sus horas pendientes.

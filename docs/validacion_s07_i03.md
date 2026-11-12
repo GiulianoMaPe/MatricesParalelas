@@ -1,4 +1,4 @@
-# Sprint 7 · I3 · Medición Go secuencial
+﻿# Sprint 7 · I3 · Medición Go secuencial
 
 La entrega de Giuliano añade únicamente el caso Go secuencial a
 `scripts/bench_windows.ps1`. La campaña integrada, el piloto, la agregación y la
@@ -102,3 +102,45 @@ para N=1,3,17 y semillas 0/4294967295, verificando seis observaciones por lote.
 Está **pendiente de ejecución en Windows**; una plataforma o dependencia ausente
 falla, no se omite como PASS. La revisión I2→I3 y las horas reales siguen
 pendientes de declaración. Este documento no cierra el sprint del equipo.
+
+## Resultado Windows y coexistencia · 12/11/2026
+
+La aceptación Windows pendiente arriba ya se ejecutó: **81/81 casos OK** en
+Windows PowerShell **5.1.26100.9711**, después de compilar el Release.
+El historial previo se conserva como antecedente, no como estado vigente.
+
+[Evidencia](../resultados/diagnostico/s07-i03/aceptacion_windows_20261112/aceptacion.json)
+y [resumen de los 81 casos](../resultados/diagnostico/s07-i03/aceptacion_windows_20261112/summary.csv).
+La misma carpeta contiene logs de pruebas y despachos, lotes reales completos
+N=1/3/17 con semillas extremas y un lote Go secuencial N=256/seed=42.
+El commit VCS del binario es `97f77291025b207b32331316294f262610db33bd`;
+los cambios del medidor están en el árbol local, documentados como tal.
+No se presenta esta evidencia como una versión congelada limpia.
+
+Las funciones Go están en `scripts/bench_go_secuencial.ps1`, cargadas por el
+punto de entrada común. Los otros módulos conservan las implementaciones de:
+
+- I1: `59ac83f`, C secuencial.
+- I2: `e1185a8133fa070e1855b533c93107480d0f8ee4`, C paralelo; se conservan
+  funciones y configuración, sin el despacho duplicado/separador residual de esa rama.
+- I4: `165115df9d81069e1a11204ef36aa0394b53a867`, Go paralelo.
+
+Pruebas originales de regresión: **23/23 C paralelo** y **26/26 Go paralelo**.
+Los cuatro despachos individuales funcionan: C secuencial y Go paralelo N=1
+con seis corridas reales; Go secuencial N=256 con seis corridas reales;
+C paralelo con N=1/P1_T1 en DryRun. DryRun no valida ejecución MPI.
+Los módulos auxiliares se cargan desde `bench_windows.ps1`; para I5 sigue siendo
+válido dot-sourcear ese archivo y llamar `Invoke-GoSequentialMeasurement`.
+
+La firma común conserva `ValidateRange(1,1000)` para no restringir llamadas de
+otros integrantes. Go secuencial rechaza valores distintos de 5 antes de medir.
+C secuencial y Go paralelo conservan salida CSV por stdout; Go secuencial usa
+OutputDirectory; C paralelo conserva sus opciones OutputRoot, CampaignId,
+Configurations, NList y DryRun. Las opciones exclusivas de C paralelo se rechazan
+explícitamente al usarlas con otro caso, en vez de ignorarlas.
+`all` sigue reservado a la integración intercalada I5 y sale con código 2.
+No hay afirmación de aceptación del piloto completo ni del cierre de equipo.
+
+Giuliano declaró **8 horas reales totales**, sin desglose. Quedan pendientes
+la aprobación humana I2→I3 y la confirmación de coordinación con I5.
+No se atribuyen revisiones ni horas por actividad que no se hayan confirmado.
