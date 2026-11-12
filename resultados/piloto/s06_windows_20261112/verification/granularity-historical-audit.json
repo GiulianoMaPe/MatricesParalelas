@@ -1,0 +1,8 @@
+{
+  "rows": 720,
+  "kernel_over_total": 189,
+  "source_sha256": "39cf810649ec9164ddc9ac34d93b13f0a82b6dc7c232600f002ea22bf5bf4971",
+  "policy": "Preserved unmodified; mixed clocks, not valid contractual observations",
+  "corrected_rows": 72,
+  "corrected_kernel_over_total": 0
+}

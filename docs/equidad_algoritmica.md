@@ -1,8 +1,8 @@
 # Equidad algorítmica y regresión — Sprint 6
 
-Revisión del 11/11/2026, rama `feature/s06-optimizacion-evidencia`, sobre
-`dd008f7`. Alcance autorizado: ejecutar lo que no requiere Windows. La
-aceptación MSVC/MS-MPI queda pendiente; esta revisión no sustituye esa campaña.
+Actualización del 12/11/2026: aceptación Windows completada sobre la integración
+de I4/I7 y la base I8. La tabla siguiente describe los invariantes conservados;
+la evidencia Linux se mantiene diferenciada de la nueva aceptación Windows.
 
 ## Comparación de las cuatro implementaciones
 
@@ -72,7 +72,7 @@ de archivos por plataforma sigue compilando. No prueba su ejecución ni el SDK
 MSVC/MS-MPI. Los intentos ASan fallaron por falta de libasan y sus diagnósticos
 se conservaron; los mismos contratos se ejecutaron con GCC -O0/-g y -O2.
 
-## Condiciones que faltan para cerrar la aceptación Windows
+## Criterios Windows originales (resueltos en el cierre)
 
 1. Ejecutar `test_windows.ps1 -Version all` en Debug y Release sobre la revisión
    final y conservar los logs. La evidencia histórica de S5 no acredita S6.
@@ -85,3 +85,20 @@ se conservaron; los mismos contratos se ejecutaron con GCC -O0/-g y -O2.
 No se traslada generación, validación, vaciado o coordinación fuera de su
 intervalo contractual para aparentar una mejora. `total_s-kernel_s` sigue
 siendo un indicador, no una medida causal exacta de comunicaciones o canal.
+
+
+## Auditoría de cierre Windows
+
+Los cinco criterios anteriores se comprobaron en la
+[aceptación Windows](cierre_s06_windows.md) y la
+[revisión de integración](revision_s06.md). Debug y Release pasan en las cuatro
+versiones, con MPI real, perfiles rank/PID, filas/hilos, afinidad, errores y
+timeouts sin procesos restantes. El refactor de I4 conserva el bloque canónico;
+ninguna candidata aislada reemplaza el cálculo de producción.
+
+No cambian representación, orden aritmético, generador, vaciado ni tolerancias.
+El diagnóstico MPI optativo se ejecuta después de tiempos y validación
+colectiva. La corrección del arnés I4 afecta solo al laboratorio: conserva QPC
+auxiliar y compara total/kernel con el mismo reloj de los workers.
+El responsable encargó a Codex la revisión de este cierre; no se inventan
+conformidades personales ni se llama humana a esa revisión.

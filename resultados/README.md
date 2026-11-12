@@ -4,19 +4,22 @@ Las cuatro versiones implementan el producto y su validación. La automatizació
 completa del piloto corresponde a S7 y la campaña oficial a S8; consultar
 [protocolo](../docs/protocolo_medicion.md).
 
-| Carpeta | Contenido |
-| --- | --- |
-| `diagnostico/s06/` | Ensayos Linux de núcleos y candidatas, memoria RSS y regresión portable. Esquema `s06-laboratory-v1`, separado del CSV Windows. |
-| `piloto/<campaign_id>/` | Piloto Windows S7, con entorno, plan, mediciones y bitácora. |
-| `raw/<campaign_id>/` | Datos oficiales Windows S8. |
-| `resumen/` y `graficos/` | Derivados trazables de las observaciones correspondientes. |
+S7 guarda ensayos en `piloto/`; S8 conserva la campaña oficial en `raw/`. Los
+resúmenes y gráficos deben derivarse de observaciones reales y trazables.
 
-No mezclar plataformas, revisiones, compilaciones o intentos. Las salidas lentas
-y los fallos se conservan. El tiempo de un smoke test no es rendimiento matricial.
-Los builds y cachés son regenerables y permanecen ignorados por Git.
+`experimentos/` guarda mediciones de optimización del S6 que no forman parte de
+la campaña; por ejemplo, `granularidad_go/` es la evidencia de
+[docs/granularidad_go.md](../docs/granularidad_go.md).
 
-Los diagnósticos S6 conservan `entorno.json`, `plan.json`,
-`observaciones.jsonl`, `resumen.json` y `resumen.csv`. Cada observación incluye
-stdout, stderr, lectura original del pico RSS, comando y estado. Las fuentes
-exactas se guardan en `sources/` con hashes, porque el experimento puede preceder
-al commit de la entrega. El resumen no publica speedup de campaña.
+## Evidencia del cierre S6
+
+- `diagnostico/s06/`: núcleos Linux, intentos A/B separados; no son MPI Windows.
+- `experimentos/granularidad_go/`: entrega histórica I4 en otro equipo; 189 filas
+  mezclan relojes e infringen kernel<=total. Se conservan intactas como exploración,
+  sin incorporarlas al CSV contractual de campaña.
+- `piloto/s06_windows_20261112/`: aceptación exploratoria Windows S6, con plan,
+  fuentes/hashes, 540 corridas, 33 perfiles separados, diagnóstico MPI y regresión.
+  No equivale al piloto completo de S7 ni a datos oficiales S8.
+
+Véanse [aceptación Windows](../docs/cierre_s06_windows.md) y
+[revisión](../docs/revision_s06.md).

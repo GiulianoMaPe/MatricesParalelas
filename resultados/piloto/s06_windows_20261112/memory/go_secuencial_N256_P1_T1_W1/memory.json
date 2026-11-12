@@ -1,0 +1,28 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "--n",
+    "256",
+    "--seed",
+    "42"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_s": 0.06035999999994601,
+  "processes": [
+    {
+      "pid": 1724,
+      "working_set_bytes": 7925760,
+      "peak_working_set_bytes": 8679424,
+      "private_bytes": 13651968,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 13651968
+    }
+  ],
+  "max_simultaneous_working_set_bytes": 7925760,
+  "max_simultaneous_private_bytes": 13651968,
+  "remaining_pids": [],
+  "sample_count": 2,
+  "maximum_sample_gap_s": 0.02539119999983086
+}

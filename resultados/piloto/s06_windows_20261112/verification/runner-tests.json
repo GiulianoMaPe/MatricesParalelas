@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\sprint06_windows_test.py"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "....\r\n----------------------------------------------------------------------\r\nRan 4 tests in 0.000s\r\n\r\nOK\r\n"
+}

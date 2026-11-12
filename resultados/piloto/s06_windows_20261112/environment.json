@@ -1,0 +1,67 @@
+{
+  "protocol_version": "1.3",
+  "phase": "S6 exploratory Windows, not S7/S8",
+  "started_at_utc": "2026-11-12T05:15:25.306648+00:00",
+  "git_commit": "72417b989c5ef8792970f57724a8f7bd639ca7e2",
+  "git_status": " M resultados/diagnostico/s06/20261112T033150Z_fedora/resumen.csv\n M resultados/diagnostico/s06/20261112T035217Z_fedora/resumen.csv\n M scripts/sprint06_windows.py\n?? resultados/piloto/s06_windows_20261112/\n?? tests/sprint06_windows_test.py\n",
+  "hardware": {
+    "cpu": "AMD Ryzen 5 3600 6-Core Processor              ",
+    "physical_cores": 6,
+    "logical_processors": 12,
+    "os": "Microsoft Windows 11 Pro",
+    "build": "10.0.26300",
+    "ram_visible_bytes": 17085501440,
+    "ram_available_bytes": 8254926848,
+    "power_plan": "GUID de plan de energía: 381b4222-f694-41f0-9685-ff5bb260df2e  (Equilibrado)",
+    "battery": []
+  },
+  "tools": {
+    "msvc": {
+      "command": [
+        "cl"
+      ],
+      "exit_code": 0,
+      "stdout": "uso : cl [ opción... ] nombre de archivo... [ /link opción de vínculo... ]\r\n",
+      "stderr": "Compilador de optimización de C/C++ de Microsoft (R) versión 19.44.35230 para x64\r\n(C) Microsoft Corporation. Todos los derechos reservados.\r\n\r\n"
+    },
+    "go": {
+      "command": [
+        "go",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "go version go1.27.4 windows/amd64\n",
+      "stderr": ""
+    },
+    "mpi": {
+      "command": [
+        "C:\\Program Files\\Microsoft MPI\\Bin\\mpiexec.exe",
+        "-help"
+      ],
+      "exit_code": 0,
+      "stdout": "Microsoft MPI Startup Program [Version 10.1.12498.52]\r\n\r\nLaunches an application on multiple hosts.\r\n\r\nUsage:\r\n\r\n    mpiexec [options] executable [args] [ : [options] exe [args] : ... ]\r\n    mpiexec -configfile <file name>\r\n\r\nCommon options:\r\n\r\n-n <num_processes>\r\n-env <env_var_name> <env_var_value>\r\n-wdir <working_directory>\r\n-hosts n host1 [m1] host2 [m2] ... hostn [mn]\r\n-cores <num_cores_per_host>\r\n-lines\r\n-debug [0-3]\r\n-logfile <log file>\r\n\r\nExamples:\r\n\r\n    mpiexec -n 4 pi.exe\r\n    mpiexec -hosts 1 server1 master : -n 8 worker\r\n\r\nFor a complete list of options, run mpiexec -help2\r\nFor a list of environment variables, run mpiexec -help3\r\n\r\nYou can reach the Microsoft MPI team via email at askmpi@microsoft.com\r\n",
+      "stderr": ""
+    },
+    "git": {
+      "command": [
+        "git",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "git version 2.56.0.windows.4\n",
+      "stderr": ""
+    }
+  },
+  "windows_sdk": "10.0.26100.0\\",
+  "msvc_tools": "14.44.35207",
+  "power_source": "Battery query recorded; desktop AC inferred if no battery, not directly instrumented",
+  "thermal_load": "Desktop active; no thermal sensor/background-load control; exploratory only",
+  "configuration": "Release x64",
+  "sampling": "Separate profiles: GetProcessMemoryInfo, bytes, requested interval 20 ms; individual OS peak WS, sampled private maxima and simultaneous sums; actual maximum gap recorded",
+  "timeout_seconds": 180,
+  "machine_budget_seconds": 7200,
+  "excluded": [
+    "W=8 exceeds 6 physical cores",
+    "N=2048/4096 excluded from exploratory repetitions: independent O(N^3) reference wall-time budget; RAM model assessed separately"
+  ]
+}

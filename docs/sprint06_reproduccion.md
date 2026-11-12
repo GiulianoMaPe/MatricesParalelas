@@ -1,7 +1,9 @@
 # Reproducir el trabajo del Sprint 6
 
-La [aceptación actual](sprints/sprint-06.md) distingue la parte Linux autorizada
-de la comprobación Windows que sigue pendiente. Este procedimiento no habilita
+La [aceptación actual](sprints/sprint-06.md) completa Windows y conserva aparte
+la evidencia Linux. Los comandos Windows vigentes están en
+[cierre_s06_windows.md](cierre_s06_windows.md). Las listas de pendientes de este
+procedimiento corresponden al estado previo y quedan resueltas según el acta. Este procedimiento no habilita
 `bench_windows.ps1`, cuya implementación corresponde a S7.
 
 ## Diagnóstico Linux

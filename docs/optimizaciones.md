@@ -1,164 +1,97 @@
-# Registro de decisiones de rendimiento — Sprint 6
+# Decisiones de optimización — cierre S6
 
-Revisión del 11/11/2026, rama `feature/s06-optimizacion-evidencia`, base `dd008f7`.
-El usuario autorizó ejecutar la parte que no requiere Windows. Se conserva el
-algoritmo de producción y se estudian candidatas en archivos de pruebas; no se
-declara una optimización MSVC/MS-MPI sin sus observaciones correspondientes.
+Revisión del 12/11/2026. Se priorizaron e integraron las entregas I4 e I7;
+I8 ya estaba integrado. Se conservan sus aportes y autorías. El
+[original de I7](optimizaciones_i7_original_s06.md) y el
+[diagnóstico Linux](optimizaciones_portable_s06.md) permanecen como antecedentes,
+separados de la [aceptación Windows](cierre_s06_windows.md).
 
-## Decisiones por hipótesis
+## Decisiones que recibe S7
 
-| ID | Base y candidata aislada | Qué cambia y cómo se valida | Decisión para producción |
-| --- | --- | --- | --- |
-| C-01 | `matrix_accumulate` frente a `restrict_c` | Solo la información de no alias de C; mantiene i,k,j y tipos. Cada celda se compara con referencia i,j,k. | Base conservada; candidata experimental, pendiente de Windows. |
-| C-02 | Kernel local OpenMP `static` frente a `static,1` | Solo granularidad estática; mismos N y T, región y referencia. No cambia comunicación porque el laboratorio no ejecuta MPI. | Base conservada; P/T híbrido pendiente de MS-MPI. |
-| GO-01 | `multiplyKernel` frente a `row_slices` | Slices por fila, sin copiar datos; mismos bucles y producto. Pruebas con cinco semillas, impares, repetición y A/B inmutables. | Base conservada; mejora candidata que debe contrastarse en Windows y también en el kernel paralelo antes de promoverse. |
-| GO-02 | Pool actual frente a `block16` | Solo tamaño de tarea: 16 filas frente a ceil(N/W), mismo canal W y worker de producción. | Base conservada; experimento de granularidad. |
-| GO-03 | Pool actual frente a `unbuffered` | Solo capacidad del canal: 0 frente a W, mismo bloque ceil(N/W). | Base conservada; experimento de coordinación. |
-| MEM-01 | Modelo de buffers y picos RSS | Memoria estimada por implementación y picos del proceso de laboratorio, incluyendo la referencia. | Límites Windows aún sujetos a medición por rank y RAM disponible. |
+| Hipótesis | Decisión | Fundamento y frontera |
+| --- | --- | --- |
+| C-01 `restrict_c` | Experimental; conservar base | No se exige promover cambios: el contrato y la equidad final priorizan una base común. Los datos MSVC inferiores muestran el efecto local, sin convertir aliasing aislado en una optimización aceptada en el híbrido. |
+| C-02 `static1` | Conservar `schedule(static)` | Kernel local separado; no sustituye las observaciones MPI completas ni prueba una mejora general de P/T. |
+| GO-01 `row_slices` | Experimental; conservar índices actuales | El kernel ya tiene cero reservas. Promover solo el secuencial requeriría contrastar también `multiplyBlock`; se conserva simetría y se entrega la oportunidad como experimento futuro, sin reclamar que la candidata sea más lenta. |
+| GO-02 `block16` | Conservar `ceil(N/W)` | Se prioriza la conclusión de I4: los beneficios dependen de N/W y el reparto dinámico debe estudiarse simétricamente. |
+| GO-03 `unbuffered` | Conservar canal W | No se acepta una política universal por un subconjunto favorable. El pool, canal, despacho/cierre/espera siguen dentro de total_s. |
+| OPT-01 de I7: i,k,j | Conservar | Accesos contiguos verificados por inspección; no se acredita la cifra 8–12x sin la comparación bruta correspondiente. |
+| OPT-02/03/04: tiling, transposición y SIMD manual | Excluidos del alcance canónico | Decisión de diseño/equidad; no se inventan medidas para técnicas que este cierre no ejecutó. Transponer a otro buffer no viola por sí mismo la inmutabilidad, pero cambia representación/trabajo y requiere evaluación simétrica. |
+| OPT-05: reservas | Conservar | Matrices y slots antes de T0; canal/pool dentro de total_s. No se garantiza ausencia del GC durante cálculo. |
+| OPT-06: filas contiguas | Conservar | Un propietario por fila. Hay como máximo W tareas, no necesariamente exactamente W, y no se afirma ausencia total de false sharing sin medirlo. |
 
-No se introduce tiling, transposición, precisión reducida, BLAS, intrínsecos SIMD
-ni `fast-math`. Tampoco se elimina validación, vaciado o coordinación para
-aparentar menor tiempo. C ya utilizaba punteros de fila y Go ya tenía un kernel
-sin reservas de datos explícitas: no se presentan como cambios nuevos.
+Se fija el algoritmo existente, sin introducir cambios artificiales. La decisión
+no necesita que todas las candidatas regresen: las mejoras aisladas pueden
+permanecer experimentales al no aceptarse su integración simétrica en este sprint.
 
-## Método y trazabilidad
+## Antes/después en MSVC y Go Windows
 
-El runner [sprint06_lab.py](../scripts/sprint06_lab.py) construye dos harnesses C
-y dos ejecutables de pruebas Go. Las candidatas residen exclusivamente en
-[el harness C](../tests/sprint06_kernel_bench.c),
-[pruebas Go secuenciales](../go_secuencial/sprint06_test.go) y
-[pruebas Go paralelas](../go_paralelo/sprint06_test.go).
+Semilla 42, un calentamiento y cinco medidas, mismas condiciones. Valores en ms:
+mediana [IQR]. Reducción = 100*(base-candidata)/base; negativa es regresión.
+Cada fila pertenece a su mismo grupo N/W e intento, sin fusionar hosts ni Linux.
+Los grupos Go con alguna medida total/kernel menor de 100 ms son diagnóstico
+de tiempos cortos por la resolución local cercana a 0,5 ms. No justifican por sí
+solos una aceptación; `clock-policy.json` los clasifica sin eliminar datos.
 
-Se usa semilla 42 y un proceso nuevo para cada observación. Antes del cronómetro
-se preparan A/B/C y una referencia independiente i,j,k. Total incluye el vaciado
-de C y kernel lo excluye; en Go paralelo también se incluye creación, despacho,
-cierre y espera, y se toma el máximo de acumulados por worker.
+| Laboratorio | N | W/T | Candidata | Total base | Total candidata | Reducción | Kernel base → candidata |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: |
+| go_paralelo | 1024 | 4 | unbuffered | 480.411 [20.819] | 453.078 [25.555] | +5.69% | 479.406 → 451.570 |
+| go_paralelo | 1024 | 4 | block16 | 480.411 [20.819] | 481.741 [26.896] | -0.28% | 479.406 → 479.695 |
+| go_paralelo | 1024 | 2 | unbuffered | 777.927 [101.967] | 796.433 [41.436] | -2.38% | 776.916 → 794.850 |
+| go_paralelo | 1024 | 2 | block16 | 777.927 [101.967] | 789.992 [174.092] | -1.55% | 776.916 → 788.985 |
+| go_paralelo | 1024 | 1 | unbuffered | 1282.107 [84.976] | 1283.700 [77.086] | -0.12% | 1280.084 → 1283.196 |
+| go_paralelo | 1024 | 1 | block16 | 1282.107 [84.976] | 1221.669 [24.211] | +4.71% | 1280.084 → 1220.153 |
+| go_secuencial | 1024 | 1 | row_slices | 869.825 [86.325] | 457.561 [47.683] | +47.40% | 868.819 → 455.385 |
+| c_openmp_local | 1024 | 4 | static1 | 254.454 [12.152] | 230.282 [28.513] | +9.50% | 253.249 → 229.132 |
+| c_openmp_local | 1024 | 2 | static1 | 464.315 [61.975] | 393.440 [13.355] | +15.26% | 463.264 → 392.264 |
+| c_openmp_local | 1024 | 1 | static1 | 742.068 [33.915] | 549.308 [76.996] | +25.98% | 740.933 → 547.604 |
+| c_secuencial | 1024 | 1 | restrict_c | 234.119 [29.443] | 230.721 [35.525] | +1.45% | 232.936 → 229.592 |
+| go_paralelo | 512 | 4 | unbuffered | 46.905 [2.015] | 45.356 [5.404] | +3.30% | 45.956 → 44.853 |
+| go_paralelo | 512 | 4 | block16 | 46.905 [2.015] | 42.462 [0.429] | +9.47% | 45.956 → 41.960 |
+| go_paralelo | 512 | 2 | unbuffered | 76.151 [10.866] | 75.127 [8.695] | +1.34% | 75.645 → 74.623 |
+| go_paralelo | 512 | 2 | block16 | 76.151 [10.866] | 79.448 [8.531] | -4.33% | 75.645 → 79.433 |
+| go_paralelo | 512 | 1 | unbuffered | 141.404 [5.519] | 144.168 [8.660] | -1.95% | 141.404 → 143.164 |
+| go_paralelo | 512 | 1 | block16 | 141.404 [5.519] | 140.395 [2.348] | +0.71% | 141.404 → 139.887 |
+| go_secuencial | 512 | 1 | row_slices | 95.909 [1.970] | 51.398 [1.084] | +46.41% | 95.909 → 50.887 |
+| c_openmp_local | 512 | 4 | static1 | 27.778 [5.255] | 24.218 [1.749] | +12.82% | 27.410 → 23.943 |
+| c_openmp_local | 512 | 2 | static1 | 42.535 [3.709] | 35.248 [3.552] | +17.13% | 42.244 → 34.956 |
+| c_openmp_local | 512 | 1 | static1 | 74.667 [1.158] | 61.267 [2.130] | +17.95% | 74.388 → 60.894 |
+| c_secuencial | 512 | 1 | restrict_c | 23.842 [0.659] | 24.752 [1.897] | -3.82% | 23.557 → 24.407 |
+| go_paralelo | 256 | 4 | unbuffered | 7.817 [0.923] | 6.158 [0.424] | +21.22% | 6.812 → 6.158 |
+| go_paralelo | 256 | 4 | block16 | 7.817 [0.923] | 6.182 [0.906] | +20.92% | 6.812 → 6.154 |
+| go_paralelo | 256 | 2 | unbuffered | 10.093 [1.992] | 10.971 [2.060] | -8.70% | 10.093 → 10.824 |
+| go_paralelo | 256 | 2 | block16 | 10.093 [1.992] | 11.150 [2.920] | -10.47% | 10.093 → 11.150 |
+| go_paralelo | 256 | 1 | unbuffered | 17.466 [0.427] | 17.514 [1.259] | -0.27% | 17.466 → 17.514 |
+| go_paralelo | 256 | 1 | block16 | 17.466 [0.427] | 18.501 [1.547] | -5.93% | 17.466 → 18.501 |
+| go_secuencial | 256 | 1 | row_slices | 12.234 [0.612] | 6.547 [0.099] | +46.48% | 12.234 → 6.500 |
+| c_openmp_local | 256 | 4 | static1 | 3.468 [0.474] | 3.369 [0.660] | +2.84% | 3.369 → 3.293 |
+| c_openmp_local | 256 | 2 | static1 | 6.096 [0.532] | 5.023 [0.052] | +17.60% | 6.018 → 4.944 |
+| c_openmp_local | 256 | 1 | static1 | 9.540 [0.940] | 7.779 [0.167] | +18.46% | 9.456 → 7.625 |
+| c_secuencial | 256 | 1 | restrict_c | 3.073 [0.094] | 3.260 [0.433] | -6.09% | 2.992 → 3.181 |
 
-Por combinación se conserva repetición 0 de calentamiento y cinco rondas
-intercaladas, alternando el orden directo/inverso. Solo grupos de seis corridas
-OK con repeticiones únicas 0..5 producen resumen. Se calcula mediana=x3 e
-IQR=x4−x2 de las cinco medidas ordenadas. La reducción porcentual usa
-`100*(mediana_base-mediana_candidata)/mediana_base`; puede ser negativa.
+Los mínimos/máximos, IQR kernel, tiempo de pared y todas las observaciones están
+en el [resumen](../resultados/piloto/s06_windows_20261112/summary.csv) y los [originales](../resultados/piloto/s06_windows_20261112/observations.jsonl).
+Los picos del programa completo se conservan aparte en [memoria](memoria.md):
+no se atribuyen a variantes aisladas sin perfiles por variante.
+Los JSON incluyen las asignaciones N=17 del kernel/API/pool; no se presentan como
+asignaciones del N principal ni se usan sus tiempos para escalabilidad.
 
-El esquema es `s06-laboratory-v1` y no el CSV de veinte columnas de campaña.
-No se comparan tiempos Linux contra Windows ni GCC contra MSVC. No se publica
-speedup oficial ni se interpreta `total-kernel` como el coste exacto del canal.
+## Revisión de la evidencia recibida
 
-Los datos originales conservan comandos, stdout/stderr, estado, tiempos y RSS.
-El entorno incluye revisión, fuentes exactas y sus hashes, herramientas, comandos
-de compilación y SHA-256 de binarios. Esto identifica las candidatas aunque se
-hayan medido antes del commit de la entrega. Los builds son regenerables.
+I4 aporta 720 corridas en Ryzen 7 3700X/Go 1.27.1, más benchmarks del canal.
+El CSV tiene 189 filas con kernel mayor que total al mezclar
+QPC y el reloj de los workers. Se preserva intacto y se limita su uso al estudio
+exploratorio de total QPC; no se acepta como CSV contractual ni para calcular
+overhead válido. El [auditor](../resultados/piloto/s06_windows_20261112/verification/granularity-historical-audit.json)
+registra hash y conteos. Se corrigió el arnés: total/kernel usan el reloj
+monotónico de producción, QPC es auxiliar y los tiempos inválidos abortan.
+Pasaron 72 corridas pequeñas con todos los bloques y dos presupuestos.
 
-## Asignaciones y localidad
+La tabla preliminar de I7 no incluye corridas brutas con las que reconstruir
+sus porcentajes. Se conserva como entrega histórica atribuida, sin inventar
+metadatos ni aceptarla como prueba nueva. El 5% no demuestra significación;
+se consideran dispersión, extremos, consistencia y condiciones.
 
-Las observaciones Go incluyen asignaciones por llamada de kernels/pool con
-N=17, fuera de los intervalos de tiempo y del N principal. La API secuencial
-`Multiply` se diagnostica aparte porque reserva C y valida entradas/salida.
-`testing.AllocsPerRun` fuerza temporalmente GOMAXPROCS=1 para ese diagnóstico;
-no se usan sus tiempos para inferir escalabilidad.
-
-En el pool es esperable reservar canal, WaitGroup/closures y goroutines dentro
-de total_s. No se impone la falsa condición de cero asignaciones para toda
-coordinación ni se desplazan esas reservas fuera del cronómetro.
-
-El recorrido contiguo se comprueba por inspección del código. No hay contadores
-de caché disponibles en esta sesión; por tanto no se afirma una tasa de aciertos,
-una saturación de memoria o una causa de rendimiento a partir del tiempo solo.
-
-## Límites de la evidencia
-
-- Los kernels C se midieron con GCC y el pool Go con runtime Linux. El híbrido
-  se limita al kernel OpenMP local; no ejecuta Bcast/Scatterv/Gatherv.
-- El escritorio seguía activo, con memoria disponible registrada en el entorno.
-  No se estableció una sesión térmica/energética controlada equivalente a la
-  futura PC oficial. Los resultados se consideran exploratorios.
-- Los picos RSS incluyen el harness/runtime y pequeñas pruebas de asignaciones;
-  no equivalen a bytes matriciales puros ni a memoria privada comprometida.
-- Las candidatas pueden presentar variaciones entre N, W y corridas. No se
-  selecciona solo el mejor intento ni se elimina una observación lenta.
-- Sin batería MSVC/MS-MPI y comparativas Windows, no se promueve ninguna
-  candidata ni se declara cerrado el criterio de optimización de la campaña.
-
-## Inspección del compilador C
-
-En las unidades separadas, GCC con `-O2 -ffp-contract=off` informa cero bucles
-vectorizados en `matrix_accumulate` y un bucle vectorizado con vectores de
-16 bytes en la candidata con C restringida. Los reportes están en
-[base](../resultados/diagnostico/s06/verificacion_20261112T032934Z/c_baseline_vectorization.report.txt)
-y [candidata controlada](../resultados/diagnostico/s06/verificacion_20261112T032934Z/c_candidate_controlled_vectorization.report.txt).
-Esto describe el código que ese compilador genera, no demuestra aciertos de
-caché ni garantiza que MSVC tome la misma decisión.
-
-## Paso de aceptación pendiente
-
-Seguir [reproducción S6](sprint06_reproduccion.md), repetir la regresión Windows
-en Debug/Release y comparar antes/después en la misma PC con metadatos completos.
-Confirmar memoria y equidad antes de aceptar una mejora. La diferencia debe ser
-consistente respecto a la dispersión y los tamaños prioritarios; un porcentaje
-fijo por sí solo no acredita significación estadística. Si la evidencia es
-inconclusa, conservar la base sigue siendo una decisión válida.
-
-
-## Resultados y corrección metodológica
-
-Se conservan dos intentos completos, con **486 corridas numéricamente válidas**:
-
-- **A:** [primer lote](../resultados/diagnostico/s06/20261112T033150Z_fedora/entorno.json), 342 corridas: 57 calentamientos y 285
-  medidas. [Observaciones](../resultados/diagnostico/s06/20261112T033150Z_fedora/observaciones.jsonl) y [resumen](../resultados/diagnostico/s06/20261112T033150Z_fedora/resumen.csv).
-- **B:** [control C con compilación separada](../resultados/diagnostico/s06/20261112T035217Z_fedora/entorno.json), 144 corridas:
-  24 calentamientos y 120 medidas. [Observaciones](../resultados/diagnostico/s06/20261112T035217Z_fedora/observaciones.jsonl)
-  y [resumen](../resultados/diagnostico/s06/20261112T035217Z_fedora/resumen.csv).
-
-La revisión de A detectó que la candidata C se compilaba junto al harness y la
-base en otra unidad. Esa diferencia de visibilidad podía influir en el código
-generado. Se trasladó la candidata a `tests/sprint06_candidates.c`, con las
-mismas comprobaciones y bucles, cambiando solo alias de C o planificación,
-y se repitieron todos los grupos C en B, sin LTO y con unidades separadas.
-
-**Las conclusiones C usan solo B; las Go usan solo A.** No se mezclan
-observaciones individuales ni se elige el intento más rápido. Los grupos C de
-A se conservan como exploración supersedida por esta corrección metodológica.
-Cada comparación base/candidata sigue perteneciendo a un único intento.
-
-La suma de pared de A y B fue 1264.5 segundos, distinta del tiempo activo de
-trabajo. Se conservaron 45 fuentes exactas en A y 46 en B, con hashes y comandos.
-El host es Fedora Linux, Ryzen 5 3600, 6 núcleos físicos/12 lógicos, GCC 16.2.1
-y Go 1.27.4. W=8 no se habilitó por superar los núcleos físicos.
-
-Cada celda muestra **mediana total base → candidata en ms (reducción %)**.
-La dispersión, los extremos y los tiempos kernel están en los resúmenes enlazados.
-Una reducción negativa significa regresión.
-
-| Experimento y presupuesto | N=256 | N=512 | N=1024 |
-| --- | --- | --- | --- |
-| C secuencial, restrict_c [B] | 7.053 → 4.532 (+35.75%) | 48.186 → 31.481 (+34.67%) | 440.811 → 276.674 (+37.24%) |
-| OpenMP local, static1, T=1 [B] | 7.028 → 6.961 (+0.95%) | 51.199 → 49.144 (+4.01%) | 454.018 → 431.646 (+4.93%) |
-| OpenMP local, static1, T=2 [B] | 4.025 → 4.888 (-21.44%) | 28.567 → 27.104 (+5.12%) | 204.750 → 208.958 (-2.06%) |
-| OpenMP local, static1, T=4 [B] | 2.648 → 2.921 (-10.29%) | 17.923 → 21.658 (-20.84%) | 126.763 → 119.831 (+5.47%) |
-| Go secuencial, row_slices [A] | 11.810 → 11.550 (+2.20%) | 90.509 → 73.363 (+18.94%) | 766.346 → 584.716 (+23.70%) |
-| Go paralelo, block16, W=1 [A] | 16.845 → 16.687 (+0.94%) | 134.678 → 135.422 (-0.55%) | 1097.177 → 1100.138 (-0.27%) |
-| Go paralelo, unbuffered, W=1 [A] | 16.845 → 16.852 (-0.04%) | 134.678 → 132.591 (+1.55%) | 1097.177 → 1143.712 (-4.24%) |
-| Go paralelo, block16, W=2 [A] | 8.999 → 9.161 (-1.80%) | 68.424 → 69.449 (-1.50%) | 579.514 → 593.943 (-2.49%) |
-| Go paralelo, unbuffered, W=2 [A] | 8.999 → 9.257 (-2.86%) | 68.424 → 69.904 (-2.16%) | 579.514 → 547.640 (+5.50%) |
-| Go paralelo, block16, W=4 [A] | 5.238 → 6.031 (-15.14%) | 46.358 → 42.442 (+8.45%) | 306.048 → 305.963 (+0.03%) |
-| Go paralelo, unbuffered, W=4 [A] | 5.238 → 6.716 (-28.22%) | 46.358 → 45.315 (+2.25%) | 306.048 → 305.184 (+0.28%) |
-
-Interpretación limitada a estos intentos:
-
-- C: la tabla B es la comparación controlada; A no se utiliza para atribuir
-  ganancias a `restrict`. Los reportes de GCC documentan el código generado,
-  sin garantizar el resultado en MSVC.
-- Go secuencial: `row_slices` reduce la mediana en N=512/1024; en N=256 la
-  diferencia es pequeña respecto a la dispersión. Se debe evaluar la oportunidad
-  equivalente en el kernel paralelo antes de promover una mejora solo secuencial.
-- OpenMP: el resultado depende de N/T; no se cambia la política de producción
-  ni se extrapola el kernel local a MPI. Se conservan también las regresiones.
-- Go paralelo: las variaciones de bloque/canal no mejoran consistentemente todos
-  los presupuestos; en N=1024/W4 la diferencia de medianas es menor al 0.3%.
-- Asignaciones N=17: el kernel secuencial base y con slices registra 0 por llamada;
-  la API `Multiply` registra 1. La coordinación del pool registra 6/7/9 con
-  W=1/2/4 en las variantes comprobadas. No se inventa una reducción donde ya eran cero.
-
-Ninguna candidata se ha promovido al código de campaña. El algoritmo actual
-se conserva a la espera de validación y comparativas Windows, como se acordó
-para el alcance de esta ejecución.
+No se midieron contadores de caché, pausas GC ni instrucciones SIMD emitidas en
+Windows. No se sostienen garantías sobre ellos. La tolerancia es
+`abs(obtenido-esperado) <= 1e-9 + 1e-9*abs(esperado)`, no igualdad por bits obligatoria.

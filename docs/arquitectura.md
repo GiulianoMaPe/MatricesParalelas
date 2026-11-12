@@ -2,8 +2,8 @@
 
 **Sprint:** 6
 **Entrega inicial de S6:** Integrante 8 — Roberto, PR #43.
-**Revisión técnica:** 11/11/2026, `feature/s06-optimizacion-evidencia`.
-**Estado:** algoritmo candidato conservado; aceptación Windows pendiente. Ver [optimización](optimizaciones.md) y [acta S6](sprints/sprint-06.md).
+**Revisión técnica:** 12/11/2026, `feature/s06-optimizacion-evidencia`.
+**Estado:** algoritmo de producción conservado y aceptado en Windows para el piloto S7. Ver [optimización](optimizaciones.md) y [acta S6](sprints/sprint-06.md).
 
 ---
 
@@ -505,16 +505,17 @@ solo después de T1. El vaciado explícito de C pertenece a total_s y no al kern
 La cuenta `2*N^3` es una convención de operaciones aritméticas del algoritmo,
 no un conteo de instrucciones ejecutadas ni una garantía de vectorización.
 
-Se conserva el algoritmo candidato actual para preparar S7. No se declara
-completado el cierre Windows de S6 a partir de las pruebas Linux. S7 fija la
-revisión experimental y sus parámetros después del piloto. Cualquier cambio
-posterior en cálculo o cronometraje exige repetir las observaciones afectadas.
+La aceptación Windows de S6 conserva el algoritmo actual tras las comparativas,
+regresión Debug/Release y perfiles MPI. S7 fija la revisión experimental y sus
+parámetros después del piloto. Cualquier cambio posterior en cálculo o
+cronometraje exige repetir las observaciones afectadas.
 
 ## 12. Evidencia y pendientes
 
-La evidencia local permite comprobar núcleos, candidatas y contratos portables;
-los [informes de memoria](memoria.md), [equidad](equidad_algoritmica.md) y
-[optimización](optimizaciones.md) indican su alcance. Quedan pendientes la
-batería completa MSVC/MS-MPI, las comparativas Windows P/T, los picos por rank
-y la aprobación formal. La congelación declarada en la entrega inicial de S6
-se entiende como propuesta de diseño hasta cumplir estos criterios.
+Se completaron los [ensayos Windows](cierre_s06_windows.md), la batería nativa,
+comparativas P/T, picos por rank/conjunto y la revisión encargada por el
+responsable. [Memoria](memoria.md), [equidad](equidad_algoritmica.md),
+[optimización](optimizaciones.md) y [acta](sprints/sprint-06.md) fijan el resultado.
+Se conserva i,k,j, row-major, reparto por filas, `schedule(static)`, bloque
+`ceil(N/W)` y canal W. La fijación del algoritmo S6 no congela todavía la
+automatización experimental ni los parámetros definitivos del piloto S7.

@@ -793,6 +793,33 @@ static int run_hybrid(const Options *options, int rank, int size, int threads) {
     }
     if (!local_ok) goto done;
 
+    /* Optional S6 diagnostics, after timing AND collective validation. Each
+     * rank owns its file; stdout remains the contractual twenty-column CSV.
+     * Empty ranks did not enter the timed OpenMP region: report zero there. */
+    {
+        const char *directory = getenv("S06_DIAGNOSTICS");
+        if (directory != NULL && directory[0] != '\0') {
+            char path[4096];
+            FILE *diagnostic = NULL;
+            DWORD_PTR process_mask = 0, system_mask = 0;
+            if (snprintf(path, sizeof(path), "%s/rank-%d.json", directory, rank) > 0 &&
+                fopen_s(&diagnostic, path, "wb") == 0 && diagnostic != NULL) {
+                GetProcessAffinityMask(GetCurrentProcess(), &process_mask, &system_mask);
+                fprintf(diagnostic,
+                        "{\"rank\":%d,\"pid\":%lu,\"rows\":%d,\"first_row\":%d,"
+                        "\"requested_threads\":%d,\"timed_observed_threads\":%d,"
+                        "\"kernel_s\":%.9f,\"total_s\":%.9f,"
+                        "\"process_affinity_mask\":%llu,\"system_affinity_mask\":%llu}\n",
+                        rank, (unsigned long)GetCurrentProcessId(), rows[rank], first[rank],
+                        threads, local_count == 0 ? 0 : observed_local,
+                        kernel_local, total_local, (unsigned long long)process_mask,
+                        (unsigned long long)system_mask);
+                fclose(diagnostic);
+            } else {
+                fprintf(stderr, "ERROR S06: no se pudo escribir diagnostico de rank %d.\n", rank);
+            }
+        }
+    }
     exit_code = EXIT_OK;
 
 done:

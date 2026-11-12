@@ -5,7 +5,10 @@ una base técnica preparada. Las cuatro versiones ejecutan y validan el producto
 real. El [cierre del Sprint 5](docs/sprints/sprint-05.md) reúne la validación
 integral, los errores controlados y 64 horas confirmadas. El cierre técnico está
 completado; quedan cuatro conformidades personales para el cierre administrativo.
-S6 conserva el algoritmo de producción y añade diagnósticos Linux, candidatas aisladas e informes de memoria/equidad. La aceptación MSVC/MS-MPI sigue pendiente; consultar [acta S6](docs/sprints/sprint-06.md).
+S6 conserva el algoritmo de producción y completa la aceptación Windows:
+entregas I4/I7/I8 integradas, comparativas, memoria MPI por rank y revisión.
+Consultar [acta S6](docs/sprints/sprint-06.md) y
+[evidencia Windows](docs/cierre_s06_windows.md). S7 recibe esta base para su piloto.
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |

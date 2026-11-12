@@ -11,3 +11,5 @@
 # Preserve diagnostic output and archived sources byte-for-byte (SHA-256).
 # Whitespace in captured diffs/compiler reports is part of the raw evidence.
 resultados/diagnostico/** -text -whitespace
+resultados/piloto/s06_windows_*/** -text -whitespace
+docs/optimizaciones_i7_original_s06.md -whitespace

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-count=3",
+    "-timeout=120s",
+    "./..."
+  ],
+  "exit_code": 0,
+  "stdout": "ok  \tmatrices/go_paralelo\t12.566s\n",
+  "stderr": ""
+}

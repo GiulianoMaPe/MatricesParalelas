@@ -1,0 +1,75 @@
+[
+  {
+    "elapsed_s": 0.009603200000128709,
+    "processes": [],
+    "simultaneous_working_set_bytes": 0,
+    "simultaneous_private_bytes": 0
+  },
+  {
+    "elapsed_s": 0.03511400000024878,
+    "processes": [
+      {
+        "pid": 8560,
+        "working_set_bytes": 2498560,
+        "peak_working_set_bytes": 2498560,
+        "private_bytes": 446464,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 2498560,
+    "simultaneous_private_bytes": 446464
+  },
+  {
+    "elapsed_s": 0.0607665000002271,
+    "processes": [
+      {
+        "pid": 8560,
+        "working_set_bytes": 7909376,
+        "peak_working_set_bytes": 7917568,
+        "private_bytes": 1712128,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      },
+      {
+        "pid": 3404,
+        "working_set_bytes": 6905856,
+        "peak_working_set_bytes": 6905856,
+        "private_bytes": 1536000,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 14815232,
+    "simultaneous_private_bytes": 3248128
+  },
+  {
+    "elapsed_s": 0.08679579999989073,
+    "processes": [
+      {
+        "pid": 8560,
+        "working_set_bytes": 8495104,
+        "peak_working_set_bytes": 8495104,
+        "private_bytes": 2928640,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      },
+      {
+        "pid": 3404,
+        "working_set_bytes": 9859072,
+        "peak_working_set_bytes": 9859072,
+        "private_bytes": 4505600,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 18354176,
+    "simultaneous_private_bytes": 7434240
+  },
+  {
+    "elapsed_s": 0.1143448000002536,
+    "processes": [],
+    "simultaneous_working_set_bytes": 0,
+    "simultaneous_private_bytes": 0
+  }
+]

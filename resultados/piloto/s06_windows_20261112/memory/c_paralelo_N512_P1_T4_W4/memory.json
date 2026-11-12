@@ -1,0 +1,33 @@
+{
+  "command": [
+    "C:\\Program Files\\Microsoft MPI\\Bin\\mpiexec.exe",
+    "-affinity_layout",
+    "0",
+    "-n",
+    "1",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release\\c_paralelo.exe",
+    "--n",
+    "512",
+    "--seed",
+    "42"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_s": 0.8927363999996487,
+  "processes": [
+    {
+      "pid": 12148,
+      "working_set_bytes": 19038208,
+      "peak_working_set_bytes": 21221376,
+      "private_bytes": 14573568,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 14573568
+    }
+  ],
+  "max_simultaneous_working_set_bytes": 19038208,
+  "max_simultaneous_private_bytes": 14573568,
+  "remaining_pids": [],
+  "sample_count": 33,
+  "maximum_sample_gap_s": 0.02992709999989529
+}
