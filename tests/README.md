@@ -89,3 +89,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\sprint05_errors_
 
 MPI requiere permiso para lanzar procesos de MS-MPI. Una restricción del
 entorno se reporta como fallo; no se omite la prueba ni se presenta como éxito.
+
+## Sprint 7 — caso `c_paralelo` del script de campaña
+
+`bench_c_paralelo_test.ps1` prueba las funciones puras de
+`scripts/bench_windows.ps1` sin MSVC ni MS-MPI: cabecera y parser CSV,
+validación de configuración/P/T/`observed_threads`/tiempos, filas de fallo sin
+tiempos inventados, resolución de configuraciones por núcleos físicos,
+exclusiones por memoria, `plan.csv`, `entorno.json` y el lock de campaña.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_c_paralelo_test.ps1
+```
+
+El script hace dot-source de `bench_windows.ps1` y ejecuta 23 pruebas. No sustituye a
+la campaña real: esta requiere compilar Release, MS-MPI y permisos para lanzar
+procesos.
+
