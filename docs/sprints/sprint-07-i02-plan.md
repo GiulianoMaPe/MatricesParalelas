@@ -547,7 +547,7 @@ genera conflictos con I1/I3/I4/I5.
 
 ---
 
-## 12. Comandos de referencia
+## 11. Comandos de referencia
 
 ```powershell
 # Compilar Release de la versión híbrida
@@ -569,7 +569,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.
 
 ---
 
-## 13. Decisiones resueltas
+## 12. Decisiones resueltas
 
 1. **Base de S6 / commit a entregar:** no se fija un hash en el plan. El script
    deriva `HEAD` en tiempo de ejecución y lo registra junto al estado limpio o
@@ -595,7 +595,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.
 
 ---
 
-## 14. Estado de implementación (PR de I2)
+## 13. Estado de implementación (PR de I2)
 
 Implementado en `scripts/bench_windows.ps1`:
 
@@ -637,7 +637,7 @@ las filas antes de marcar el entregable como validado.
 
 ---
 
-## 15. Checklist de cierre
+## 14. Checklist de cierre
 
 - [x] Commit derivado en tiempo de ejecución y registrado con estado/diff.
 - [x] `scripts/bench_windows.ps1` ejecuta `c_paralelo` con P × T.
