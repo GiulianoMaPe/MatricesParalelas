@@ -101,7 +101,7 @@ coordinación).
 ## Registro de cierre
 
 - Participantes y horas reales: pendiente.
-- Issues y pull requests: pendiente.
+- Issues y pull requests: I2 — [PR #51](https://github.com/GiulianoMaPe/MatricesParalelas/pull/51), pendiente de revisión de I1.
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
