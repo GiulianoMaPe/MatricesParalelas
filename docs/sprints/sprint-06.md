@@ -42,7 +42,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de medición del tamaño de bloque y del coste del canal, 3 h de ajuste de bloques y cantidad de workers, 1 h de revisión cruzada a I5 (Fernando, `docs/memoria.md`) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s06-i04-granularidad-go`. La revisión corresponde a I3 (Giuliano) según la rotación.
+- **Issues y pull requests:** rama de trabajo `feature/s06-i04-granularidad-go`; [PR #45](https://github.com/GiulianoMaPe/MatricesParalelas/pull/45). La revisión corresponde a I3 (Giuliano) según la rotación.
 
 - **Pruebas y evidencias:** entregable [Comparativa de granularidad Go](../granularidad_go.md).
   - **Cambio en el código:** en [workers.go](../../go_paralelo/workers.go), `multiplyParallelKernelBlocks` y `dispatchRowBlocksOfSize` reciben el tamaño de bloque explícito. El camino canónico sigue usando `ceil(N/W)`.
