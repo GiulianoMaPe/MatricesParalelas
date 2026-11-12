@@ -58,10 +58,11 @@ function Validate-CsvRow {
         }
     }
 
-    # Parse data row — handle quoted fields
+    # Parse data row — handle quoted fields and reject malformed quoting.
     $fields = @()
     $current = ''
     $inQuote = $false
+    $quoteClosed = $false
     for ($ci = 0; $ci -lt $DataLine.Length; $ci++) {
         $ch = $DataLine[$ci]
         if ($inQuote) {
@@ -71,20 +72,34 @@ function Validate-CsvRow {
                     $ci++
                 } else {
                     $inQuote = $false
+                    $quoteClosed = $true
                 }
             } else {
                 $current += $ch
             }
         } else {
             if ($ch -eq '"') {
+                if ($current.Length -gt 0 -or $quoteClosed) {
+                    [Console]::Error.WriteLine("ERROR: comilla CSV fuera de lugar en posición $ci.")
+                    return $null
+                }
                 $inQuote = $true
             } elseif ($ch -eq ',') {
                 $fields += $current
                 $current = ''
+                $quoteClosed = $false
             } else {
+                if ($quoteClosed) {
+                    [Console]::Error.WriteLine("ERROR: texto posterior a un campo CSV entrecomillado en posición $ci.")
+                    return $null
+                }
                 $current += $ch
             }
         }
+    }
+    if ($inQuote) {
+        [Console]::Error.WriteLine('ERROR: campo CSV con comillas sin cerrar.')
+        return $null
     }
     $fields += $current
 
@@ -98,6 +113,56 @@ function Validate-CsvRow {
         $row[$script:CsvHeader[$i]] = $fields[$i]
     }
 
+    # Validate reproducibility metadata and numeric fields common to all builds.
+    if ($row['timestamp'] -notmatch '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$') {
+        [Console]::Error.WriteLine("ERROR: timestamp='$($row['timestamp'])' no tiene formato UTC ISO 8601.")
+        return $null
+    }
+    $parsedTimestamp = [datetime]::MinValue
+    if (-not [datetime]::TryParseExact($row['timestamp'], 'yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref]$parsedTimestamp)) {
+        [Console]::Error.WriteLine("ERROR: timestamp='$($row['timestamp'])' no es una fecha válida.")
+        return $null
+    }
+    if ($row['commit'] -notmatch '^[0-9a-fA-F]{7,40}$') {
+        [Console]::Error.WriteLine("ERROR: commit='$($row['commit'])' no es un hash hexadecimal de 7 a 40 caracteres.")
+        return $null
+    }
+    foreach ($fieldName in @('hostname','cpu_model','os_version')) {
+        if ([string]::IsNullOrWhiteSpace($row[$fieldName])) {
+            [Console]::Error.WriteLine("ERROR: el campo obligatorio '$fieldName' está vacío.")
+            return $null
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($row['configuration'])) {
+        [Console]::Error.WriteLine('ERROR: configuration está vacío.')
+        return $null
+    }
+
+    $ramGb = 0.0
+    if (-not [double]::TryParse($row['ram_gb'], [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$ramGb) -or
+        [double]::IsNaN($ramGb) -or [double]::IsInfinity($ramGb) -or $ramGb -le 0.0) {
+        [Console]::Error.WriteLine("ERROR: ram_gb='$($row['ram_gb'])' debe ser un decimal finito positivo.")
+        return $null
+    }
+    foreach ($fieldName in @('n','processes','threads','observed_threads','workers')) {
+        $positiveValue = 0
+        if (-not [int]::TryParse($row[$fieldName], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$positiveValue) -or $positiveValue -lt 1) {
+            [Console]::Error.WriteLine("ERROR: $fieldName='$($row[$fieldName])' debe ser un entero positivo.")
+            return $null
+        }
+    }
+    $gomaxprocs = 0
+    if ($ExpectedVersion -like 'c_*') {
+        if ($row['gomaxprocs'] -ne '' -and
+            (-not [int]::TryParse($row['gomaxprocs'], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$gomaxprocs) -or $gomaxprocs -lt 1)) {
+            [Console]::Error.WriteLine("ERROR: gomaxprocs='$($row['gomaxprocs'])' debe estar vacío o ser un entero positivo para C.")
+            return $null
+        }
+    } elseif (-not [int]::TryParse($row['gomaxprocs'], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$gomaxprocs) -or $gomaxprocs -lt 1) {
+        [Console]::Error.WriteLine("ERROR: gomaxprocs='$($row['gomaxprocs'])' debe ser un entero positivo para Go.")
+        return $null
+    }
+
     # Validate version
     if ($row['version'] -ne $ExpectedVersion) {
         [Console]::Error.WriteLine("ERROR: version='$($row['version'])', se esperaba '$ExpectedVersion'.")
@@ -105,19 +170,22 @@ function Validate-CsvRow {
     }
 
     # Validate N
-    if ([int]$row['n'] -ne $ExpectedN) {
+    $actualN = 0
+    if (-not [int]::TryParse($row['n'], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$actualN) -or $actualN -ne $ExpectedN) {
         [Console]::Error.WriteLine("ERROR: n=$($row['n']), se esperaba $ExpectedN.")
         return $null
     }
 
     # Validate seed
-    if ([uint32]$row['seed'] -ne $ExpectedSeed) {
+    $actualSeed = [uint32]0
+    if (-not [uint32]::TryParse($row['seed'], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$actualSeed) -or $actualSeed -ne $ExpectedSeed) {
         [Console]::Error.WriteLine("ERROR: seed=$($row['seed']), se esperaba $ExpectedSeed.")
         return $null
     }
 
     # Validate repetition
-    if ([int]$row['repetition'] -ne $ExpectedRepetition) {
+    $actualRepetition = 0
+    if (-not [int]::TryParse($row['repetition'], [Globalization.NumberStyles]::None, [Globalization.CultureInfo]::InvariantCulture, [ref]$actualRepetition) -or $actualRepetition -lt 0 -or $actualRepetition -gt 5 -or $actualRepetition -ne $ExpectedRepetition) {
         [Console]::Error.WriteLine("ERROR: repetition=$($row['repetition']), se esperaba $ExpectedRepetition.")
         return $null
     }
@@ -136,8 +204,13 @@ function Validate-CsvRow {
     }
 
     # Validate kernel_s and total_s (PS 5.1 compatible — no [double]::IsFinite)
-    $kernelS = [double]$row['kernel_s']
-    $totalS  = [double]$row['total_s']
+    $kernelS = 0.0
+    $totalS  = 0.0
+    if (-not [double]::TryParse($row['kernel_s'], [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$kernelS) -or
+        -not [double]::TryParse($row['total_s'], [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$totalS)) {
+        [Console]::Error.WriteLine('ERROR: kernel_s y total_s deben ser números decimales con punto.')
+        return $null
+    }
 
     if ([double]::IsNaN($kernelS) -or [double]::IsInfinity($kernelS) -or $kernelS -lt 0.0) {
         [Console]::Error.WriteLine("ERROR: kernel_s=$kernelS invalido (no finito o negativo).")
