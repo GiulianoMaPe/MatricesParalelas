@@ -13,3 +13,4 @@
 resultados/diagnostico/** -text -whitespace
 resultados/piloto/s06_windows_*/** -text -whitespace
 docs/optimizaciones_i7_original_s06.md -whitespace
+resultados/experimentos/granularidad_go/** -whitespace
