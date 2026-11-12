@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: entrega técnica de I3 validada en Windows y aprobada por I2; coordinación con I5 pendiente. Las demás entregas y el cierre de equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -34,11 +34,61 @@ I1 a I4 trabajan en funciones separadas del script; I5 integra después de su re
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
+### I3 · Giuliano · 12/11/2026
+
+- Rama: `feature/s07-i03-medicion-go-secuencial`, desde `352858d`.
+- Implementación: caso `-Version go_secuencial` en `scripts/bench_windows.ps1`.
+  Ejecuta exclusivamente `go_secuencial/build/Release/go_secuencial.exe`, con
+  `--n`, `--seed`, `--repetition` y `GOMAXPROCS=1` en el proceso hijo.
+- Comprueba PE x64, metadatos VCS/HEAD, ausencia de opciones Debug/instrumentación,
+  SHA-256 antes/después, veinte columnas CSV, parámetros solicitados/efectivos y
+  tiempos internos. Registra calentamiento y cinco medidas; conserva stdout,
+  stderr, argumentos, PID, código real, timeout y estado del lote.
+- Validación local: **75 casos aprobados con PowerShell 7.4.6 sobre Linux**,
+  incluidos procesos controlados, stderr de 200000 bytes, terminación por timeout,
+  lotes sintéticos completos/fallidos y conservación de resultados parciales.
+  Estos datos sintéticos no son observaciones experimentales.
+- [Procedimiento, evidencia y límites](../validacion_s07_i03.md). Falta ejecutar
+  `tests/bench_go_secuencial_test.ps1 -WithExecutable` en Windows PowerShell 5.1
+  con Release recién compilado. No se acredita todavía aceptación Windows.
+- Integración: I5 puede invocar `Invoke-GoSequentialMeasurement` para cada fila
+  del plan general. `all`, C y Go paralelo mantienen salida 2 sin mediciones.
+- Revisión I2→I3 y coordinación con I5: pendientes de confirmación humana.
+  No se ejecutó el piloto ni se completaron tareas de otros integrantes.
+
+- Participantes y horas reales: I3 · Giuliano · **8 h reales**, declaradas por el integrante el 12/11/2026. Desglose no declarado; no se presume revisión ni coordinación completadas.
 - Issues y pull requests: pendiente.
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+### Actualización I3 · aceptación Windows · 12/11/2026
+
+- **Aceptación técnica individual ejecutada:** Windows PowerShell 5.1.26100.9711,
+  Go Release recién compilado, `tests/bench_go_secuencial_test.ps1 -WithExecutable`:
+  **81/81 casos OK**, incluidos 6 lotes reales, N=1/3/17 y semillas
+  0/4294967295 (un calentamiento y cinco medidas por lote).
+- Refactorización: despacho común en `scripts/bench_windows.ps1` y funciones
+  separadas en `bench_c_secuencial.ps1`, `bench_c_paralelo.ps1`,
+  `bench_go_secuencial.ps1`, `bench_go_paralelo.ps1`. Se conservan las funciones
+  de I1/I2/I4; se excluyó el despacho duplicado y el separador `=======` presentes
+  en la fuente remota de I2. No se importaron esos errores a la entrega.
+- Regresión Windows: I2 **23/23**, I4 **26/26**. Despachos reales de C secuencial
+  N=1, Go paralelo N=1/W=1 y Go secuencial N=256 terminan con código 0.
+  C paralelo N=1/P1_T1 genera su plan con `-DryRun`, código 0; esto no acredita
+  una campaña MPI real ni reemplaza la aceptación de I2.
+- Compatibilidad: `Repetitions` conserva el rango público 1..1000 de I2.
+  El caso Go secuencial exige exactamente 5 y calentamiento 1 antes de medir.
+  `all` rechaza sin mediciones: la campaña intercalada corresponde a I5.
+- [Evidencia persistente](../../resultados/diagnostico/s07-i03/aceptacion_windows_20261112/aceptacion.json):
+  entorno, commit de compilación, hash, logs, resumen de pruebas y CSV/bitácoras
+  de seis lotes reales más el ensayo N=256. Son ensayos de aceptación, no el piloto oficial.
+- **Horas reales I3: 8 h**, confirmadas por Giuliano; sin desglose inventado.
+- **Revisión I2→I3:** Sebastián aprobó el [PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934) el 12/11/2026.
+  La aceptación Windows y la corrección están publicadas en `dc9040e`. Sigue
+  pendiente confirmar la coordinación con I5; el sprint completo del equipo sigue abierto.
+- El registro anterior describe el estado previo; esta actualización sustituye
+  sus pendientes técnicos de Windows e integración individual y sus horas pendientes.
 
 ## Registros individuales
 
@@ -97,3 +147,19 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
   - Compatibilidad verificada con PowerShell 5.1.26100.
 
 - **Revisión y criterio de aceptación:** El caso `c_secuencial` de `bench_windows.ps1` genera CSV válido, respeta el protocolo de warmup + repeticiones, detecta y reporta errores, y no interfiere con las secciones reservadas para I2/I3/I4. Pendiente: revisión cruzada de I2 y aceptación del equipo.
+
+### Resolución de conflictos del PR #49 · 12/11/2026
+
+- Se incorporó `main` (`7cf0aae`, [PR #50 de I1](https://github.com/GiulianoMaPe/MatricesParalelas/pull/50)) a la rama de I3.
+  Se conservaron íntegros el registro de Yessly y las tres funciones de C secuencial;
+  la comparación de sus definiciones PowerShell confirma que no cambian al pasar
+  a `bench_c_secuencial.ps1`. El despacho común y los módulos de I2/I3/I4 se mantienen.
+- Tras resolver los conflictos: **75/75 pruebas controladas I3** y **23/23 pruebas
+  de funciones I2** aprobadas en PowerShell 7.4.6 Linux; estas últimas con `TEMP=/tmp`.
+  Los ocho scripts de benchmark/pruebas no tienen errores de sintaxis.
+- Se verificó la evidencia Windows ya publicada en `dc9040e`: 81 pruebas OK y
+  42 observaciones válidas repartidas en siete lotes completos. No se repitieron
+  aquí los ejecutables Windows; el código de los medidores se conserva sin cambios.
+- [Sebastián aprobó el PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934).
+  Giuliano autorizó resolver los conflictos y fusionarlo a `main`. La coordinación
+  con I5 y la campaña integrada siguen pendientes; no se declara cerrado S7.
