@@ -1,0 +1,12 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-race",
+    "-count=1",
+    "./..."
+  ],
+  "exit_code": 2,
+  "stdout": "",
+  "stderr": "go: -race requires cgo; enable cgo by setting CGO_ENABLED=1\n"
+}

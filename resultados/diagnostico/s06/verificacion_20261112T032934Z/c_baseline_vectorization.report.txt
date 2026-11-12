@@ -1,0 +1,92 @@
+c_secuencial/src/matrix.c:53:19: missed: couldn't vectorize loop
+c_secuencial/src/matrix.c:54:14: missed: not vectorized: no vectype for stmt: _10 = *_9;
+ scalar_type: double
+c_secuencial/src/matrix.c:44:5: note: vectorized 0 loops in function.
+c_secuencial/src/matrix.c:53:19: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:53:19: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+c_secuencial/src/matrix.c:14:31: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:14:31: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+c_secuencial/src/matrix.c:27:47: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:27:47: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+c_secuencial/src/matrix.c:38:1: note: ***** Analysis failed with vector mode V4SI
+c_secuencial/src/matrix.c:38:1: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V4SI
+c_secuencial/src/matrix.c:42:1: note: ***** Analysis failed with vector mode V4SI
+c_secuencial/src/matrix.c:42:1: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V4SI
+c_secuencial/src/matrix.c:44:5: note: vectorized 0 loops in function.
+c_secuencial/src/matrix.c:44:5: missed: statement clobbers memory: _1 = matrix_validate.part.0 (matrix_3(D));
+c_secuencial/src/matrix.c:44:5: note: ***** Analysis failed with vector mode VOID
+c_secuencial/src/matrix.c:73:22: missed: statement clobbers memory: data_17 = calloc (powmult_36, 8);
+c_secuencial/src/matrix.c:75:15: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:75:15: note: ***** The result for vector mode V16QI would be the same
+c_secuencial/src/matrix.c:75:15: note: ***** Re-trying analysis with vector mode V8QI
+c_secuencial/src/matrix.c:75:15: note: ***** Analysis failed with vector mode V8QI
+c_secuencial/src/matrix.c:75:15: note: ***** Re-trying analysis with vector mode V4QI
+c_secuencial/src/matrix.c:75:15: note: ***** Analysis failed with vector mode V4QI
+c_secuencial/src/matrix.c:83:5: missed: statement clobbers memory: free (_1);
+c_secuencial/src/matrix.c:84:15: note: ***** Analysis succeeded with vector mode V2DI
+c_secuencial/src/matrix.c:84:15: note: SLPing BB part
+c_secuencial/src/matrix.c:84:15: note: Costing subgraph: 
+c_secuencial/src/matrix.c:84:15: note: node 0x2e6bc278 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+c_secuencial/src/matrix.c:84:15: note: op template: matrix_3(D)->n = 0;
+c_secuencial/src/matrix.c:84:15: note: 	stmt 0 matrix_3(D)->n = 0;
+c_secuencial/src/matrix.c:84:15: note: 	stmt 1 matrix_3(D)->length = 0;
+c_secuencial/src/matrix.c:84:15: note: 	children 0x2e6bc318
+c_secuencial/src/matrix.c:84:15: note: node (constant) 0x2e6bc318 (max_nunits=1, refcnt=1) vector(2) long unsigned int
+c_secuencial/src/matrix.c:84:15: note: 	{ 0, 0 }
+c_secuencial/src/matrix.c:84:15: note: Cost model analysis: 
+c_secuencial/src/matrix.c:84:15: note: Cost model analysis for part in loop 0:
+  Vector cost: 24
+  Scalar cost: 24
+c_secuencial/src/matrix.c:84:15: note: Basic block will be vectorized using SLP
+c_secuencial/src/matrix.c:84:15: optimized: basic block part vectorized using 16 byte vectors
+c_secuencial/src/matrix.c:84:15: note: Vectorizing SLP tree:
+c_secuencial/src/matrix.c:84:15: note: node 0x2e6bc278 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+c_secuencial/src/matrix.c:84:15: note: op template: matrix_3(D)->n = 0;
+c_secuencial/src/matrix.c:84:15: note: 	stmt 0 matrix_3(D)->n = 0;
+c_secuencial/src/matrix.c:84:15: note: 	stmt 1 matrix_3(D)->length = 0;
+c_secuencial/src/matrix.c:84:15: note: 	children 0x2e6bc318
+c_secuencial/src/matrix.c:84:15: note: node (constant) 0x2e6bc318 (max_nunits=1, refcnt=1) vector(2) long unsigned int
+c_secuencial/src/matrix.c:84:15: note: 	{ 0, 0 }
+c_secuencial/src/matrix.c:84:15: note: ------>vectorizing SLP node starting from: matrix_3(D)->n = 0;
+c_secuencial/src/matrix.c:84:15: note: transform store.
+c_secuencial/src/matrix.c:84:15: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: matrix_3(D)->n
+c_secuencial/src/matrix.c:84:15: note: created vectp.58_9
+c_secuencial/src/matrix.c:84:15: note: add new stmt: MEM <vector(2) long unsigned int> [(long unsigned int *)vectp.58_9] = { 0, 0 };
+c_secuencial/src/matrix.c:84:15: note: vectorizing stmts using SLP.
+c_secuencial/src/matrix.c:84:15: note: ***** The result for vector mode V16QI would be the same
+c_secuencial/src/matrix.c:96:5: missed: statement clobbers memory: _9 = matrix_validate.part.0 (a_4(D));
+c_secuencial/src/matrix.c:96:5: missed: statement clobbers memory: _6 = matrix_validate.part.0 (b_5(D));
+c_secuencial/src/matrix.c:107:44: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:107:44: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+c_secuencial/src/matrix.c:115:5: missed: statement clobbers memory: memset (c_4(D), 0, _1);
+c_secuencial/src/matrix.c:116:1: note: ***** Analysis failed with vector mode VOID
+c_secuencial/src/matrix.c:120:19: missed: couldn't vectorize loop
+c_secuencial/src/matrix.c:120:19: missed: not vectorized: multiple nested loops.
+c_secuencial/src/matrix.c:123:23: missed: couldn't vectorize loop
+c_secuencial/src/matrix.c:127:26: missed: not vectorized: complicated access pattern.
+c_secuencial/src/matrix.c:126:27: missed: couldn't vectorize loop
+c_secuencial/src/matrix.c:127:22: missed: not vectorized: no vectype for stmt: _6 = *_5;
+ scalar_type: double
+c_secuencial/src/matrix.c:118:6: note: vectorized 0 loops in function.
+c_secuencial/src/matrix.c:118:6: note: ***** Analysis failed with vector mode V2DF
+c_secuencial/src/matrix.c:118:6: note: ***** The result for vector mode V16QI would be the same
+c_secuencial/src/matrix.c:118:6: note: ***** Re-trying analysis with vector mode V8QI
+c_secuencial/src/matrix.c:118:6: note: ***** Analysis failed with vector mode V8QI
+c_secuencial/src/matrix.c:118:6: note: ***** Re-trying analysis with vector mode V4QI
+c_secuencial/src/matrix.c:118:6: note: ***** Analysis failed with vector mode V4QI
+c_secuencial/src/matrix.c:135:19: missed: couldn't vectorize loop
+c_secuencial/src/matrix.c:136:14: missed: not vectorized: no vectype for stmt: _18 = *_17;
+ scalar_type: const double
+c_secuencial/src/matrix.c:141:5: note: vectorized 0 loops in function.
+c_secuencial/src/matrix.c:143:18: missed: statement clobbers memory: status_8 = matrix_multiply_validate (a_4(D), b_5(D), c_6(D), c_length_7(D));
+c_secuencial/src/matrix.c:115:5: missed: statement clobbers memory: memset (c_6(D), 0, _11);
+c_secuencial/src/matrix.c:146:5: missed: statement clobbers memory: matrix_accumulate (_14, _13, c_6(D), _12);
+c_secuencial/src/matrix.c:147:48: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:147:48: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+c_secuencial/src/matrix.c:159:12: missed: statement clobbers memory: _18 = matrix_multiply_checked (&matrix_a, &matrix_b, c_16(D), powmult_1);
+c_secuencial/src/matrix.c:155:29: note: ***** Analysis failed with vector mode V2DI
+c_secuencial/src/matrix.c:155:29: note: ***** The result for vector mode V16QI would be the same
+c_secuencial/src/matrix.c:155:29: note: ***** Re-trying analysis with vector mode V8QI
+c_secuencial/src/matrix.c:155:29: note: ***** Analysis failed with vector mode V8QI
+c_secuencial/src/matrix.c:155:29: note: ***** Re-trying analysis with vector mode V4QI
+c_secuencial/src/matrix.c:155:29: note: ***** Analysis failed with vector mode V4QI

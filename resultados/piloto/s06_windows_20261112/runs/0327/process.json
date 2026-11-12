@@ -1,0 +1,14 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "--n",
+    "512",
+    "--seed",
+    "42",
+    "--repetition",
+    "3"
+  ],
+  "exit_code": 0,
+  "stdout": "timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status\n2026-11-12T05:27:26Z,go_secuencial,72417b989c5ef8792970f57724a8f7bd639ca7e2,PCG1UL14N0,AMD Ryzen 5 3600 6-Core Processor,15.912,Windows 11 Pro build 26300.9711,go_secuencial,512,42,1,1,1,1,1,3,false,0.099509000,0.099509000,OK\n",
+  "stderr": ""
+}

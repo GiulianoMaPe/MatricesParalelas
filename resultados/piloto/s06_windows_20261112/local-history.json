@@ -1,0 +1,14 @@
+[
+  {
+    "sha": "cb2e011088b3ab294b29b7210af2935eb06be938",
+    "raw_commit": "tree cb4c47fa14658a57ee93052fa6a5ca3e7db9416c\nparent b25aa392760426af5f9a4480998c17bde5b1dbb5\nparent 595b1514f6a5f40074c1591b9f9651884637b142\nauthor Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460170 -0500\ncommitter Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460170 -0500\n\nIntegrar entrega I4 de granularidad Go para cierre S6\n"
+  },
+  {
+    "sha": "756d7a4c455df7d25416f3dd96b539e32cf795f6",
+    "raw_commit": "tree 3d5765bdbda0c4866a0ec93106ef3dde719bf698\nparent cb2e011088b3ab294b29b7210af2935eb06be938\nparent 0976bb15e3614817260248e021fc17332a666195\nauthor Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460171 -0500\ncommitter Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460171 -0500\n\nIntegrar entrega I7 de decisiones y revision I8 para cierre S6\n"
+  },
+  {
+    "sha": "72417b989c5ef8792970f57724a8f7bd639ca7e2",
+    "raw_commit": "tree ee907c67562e6f1157d427db5b878ea191b37386\nparent 756d7a4c455df7d25416f3dd96b539e32cf795f6\nauthor Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460338 -0500\ncommitter Giuliano Macchiavello <giulianomape.1806.14@gmail.com> 1794460338 -0500\n\nAgregar captura exploratoria Windows y diagnostico MPI por rank para S6\n"
+  }
+]

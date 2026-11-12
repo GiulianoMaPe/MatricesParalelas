@@ -1,0 +1,10 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\c_openmp_local.exe",
+    "512",
+    "baseline"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"schema\":\"s06-laboratory-v1\",\"version\":\"c_openmp_local\",\"variant\":\"baseline\",\"n\":512,\"seed\":42,\"workers\":4,\"observed_threads\":4,\"kernel_s\":0.034200200,\"total_s\":0.034485700,\"validation_status\":\"OK\"}\r\n",
+  "stderr": ""
+}

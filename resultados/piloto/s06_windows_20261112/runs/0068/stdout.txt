@@ -1,0 +1,2 @@
+timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
+2026-11-12T05:19:18Z,c_paralelo,72417b989c5ef8792970f57724a8f7bd639ca7e2,PCG1UL14N0,AMD Ryzen 5 3600 6-Core Processor              ,15.912,Windows 10 Pro build 26300.9711,c_paralelo_P2_T1,256,42,2,1,1,1,,0,true,0.005028300,0.005809800,OK

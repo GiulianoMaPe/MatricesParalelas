@@ -1,0 +1,2 @@
+ERROR: OMP_DYNAMIC debe ser FALSE para fijar el numero de hilos.
+ERROR: configuracion OpenMP invalida en algun rango.

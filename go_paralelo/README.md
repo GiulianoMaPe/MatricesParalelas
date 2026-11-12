@@ -17,7 +17,8 @@ conserva la prueba de instalación; por sí sola no verifica el producto.
 | `MaxWorkers` | Tope único de workers (1024) para la API y la CLI. |
 | `validateKernelBuffers(a, b, c, workers, durations)` | Comprueba en O(1), fuera de `total_s`, las precondiciones del kernel: `0 < workers <= MaxWorkers`, un slot de tiempo por worker, N*N elementos en A, B y C, y C sin memoria compartida con A ni con B. |
 | `multiplyParallelKernel(a, b, c, workers, durations)` | Coordina canal, workers, reparto, cierre y espera sobre matrices preparadas. Permite medir sin incluir reservas y validaciones. |
-| `dispatchRowBlocks(n, workers, tasks)` | Envía los bloques; no cierra el canal. Requiere consumidores activos o buffer suficiente. |
+| `dispatchRowBlocks(n, workers, tasks)` | Envía los bloques canónicos de `ceil(N/workers)` filas; no cierra el canal. Requiere consumidores activos o buffer suficiente. |
+| `multiplyParallelKernelBlocks` / `dispatchRowBlocksOfSize` | Igual que las anteriores, pero con un tamaño de bloque explícito. Solo las usa la [comparativa de granularidad](../docs/granularidad_go.md); el ejecutable usa siempre el bloque canónico. |
 | `worker` / `multiplyBlock` | Consumen tareas y acumulan solo en sus filas de C usando bucles `i,k,j`. |
 
 `MultiplyParallel` rechaza workers no positivos (`ErrInvalidWorkers`) o mayores

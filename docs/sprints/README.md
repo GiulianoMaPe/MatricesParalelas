@@ -82,3 +82,10 @@ y 296 invocaciones de compatibilidad C/Go entre ambas configuraciones. El
 responsable confirmó 8 h reales por integrante (64 h); el acta reconstruye el
 desglose e identifica cuatro conformidades personales aún pendientes:
 I3→I4, I5→I6, I6→I7 e I8→I1. S6 parte de esta base para optimizar con evidencia.
+
+Al 12/11/2026, S6 completa la aceptación Windows y la integración de las
+entregas I4/I7/I8, conservando la evidencia Linux por separado. La revisión de
+este cierre fue encargada expresamente a Codex por el responsable como excepción
+al flujo de revisión humana. El [acta S6](sprint-06.md) enlaza corridas originales,
+comparativas, memoria por rank, regresión, decisiones y horas realmente declaradas.
+La fijación del algoritmo no sustituye el piloto ni la congelación experimental S7.

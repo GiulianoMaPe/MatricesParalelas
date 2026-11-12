@@ -1,0 +1,377 @@
+[
+  {
+    "elapsed_s": 0.014267300000028627,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 8790016,
+        "peak_working_set_bytes": 8790016,
+        "private_bytes": 16879616,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 8790016,
+    "simultaneous_private_bytes": 16879616
+  },
+  {
+    "elapsed_s": 0.041621200000008685,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 11681792,
+        "peak_working_set_bytes": 11681792,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 11681792,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.07367970000041169,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 11747328,
+        "peak_working_set_bytes": 11747328,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 11747328,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.10353210000039326,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 11878400,
+        "peak_working_set_bytes": 11878400,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 11878400,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.1326734000003853,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12009472,
+        "peak_working_set_bytes": 12009472,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12009472,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.16015950000019075,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12140544,
+        "peak_working_set_bytes": 12140544,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12140544,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.1881054000000404,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12206080,
+        "peak_working_set_bytes": 12206080,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12206080,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.2156542000002446,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12337152,
+        "peak_working_set_bytes": 12337152,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12337152,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.24253250000037951,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12402688,
+        "peak_working_set_bytes": 12402688,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12402688,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.2703887000002396,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12468224,
+        "peak_working_set_bytes": 12468224,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12468224,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.29673440000033224,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12599296,
+        "peak_working_set_bytes": 12599296,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12599296,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.32420600000023114,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12648448,
+        "peak_working_set_bytes": 12648448,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12648448,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.35230090000004566,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12795904,
+        "peak_working_set_bytes": 12795904,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12795904,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.3790617000004204,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12861440,
+        "peak_working_set_bytes": 12861440,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12861440,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.40644590000010794,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 12926976,
+        "peak_working_set_bytes": 12926976,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 12926976,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.4335724000002301,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13058048,
+        "peak_working_set_bytes": 13058048,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13058048,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.46100790000036795,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13123584,
+        "peak_working_set_bytes": 13123584,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13123584,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.4887721000000056,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13254656,
+        "peak_working_set_bytes": 13254656,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13254656,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.5160183000002689,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13320192,
+        "peak_working_set_bytes": 13320192,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13320192,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.5437342000000172,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13451264,
+        "peak_working_set_bytes": 13451264,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13451264,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.5711581000000479,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13516800,
+        "peak_working_set_bytes": 13516800,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13516800,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.5986165000003894,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 13647872,
+        "peak_working_set_bytes": 13647872,
+        "private_bytes": 18980864,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 13647872,
+    "simultaneous_private_bytes": 18980864
+  },
+  {
+    "elapsed_s": 0.6262288000002627,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 15765504,
+        "peak_working_set_bytes": 15765504,
+        "private_bytes": 21090304,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 15765504,
+    "simultaneous_private_bytes": 21090304
+  },
+  {
+    "elapsed_s": 0.6539961000003132,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 15765504,
+        "peak_working_set_bytes": 15765504,
+        "private_bytes": 21090304,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 15765504,
+    "simultaneous_private_bytes": 21090304
+  },
+  {
+    "elapsed_s": 0.6818494000003739,
+    "processes": [
+      {
+        "pid": 9696,
+        "working_set_bytes": 15765504,
+        "peak_working_set_bytes": 15765504,
+        "private_bytes": 21090304,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 15765504,
+    "simultaneous_private_bytes": 21090304
+  }
+]

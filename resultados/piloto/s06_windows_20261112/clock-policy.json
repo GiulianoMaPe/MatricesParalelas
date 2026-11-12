@@ -1,0 +1,366 @@
+{
+  "minimum_total_and_kernel_seconds": 0.1,
+  "reason": "Observed time.Now minimum step 495.6 us; conservative short-duration diagnostic policy, no raw rows removed",
+  "groups": [
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "row_slices",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 256,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 256,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 256,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 256,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 256,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "row_slices",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 512,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 512,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 512,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 512,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 2,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 512,
+      "workers": 4,
+      "comparison_eligible": false
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_secuencial",
+      "variant": "row_slices",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 2,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 1024,
+      "workers": 2,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 1024,
+      "workers": 2,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 4,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "block16",
+      "n": 1024,
+      "workers": 4,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "laboratory",
+      "version": "go_paralelo",
+      "variant": "unbuffered",
+      "n": 1024,
+      "workers": 4,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "program",
+      "version": "go_secuencial",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 1,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 2,
+      "comparison_eligible": true
+    },
+    {
+      "kind": "program",
+      "version": "go_paralelo",
+      "variant": "baseline",
+      "n": 1024,
+      "workers": 4,
+      "comparison_eligible": true
+    }
+  ]
+}

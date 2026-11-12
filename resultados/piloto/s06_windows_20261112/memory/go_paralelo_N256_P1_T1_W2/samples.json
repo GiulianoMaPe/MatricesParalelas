@@ -1,0 +1,32 @@
+[
+  {
+    "elapsed_s": 0.014515300000311981,
+    "processes": [
+      {
+        "pid": 2636,
+        "working_set_bytes": 7077888,
+        "peak_working_set_bytes": 7077888,
+        "private_bytes": 13574144,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 7077888,
+    "simultaneous_private_bytes": 13574144
+  },
+  {
+    "elapsed_s": 0.04103630000008707,
+    "processes": [
+      {
+        "pid": 2636,
+        "working_set_bytes": 8089600,
+        "peak_working_set_bytes": 8089600,
+        "private_bytes": 14098432,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 8089600,
+    "simultaneous_private_bytes": 14098432
+  }
+]

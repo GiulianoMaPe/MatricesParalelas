@@ -1,0 +1,13 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-c",
+    "-o",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\go_paralelo.test.exe",
+    "."
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}

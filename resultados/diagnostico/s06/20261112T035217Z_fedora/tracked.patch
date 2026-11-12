@@ -1,0 +1,465 @@
+diff --git a/.gitignore b/.gitignore
+index 41943e2..c6ff7f8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -32,3 +32,6 @@ Desktop.ini
+ .idea
+ Guia_Sprints.md
+ tests/outputs/
++/PLAN_SPRINT_6.md
++/PLAN_SPRINT_7.md
++__pycache__/
+diff --git a/README.md b/README.md
+index 5dd24a8..87de5b6 100644
+--- a/README.md
++++ b/README.md
+@@ -5,7 +5,7 @@ una base técnica preparada. Las cuatro versiones ejecutan y validan el producto
+ real. El [cierre del Sprint 5](docs/sprints/sprint-05.md) reúne la validación
+ integral, los errores controlados y 64 horas confirmadas. El cierre técnico está
+ completado; quedan cuatro conformidades personales para el cierre administrativo.
+-S6 continúa con la optimización sustentada por mediciones.
++S6 conserva el algoritmo de producción y añade diagnósticos Linux, candidatas aisladas e informes de memoria/equidad. La aceptación MSVC/MS-MPI sigue pendiente; consultar [acta S6](docs/sprints/sprint-06.md).
+ 
+ | Versión | Tecnología | Estado |
+ | --- | --- | --- |
+diff --git a/docs/arquitectura.md b/docs/arquitectura.md
+index 7aa0698..667bdbd 100644
+--- a/docs/arquitectura.md
++++ b/docs/arquitectura.md
+@@ -1,8 +1,9 @@
+-# Arquitectura de las Versiones Paralelas: C (MPI + OpenMP) y Go (Goroutines + Canales
++# Arquitectura de las Versiones Paralelas: C (MPI + OpenMP) y Go (Goroutines + Canales)
+ 
+ **Sprint:** 6
+-**Autor:** Integrante 8 — Roberto
+-**Rama:** `feature/s06-i08-diseno-optimizaciones`
++**Entrega inicial de S6:** Integrante 8 — Roberto, PR #43.
++**Revisión técnica:** 11/11/2026, `feature/s06-optimizacion-evidencia`.
++**Estado:** algoritmo candidato conservado; aceptación Windows pendiente. Ver [optimización](optimizaciones.md) y [acta S6](sprints/sprint-06.md).
+ 
+ ---
+ 
+@@ -31,7 +32,7 @@ El objetivo central del proyecto es diseñar, implementar y comparar dos paradig
+ ### Principios Rectores Comunes
+ 
+ 1. **Representación de Datos:** Almacenamiento contiguo por filas (_row-major layout_) donde el elemento $(i, j)$ reside en la posición lineal $i \times N + j$. En C se utiliza `double` (64 bits, IEEE 754) y en Go `float64`.
+-2. **Núcleo Aritmético Canónico:** Orden de bucles $i \to k \to j$ en ambas implementaciones. Al fijar el elemento $A[i, k]$ en un registro/variable temporal, los accesos a las filas de $B$ y $C$ se realizan de forma estrictamente secuencial ($j$ consecutivo), maximizando la tasa de aciertos (_cache hits_) en las líneas de caché L1/L2.
++2. **Núcleo Aritmético Canónico:** Orden de bucles $i \to k \to j$ en ambas implementaciones. Al fijar el elemento $A[i, k]$ en un registro/variable temporal, los accesos a las filas de $B$ y $C$ se realizan de forma estrictamente secuencial ($j$ consecutivo), favoreciendo el recorrido contiguo. La tasa de aciertos requiere medición específica; no se deduce solo del orden de bucles.
+ 3. **Propiedad Exclusiva de Escritura:** Cada celda $C[i, j]$ es modificada por exactamente un hilo o worker. No se requieren primitivas de exclusión mutua de grano fino (como mutex o bloqueos atómicos) en la sección crítica aritmética.
+ 4. **Inmutabilidad de Entradas:** Las matrices $A$ y $B$ permanecen en solo lectura durante toda la computación; no sufren modificaciones ni se produce solapamiento destructivo (_buffer aliasing_).
+ 5. **Separación de Intervalos Temporales:** Aislamiento estricto de `kernel_s` (tiempo de cómputo aritmético puro) frente a `total_s` (que incorpora vaciado de memoria, distribución de mensajes, despacho por canales y sincronización colectiva).
+@@ -46,7 +47,7 @@ La solución combina el paso de mensajes entre procesos independientes (**MPI**)
+ 
+ - **Nivel 1 (Entre Procesos - MPI):** El problema global se divide en $P$ procesos del sistema operativo comunicados mediante MS-MPI. El proceso maestro (`rank 0`) lee o genera las matrices, coordina la distribución y reúne los resultados.
+ - **Nivel 2 (Intra-proceso - OpenMP):** Cada proceso MPI utiliza $T$ hilos de ejecución OpenMP para computar su bloque asignado de filas en paralelo.
+-- **Nivel de Hilos MPI (`MPI_THREAD_FUNNELED`):** La inicialización se realiza con `MPI_Init_thread(..., MPI_THREAD_FUNNELED, &provided)`. Únicamente el hilo principal (_master thread_) de cada proceso ejecuta llamadas a funciones MPI, garantizando compatibilidad absoluta y ausencia de contención en la pila de red.
++- **Nivel de Hilos MPI (`MPI_THREAD_FUNNELED`):** La inicialización se realiza con `MPI_Init_thread(..., MPI_THREAD_FUNNELED, &provided)`. Únicamente el hilo principal (_master thread_) de cada proceso ejecuta llamadas a funciones MPI, cumpliendo el nivel de soporte solicitado. Esto no garantiza ausencia de contención o sobrecostes de comunicación.
+ 
+ ### 2.2. Particionado 1D por Bloques de Filas (`partition.h`)
+ 
+@@ -162,8 +163,8 @@ for (int i = 0; i < local_rows; ++i) {
+ 
+ - **Pool Acotado de Goroutines:** No se genera una goroutine por celda ni por fila. Se inicializa un pool fijo de exactamente $W$ workers (`--workers W`).
+ - **Canal Tipado de Tareas (`chan Task`):** Las goroutines trabajadoras compiten de forma pasiva por consumir tareas de un canal tipado con buffer acotado (`make(chan Task, workers)`).
+-- **Coordinación de Finalización:** Sincronización libre de cerrojos mediante `sync.WaitGroup` (`wg.Add`, `defer wg.Done()`, `wg.Wait()`).
+-- **Runtime M:N:** Se fija `runtime.GOMAXPROCS(workers)` para permitir ejecución verdaderamente simultánea sobre los hilos del sistema operativo.
++- **Coordinación de Finalización:** Sincronización de terminación mediante `sync.WaitGroup` (`wg.Add`, `defer wg.Done()`, `wg.Wait()`).
++- **Runtime M:N:** Se fija `runtime.GOMAXPROCS(workers)` para fijar el presupuesto de ejecución de código Go. La simultaneidad observada depende también del hardware y la carga.
+ 
+ ### 3.2. Estructuras de Datos y Modelo de Tareas (`workers.go`)
+ 
+@@ -199,6 +200,7 @@ func computeBlockSize(n, workers int) int {
+   puede consumirlas y un mismo worker puede ejecutar varias; no se garantiza
+   que sean las primeras N goroutines ni que N workers distintos reciban trabajo.
+   Todos terminan al agotar el canal cerrado y notifican `wg.Done()`.
++- Se generan `ceil(N/ceil(N/W))` tareas, como máximo W; no necesariamente W. Por ejemplo, N=5/W=4 genera tres tareas de tamaños 2,2,1. Un worker puede consumir varias tareas.
+ - El productor (goroutine principal) despacha todos los bloques e inmediatamente ejecuta `close(tasks)`.
+ 
+ ### 3.3. Ciclo de Vida del Worker y Ejecución Aritmética
+@@ -288,7 +290,7 @@ func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
+ | **Sobrecarga de Comunicación**          | Serialización y copia por sockets/memoria compartida IPC | Cero copia de datos; solo paso del descriptor `Task` (16 bytes)                                       |
+ | **Prevención de Data Races**            | Procesos aislados; OpenMP privatiza índices $i,k,j$      | Rango de filas disjunto en $C$; $A, B$ solo lectura                                                   |
+ | **Comportamiento si $P > N$ o $W > N$** | Procesos extra reciben `count=0` sin fallos              | N tareas de una fila; el reparto entre workers depende del planificador y todos notifican `wg.Done()` |
+-| **Escalabilidad Teórica**               | Escala a clústeres multi-nodo y supercomputadores        | Escala eficientemente dentro de un nodo simétrico (SMP/NUMA)                                          |
++| **Escalabilidad Teórica**               | Puede extenderse a varios nodos; no se ha medido aquí        | Comparte memoria en un nodo; la eficiencia se mide                                          |
+ 
+ ---
+ 
+@@ -311,12 +313,12 @@ En conformidad con las pautas de evaluación del curso de **Programación Concur
+   - En Go: el productor asegura `close(tasks)` únicamente tras despachar la totalidad de los bloques, permitiendo que todos los workers salgan del bucle `for task := range tasks`.
+ - **Ausencia de Data Races:**
+   - En C: ningún hilo OpenMP comparte índices de fila de escritura.
+-  - En Go: garantizado por diseño e inspección estática y dinámica con `go test -race`.
++  - En Go: propiedad disjunta y ausencia de carreras en las pruebas ejecutadas con `go test -race`; no constituye una demostración de todas las ejecuciones.
+ 
+ ### 5.3. Rigor del Protocolo Experimental
+ 
+ - **Aislamiento de Cronometraje:** La lectura de archivos, validación sintáctica de flags, generación de matrices y emisión de salidas CSV se ejecutan fuera de los cronómetros.
+-- **Separación `kernel_s` vs `total_s`:** Permite calcular el _overhead_ de paralelización ($\text{Sobrecarga} = \text{total}_s - \text{kernel}_s$), revelando el costo de la comunicación de red/IPC en MPI frente a la contención del planificador en Go.
++- **Separación `kernel_s` vs `total_s`:** Su diferencia es un indicador del trabajo fuera del kernel, no una descomposición exacta de comunicación, canal o planificación. Los máximos y el solapamiento deben interpretarse conforme al protocolo.
+ 
+ ---
+ 
+@@ -379,12 +381,12 @@ sequenceDiagram
+     end
+     Main->>Ch: close(tasks) [Fin de tareas]
+ 
+-    Note over Pool: Inicio de kernel_s por worker
+     loop Consumo de bloques hasta canal cerrado
+         Ch->>Pool: task = <-tasks
++        Note over Pool: Iniciar tiempo del bloque después de recibir
+         Pool->>Pool: multiplyBlock(A, B, C, start, end)
++        Note over Pool: Sumar duración del bloque, excluyendo recepción
+     end
+-    Note over Pool: Fin de kernel_s por worker
+ 
+     Pool->>Main: Registrar duracion y llamar wg.Done()
+     Main->>Main: wg.Wait() [Barrera de sincronizacion]
+@@ -423,146 +425,96 @@ sequenceDiagram
+ 
+ ---
+ 
+-## 9. Fundamentación Teórica desde la Literatura Científica (Sprint 6)
+-
+-En el marco del **Sprint 6** ("_Optimizar con evidencia_"), las decisiones de arquitectura y optimización adoptadas en el proyecto se fundamentan y contrastan directamente con la literatura científica clásica y contemporánea revisada en `docs/bibliografia.md`:
+-
+-### 9.1. Jerarquía de Memoria y Localidad de Caché (Hennessy & Patterson, Dongarra et al.)
+-
+-En procesadores modernos de arquitectura x86_64 (como AMD Zen 4 o Intel Core), la memoria caché organiza las transferencias desde la memoria principal (DRAM) en **líneas de caché de 64 bytes**. Dado que cada elemento `double` en C y `float64` en Go ocupa 8 bytes, una sola línea de caché transfiere exactamente **8 elementos flotantes contiguos**.
+-
+-```
+-              LÍNEA DE CACHÉ DE 64 BYTES (8 FLOATS DE 64 BITS)
+-  ┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
+-  │ Val[k,0] │ Val[k,1] │ Val[k,2] │ Val[k,3] │ Val[k,4] │ Val[k,5] │ Val[k,6] │ Val[k,7] │
+-  └──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘
+-  ◄────────────────────────────────── 64 Bytes ──────────────────────────────────────────►
+-```
+-
+-#### Análisis Comparativo de las Permutaciones de Bucles:
+-
+-Para la multiplicación de matrices densas $N \times N$ en almacenamiento contiguo por filas (_row-major_):
+-
+-- **Orden de Texto Escolar ($i \to j \to k$):**
+-  - Para calcular una sola celda $C[i, j]$, el bucle más interno varía el índice $k$:
+-    $$
+-    C[i, j] += A[i, k] \times B[k, j]
+-    $$
+-  - Mientras $A[i, k]$ avanza secuencialmente (stride-1), el acceso a $B[k, j]$ salta filas completas: posición $(k \times N + j)$, con un paso de memoria (_stride_) de $N$ elementos ($8N$ bytes).
+-  - Cuando $N$ supera el tamaño de una línea de caché (es decir, $N > 8$), cada iteración sobre $k$ provoca un **fallo de caché forzado (_cache miss_)** sobre $B$. Esto destruye el rendimiento y satura el bus de memoria.
+-- **Orden Canónico Optimizado ($i \to k \to j$):**
+-  - Al intercambiar los bucles $j$ y $k$:
+-    - En el bucle intermedio $k$, el valor escalar $a_{ik} = A[i, k]$ se carga **una sola vez** en un registro de CPU (localidad temporal perfecta).
+-    - En el bucle más interno $j$, se ejecutan accesos contiguos en memoria tanto para la fila $k$ de $B$ ($B[k \times N + j]$) como para la fila $i$ de $C$ ($C[i \times N + j]$).
+-    - **Stride-1 Absoluto:** Ambos accesos avanzan celda a celda contigua ($j, j+1, j+2, \dots$). El primer acceso carga la línea de 64 bytes completa a la caché L1, y las 7 iteraciones siguientes resultan en **aciertos de caché inmediatos (_cache hits_)** a velocidad de registro/L1.
+-    - Además, los mecanismos de _Hardware Prefetcher_ del CPU detectan el patrón lineal y anticipan la carga de las siguientes líneas de caché antes de que sean solicitadas.
+-  - **Conclusión Teórica:** El orden $i \to k \to j$ aprovecha al máximo la jerarquía de memoria sin requerir código ensamblador ni transformaciones complejas de datos.
+-
+-### 9.2. Particionado Jerárquico: H-SUMMA (Quintin & Wagner, 2013)
+-
+-En su investigación sobre multiplicación jerárquica de matrices (_H-SUMMA: A Hierarchical Approach to Matrix Multiplication_), Quintin y Wagner demuestran que en sistemas con comunicación híbrida (red entre nodos + memoria compartida en el nodo), la clave de la escalabilidad radica en **minimizar las transferencias globales de comunicación**:
+-
+-- En nuestro híbrido C (`c_paralelo`), el particionado 1D por bloques de filas (`partition.h`) implementa este principio de dos niveles:
+-  - **Nivel Colectivo (MPI):** El proceso maestro difunde la matriz $B$ una sola vez mediante `MPI_Bcast` y dispersa $A$ mediante `MPI_Scatterv`. Durante el cálculo aritmético no existe ninguna comunicación inter-proceso ni contención de red.
+-  - **Nivel Local (OpenMP):** Los hilos locales operan exclusivamente sobre la porción de memoria local (`local_a` y `local_c`), maximizando la independencia de cómputo.
+-- **Ventaja del Particionado 1D sobre el 2D (Cannon / SUMMA Estándar):**
+-  - Los esquemas 2D (grillas de procesos $\sqrt{P} \times \sqrt{P}$) requieren empaquetar bloques bidimensionales no continuos de memoria (_data packing/unpacking_) o tipos derivados de MPI (`MPI_Type_vector`), introduciendo sobrecostes de serialización.
+-  - En contraposición, en el almacenamiento _row-major_, un bloque continuo de filas completas es un subarreglo estrictamente contiguo en memoria. `MPI_Scatterv` y `MPI_Gatherv` transfieren los datos directamente sin copias intermedias ni reordenamientos.
+-
+-### 9.3. Modelo de Concurrencia CSP (Hoare, 1978; Golani et al., 2021)
+-
+-La implementación de `go_paralelo` traduce los principios del formalismo CSP (_Communicating Sequential Processes_):
+-
+-- En lugar de compartir memoria mediante cerrojos (_locks_) o variables de condición que degradan la escalabilidad, se utiliza un canal tipado `chan Task` donde cada tarea encapsula la propiedad exclusiva de un bloque continuo de filas $[StartRow, EndRow)$.
+-- Los workers consumen tareas de forma pasiva, garantizando balanceo dinámico natural sin sobrecarga de gestión centralizada.
+-- La inmutabilidad de $A$ y $B$ y la ausencia de escrituras compartidas en $C$ aseguran matemáticamente la ausencia de condiciones de carrera (_race freedom_), verificado exhaustivamente mediante el detector de carreras del runtime de Go (`go test -race`).
+-
+----
+-
+-## 10. Evaluación de Optimizaciones Candidatas y Decisiones de Diseño
+-
+-En concordancia con el objetivo del Sprint 6 (_"Mejorar el rendimiento sin cambiar la corrección ni introducir comparaciones injustas"_), se evaluaron las siguientes técnicas de optimización:
+-
+-### 10.1. Tiling o Bloques de Memoria Caché (_Cache Blocking_)
+-
+-- **Hipótesis:** Dividir las matrices en sub-bloques $B_{size} \times B_{size}$ que quepan simultáneamente en la caché L1D/L2 para evitar el desalojo de líneas en matrices grandes.
+-- **Análisis Experimental y Literario:**
+-  - Para las dimensiones del proyecto ($N \in \{512, 1024, 2048, 4096\}$), el bucle canónico $i \to k \to j$ ya presenta un comportamiento óptimo porque la fila activa de $B$ y la fila acumulada de $C$ se reutilizan intensivamente.
+-  - El tiling requiere sextuplicar los bucles de iteración ($i_b \to k_b \to j_b \to i \to k \to j$), lo que introduce una sobrecarga considerable en la gestión de índices y penaliza el rendimiento en dimensiones que no sean múltiplos exactos del tamaño de bloque ($B_{size}$), como ocurre con matrices impares (`impar3` o $N=129$).
+-  - En pruebas comparativas en compiladores modernos con prefetching automático, la ganancia del tiling manual en matrices $\le 2048$ es marginal frente a la pérdida de simplicidad del código.
+-- **Decisión de Diseño:** **DESCARTAR el tiling manual.** Se conserva el triple bucle canónico $i \to k \to j$, garantizando simplicidad, robustez universal y equidad algorítmica.
+-
+-### 10.2. Vectorización Manual SIMD (AVX2/AVX-512) vs Auto-vectorización del Compilador
+-
+-- **Hipótesis:** Reemplazar el bucle interno de $j$ por instrucciones vectoriales explícitas (intrínsecos `_mm256_fmadd_pd`).
+-- **Análisis de Equidad:**
+-  - En lenguaje C es posible escribir intrínsecos de ensamblador de bajo nivel, pero en Go nativo el compilador estándar `gc` no expone intrínsecos manuales directos, obligando a recurrir a ensamblador Plan 9 (`.s`), lo que rompería la portabilidad multiplataforma y la auditabilidad del código.
+-  - Introducir SIMD manual en C y dejar Go con código estándar constituiría una **comparación metodológicamente asimétrica e injusta**, violando la rúbrica académica.
+-  - Los compiladores de C (MSVC con `/O2 /fp:precise` y GCC con `-O2`) ya reconocen el patrón $i \to k \to j$ y auto-vectorizan el bucle interno sobre $j$ utilizando registros SIMD xmm/ymm de forma segura.
+-- **Decisión de Diseño:** **DESCARTAR intrínsecos manuales.** Confiar exclusivamente en la optimización y auto-vectorización nativa del compilador en modo `-O2` / `Release`, preservando la equivalencia conceptual del código fuente en C y Go.
+-
+-### 10.3. Granularidad del Canal y Pool de Workers en Go Paralelo
+-
+-- **Hipótesis:** Variar la cantidad de tareas despachadas por el canal (por ejemplo, bloques fijos de 16 filas vs bloques calculados con división entera).
+-- **Análisis Experimental:**
+-  - Enviar bloques demasiado pequeños genera contención y sobrecoste de sincronización en el canal `chan Task` (`runtime.chansend` y `runtime.chanrecv`).
+-  - Enviar bloques demasiado grandes puede desbalancear la carga si un hilo se retrasa por interrupciones del sistema operativo.
+-  - La fórmula adoptada en Sprint 4 (`computeBlockSize(n, workers) = ceil(n / workers)`) divide la matriz en exactamente $W$ bloques contiguos balanceados. Como cada worker recibe un bloque sustancial y el canal se dimensiona con buffer `make(chan Task, workers)`, el productor despacha todas las tareas sin bloquearse y el canal se cierra de inmediato.
+-- **Decisión de Diseño:** **CONSERVAR el particionado contiguo por bloques** con buffer acotado y límite estricto `MaxWorkers = 1024`.
+-
+-### 10.4. Gestión de Memoria y Prevención de Fugas
+-
+-- **Decisión de Diseño:** Toda reserva de memoria (`malloc` en C, `make` en Go) debe realizarse **antes** del inicio del cronómetro $T_0$, y la liberación o recolección de basura después del fin del cronómetro $T_1$.
+-- El vaciado explícito de memoria de la matriz $C$ (mediante `memset` en C o `clear(c.Data)` en Go) se realiza dentro de `total_s` pero **estrictamente fuera de `kernel_s`**, garantizando que el kernel mida exclusivamente la computación aritmética útil.
+-
+----
+-
+-## 11. Criterios Formales para el Congelamiento del Algoritmo (Algorithmic Freezing)
+-
+-Con el fin de asegurar la reproducibilidad, comparabilidad y rigor científico en las campañas experimentales y estadísticas de los **Sprints 7 y 8**, el equipo establece el siguiente **Marco Normativo de Congelamiento Algorítmico**:
+-
+-```
+-                         CRITERIOS DE CONGELAMIENTO ALGORÍTMICO
+- ┌──────────────────────────────────────────────────────────────────────────────────┐
+- │                                                                                  │
+- │   1. EQUIDAD ALGORÍTMICA                                                         │
+- │      • Mismo orden canónico de bucles i -> k -> j en las 4 versiones.            │
+- │      • Exactamente 2*N^3 operaciones flotantes (FLOPs) ejecutadas.               │
+- │      • Sin intrínsecos manuales asimétricos entre lenguajes.                     │
+- │                                                                                  │
+- │   2. DETERMINISMO Y TOLERANCIA NUMÉRICA                                          │
+- │      • Preservación estricta de tolerancia: |C_c - C_e| <= 1e-9 + 1e-9*|C_e|.    │
+- │      • Identidad exacta bit a bit en los 5 fixtures canónicos oficiales.         │
+- │      • Rechazo determinista e inmediato ante NaN o infinitos.                    │
+- │                                                                                  │
+- │   3. INVARIANTES DE MEMORIA Y SEGURIDAD CONCURRENTE                              │
+- │      • Almacenamiento continuo por filas (row-major).                            │
+- │      • Propiedad disjunta: un único escritor por celda (cero data races).        │
+- │      • Matrices A y B tratadas como solo lectura estricta.                       │
+- │                                                                                  │
+- │   4. RIGOR DE CRONOMETRÍA                                                        │
+- │      • Invariante temporal inviolable: 0.0 <= kernel_s <= total_s.               │
+- │      • I/O, generación de matrices, parseo y validación FUERA de cronómetros.    │
+- │      • Emisión obligatoria del esquema CSV unificado de 20 columnas.             │
+- │                                                                                  │
+- └──────────────────────────────────────────────────────────────────────────────────┘
+-```
+-
+-### Reglas de Congelamiento:
+-
+-1. **Regla de Inmutabilidad del Algoritmo:** A partir del cierre del Sprint 6, queda estrictamente prohibido alterar la lógica interna de acumulación o el orden de iteración de los núcleos secuenciales y paralelos.
+-2. **Regla de Modificación Justificada:** Ninguna propuesta de cambio de código podrá integrarse a `main` a menos que demuestre:
+-   - Medición experimental rigurosa de _antes_ y _después_ sobre el hardware del proyecto.
+-   - Mejora de rendimiento consistente superior a un umbral estadístico significativo ($> 5\%$) sin degradar la precisión numérica.
+-   - Aprobación unánime del equipo certificando que no introduce comparaciones asimétricas entre C y Go.
+-3. **Mantenimiento de Experimentos Aislados:** Cualquier técnica experimental alternativa (como tiling, transposición previa de matriz $B$, o directivas SIMD agresivas) deberá mantenerse en ramas o scripts de laboratorio independientes, sin sustituir los ejecutables canónicos oficiales de la campaña.
+-
+----
+-
+-## 12. Conclusiones
+-
+-En cumplimiento de los objetivos del **Sprint 6**, se declara que:
+-
+-1. Las cuatro implementaciones del proyecto (`c_secuencial`, `c_paralelo`, `go_secuencial` y `go_paralelo`) se encuentran plenamente alineadas con los fundamentos de localidad espacial y temporal de la literatura científica.
+-2. Se han analizado y descartado formalmente las optimizaciones que comprometen la equidad algorítmica o la portabilidad del código.
+-3. Las arquitecturas de software y los contratos de ejecución quedan **OFICIALMENTE CONGELADOS** para dar paso a la automatización de experimentos (Sprint 7) y a la campaña oficial de mediciones de rendimiento (Sprint 8).
++## 9. Fundamentación y límites de las inferencias (S6)
++
++La [bibliografía verificada](bibliografia.md) identifica a Quintin, Hasanov y
++Lastovetsky (ICPP 2013) como referencia principal y a Hérault, Robert, Bosilca y
++Dongarra (ScalA 2019) como complemento. Se usan las secciones y páginas ya
++registradas allí, sin añadir atribuciones a fuentes no verificadas.
++
++### 9.1. Localidad y recorrido
++
++Con almacenamiento por filas, i,k,j recorre B y C con paso de un elemento en j y
++reutiliza A[i,k]. Es una propiedad de la indexación, no una prueba de que todo
++acceso sea un acierto L1 ni de que i,j,k provoque un fallo por iteración cuando
++N>8. La alineación, capacidad/asociatividad, compilador, prefetch y carga influyen.
++Sin contadores de caché no se atribuyen causalmente los tiempos a esos efectos.
++El ancho de línea observado en una CPU tampoco se convierte en requisito universal.
++
++### 9.2. Comunicación, memoria y literatura
++
++Quintin et al. estudian HSUMMA con jerarquía virtual sobre una malla 2D. El
++reparto por filas de este proyecto no implementa HSUMMA y sus niveles no son
++equivalentes automáticamente a MPI más OpenMP. La fuente motiva estudiar la
++comunicación, sin demostrar qué P/T será más rápido en esta PC.
++
++Hérault et al. estudian teselas, dependencias y memoria en plataformas con GPU
++sobre PaRSEC. Aquí se adapta la idea de controlar datos activos y propietarios
++del resultado, con CPU y filas. No se utiliza GPU ni PaRSEC.
++
++Los bloques de filas son contiguos y simplifican counts/desplazamientos. MPI
++puede hacer copias internas y este código reserva bloques A/C locales incluso
++en la raíz. No se afirma que Scatterv/Gatherv carezcan de copias ni que 1D sea
++universalmente superior a las distribuciones 2D.
++
++### 9.3. Propiedad y sincronización Go
++
++A/B son entradas compartidas de lectura; las filas de C y los slots de tiempos
++tienen escritores disjuntos. Los consumidores se lanzan antes del despacho y
++el productor cierra el canal antes de esperar. Estos invariantes deben mantenerse
++al cambiar granularidad; el detector de carreras aporta evidencia de las pruebas
++ejecutadas, sin demostrar todas las ejecuciones ni que los canales sean gratuitos.
++
++## 10. Candidatas y decisión conservada
++
++Los detalles y observaciones se conservan en [optimizaciones.md](optimizaciones.md).
++
++| Versión | Base | Experimento aislado | Estado de producción |
++| --- | --- | --- | --- |
++| C secuencial | Punteros por fila y i,k,j | Restricción de alias de C en el laboratorio | Se conserva la base. |
++| C paralelo | OpenMP `schedule(static)` | `schedule(static,1)` en el kernel local | Se conserva la base; no es ensayo MPI. |
++| Go secuencial | Índices sobre slices contiguos | Slices por fila sin reservas de datos | Se conserva la base. |
++| Go paralelo | Bloque `ceil(N/W)` y canal W | Bloque fijo 16 y canal sin buffer, por separado | Se conserva la base. |
++
++Las candidatas viven solo en archivos de pruebas. No se han sustituido los
++núcleos de la campaña por resultados de GCC o Go Linux. Tiling, transposición,
++SIMD manual y bibliotecas externas quedan fuera de esta comparación; no se
++atribuyen porcentajes de mejora o regresión a técnicas que no se han medido.
++
++Las reservas de matrices y vectores de tiempos quedan antes de T0. La creación
++del canal, WaitGroup y goroutines ocurre dentro de total_s, como exige el
++protocolo. No se obliga ni se garantiza que el recolector de basura Go se ejecute
++solo después de T1. El vaciado explícito de C pertenece a total_s y no al kernel.
++
++## 11. Criterios de aceptación y fijación del algoritmo
++
++1. Misma representación, tipos, entradas, generador y orden i,k,j en las cuatro
++   versiones, con un propietario por fila y A/B inmutables.
++2. Validación por celda con `atol=rtol=1e-9`, rechazo de NaN/Inf y errores
++   controlados. La coincidencia por bits de ciertos fixtures es un resultado,
++   no un requisito nuevo que sustituya las tolerancias del contrato.
++3. Fronteras de tiempo comunes y CSV de veinte columnas; `0 <= kernel_s <= total_s`.
++   Las métricas de laboratorio se mantienen separadas del CSV de campaña.
++4. Cada cambio de producción requiere comparación antes/después en Windows,
++   regresión Debug/Release y revisión de equidad. Una mejora pequeña respecto a
++   la dispersión se considera inconclusa; un umbral del 5% no constituye por sí
++   solo una prueba de significación estadística.
++5. Límites de RAM y duración contrastados con observaciones de la plataforma,
++   y revisión del estado de cada entregable antes del cierre técnico.
++
++La cuenta `2*N^3` es una convención de operaciones aritméticas del algoritmo,
++no un conteo de instrucciones ejecutadas ni una garantía de vectorización.
++
++Se conserva el algoritmo candidato actual para preparar S7. No se declara
++completado el cierre Windows de S6 a partir de las pruebas Linux. S7 fija la
++revisión experimental y sus parámetros después del piloto. Cualquier cambio
++posterior en cálculo o cronometraje exige repetir las observaciones afectadas.
++
++## 12. Evidencia y pendientes
++
++La evidencia local permite comprobar núcleos, candidatas y contratos portables;
++los [informes de memoria](memoria.md), [equidad](equidad_algoritmica.md) y
++[optimización](optimizaciones.md) indican su alcance. Quedan pendientes la
++batería completa MSVC/MS-MPI, las comparativas Windows P/T, los picos por rank
++y la aprobación formal. La congelación declarada en la entrega inicial de S6
++se entiende como propuesta de diseño hasta cumplir estos criterios.
+diff --git a/docs/plantillas/entorno_medicion.json b/docs/plantillas/entorno_medicion.json
+index e3df9cc..de730d2 100644
+--- a/docs/plantillas/entorno_medicion.json
++++ b/docs/plantillas/entorno_medicion.json
+@@ -1,5 +1,5 @@
+ {
+-  "protocol_version": "1.2",
++  "protocol_version": "1.3",
+   "campaign_id": null,
+   "phase": null,
+   "started_at_utc": null,
+diff --git a/docs/protocolo_medicion.md b/docs/protocolo_medicion.md
+index 1a3fa93..b427f50 100644
+--- a/docs/protocolo_medicion.md
++++ b/docs/protocolo_medicion.md
+@@ -2,7 +2,7 @@
+ 
+ **Versión:** 1.3 (Auditoría de Cronometría y Equivalencia de Límites · Sprint 5 · 2026-11-05; Integrante 7 Andrés)
+ **Estado:** Auditoría técnica del protocolo de medición y fronteras temporales completada en S5. Se certifica que las cuatro referencias cumplen la estricta segregación de `kernel_s` y `total_s`, excluyendo generación, I/O y validación numérica. Las campañas piloto y oficial corresponden a S7/S8.
+-**Documentos relacionados:** `docs/Guia_Sprints.md`, [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
++**Documentos relacionados:** [plan de sprints](sprints/README.md), [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
+ 
+ ---
+ 
+@@ -15,7 +15,12 @@ Este documento establece el **Protocolo de Medición Versión Inicial** del proy
+ * `go_paralelo`: Implementación concurrente en Go con pool acotado de workers, canales tipados y `sync.WaitGroup`.
+ 
+ > [!IMPORTANT]
+-> Siguiendo el contrato del proyecto, las solicitudes de cálculo actuales devuelven código `2` (operación pendiente); los smoke tests correctos devuelven 0. Los errores se convierten a 1. Ninguna prueba de instalación o smoke test se reporta como medición de rendimiento. Las mediciones reales se habilitarán únicamente cuando los algoritmos de multiplicación pasen la verificación matemática elemento a elemento ($\text{atol}=10^{-9}, \text{rtol}=10^{-9}$).
++> Las cuatro versiones implementan el producto y su validación desde S3–S5.
++> `bench_windows.ps1` continúa pendiente de automatización hasta S7 y devuelve 2;
++> cambiar los estados JSON no lo habilita. Los errores de programas se convierten
++> a 1 y el éxito validado a 0. Los smoke tests solo prueban instalación.
++> Los ensayos Linux de S6 se guardan en `resultados/diagnostico/` y no constituyen
++> observaciones de la campaña Windows ni certifican MSVC/MS-MPI.
+ 
+ ---
+ 
+diff --git a/resultados/README.md b/resultados/README.md
+index 42d428d..94c42a1 100644
+--- a/resultados/README.md
++++ b/resultados/README.md
+@@ -1,8 +1,22 @@
+ # Resultados
+ 
+-`piloto/`, `raw/`, `resumen/` y `graficos/` se conservan con .gitkeep. Están vacías porque los
+-algoritmos y la campaña aún no están implementados. Consultar docs/protocolo_medicion.md.
+-No almacenar pruebas de instalación como tiempos del proyecto.
++Las cuatro versiones implementan el producto y su validación. La automatización
++completa del piloto corresponde a S7 y la campaña oficial a S8; consultar
++[protocolo](../docs/protocolo_medicion.md).
+ 
+-S7 guarda ensayos en `piloto/`; S8 conserva la campaña oficial en `raw/`. Los
+-resúmenes y gráficos deben derivarse de observaciones reales y trazables.
++| Carpeta | Contenido |
++| --- | --- |
++| `diagnostico/s06/` | Ensayos Linux de núcleos y candidatas, memoria RSS y regresión portable. Esquema `s06-laboratory-v1`, separado del CSV Windows. |
++| `piloto/<campaign_id>/` | Piloto Windows S7, con entorno, plan, mediciones y bitácora. |
++| `raw/<campaign_id>/` | Datos oficiales Windows S8. |
++| `resumen/` y `graficos/` | Derivados trazables de las observaciones correspondientes. |
++
++No mezclar plataformas, revisiones, compilaciones o intentos. Las salidas lentas
++y los fallos se conservan. El tiempo de un smoke test no es rendimiento matricial.
++Los builds y cachés son regenerables y permanecen ignorados por Git.
++
++Los diagnósticos S6 conservan `entorno.json`, `plan.json`,
++`observaciones.jsonl`, `resumen.json` y `resumen.csv`. Cada observación incluye
++stdout, stderr, lectura original del pico RSS, comando y estado. Las fuentes
++exactas se guardan en `sources/` con hashes, porque el experimento puede preceder
++al commit de la entrega. El resumen no publica speedup de campaña.
+diff --git a/tests/README.md b/tests/README.md
+index 0d06bf5..e493d18 100644
+--- a/tests/README.md
++++ b/tests/README.md
+@@ -89,3 +89,32 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\sprint05_errors_
+ 
+ MPI requiere permiso para lanzar procesos de MS-MPI. Una restricción del
+ entorno se reporta como fallo; no se omite la prueba ni se presenta como éxito.
++
++## Diagnóstico del Sprint 6
++
++Los archivos `go_secuencial/sprint06_test.go` y `go_paralelo/sprint06_test.go`
++contienen candidatas aisladas y comprobaciones de producto, repetición e
++inmutabilidad. No sustituyen los kernels de producción. Las observaciones
++`TestSprint06Observation` solo se activan con `S06_OUTPUT` y usan un esquema
++propio de laboratorio, no el CSV de campaña.
++
++`tests/sprint06_kernel_bench.c` se enlaza por separado con C secuencial o con el
++kernel local OpenMP (`S06_OPENMP`); este último no ejecuta comunicación MPI.
++Cada observación usa la referencia independiente i,j,k y verifica cada celda.
++
++En Linux con Python 3.9+, GCC/OpenMP, Go compatible con go.mod y GNU time:
++
++```bash
++python3 -B tests/sprint06_lab_test.py
++python3 -B scripts/sprint06_lab.py --go /ruta/a/go --sizes 256 512 1024 --workers 1 2 4
++```
++
++El runner construye los harnesses, toma un calentamiento y cinco medidas por
++combinación, alterna el orden por rondas y conserva fuentes, hashes, entorno,
++memoria RSS y datos originales bajo `resultados/diagnostico/s06/`. Incluye
++bloqueo por repositorio, timeout del grupo de procesos y validación de salida;
++no sobreescribe intentos ni modifica los programas de campaña.
++
++Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
++cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
++los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).
+advertencia: en la copia de trabajo de '.gitignore', CRLF será reemplazado con LF la próxima vez que Git la toque

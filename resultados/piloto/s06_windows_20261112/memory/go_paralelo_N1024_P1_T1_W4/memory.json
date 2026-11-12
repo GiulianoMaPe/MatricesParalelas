@@ -1,0 +1,30 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+    "--n",
+    "1024",
+    "--seed",
+    "42",
+    "--workers",
+    "4"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_s": 5.1361752000002525,
+  "processes": [
+    {
+      "pid": 6172,
+      "working_set_bytes": 41512960,
+      "peak_working_set_bytes": 41725952,
+      "private_bytes": 47079424,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 47079424
+    }
+  ],
+  "max_simultaneous_working_set_bytes": 41512960,
+  "max_simultaneous_private_bytes": 47079424,
+  "remaining_pids": [],
+  "sample_count": 184,
+  "maximum_sample_gap_s": 0.04529580000007627
+}

@@ -1,0 +1,36 @@
+goos: windows
+goarch: amd64
+pkg: matrices/go_paralelo
+cpu: AMD Ryzen 7 3700X 8-Core Processor             
+BenchmarkTaskChannel/W1-16        	16878550	       142.7 ns/op
+BenchmarkTaskChannel/W1-16        	16685124	       146.3 ns/op
+BenchmarkTaskChannel/W1-16        	16266488	       147.8 ns/op
+BenchmarkTaskChannel/W2-16        	 9249772	       262.1 ns/op
+BenchmarkTaskChannel/W2-16        	 9728426	       252.7 ns/op
+BenchmarkTaskChannel/W2-16        	 9259633	       255.0 ns/op
+BenchmarkTaskChannel/W4-16        	 9845568	       269.1 ns/op
+BenchmarkTaskChannel/W4-16        	 9201596	       245.7 ns/op
+BenchmarkTaskChannel/W4-16        	 8374370	       248.5 ns/op
+BenchmarkTaskChannel/W8-16        	 9483256	       243.5 ns/op
+BenchmarkTaskChannel/W8-16        	10130005	       250.0 ns/op
+BenchmarkTaskChannel/W8-16        	 9080390	       253.0 ns/op
+BenchmarkTaskChannel/W16-16       	 9977276	       240.9 ns/op
+BenchmarkTaskChannel/W16-16       	 9845498	       244.2 ns/op
+BenchmarkTaskChannel/W16-16       	 9670910	       236.8 ns/op
+BenchmarkKernelCoordination/W1-16 	 3147811	       752.8 ns/op	     320 B/op	       6 allocs/op
+BenchmarkKernelCoordination/W1-16 	 3185406	       759.9 ns/op	     320 B/op	       6 allocs/op
+BenchmarkKernelCoordination/W1-16 	 3208192	       758.5 ns/op	     320 B/op	       6 allocs/op
+BenchmarkKernelCoordination/W2-16 	  838497	      2681 ns/op	     416 B/op	       7 allocs/op
+BenchmarkKernelCoordination/W2-16 	  871165	      2639 ns/op	     416 B/op	       7 allocs/op
+BenchmarkKernelCoordination/W2-16 	  855139	      2714 ns/op	     416 B/op	       7 allocs/op
+BenchmarkKernelCoordination/W4-16 	  466670	      4350 ns/op	     608 B/op	       9 allocs/op
+BenchmarkKernelCoordination/W4-16 	  585442	      4448 ns/op	     608 B/op	       9 allocs/op
+BenchmarkKernelCoordination/W4-16 	  531462	      4454 ns/op	     608 B/op	       9 allocs/op
+BenchmarkKernelCoordination/W8-16 	  401137	      5838 ns/op	     992 B/op	      13 allocs/op
+BenchmarkKernelCoordination/W8-16 	  435760	      5944 ns/op	     992 B/op	      13 allocs/op
+BenchmarkKernelCoordination/W8-16 	  406962	      6105 ns/op	     992 B/op	      13 allocs/op
+BenchmarkKernelCoordination/W16-16         	  263893	      8914 ns/op	    1778 B/op	      21 allocs/op
+BenchmarkKernelCoordination/W16-16         	  273574	      9125 ns/op	    1778 B/op	      21 allocs/op
+BenchmarkKernelCoordination/W16-16         	  257929	      9839 ns/op	    1778 B/op	      21 allocs/op
+PASS
+ok  	matrices/go_paralelo	78.625s

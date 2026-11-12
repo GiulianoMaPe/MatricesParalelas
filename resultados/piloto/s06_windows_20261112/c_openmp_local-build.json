@@ -1,0 +1,25 @@
+{
+  "command": [
+    "cl",
+    "/nologo",
+    "/TC",
+    "/std:c11",
+    "/O2",
+    "/MD",
+    "/fp:precise",
+    "/W4",
+    "/openmp",
+    "/DS06_OPENMP",
+    "/ID:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\include",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\sprint06_kernel_bench.c",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\sprint06_candidates.c",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\matrix.c",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\input.c",
+    "/Fe:D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\c_openmp_local.exe",
+    "/link",
+    "/MACHINE:X64"
+  ],
+  "exit_code": 0,
+  "stdout": "sprint06_kernel_bench.c\r\nsprint06_candidates.c\r\nmatrix.c\r\ninput.c\r\nGenerando código...\r\n",
+  "stderr": ""
+}

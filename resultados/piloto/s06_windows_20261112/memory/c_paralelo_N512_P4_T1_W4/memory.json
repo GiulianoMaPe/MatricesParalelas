@@ -1,0 +1,60 @@
+{
+  "command": [
+    "C:\\Program Files\\Microsoft MPI\\Bin\\mpiexec.exe",
+    "-affinity_layout",
+    "0",
+    "-n",
+    "4",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release\\c_paralelo.exe",
+    "--n",
+    "512",
+    "--seed",
+    "42"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_s": 0.9962249999998676,
+  "processes": [
+    {
+      "pid": 12060,
+      "working_set_bytes": 11694080,
+      "peak_working_set_bytes": 11784192,
+      "private_bytes": 5001216,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 5001216
+    },
+    {
+      "pid": 12756,
+      "working_set_bytes": 11722752,
+      "peak_working_set_bytes": 11812864,
+      "private_bytes": 5021696,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 5021696
+    },
+    {
+      "pid": 900,
+      "working_set_bytes": 11804672,
+      "peak_working_set_bytes": 11804672,
+      "private_bytes": 5033984,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 5033984
+    },
+    {
+      "pid": 6732,
+      "working_set_bytes": 18124800,
+      "peak_working_set_bytes": 18149376,
+      "private_bytes": 11345920,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 11345920
+    }
+  ],
+  "max_simultaneous_working_set_bytes": 53346304,
+  "max_simultaneous_private_bytes": 26402816,
+  "remaining_pids": [],
+  "sample_count": 35,
+  "maximum_sample_gap_s": 0.029337800000121206
+}

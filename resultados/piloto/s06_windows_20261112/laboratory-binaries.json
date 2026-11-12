@@ -1,0 +1,18 @@
+{
+  "c_secuencial": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\c_secuencial.exe",
+    "sha256": "55c63d8d909859c0d2e67a320d8497a48b7c006e9742c4355ea3045610190560"
+  },
+  "c_openmp_local": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\c_openmp_local.exe",
+    "sha256": "45c00dc9ad3dce6cb310505b3143e3eee376a11897b2506415fb911daa84d5db"
+  },
+  "go_secuencial": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\go_secuencial.test.exe",
+    "sha256": "f36837543cc60825f020caee393f1d80bc17a73d5808fe81399f003581ca606b"
+  },
+  "go_paralelo": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\go_paralelo.test.exe",
+    "sha256": "d4cab0286e97f09f62ed714dac14034f7abf63af21b70946121ac39c62900c08"
+  }
+}
