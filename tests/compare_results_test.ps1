@@ -15,22 +15,35 @@ function Invoke-Comparator {
         [string]$OutputPattern = '^(OK|ERROR)'
     )
     $arguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $comparator, '-Expected', $Expected, '-Actual') + $Actual
-    $previousErrorAction = $ErrorActionPreference
-    $stderrPath = Join-Path $temporary ("stderr-" + [guid]::NewGuid().ToString('N') + '.txt')
+    $process = [Diagnostics.Process]::new()
     try {
-        $ErrorActionPreference = 'Continue'
-        $stdout = @(& powershell.exe @arguments 2> $stderrPath)
-        $exitCode = $LASTEXITCODE
-        $stderr = if (Test-Path -LiteralPath $stderrPath) { [IO.File]::ReadAllText($stderrPath) } else { '' }
+        $process.StartInfo.FileName = (Get-Command powershell.exe -ErrorAction Stop).Source
+        $process.StartInfo.Arguments = ($arguments | ForEach-Object { '"' + $_ + '"' }) -join ' '
+        $process.StartInfo.UseShellExecute = $false
+        $process.StartInfo.CreateNoWindow = $true
+        $process.StartInfo.RedirectStandardOutput = $true
+        $process.StartInfo.RedirectStandardError = $true
+        if (-not $process.Start()) {
+            throw 'No se pudo iniciar el comparador.'
+        }
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
+        if (-not $process.WaitForExit(30000)) {
+            $process.Kill()
+            throw 'Timeout ejecutando el comparador.'
+        }
+        $exitCode = $process.ExitCode
+        $stdout = $stdoutTask.GetAwaiter().GetResult()
+        $stderr = $stderrTask.GetAwaiter().GetResult()
     } finally {
-        $ErrorActionPreference = $previousErrorAction
+        $process.Dispose()
     }
     if ($exitCode -ne $ExpectedExit) {
-        $failures.Add("$Name (codigo $exitCode, esperado $ExpectedExit): stdout=$($stdout -join ' | '); stderr=$stderr")
-    } elseif ($ExpectedExit -eq 0 -and ($stderr -ne '' -or ($stdout -join "`n") -notmatch ("(?s)" + $OutputPattern))) {
-        $failures.Add("$Name (canales o salida OK invalidos): stdout=$($stdout -join ' | '); stderr=$stderr")
-    } elseif ($ExpectedExit -ne 0 -and ($stdout.Count -ne 0 -or $stderr -notmatch ("(?s)" + $OutputPattern))) {
-        $failures.Add("$Name (el error no salio solo por stderr con patron '$OutputPattern'): stdout=$($stdout -join ' | '); stderr=$stderr")
+        $failures.Add("$Name (codigo $exitCode, esperado $ExpectedExit): stdout=$stdout; stderr=$stderr")
+    } elseif ($ExpectedExit -eq 0 -and ($stderr -ne '' -or $stdout -notmatch ("(?s)" + $OutputPattern))) {
+        $failures.Add("$Name (canales o salida OK invalidos): stdout=$stdout; stderr=$stderr")
+    } elseif ($ExpectedExit -ne 0 -and ($stdout.Length -ne 0 -or $stderr -notmatch ("(?s)" + $OutputPattern))) {
+        $failures.Add("$Name (el error no salio solo por stderr con patron '$OutputPattern'): stdout=$stdout; stderr=$stderr")
     }
 }
 
