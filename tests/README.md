@@ -119,3 +119,28 @@ no sobreescribe intentos ni modifica los programas de campaña.
 Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
 cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
 los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).
+
+## Sprint 7 · I4: caso go_paralelo de la campaña
+
+`bench_go_paralelo_test.ps1` carga `scripts/bench_windows.ps1` con dot-source y
+prueba su caso go_paralelo con ejecutables falsos (`.cmd`). No produce
+observaciones experimentales. Cubre:
+
+- aceptación de una fila válida y del calentamiento;
+- rechazo cuando workers, `gomaxprocs`, `configuration`, procesos o hilos
+  observados no coinciden con el paralelismo pedido;
+- rechazo de versión, repetición, `validation_status`, `kernel_s > total_s`,
+  filas sobrantes y códigos de salida 1 y 2;
+- ejecutable ausente y plazo excedido (se termina el árbol del proceso);
+- serie de workers del protocolo y rechazo de W=0, W mayor que los procesadores
+  lógicos y W=1025;
+- lock exclusivo en `.cache\bench.lock`, compatible con el del caso c_paralelo;
+- rechazo de una campaña si otro ejecutable de medición está en marcha.
+
+`-WithExecutable` añade una campaña corta real (N=64) con el ejecutable Release.
+Desde la raíz:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1 -Version go_paralelo -Configuration Release
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_go_paralelo_test.ps1 -WithExecutable
+```

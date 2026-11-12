@@ -97,3 +97,41 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
   - Compatibilidad verificada con PowerShell 5.1.26100.
 
 - **Revisión y criterio de aceptación:** El caso `c_secuencial` de `bench_windows.ps1` genera CSV válido, respeta el protocolo de warmup + repeticiones, detecta y reporta errores, y no interfiere con las secciones reservadas para I2/I3/I4. Pendiente: revisión cruzada de I2 y aceptación del equipo.
+
+#### Integrante 4 (Eva)
+
+- **Participantes y horas reales:** Eva Moreno (I4). El plan contempla 3 h para completar el caso go_paralelo con distintos workers, 3 h para comprobar el paralelismo solicitado y evitar campañas simultáneas, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s07-i04-bench-go-paralelo`; [PR #53](https://github.com/GiulianoMaPe/MatricesParalelas/pull/53). La revisión corresponde a I3 (Giuliano) según la rotación; la integración de los cuatro casos, a I5.
+
+- **Entregable:** caso `go_paralelo` de [`scripts/bench_windows.ps1`](../../scripts/bench_windows.ps1). Solo se tocaron el bloque reservado para I4, su entrada en el despacho, el parámetro `-GoWorkers` y la guarda de dot-source, para no interferir con I1, I2 e I3.
+  - **Serie de workers:** sin `-GoWorkers` se usa la del [protocolo](../protocolo_medicion.md): W=1, 2, 4 y W=8 solo con 8 o más núcleos físicos. Una lista explícita se ordena, se eliminan duplicados y se rechaza W=0, W>1024 o W mayor que los procesadores lógicos, porque `GOMAXPROCS=W` no daría paralelismo real.
+  - **Paralelismo efectivo:** además del contrato CSV (`Validate-CsvRow` de I1), cada fila debe cumplir `workers=W`, `gomaxprocs=W` (valor efectivo de `runtime.GOMAXPROCS(0)`), `configuration=go_paralelo_W{W}` y `processes=threads=observed_threads=1`. Se elimina `GOMAXPROCS` del entorno del proceso hijo, para que no lo altere una variable heredada. Como diagnóstico, se registra en stderr el cociente entre tiempo de CPU y tiempo de pared del proceso.
+  - **Campañas simultáneas:** se rechaza la campaña si hay un ejecutable de medición del proyecto en marcha (`c_secuencial`, `c_paralelo`, `go_secuencial`, `go_paralelo`, `mpiexec` o `smpd`). Además, se toma `.cache\bench.lock` con el mismo modo exclusivo y el mismo formato JSON que el lock del caso c_paralelo (I2, [PR #51](https://github.com/GiulianoMaPe/MatricesParalelas/pull/51)), para que ambas campañas se excluyan. El lock se libera en `finally` y nunca se borra uno ajeno.
+  - **Robustez:** cada corrida tiene un plazo de 1800 s; si lo supera, se termina el árbol de procesos. La campaña se detiene ante el primer error, rechaza más de 5 repeticiones medidas (el ejecutable acepta `--repetition` 0..5) y registra en stderr el SHA-256 del ejecutable.
+
+- **Pruebas y evidencias:**
+  - **Pruebas automáticas:** [`tests/bench_go_paralelo_test.ps1`](../../tests/bench_go_paralelo_test.ps1) usa ejecutables falsos (`.cmd`) y pasa sus 27 casos con `-WithExecutable`, que añade una campaña real corta con N=64 y W=1, 2 y 16. Cubre fila válida y calentamiento, cinco formas de paralelismo no efectivo, versión, repetición, estado, `kernel_s > total_s`, filas sobrantes, códigos 1 y 2, ejecutable ausente, plazo excedido, la serie de workers y sus rechazos, el lock (exclusivo, liberado y con huérfano ajeno conservado) y la detección de mediciones en curso.
+  - **Comprobación de las pruebas:** en una copia aislada del repositorio inyecté tres fallos: quitar la comprobación de `gomaxprocs`, hacer el lock no exclusivo y no detectar procesos en curso. Las pruebas fallaron en los tres casos.
+  - **Piloto real · 12/11/2026:** con `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_paralelo -Fase piloto` en el equipo de I4 (FLDSMDFR: AMD Ryzen 7 3700X, 8 núcleos y 16 hilos, 15,9 GB, Windows 11 Pro 26200, Go 1.27.1), sobre el commit `7cf0aae` más los cambios de esta rama. Resultados:
+    - 72 de 72 corridas correctas en 156 s: N ∈ {256, 512, 1024} y W ∈ {1, 2, 4, 8}, con 1 calentamiento y 5 medidas cada una;
+    - cabecera idéntica al contrato y todas las filas con `validation_status=OK`, `gomaxprocs=workers` y `kernel_s ≤ total_s`;
+    - SHA-256 del ejecutable: `498153DA…103CE7`.
+    - Los datos están en [`resultados/piloto/s07_i04_go_paralelo/`](../../resultados/piloto/s07_i04_go_paralelo/).
+
+    | N | W=1 | W=2 | W=4 | W=8 |
+    | ---: | ---: | ---: | ---: | ---: |
+    | 256 | 0,0158 s | 0,0110 s | 0,0042 s | 0,0044 s |
+    | 512 | 0,1360 s | 0,0710 s | 0,0398 s | 0,0229 s |
+    | 1024 | 1,1304 s | 0,6310 s | 0,4007 s | 0,2270 s |
+
+    *Mediana de `total_s` de las 5 medidas.*
+  - **Campaña simultánea:** con el piloto en curso, una segunda campaña se rechazó en 1,5 s con "Hay mediciones en curso: go_paralelo[17472]", sin medir ni tocar el lock de la primera.
+  - **Reloj:** con Go 1.27.1, `time.Now()` avanzó a pasos de 303,8 µs, frente a 100 ns de `QueryPerformanceCounter` ([`resolucion_reloj.txt`](../../resultados/piloto/s07_i04_go_paralelo/resolucion_reloj.txt)). Según la política de cierre del S6, los grupos con `total_s` menor de 100 ms (N=256 y N=512 con W≥2) quedan como diagnóstico de tiempos cortos.
+
+- **Bloqueos y decisiones:**
+  - El diagnóstico CPU/pared crece con W a partir de N ≥ 512 (con N=1024: 0,97 con W=1 y 1,24 con W=8), pero no llega a W. El tiempo de pared del proceso incluye la generación y la referencia secuencial. La verificación del paralelismo es `gomaxprocs=W`; el cociente es solo orientativo y no se usa para aceptar o rechazar.
+  - Para la integración de I5: el lock y la detección de procesos se pueden unificar con los de I2, y la guarda de dot-source con la de I3.
+  - Con `-Version all` el script sigue emitiendo una cabecera por caso; la unificación de la salida corresponde a I5.
+
+- **Revisión y criterio de aceptación:** el caso go_paralelo genera CSV válido, repite correctamente, comprueba el paralelismo efectivo, detecta fallos y rechaza campañas simultáneas. Quedan pendientes la revisión de I3, mi revisión cruzada a I5 cuando publique su integración, las horas reales y la aceptación del equipo.
