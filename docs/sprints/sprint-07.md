@@ -102,7 +102,7 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
 
 - **Participantes y horas reales:** Eva Moreno (I4). El plan contempla 3 h para completar el caso go_paralelo con distintos workers, 3 h para comprobar el paralelismo solicitado y evitar campañas simultáneas, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s07-i04-bench-go-paralelo`. La revisión corresponde a I3 (Giuliano) según la rotación; la integración de los cuatro casos, a I5.
+- **Issues y pull requests:** rama de trabajo `feature/s07-i04-bench-go-paralelo`; [PR #53](https://github.com/GiulianoMaPe/MatricesParalelas/pull/53). La revisión corresponde a I3 (Giuliano) según la rotación; la integración de los cuatro casos, a I5.
 
 - **Entregable:** caso `go_paralelo` de [`scripts/bench_windows.ps1`](../../scripts/bench_windows.ps1). Solo se tocaron el bloque reservado para I4, su entrada en el despacho, el parámetro `-GoWorkers` y la guarda de dot-source, para no interferir con I1, I2 e I3.
   - **Serie de workers:** sin `-GoWorkers` se usa la del [protocolo](../protocolo_medicion.md): W=1, 2, 4 y W=8 solo con 8 o más núcleos físicos. Una lista explícita se ordena, se eliminan duplicados y se rechaza W=0, W>1024 o W mayor que los procesadores lógicos, porque `GOMAXPROCS=W` no daría paralelismo real.
