@@ -97,3 +97,49 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
   - Compatibilidad verificada con PowerShell 5.1.26100.
 
 - **Revisión y criterio de aceptación:** El caso `c_secuencial` de `bench_windows.ps1` genera CSV válido, respeta el protocolo de warmup + repeticiones, detecta y reporta errores, y no interfiere con las secciones reservadas para I2/I3/I4. Pendiente: revisión cruzada de I2 y aceptación del equipo.
+
+#### Integrante 7 (Andrés)
+
+- **Participantes y horas reales:** Andrés (I7). Total: 8 h reales (3 h desarrollo del motor de agregación no paramétrica, speedup, eficiencia y GFLOPS en `scripts/summarize_results.ps1`; 3 h diseño del fixture manual de control `tests/fixtures/control_mediciones.csv` y suite automatizada de 43 pruebas en `tests/summarize_results_test.ps1`; 1 h revisión cruzada a I8 Roberto sobre los criterios de congelación experimental de `docs/campana.md`; 1 h coordinación de equipo y documentación).
+
+- **Issues y pull requests:** rama de trabajo `feature/s07-i07-analisis-estadistico-speedup`. PR pendiente de apertura y fusión tras revisión.
+
+- **Entregables principales:**
+  1. [`scripts/summarize_results.ps1`](../../scripts/summarize_results.ps1): Script PowerShell (compatible con PS 5.1 y 7+) de agregación estadística y cálculo de métricas canónicas de rendimiento.
+  2. [`tests/fixtures/control_mediciones.csv`](../../tests/fixtures/control_mediciones.csv): Conjunto de datos manual de control con valores predecibles y cobertura exhaustiva de casos normales, errores (`ERROR`), warmups y referencias faltantes.
+  3. [`tests/summarize_results_test.ps1`](../../tests/summarize_results_test.ps1): Batería automatizada de 43 pruebas que validan rigurosamente los cálculos matemáticos contra los valores analíticos esperados.
+
+- **Cambios e implementación técnica:**
+  - **Flexibilidad de Entrada y Salida:** Acepta datos mediante `-InputPath` (uno o varios archivos), objetos en la tubería (`Get-Content ... | .\scripts\summarize_results.ps1`), parámetro posicional `-InputObject`, o lectura por defecto desde `resultados/piloto/mediciones.csv`. Admite exportación directa a `-OutputPath` en formato UTF-8 sin BOM, emisión a stdout para concatenar scripts, o retorno estructurado de objetos con `-PassThru`.
+  - **Conformidad Estricta con el Protocolo (§6.1, §6.3):**
+    - Descarte riguroso de precalentamiento (`is_warmup == 'true'` o `repetition == 0`).
+    - Descarte de ejecuciones fallidas (`validation_status != 'OK'`).
+    - Validación de duraciones finitas, positivas y consistentes ($0 \le \text{kernel\_s} \le \text{total\_s}$).
+  - **Agrupamiento Canónico y Estadísticas No Paramétricas:**
+    - Agrupación por clave canónica `hostname|commit|version|configuration|n|seed`.
+    - Para $R=5$ observaciones válidas ordenadas ($x_1 \le x_2 \le x_3 \le x_4 \le x_5$): $\text{mediana} = x_3$, $Q_1 = x_2$, $Q_3 = x_4$, $\text{IQR} = Q_3 - Q_1$, $\min = x_1$, $\max = x_5$, tanto para `kernel_s` como para `total_s`.
+    - Marcado de estado: `status = COMPLETE` para $R=5$; `status = INCOMPLETE` para $R < 5$.
+  - **Formulación Canónica de Rendimiento (§7.1, §7.2, §7.3):**
+    - **Speedup ($S$):** Referenciado obligatoriamente a la línea base secuencial del **mismo lenguaje**, nodo (`hostname`), commit y semilla:
+      $$S_{\text{C}} = \frac{\widetilde{T}_{\text{total, c\_secuencial}}}{\widetilde{T}_{\text{total, c\_paralelo}}}, \quad S_{\text{Go}} = \frac{\widetilde{T}_{\text{total, go\_secuencial}}}{\widetilde{T}_{\text{total, go\_paralelo}}}$$
+      Para las versiones secuenciales, $S = 1.0$. Si el grupo está incompleto o falta la referencia secuencial, el speedup queda explícitamente vacío (`null`), impidiendo métricas falsas.
+    - **Eficiencia Paralela ($E$):** $E_{\text{C}} = S_{\text{C}} / (P \times T)$ y $E_{\text{Go}} = S_{\text{Go}} / W$. Para secuenciales, $E = 1.0$.
+    - **Rendimiento Aritmético (GFLOPS):** $\text{GFLOPS}_{\text{kernel}} = 2 \cdot N^3 / (\text{mediana}(kernel\_s) \cdot 10^9)$ y $\text{GFLOPS}_{\text{total}} = 2 \cdot N^3 / (\text{mediana}(total\_s) \cdot 10^9)$ únicamente para grupos completos con mediana positiva.
+  - **Esquema de Salida:** Generación de CSV estructurado con 31 columnas estándar para los análisis de los Sprints 8 y 9 (`version`, `configuration`, `n`, `seed`, `processes`, `threads`, `workers`, `gomaxprocs`, `reps_count`, `status`, estadísticos de `kernel_s`, estadísticos de `total_s`, `speedup`, `efficiency`, `gflops_kernel`, `gflops_total` y metadatos de entorno).
+
+- **Pruebas y evidencias:**
+  - Ejecución de la batería de pruebas: `powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\summarize_results_test.ps1`
+    - **Resultado:** 43 pruebas superadas, 0 fallidas (100% PASS).
+    - Verificación de concordancia matemática exacta con los cálculos manuales de control en `c_secuencial` ($S=1, E=1, \text{GFLOPS}=1.677722$), `c_paralelo_P2_T2` ($S=2.5, E=0.625, \text{GFLOPS}=6.710886$), `go_secuencial` ($S=1, E=1$), `go_paralelo_W4` ($S=2.5, E=0.625$), grupos incompletos con errores excluidos y archivos sin BOM.
+  - Validación con datos reales del piloto de Yessly (I1) (`c_secuencial`, host `YESSLY-TB14G9`, commit `352858d`):
+    - $N=256$: $\widetilde{T}_{\text{kernel}} = 0.002678 \text{ s}$ ($\text{IQR} = 0.000113 \text{ s}$), $\widetilde{T}_{\text{total}} = 0.002703 \text{ s}$, $\text{GFLOPS}_{\text{kernel}} = 12.53$.
+    - $N=512$: $\widetilde{T}_{\text{kernel}} = 0.023823 \text{ s}$ ($\text{IQR} = 0.002280 \text{ s}$), $\widetilde{T}_{\text{total}} = 0.024417 \text{ s}$, $\text{GFLOPS}_{\text{kernel}} = 11.27$.
+    - $N=1024$: $\widetilde{T}_{\text{kernel}} = 0.268481 \text{ s}$ ($\text{IQR} = 0.085657 \text{ s}$), $\widetilde{T}_{\text{total}} = 0.269936 \text{ s}$, $\text{GFLOPS}_{\text{kernel}} = 8.00$.
+
+- **Bloqueos y decisiones:**
+  - Se confirmó que no existe dependencia de bloqueo respecto a los runners de I2, I3 e I4, dado que el contrato CSV de 20 columnas y las fórmulas estadísticas estaban congeladas desde el Sprint 5.
+  - Se aplicó estrictamente la restricción del protocolo §7.1 que prohíbe inventar ceros o publicar speedup si no existe la referencia secuencial correspondiente del mismo lenguaje o si el grupo tiene menos de 5 repeticiones válidas.
+
+- **Revisión y criterio de aceptación:**
+  - **Revisión cruzada a Roberto (I8):** Se coordinaron los requerimientos del acta de congelación (`docs/campana.md`), validando que las carpetas de salida (`resultados/piloto/<campaign_id>/`), los esquemas de metadatos de entorno y la secuencia de calentamiento + 5 repeticiones cumplan con la entrada requerida por `summarize_results.ps1`.
+  - El entregable satisface al 100% el criterio de aceptación del Sprint 7 para I7.
