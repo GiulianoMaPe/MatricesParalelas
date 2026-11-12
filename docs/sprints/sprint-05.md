@@ -369,3 +369,30 @@ afirma que otras personas hayan revisado, coordinado o reproducido la entrega.
 - **PR:** #39
 - **Cambios:** manejo de fallos colectivos y finalización del híbrido; los rangos coordinan errores antes de los colectivos críticos para evitar esperas indefinidas. Se documentan además el uso de `MPI_THREAD_FUNNELED` y el comportamiento de procesos sin filas.
 - **Pruebas y evidencias:** `c_paralelo/tests/pending_test.c` cubre procesos sin filas, P = N, límites de dimensión y el núcleo con cero filas. `c_paralelo/tests/registro_fallos.md` documenta los fallos controlados y sus códigos de salida. `c_paralelo/status.json` registra `validation: passed`; la ejecución de runtime debe repetirse en un equipo con MSVC, Windows SDK y MS-MPI.
+
+## Registro consolidado de I6 · Gerardo
+
+- **Asignación:** ampliar `scripts/test_windows.ps1` con las pruebas matemáticas
+  completas y hacer que los errores se detecten por código de salida, informando
+  el caso exacto.
+- **Trabajo reflejado en el cierre técnico:** se integraron la batería común de
+  regresión y `tests/sprint05_errors_test.ps1` con asistencia de Codex. La
+  cobertura verifica fixtures y CSV, errores esperados, salida estándar vacía,
+  diagnóstico por `stderr`, conservación del archivo de salida y terminación
+  dentro del límite de 15 s. La aceptación de las cuatro versiones se comprobó
+  en Debug y Release; el detalle y los comandos están en las secciones
+  [Integración pendiente resuelta para I6](#integración-pendiente-resuelta-para-i6)
+  y [Verificación reproducible](#verificación-reproducible-del-05112026).
+- **Resultado técnico:** conforme. `-Version all` terminó con código 0 en ambas
+  configuraciones; se registran 49 errores controlados y 148 invocaciones de
+  compatibilidad C/Go por configuración.
+- **Autoría y trazabilidad:** este registro consolida la asignación y la
+  evidencia de cierre; no atribuye a Gerardo una entrega individual publicada.
+  No se encontró PR de S5 de I6. La integración se completó durante el cierre
+  con asistencia de Codex.
+- **Horas:** el responsable confirmó 8 h reales por integrante para el sprint.
+  El desglose de actividades de I6 en la tabla de horas es una reconstrucción
+  del cierre, no una declaración individual de Gerardo.
+- **Revisión y cierre personal:** la revisión cruzada de I6 a I7 y la revisión
+  de I5 a I6 siguen pendientes. Por tanto, la aceptación técnica no cierra por
+  sí sola el registro administrativo personal.
