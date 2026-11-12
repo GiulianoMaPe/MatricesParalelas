@@ -38,6 +38,26 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
 
+#### Integrante 4
+
+- **Participantes y horas reales:** Eva (I4). El plan contempla 3 h de medición del tamaño de bloque y del coste del canal, 3 h de ajuste de bloques y cantidad de workers, 1 h de revisión cruzada a I5 (Fernando, `docs/memoria.md`) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s06-i04-granularidad-go`. La revisión corresponde a I3 (Giuliano) según la rotación.
+
+- **Pruebas y evidencias:** entregable [Comparativa de granularidad Go](../granularidad_go.md).
+  - **Cambio en el código:** en [workers.go](../../go_paralelo/workers.go), `multiplyParallelKernelBlocks` y `dispatchRowBlocksOfSize` reciben el tamaño de bloque explícito. El camino canónico sigue usando `ceil(N/W)`.
+  - **Medición:** el arnés [granularity_test.go](../../go_paralelo/granularity_test.go) midió el 11/11/2026, en el Ryzen 7 3700X con Go 1.27.1, 720 corridas: N ∈ {256, 512, 1024, 2048}, W ∈ {1, 2, 4, 8, 16} y seis granularidades, desde un bloque por worker hasta una fila por tarea. Hubo 1 calentamiento y 5 repeticiones, con el orden rotado en cada ronda. `total_s` se midió con `QueryPerformanceCounter`, y todas las corridas fueron idénticas bit a bit a W=1.
+  - **Benchmarks:** el canal cuesta 0,15–0,25 µs por tarea y la coordinación fija, menos de 10 µs por corrida, lo que da menos del 0,05 % de `total_s` incluso con una fila por tarea.
+  - **Resultado:** los bloques finos bajan `total_s` entre un 4 y un 12 % con W=4 y W=8 y N ≥ 1024, por balance de carga. Con W=1, W=16 y N=512, el efecto es nulo o irregular.
+  - **Datos:** en [resultados/experimentos/granularidad_go/](../../resultados/experimentos/granularidad_go/).
+
+- **Bloqueos y decisiones:**
+  - **Se conserva el bloque canónico `ceil(N/W)` para la campaña.** La mejora no es consistente en todas las configuraciones (regla de arquitectura §11), y el balance dinámico solo en Go sería asimétrico frente al reparto estático de C (`Scatterv` y `schedule(static)`). La variante fina queda como experimento aislado.
+  - **Serie de workers recomendada:** W ∈ {1, 2, 4, 8, 16}.
+  - **Hallazgo a coordinar con I3 e I7 antes del piloto:** `time.Now()` de Go avanza a saltos de 0,5 ms en este Windows, mientras C mide con `QueryPerformanceCounter` o `MPI_Wtime` (100 ns). Los tiempos cortos de Go en la campaña tendrían una resolución mucho más gruesa que los de C. Las opciones están en el informe.
+
+- **Revisión y criterio de aceptación:** el ejecutable no cambia de comportamiento. `go vet`, `go test`, `go test -race` y `test_windows.ps1 -Version go_paralelo` en Debug y Release terminaron con código 0 (detalle en el PR). Quedan pendientes la revisión de I3, mi revisión de `docs/memoria.md` de I5 cuando se publique, las horas reales y la aceptación del equipo.
+
 #### Integrante 8
 
 - Participantes y horas reales: Roberto (8 h: 3 h actualización de decisiones de diseño y fundamentación con la literatura científica, 3 h formulación de criterios de congelamiento algorítmico y evaluación de optimizaciones descartadas, 1 h coordinación general, 1 h revisión cruzada asignada a I1 Yessly).

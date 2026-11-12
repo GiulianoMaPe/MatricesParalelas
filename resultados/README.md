@@ -6,3 +6,7 @@ No almacenar pruebas de instalación como tiempos del proyecto.
 
 S7 guarda ensayos en `piloto/`; S8 conserva la campaña oficial en `raw/`. Los
 resúmenes y gráficos deben derivarse de observaciones reales y trazables.
+
+`experimentos/` guarda mediciones de optimización del S6 que no forman parte de
+la campaña; por ejemplo, `granularidad_go/` es la evidencia de
+[docs/granularidad_go.md](../docs/granularidad_go.md).
