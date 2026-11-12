@@ -83,8 +83,9 @@ Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
 `scripts/run_hybrid_windows.ps1 -Processes P -Threads T`.
 El script `bench_windows.ps1 -Version go_secuencial` implementa la medición
 individual de S7/I3 con el ejecutable Release, calentamiento y cinco medidas.
-Las otras versiones y `all` siguen pendientes y devuelven 2 sin medir.
-Consultar [uso, pruebas y aceptación Windows pendiente](docs/validacion_s07_i03.md).
+Los cuatro casos individuales están disponibles en módulos separados; `all`
+sigue reservado a la integración de I5 y devuelve 2 sin medir.
+Consultar [uso, pruebas y aceptación Windows](docs/validacion_s07_i03.md).
 
 ## Organización
 

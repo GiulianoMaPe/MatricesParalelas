@@ -1,6 +1,8 @@
-﻿# Solicitud de revisión S7 · I2→I3
+# Revisión S7 · I2→I3
 
-Borrador preparado; todavía no enviado ni aprobado.
+Revisión solicitada y aprobada por Sebastián (@SebastianMalca) el 12/11/2026:
+[aprobación del PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934).
+La coordinación de integración con I5 sigue pendiente de confirmación.
 
 Se corrigió la entrega de I3 para conservar los casos individuales C secuencial,
 C paralelo y Go paralelo en módulos separados, con un despacho común.
@@ -12,7 +14,7 @@ la extracción de los módulos de I1/I2/I4. Ver evidencia en
 resultados/diagnostico/s07-i03/aceptacion_windows_20261112/.
 El rango público de Repetitions se conserva; Go secuencial exige cinco.
 
-I2: confirmar la conservación de su caso y registrar revisión/aprobación real.
+I2: aprobación real registrada en el enlace anterior.
 I5: confirmar la interfaz Invoke-GoSequentialMeasurement para el plan intercalado.
 all continúa reservado a esa integración; los ensayos no son el piloto oficial.
 

@@ -70,7 +70,7 @@ El caso Go secuencial de `scripts/bench_windows.ps1` está implementado en S7/I3
 `-Version go_secuencial -N 256 -Seed 42` ejecuta el binario Release con un
 calentamiento y cinco medidas, verifica sus parámetros/CSV y conserva diagnósticos.
 La campaña de las cuatro versiones sigue pendiente de integración. Consultar
-[uso, pruebas y aceptación Windows pendiente](../docs/validacion_s07_i03.md).
+[uso, pruebas y aceptación Windows](../docs/validacion_s07_i03.md).
 
 ## Interfaz para integrar los cronómetros
 

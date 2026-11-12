@@ -1,4 +1,4 @@
-﻿# Sprint 7 · I3 · Medición Go secuencial
+# Sprint 7 · I3 · Medición Go secuencial
 
 La entrega de Giuliano añade únicamente el caso Go secuencial a
 `scripts/bench_windows.ps1`. La campaña integrada, el piloto, la agregación y la
@@ -142,5 +142,6 @@ explícitamente al usarlas con otro caso, en vez de ignorarlas.
 No hay afirmación de aceptación del piloto completo ni del cierre de equipo.
 
 Giuliano declaró **8 horas reales totales**, sin desglose. Quedan pendientes
-la aprobación humana I2→I3 y la confirmación de coordinación con I5.
+la confirmación de coordinación con I5. La aprobación humana I2→I3 quedó
+[registrada por Sebastián en el PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934).
 No se atribuyen revisiones ni horas por actividad que no se hayan confirmado.

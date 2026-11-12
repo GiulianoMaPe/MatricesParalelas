@@ -17,7 +17,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_go_secuenc
 `-WithExecutable` añade seis lotes reales con N=1,3,17, semillas 0/4294967295,
 calentamiento y cinco medidas. Exige Windows x64 y el ejecutable Release de HEAD.
 La evidencia se guarda bajo `tests/outputs/s07-i03/<id>/`. Consultar
-[resultados locales, procedimiento y aceptación Windows pendiente](../docs/validacion_s07_i03.md).
+[resultados locales, procedimiento y aceptación Windows](../docs/validacion_s07_i03.md).
 
 ## Batería común
 
