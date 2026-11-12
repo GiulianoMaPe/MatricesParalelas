@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: implementación local de I3 disponible, con aceptación Windows y revisión cruzada pendientes. Las demás entregas y el cierre de equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -33,6 +33,28 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 I1 a I4 trabajan en funciones separadas del script; I5 integra después de su revisión. El piloto se guarda separado de los CSV oficiales de S8.
 
 ## Registro de cierre
+
+### I3 · Giuliano · 12/11/2026
+
+- Rama: `feature/s07-i03-medicion-go-secuencial`, desde `352858d`.
+- Implementación: caso `-Version go_secuencial` en `scripts/bench_windows.ps1`.
+  Ejecuta exclusivamente `go_secuencial/build/Release/go_secuencial.exe`, con
+  `--n`, `--seed`, `--repetition` y `GOMAXPROCS=1` en el proceso hijo.
+- Comprueba PE x64, metadatos VCS/HEAD, ausencia de opciones Debug/instrumentación,
+  SHA-256 antes/después, veinte columnas CSV, parámetros solicitados/efectivos y
+  tiempos internos. Registra calentamiento y cinco medidas; conserva stdout,
+  stderr, argumentos, PID, código real, timeout y estado del lote.
+- Validación local: **75 casos aprobados con PowerShell 7.4.6 sobre Linux**,
+  incluidos procesos controlados, stderr de 200000 bytes, terminación por timeout,
+  lotes sintéticos completos/fallidos y conservación de resultados parciales.
+  Estos datos sintéticos no son observaciones experimentales.
+- [Procedimiento, evidencia y límites](../validacion_s07_i03.md). Falta ejecutar
+  `tests/bench_go_secuencial_test.ps1 -WithExecutable` en Windows PowerShell 5.1
+  con Release recién compilado. No se acredita todavía aceptación Windows.
+- Integración: I5 puede invocar `Invoke-GoSequentialMeasurement` para cada fila
+  del plan general. `all`, C y Go paralelo mantienen salida 2 sin mediciones.
+- Revisión I2→I3 y coordinación con I5: pendientes; horas reales no declaradas.
+  No se ejecutó el piloto ni se completaron tareas de otros integrantes.
 
 - Participantes y horas reales: pendiente.
 - Issues y pull requests: pendiente.

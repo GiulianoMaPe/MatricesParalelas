@@ -16,8 +16,10 @@ Este documento establece el **Protocolo de Medición Versión Inicial** del proy
 
 > [!IMPORTANT]
 > Las cuatro versiones implementan el producto y su validación desde S3–S5.
-> `bench_windows.ps1` continúa pendiente de automatización hasta S7 y devuelve 2;
-> cambiar los estados JSON no lo habilita. Los errores de programas se convierten
+> En S7/I3, `bench_windows.ps1 -Version go_secuencial` implementa la medición
+> individual ([estado y validación](validacion_s07_i03.md)); las otras versiones
+> y `all` continúan pendientes y devuelven 2. Cambiar estados JSON no los habilita.
+> Los errores de programas se convierten
 > a 1 y el éxito validado a 0. Los smoke tests solo prueban instalación.
 > Los ensayos Linux de S6 se guardan en `resultados/diagnostico/` y no constituyen
 > observaciones de la campaña Windows ni certifican MSVC/MS-MPI.

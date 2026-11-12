@@ -81,9 +81,10 @@ El contrato secuencial es `--n N --seed SEED` o `--input archivo`, con `--output
 opcional y `--repetition 0..5`. C y Go secuenciales implementan estas opciones;
 Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
 `scripts/run_hybrid_windows.ps1 -Processes P -Threads T`.
-El script `bench_windows.ps1` documenta su futura interfaz y rechaza las mediciones
-con código 2 mientras no exista implementación y validación; tampoco se habilita
-solo editando `status.json`. No hay resultados experimentales en esta entrega.
+El script `bench_windows.ps1 -Version go_secuencial` implementa la medición
+individual de S7/I3 con el ejecutable Release, calentamiento y cinco medidas.
+Las otras versiones y `all` siguen pendientes y devuelven 2 sin medir.
+Consultar [uso, pruebas y aceptación Windows pendiente](docs/validacion_s07_i03.md).
 
 ## Organización
 
@@ -119,8 +120,9 @@ no vuelven a asignarse como trabajo de desarrollo ya realizado.
 Las rutas acordadas son `docs/formato_datos.md` y `docs/protocolo_medicion.md`.
 Los diagnósticos, informes y scripts que aún no existen se crearán en el sprint
 asignado. `scripts/compare_results.ps1` implementa la comparación de S3 y
-`scripts/summarize_results.ps1` corresponde a S7. `bench_windows.ps1` es solo una interfaz
-pendiente: S7 implementará la campaña real. El piloto se guardará en
+`scripts/summarize_results.ps1` corresponde a S7. `bench_windows.ps1` implementa
+el caso individual Go secuencial; falta integrar la campaña completa. El piloto
+se guardará en
 `resultados/piloto/`, separado de los datos oficiales de S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes

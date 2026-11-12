@@ -1,5 +1,26 @@
 # Pruebas del proyecto
 
+## Sprint 7 · I3: medidor Go secuencial
+
+`bench_go_secuencial_test.ps1` comprueba el CSV de veinte campos, parámetros,
+metadatos Release/VCS, captura y terminación de procesos controlados, entorno,
+timeout y conservación de datos parciales. La modalidad predeterminada usa
+datos sintéticos; está diseñada para PowerShell 5.1/7 y validada localmente con
+7.4.6 en Linux. No genera resultados de piloto.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_go_secuencial_test.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1 -Version go_secuencial -Configuration Release
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_go_secuencial_test.ps1 -WithExecutable
+```
+
+`-WithExecutable` añade seis lotes reales con N=1,3,17, semillas 0/4294967295,
+calentamiento y cinco medidas. Exige Windows x64 y el ejecutable Release de HEAD.
+La evidencia se guarda bajo `tests/outputs/s07-i03/<id>/`. Consultar
+[resultados locales, procedimiento y aceptación Windows pendiente](../docs/validacion_s07_i03.md).
+
+## Batería común
+
 `scripts/test_windows.ps1` ejecuta primero las pruebas de
 `scripts/compare_results.ps1`, compila cada versión elegida y prueba su estado
 actual. Un faltante de dependencias es un fallo/incompleto, nunca un PASS omitido
