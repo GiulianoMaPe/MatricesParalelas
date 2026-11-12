@@ -119,3 +119,23 @@ no sobreescribe intentos ni modifica los programas de campaña.
 Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
 cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
 los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).
+
+## Sprint 7 · I7: agregación estadística y validación de speedup
+
+`tests/summarize_results_test.ps1` valida de forma automatizada e independiente
+el script de agregación y análisis [`scripts/summarize_results.ps1`](../scripts/summarize_results.ps1).
+Ejecuta 43 pruebas contra el fixture manual de control [`tests/fixtures/control_mediciones.csv`](fixtures/control_mediciones.csv):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\summarize_results_test.ps1
+```
+
+Comprueba:
+1. Rechazo de esquemas CSV no conformes con el contrato (§4) y emisión de cabecera de 31 columnas.
+2. Descarte estricto de precalentamiento (`is_warmup=true`) y filas con estado diferente de `OK`.
+3. Cálculo exacto de estadísticas no paramétricas: mediana, $Q_1$, $Q_3$, IQR, mínimo y máximo.
+4. Cálculo de Speedup ($S$) referenciado a la línea base secuencial del mismo lenguaje, nodo, commit y semilla.
+5. Cálculo de Eficiencia Paralela ($E$) respecto al número nominal de trabajadores ($P \times T$ o $W$).
+6. Omisión de Speedup (campo vacío) si el grupo está incompleto ($< 5$ repeticiones válidas) o si falta la referencia secuencial.
+7. Cálculo de rendimiento aritmético estimado (GFLOPS) para kernel y total.
+8. Compatibilidad con entrada vía `-InputPath`, tubería (`Get-Content ... | .\summarize_results.ps1`) y exportación a archivo en UTF-8 sin BOM.
