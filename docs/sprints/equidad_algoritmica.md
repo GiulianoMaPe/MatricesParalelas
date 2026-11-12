@@ -90,10 +90,7 @@ siendo un indicador, no una medida causal exacta de comunicaciones o canal.
 
 ## Auditoría de cierre Windows
 
-Los cinco criterios anteriores se comprobaron en la
-[aceptación Windows](cierre_s06_windows.md) y la
-[revisión de integración](revision_s06.md). Debug y Release pasan en las cuatro
-versiones, con MPI real, perfiles rank/PID, filas/hilos, afinidad, errores y
+Debug y Release pasan en las cuatro versiones, con MPI real, perfiles rank/PID, filas/hilos, afinidad, errores y
 timeouts sin procesos restantes. El refactor de I4 conserva el bloque canónico;
 ninguna candidata aislada reemplaza el cálculo de producción.
 
