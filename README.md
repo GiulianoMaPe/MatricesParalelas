@@ -5,7 +5,7 @@ una base técnica preparada. Las cuatro versiones ejecutan y validan el producto
 real. El [cierre del Sprint 5](docs/sprints/sprint-05.md) reúne la validación
 integral, los errores controlados y 64 horas confirmadas. El cierre técnico está
 completado; quedan cuatro conformidades personales para el cierre administrativo.
-S6 continúa con la optimización sustentada por mediciones.
+S6 conserva el algoritmo de producción y añade diagnósticos Linux, candidatas aisladas e informes de memoria/equidad. La aceptación MSVC/MS-MPI sigue pendiente; consultar [acta S6](docs/sprints/sprint-06.md).
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |

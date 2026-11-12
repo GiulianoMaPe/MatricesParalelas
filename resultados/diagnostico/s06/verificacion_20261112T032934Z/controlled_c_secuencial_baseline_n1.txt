@@ -1,0 +1,1 @@
+{"schema":"s06-laboratory-v1","version":"c_secuencial","variant":"baseline","n":1,"seed":42,"workers":1,"observed_threads":1,"kernel_s":0.000000061,"total_s":0.000000531,"validation_status":"OK"}

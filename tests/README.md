@@ -89,3 +89,33 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\sprint05_errors_
 
 MPI requiere permiso para lanzar procesos de MS-MPI. Una restricción del
 entorno se reporta como fallo; no se omite la prueba ni se presenta como éxito.
+
+## Diagnóstico del Sprint 6
+
+Los archivos `go_secuencial/sprint06_test.go` y `go_paralelo/sprint06_test.go`
+contienen candidatas aisladas y comprobaciones de producto, repetición e
+inmutabilidad. No sustituyen los kernels de producción. Las observaciones
+`TestSprint06Observation` solo se activan con `S06_OUTPUT` y usan un esquema
+propio de laboratorio, no el CSV de campaña.
+
+`tests/sprint06_kernel_bench.c` se enlaza con `tests/sprint06_candidates.c`
+como unidad independiente y por separado con C secuencial o con el
+kernel local OpenMP (`S06_OPENMP`); este último no ejecuta comunicación MPI.
+Cada observación usa la referencia independiente i,j,k y verifica cada celda.
+
+En Linux con Python 3.9+, GCC/OpenMP, Go compatible con go.mod y GNU time:
+
+```bash
+python3 -B tests/sprint06_lab_test.py
+python3 -B scripts/sprint06_lab.py --go /ruta/a/go --sizes 256 512 1024 --workers 1 2 4
+```
+
+El runner construye los harnesses, toma un calentamiento y cinco medidas por
+combinación, alterna el orden por rondas y conserva fuentes, hashes, entorno,
+memoria RSS y datos originales bajo `resultados/diagnostico/s06/`. Incluye
+bloqueo por repositorio, timeout del grupo de procesos y validación de salida;
+no sobreescribe intentos ni modifica los programas de campaña.
+
+Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
+cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
+los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).

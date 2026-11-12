@@ -82,3 +82,9 @@ y 296 invocaciones de compatibilidad C/Go entre ambas configuraciones. El
 responsable confirmó 8 h reales por integrante (64 h); el acta reconstruye el
 desglose e identifica cuatro conformidades personales aún pendientes:
 I3→I4, I5→I6, I6→I7 e I8→I1. S6 parte de esta base para optimizar con evidencia.
+
+Al 11/11/2026, S6 completa el alcance Linux autorizado: candidatas aisladas,
+regresión portable, 486 corridas diagnósticas brutas y documentación de memoria,
+equidad y decisiones. Las comparativas C finales usan un intento de compilación
+controlada separado. El [acta S6](sprint-06.md) conserva datos, limitaciones y la
+aceptación MSVC/MS-MPI pendiente; no se declara cerrada la campaña Windows.

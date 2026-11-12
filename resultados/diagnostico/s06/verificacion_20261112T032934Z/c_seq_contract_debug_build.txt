@@ -1,0 +1,2 @@
+/usr/bin/ld.bfd: no se puede encontrar /usr/lib64/libasan.so.8.0.0: No existe el fichero o el directorio
+collect2: error: ld devolvió el estado de salida 1

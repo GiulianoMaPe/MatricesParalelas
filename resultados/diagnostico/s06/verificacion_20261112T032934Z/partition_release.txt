@@ -1,0 +1,1 @@
+OK: particionado MPI, bloques vacios, limites y argumentos invalidos.

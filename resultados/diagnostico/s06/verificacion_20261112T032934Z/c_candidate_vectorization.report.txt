@@ -1,0 +1,52 @@
+tests/sprint06_kernel_bench.c:33:9: missed: statement clobbers memory: _1 = clock_gettime (1, &value);
+tests/sprint06_kernel_bench.c:33:54: missed: statement clobbers memory: exit (1);
+tests/sprint06_kernel_bench.c:33:54: note: ***** Analysis failed with vector mode V2DI
+tests/sprint06_kernel_bench.c:33:54: note: ***** Skipping vector mode V16QI, which would repeat the analysis for V2DI
+tests/sprint06_kernel_bench.c:61:26: missed: couldn't vectorize loop
+tests/sprint06_kernel_bench.c:61:26: missed: not vectorized: multiple nested loops.
+tests/sprint06_kernel_bench.c:64:30: missed: couldn't vectorize loop
+tests/sprint06_kernel_bench.c:67:50: missed: not vectorized: complicated access pattern.
+tests/sprint06_kernel_bench.c:67:34: optimized: loop vectorized using 16 byte vectors and unroll factor 2
+tests/sprint06_kernel_bench.c:109:26: missed: couldn't vectorize loop
+tests/sprint06_kernel_bench.c:109:26: missed: not vectorized: multiple nested loops.
+tests/sprint06_kernel_bench.c:110:30: missed: couldn't vectorize loop
+tests/sprint06_kernel_bench.c:112:63: missed: not vectorized: not suitable for strided load _29 = *_28;
+tests/sprint06_kernel_bench.c:112:34: missed: couldn't vectorize loop
+tests/sprint06_kernel_bench.c:112:52: missed: not vectorized: no vectype for stmt: _24 = *_23;
+ scalar_type: double
+tests/sprint06_kernel_bench.c:73:5: note: vectorized 1 loops in function.
+tests/sprint06_kernel_bench.c:86:17: missed: statement clobbers memory: dimension_65 = strtoul (_2, &end, 10);
+tests/sprint06_kernel_bench.c:90:20: missed: statement clobbers memory: _10 = strcmp (_9, "baseline");
+tests/sprint06_kernel_bench.c:97:25: missed: statement clobbers memory: _11 = strcmp (_9, "restrict_c");
+tests/sprint06_kernel_bench.c:99:19: missed: statement clobbers memory: a_68 = malloc (_12);
+tests/sprint06_kernel_bench.c:100:19: missed: statement clobbers memory: b_70 = malloc (_12);
+tests/sprint06_kernel_bench.c:101:19: missed: statement clobbers memory: c_72 = malloc (_12);
+tests/sprint06_kernel_bench.c:102:27: missed: statement clobbers memory: reference_74 = malloc (_12);
+tests/sprint06_kernel_bench.c:107:9: missed: statement clobbers memory: _19 = input_generate (a_68, b_70, dimension_65, 42);
+tests/sprint06_kernel_bench.c:116:10: missed: statement clobbers memory: t0_77 = seconds ();
+tests/sprint06_kernel_bench.c:117:5: missed: statement clobbers memory: matrix_clear (c_72, powmult_150);
+tests/sprint06_kernel_bench.c:118:10: missed: statement clobbers memory: k0_80 = seconds ();
+tests/sprint06_kernel_bench.c:124:10: missed: statement clobbers memory: matrix_accumulate (a_68, b_70, c_72, dimension_65);
+tests/sprint06_kernel_bench.c:126:16: missed: statement clobbers memory: _35 = seconds ();
+tests/sprint06_kernel_bench.c:127:15: missed: statement clobbers memory: _36 = seconds ();
+tests/sprint06_kernel_bench.c:136:5: missed: statement clobbers memory: printf ("{\"schema\":\"s06-laboratory-v1\",\"version\":\"%s\",\"variant\":\"%s\",\"n\":%zu,\"seed\":42,\"workers\":%d,\"observed_threads\":%d,\"kernel_s\":%.9f,\"total_s\":%.9f,\"validation_status\":\"OK\"}\n", "c_secuencial", _49, dimension_65, 1, 1, kernel_s_84, total_s_86);
+tests/sprint06_kernel_bench.c:141:5: missed: statement clobbers memory: free (a_68);
+tests/sprint06_kernel_bench.c:141:14: missed: statement clobbers memory: free (b_70);
+tests/sprint06_kernel_bench.c:141:23: missed: statement clobbers memory: free (c_72);
+tests/sprint06_kernel_bench.c:141:32: missed: statement clobbers memory: free (reference_74);
+tests/sprint06_kernel_bench.c:131:13: missed: statement clobbers memory: fprintf (stderr.2_48, "MISMATCH at %zu\n", i_209);
+tests/sprint06_kernel_bench.c:132:13: missed: statement clobbers memory: free (a_68);
+tests/sprint06_kernel_bench.c:132:22: missed: statement clobbers memory: free (b_70);
+tests/sprint06_kernel_bench.c:132:31: missed: statement clobbers memory: free (c_72);
+tests/sprint06_kernel_bench.c:132:40: missed: statement clobbers memory: free (reference_74);
+tests/sprint06_kernel_bench.c:104:9: missed: statement clobbers memory: free (a_68);
+tests/sprint06_kernel_bench.c:104:18: missed: statement clobbers memory: free (b_70);
+tests/sprint06_kernel_bench.c:104:27: missed: statement clobbers memory: free (c_72);
+tests/sprint06_kernel_bench.c:104:36: missed: statement clobbers memory: free (reference_74);
+tests/sprint06_kernel_bench.c:82:9: missed: statement clobbers memory: __builtin_fwrite ("Usage: laboratory N baseline|restrict_c|static1\n", 1, 48, stderr.0_1);
+tests/sprint06_kernel_bench.c:103:24: note: ***** Analysis failed with vector mode V2DI
+tests/sprint06_kernel_bench.c:103:24: note: ***** The result for vector mode V16QI would be the same
+tests/sprint06_kernel_bench.c:103:24: note: ***** Re-trying analysis with vector mode V8QI
+tests/sprint06_kernel_bench.c:103:24: note: ***** Analysis failed with vector mode V8QI
+tests/sprint06_kernel_bench.c:103:24: note: ***** Re-trying analysis with vector mode V4QI
+tests/sprint06_kernel_bench.c:103:24: note: ***** Analysis failed with vector mode V4QI

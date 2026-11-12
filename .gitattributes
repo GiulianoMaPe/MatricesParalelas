@@ -8,3 +8,6 @@
 *.json text eol=lf
 *.txt text eol=lf
 *.docx binary
+# Preserve diagnostic output and archived sources byte-for-byte (SHA-256).
+# Whitespace in captured diffs/compiler reports is part of the raw evidence.
+resultados/diagnostico/** -text -whitespace
