@@ -162,6 +162,48 @@ archivo y stdout se conservan como mejoras y limitaciones documentadas.
 Los apartados siguientes conservan las declaraciones originales y sus fechas.
 Para el estado vigente de PR, horas y revisiones prevalece el acta anterior.
 
+## Registro consolidado de I6 · Gerardo
+
+- **Informe técnico complementario:** [Sprint 5 · Registro técnico de I6](sprint-05-i6.md),
+  con el cambio al test del comparador, pruebas ejecutadas y limitaciones de
+  esta validación local.
+- **Asignación:** ampliar `scripts/test_windows.ps1` con las pruebas matemáticas
+  completas y hacer que los errores se detecten por código de salida, informando
+  el caso exacto.
+- **Trabajo reflejado en el cierre técnico:** se integraron la batería común de
+  regresión y `tests/sprint05_errors_test.ps1` con asistencia de Codex. La
+  cobertura verifica fixtures y CSV, errores esperados, salida estándar vacía,
+  diagnóstico por `stderr`, conservación del archivo de salida y terminación
+  dentro del límite de 15 s. La aceptación de las cuatro versiones se comprobó
+  en Debug y Release; el detalle y los comandos están en las secciones
+  [Integración pendiente resuelta para I6](#integración-pendiente-resuelta-para-i6)
+  y [Verificación reproducible](#verificación-reproducible-del-05112026).
+- **Resultado técnico:** conforme. `-Version all` terminó con código 0 en ambas
+  configuraciones; se registran 49 errores controlados y 148 invocaciones de
+  compatibilidad C/Go por configuración.
+- **Validación adicional en este workspace · 12/11/2026:** se corrigió
+  `tests/compare_results_test.ps1` para capturar stdout, stderr y código de
+  salida del comparador mediante `System.Diagnostics.Process`, evitando que
+  PowerShell convierta el stderr esperado de los casos negativos en una
+  excepción de la propia prueba. El test del comparador pasó. También pasaron
+  las pruebas de los módulos Go y 36 casos negativos: 11 de C secuencial, 11
+  de Go secuencial y 14 de Go paralelo. Las pruebas C secuenciales y las de
+  particionado C paralelo compilaron y pasaron durante el intento del runner.
+  La ejecución integral no pudo completarse en este workspace: no hay
+  metadatos `.git` para producir el commit que exigen los CSV y falta el
+  runtime de MS-MPI (`mpiexec.exe`). Por ello, esta ejecución parcial no
+  sustituye la aceptación integral Debug/Release documentada arriba.
+- **Autoría y trazabilidad:** este registro consolida la asignación y la
+  evidencia de cierre; no atribuye a Gerardo una entrega individual publicada.
+  No se encontró PR de S5 de I6. La integración se completó durante el cierre
+  con asistencia de Codex.
+- **Horas:** el responsable confirmó 8 h reales por integrante para el sprint.
+  El desglose de actividades de I6 en la tabla de horas es una reconstrucción
+  del cierre, no una declaración individual de Gerardo.
+- **Revisión y cierre personal:** la revisión cruzada de I6 a I7 y la revisión
+  de I5 a I6 siguen pendientes. Por tanto, la aceptación técnica no cierra por
+  sí sola el registro administrativo personal.
+
 ## Registro individual · I5 Fernando
 
 - **Entregable:** [Informe de validación numérica](../validacion_numerica.md).

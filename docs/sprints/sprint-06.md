@@ -41,6 +41,9 @@ incumplimientos temporales históricos de I4, sin reetiquetarlos como válidos.
 
 ## Autorías, horas y alcance de la revisión
 
+El registro técnico de I6 y las regresiones ejecutadas en el workspace están
+documentados en [Sprint 6 · Registro técnico de I6](sprint-06-i6.md).
+
 | Persona | Horas reales declaradas | Fuente |
 | --- | ---: | --- |
 | Giuliano (I3), integración asistida por Codex | 8 h | Confirmación del responsable en esta sesión |
