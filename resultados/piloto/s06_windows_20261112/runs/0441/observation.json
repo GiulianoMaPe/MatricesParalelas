@@ -1,0 +1,1 @@
+{"api_allocs_n17":1,"kernel_allocs_n17":0,"kernel_s":0.006599,"n":256,"schema":"s06-laboratory-v1","seed":42,"total_s":0.006599,"validation_status":"OK","variant":"row_slices","version":"go_secuencial","workers":1}

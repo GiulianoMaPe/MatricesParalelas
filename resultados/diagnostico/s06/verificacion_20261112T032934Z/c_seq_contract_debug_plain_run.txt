@@ -1,0 +1,3 @@
+OK: contratos S2 de dimension, datos, memoria y buffers intactos.
+OK: contratos S5 de robustez (capacidad k buffers, limites fijos y fallos simulados).
+OK: estados/valores LCG, fixtures y entradas malformadas.

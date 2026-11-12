@@ -1,0 +1,12 @@
+tests/sprint06_candidates.c:53:19: missed: couldn't vectorize loop
+tests/sprint06_candidates.c:53:19: missed: not vectorized: multiple nested loops.
+tests/sprint06_candidates.c:56:23: missed: couldn't vectorize loop
+tests/sprint06_candidates.c:59:46: missed: not vectorized: complicated access pattern.
+tests/sprint06_candidates.c:59:27: optimized: loop vectorized using 16 byte vectors and unroll factor 2
+tests/sprint06_candidates.c:50:6: note: vectorized 1 loops in function.
+tests/sprint06_candidates.c:50:6: note: ***** Analysis failed with vector mode V2DF
+tests/sprint06_candidates.c:50:6: note: ***** The result for vector mode V16QI would be the same
+tests/sprint06_candidates.c:50:6: note: ***** Re-trying analysis with vector mode V8QI
+tests/sprint06_candidates.c:50:6: note: ***** Analysis failed with vector mode V8QI
+tests/sprint06_candidates.c:50:6: note: ***** Re-trying analysis with vector mode V4QI
+tests/sprint06_candidates.c:50:6: note: ***** Analysis failed with vector mode V4QI

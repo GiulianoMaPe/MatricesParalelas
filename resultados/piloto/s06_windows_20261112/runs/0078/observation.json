@@ -1,0 +1,1 @@
+{"block_rows":256,"channel_capacity":0,"coordination_allocs_n17":6,"gomaxprocs":1,"kernel_s":0.0171933,"n":256,"schema":"s06-laboratory-v1","seed":42,"tasks":1,"total_s":0.0171933,"validation_status":"OK","variant":"unbuffered","version":"go_paralelo","workers":1}

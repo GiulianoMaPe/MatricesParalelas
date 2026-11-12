@@ -1,0 +1,12 @@
+﻿Windows: Microsoft Windows NT 10.0.26300.0; sistema 64 bits: True
+Terminal MSVC inicializada: False; vswhere: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+MSVC: C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe; destino: x64; version: 14.44.35207
+Windows SDK: C:\Program Files (x86)\Windows Kits\10\ 10.0.26100.0\ (cabeceras y kernel32.lib x64 presentes)
+mpi.h: C:\Program Files (x86)\Microsoft SDKs\MPI\Include; msmpi.lib candidata x64: C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64
+msmpi.lib: x64 confirmado
+MS-MPI Runtime: C:\Program Files\Microsoft MPI\Bin\mpiexec.exe; x64; version: 10.1.12498.52
+go version go1.27.4 windows/amd64
+Go host/destino: windows/amd64
+git version 2.56.0.windows.4
+Git: C:\Program Files\Git\cmd\git.exe; arquitectura: x64
+Dependencias detectadas. Ejecute test_windows.ps1 para verificar compilacion y ejecucion.

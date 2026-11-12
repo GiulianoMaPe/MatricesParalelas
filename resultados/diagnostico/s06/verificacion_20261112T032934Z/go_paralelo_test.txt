@@ -1,0 +1,1 @@
+ok  	matrices/go_paralelo	3.007s

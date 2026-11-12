@@ -1,0 +1,187 @@
+﻿OK: compare_results.ps1 (5 fixtures, tolerancias, valores cero y formato estricto).
+Compilando c_secuencial (Debug)...
+input.c
+main.c
+matrix.c
+timer.c
+Generando código...
+input.c
+matrix.c
+timer.c
+pending_test.c
+Generando código...
+OK: contratos S2 de dimension, datos, memoria y buffers intactos.
+OK: contratos S5 de robustez (capacidad k buffers, limites fijos y fallos simulados).
+OK: estados/valores LCG, fixtures y entradas malformadas.
+OK: prueba de instalacion C secuencial x64, sin MPI ni OpenMP. Cronometro operativo (0.003501700 s observados).
+OK: producto2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: escalar.output.txt; n=1; elementos=1; max_abs=0; max_rel=0
+OK: identidad.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: cero.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: impar3.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: c_secuencial (producto real, cinco fixtures y CSV validado).
+OK: c_secuencial/missing-value
+OK: c_secuencial/zero-dimension
+OK: c_secuencial/negative-dimension
+OK: c_secuencial/nonnumeric-dimension
+OK: c_secuencial/seed-overflow
+OK: c_secuencial/invalid-repetition
+OK: c_secuencial/missing-input
+OK: c_secuencial/truncated-input
+OK: c_secuencial/nonfinite-input
+OK: c_secuencial/nonfinite-product
+OK: c_secuencial/output-directory
+OK: S05 c_secuencial Debug; 11 errores controlados; evidencia: D:\Escritorio\Proyectos\MatricesParalelas\c_secuencial\build\Debug\s05-errors\601da981d7434a089a365b68b983aad7
+Compilando c_paralelo (Debug)...
+input.c
+main.c
+matrix.c
+partition.c
+Generando código...
+input.c
+matrix.c
+partition.c
+pending_test.c
+Generando código...
+partition.c
+partition_test.c
+Generando código...
+OK: entradas, particion (8 ejemplos + 4480 casos + filas vacias) y nucleo local.
+OK: particionado MPI, bloques vacios, limites y argumentos invalidos.
+Prueba de instalacion: proceso 0/2, hilos 2, nivel MPI 1 (FUNNELED=1).
+Prueba de instalacion: proceso 1/2, hilos 2, nivel MPI 1 (FUNNELED=1).
+OK: producto2-P2-T2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: escalar-P2-T2.output.txt; n=1; elementos=1; max_abs=0; max_rel=0
+OK: identidad-P2-T2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: cero-P2-T2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: impar3-P2-T2.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: impar3-P1-T2.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: impar3-P2-T1.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: producto2-P3-T1.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: impar3-P5-T1.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: c_paralelo (smoke, cinco fixtures, P=1, P>N, no divisible y CSV validado).
+OK: c_paralelo/missing-value
+OK: c_paralelo/zero-dimension
+OK: c_paralelo/negative-dimension
+OK: c_paralelo/nonnumeric-dimension
+OK: c_paralelo/seed-overflow
+OK: c_paralelo/invalid-repetition
+OK: c_paralelo/missing-input
+OK: c_paralelo/truncated-input
+OK: c_paralelo/nonfinite-input
+OK: c_paralelo/nonfinite-product
+OK: c_paralelo/output-directory
+OK: c_paralelo/mpi-dimension-limit
+OK: c_paralelo/invalid-openmp
+OK: S05 c_paralelo Debug; 13 errores controlados; evidencia: D:\Escritorio\Proyectos\MatricesParalelas\c_paralelo\build\Debug\s05-errors\81e48073be7c4be18c834fa88825220d
+Compilando go_secuencial (Debug)...
+ok  	matrices/go_secuencial	0.327s
+OK: prueba de instalación Go secuencial.
+OK: producto2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: escalar.output.txt; n=1; elementos=1; max_abs=0; max_rel=0
+OK: identidad.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: cero.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: impar3.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: go_secuencial (producto real, cinco fixtures y CSV validado).
+OK: go_secuencial/missing-value
+OK: go_secuencial/zero-dimension
+OK: go_secuencial/negative-dimension
+OK: go_secuencial/nonnumeric-dimension
+OK: go_secuencial/seed-overflow
+OK: go_secuencial/invalid-repetition
+OK: go_secuencial/missing-input
+OK: go_secuencial/truncated-input
+OK: go_secuencial/nonfinite-input
+OK: go_secuencial/nonfinite-product
+OK: go_secuencial/output-directory
+OK: S05 go_secuencial Debug; 11 errores controlados; evidencia: D:\Escritorio\Proyectos\MatricesParalelas\go_secuencial\build\Debug\s05-errors\eaaf703b10ac452fbef301ed6d920e67
+Compilando go_paralelo (Debug)...
+ok  	matrices/go_paralelo	5.430s
+OK: producto2.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: escalar.output.txt; n=1; elementos=1; max_abs=0; max_rel=0
+OK: identidad.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: cero.output.txt; n=2; elementos=4; max_abs=0; max_rel=0
+OK: impar3.output.txt; n=3; elementos=9; max_abs=0; max_rel=0
+OK: go_paralelo (producto real, cinco fixtures, workers>filas y CSV validado).
+OK: go_paralelo/missing-value
+OK: go_paralelo/zero-dimension
+OK: go_paralelo/negative-dimension
+OK: go_paralelo/nonnumeric-dimension
+OK: go_paralelo/seed-overflow
+OK: go_paralelo/invalid-repetition
+OK: go_paralelo/missing-input
+OK: go_paralelo/truncated-input
+OK: go_paralelo/nonfinite-input
+OK: go_paralelo/nonfinite-product
+OK: go_paralelo/output-directory
+OK: go_paralelo/workers-0
+OK: go_paralelo/workers--1
+OK: go_paralelo/workers-1025
+OK: S05 go_paralelo Debug; 14 errores controlados; evidencia: D:\Escritorio\Proyectos\MatricesParalelas\go_paralelo\build\Debug\s05-errors\0652a4d537be4da28a3662c3c387f717
+OK: lf (C/Go)
+OK: crlf (C/Go)
+OK: mixed (C/Go)
+OK: no-final-newline (C/Go)
+OK: whitespace (C/Go)
+OK: long-row (C/Go)
+OK: decimals (C/Go)
+OK: asymmetric3 (C/Go)
+OK: subnormal (C/Go)
+OK: underflow (C/Go)
+OK: max-finite (C/Go)
+OK: empty (C/Go)
+OK: header-data (C/Go)
+OK: zero-n (C/Go)
+OK: negative-n (C/Go)
+OK: signed-n (C/Go)
+OK: fractional-n (C/Go)
+OK: byte-overflow-n (C/Go)
+OK: integer-overflow-n (C/Go)
+OK: missing-row (C/Go)
+OK: missing-value (C/Go)
+OK: fused-rows (C/Go)
+OK: split-rows (C/Go)
+OK: blank-row (C/Go)
+OK: extra-value (C/Go)
+OK: extra-row (C/Go)
+OK: bare-cr (C/Go)
+OK: bom (C/Go)
+OK: nul (C/Go)
+OK: unicode-space (C/Go)
+OK: invalid-utf8 (C/Go)
+OK: invalid-tail (C/Go)
+OK: product-overflow (C/Go)
+OK: token-a-1 (C/Go)
+OK: token-b-1 (C/Go)
+OK: token-a-2 (C/Go)
+OK: token-b-2 (C/Go)
+OK: token-a-3 (C/Go)
+OK: token-b-3 (C/Go)
+OK: token-a-4 (C/Go)
+OK: token-b-4 (C/Go)
+OK: token-a-5 (C/Go)
+OK: token-b-5 (C/Go)
+OK: token-a-6 (C/Go)
+OK: token-b-6 (C/Go)
+OK: token-a-7 (C/Go)
+OK: token-b-7 (C/Go)
+OK: token-a-8 (C/Go)
+OK: token-b-8 (C/Go)
+OK: token-a-9 (C/Go)
+OK: token-b-9 (C/Go)
+OK: token-a-10 (C/Go)
+OK: token-b-10 (C/Go)
+OK: token-a-11 (C/Go)
+OK: token-b-11 (C/Go)
+OK: token-a-12 (C/Go)
+OK: token-b-12 (C/Go)
+OK: token-a-13 (C/Go)
+OK: token-b-13 (C/Go)
+OK: producto2 (C/Go)
+OK: escalar (C/Go)
+OK: identidad (C/Go)
+OK: cero (C/Go)
+OK: impar3 (C/Go)
+OK: writer-interoperability (C/Go)
+OK: S05 I03 Debug; 148 C/Go executions; evidence: D:\Escritorio\Proyectos\MatricesParalelas\go_secuencial\build\Debug\s05-io\4af1305d0a9449898d5779a09e2d9990
+OK: bateria integral S5 Debug (4 versiones, 24 comparaciones, 49 errores controlados y 148 ejecuciones C/Go).

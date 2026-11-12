@@ -1,0 +1,5258 @@
+[
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 1
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 2
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 3
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 4
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 5
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 6
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 0,
+    "execution_order": 7
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 8
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 9
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 10
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 11
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 12
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 13
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 14
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 15
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 16
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 17
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 18
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 19
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 20
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 21
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 22
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 23
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 24
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 25
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 26
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 27
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 28
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 29
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 30
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 31
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 32
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 33
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 34
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 35
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 36
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 0,
+    "execution_order": 37
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 38
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 39
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 40
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 41
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 42
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 43
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 44
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 45
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 46
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 47
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 48
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 49
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 50
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 51
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 52
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 53
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 54
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 55
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 56
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 57
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 58
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 59
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 60
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 61
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 62
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 63
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 64
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 65
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 66
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 0,
+    "execution_order": 67
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 68
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 0,
+    "execution_order": 69
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 70
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 0,
+    "execution_order": 71
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 72
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 73
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 74
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 75
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 76
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 77
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 78
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 79
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 80
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 81
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 82
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 83
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 0,
+    "execution_order": 84
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 85
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 0,
+    "execution_order": 86
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 87
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 88
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 89
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 0,
+    "execution_order": 90
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 91
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 92
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 93
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 94
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 95
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 96
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 97
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 98
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 99
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 100
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 101
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 102
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 103
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 104
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 105
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 106
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 107
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 108
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 109
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 110
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 111
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 112
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 113
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 1,
+    "execution_order": 114
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 115
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 116
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 117
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 118
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 119
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 120
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 121
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 122
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 123
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 124
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 125
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 126
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 127
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 128
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 129
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 130
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 131
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 132
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 133
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 134
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 135
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 136
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 137
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 138
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 139
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 140
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 141
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 142
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 143
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 1,
+    "execution_order": 144
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 145
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 146
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 147
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 148
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 149
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 150
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 151
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 152
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 153
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 154
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 155
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 156
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 157
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 158
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 159
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 160
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 161
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 162
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 1,
+    "execution_order": 163
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 164
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 165
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 1,
+    "execution_order": 166
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 167
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 168
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 1,
+    "execution_order": 169
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 170
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 171
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 172
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 173
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 1,
+    "execution_order": 174
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 1,
+    "execution_order": 175
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 176
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 177
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 178
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 179
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 1,
+    "execution_order": 180
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 181
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 182
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 183
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 184
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 185
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 186
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 2,
+    "execution_order": 187
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 188
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 189
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 190
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 191
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 192
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 193
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 194
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 195
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 196
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 197
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 198
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 199
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 200
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 201
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 202
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 203
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 204
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 205
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 206
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 207
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 208
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 209
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 210
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 211
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 212
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 213
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 214
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 215
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 216
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 2,
+    "execution_order": 217
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 218
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 219
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 220
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 221
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 222
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 223
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 224
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 225
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 226
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 227
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 228
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 229
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 230
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 231
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 232
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 233
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 234
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 235
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 236
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 237
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 238
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 239
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 240
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 241
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 242
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 243
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 244
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 245
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 246
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 2,
+    "execution_order": 247
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 248
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 2,
+    "execution_order": 249
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 250
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 2,
+    "execution_order": 251
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 252
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 253
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 254
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 255
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 256
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 257
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 258
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 259
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 260
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 261
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 262
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 263
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 2,
+    "execution_order": 264
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 265
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 2,
+    "execution_order": 266
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 267
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 268
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 269
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 2,
+    "execution_order": 270
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 271
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 272
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 273
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 274
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 275
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 276
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 277
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 278
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 279
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 280
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 281
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 282
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 283
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 284
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 285
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 286
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 287
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 288
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 289
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 290
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 291
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 292
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 293
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 3,
+    "execution_order": 294
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 295
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 296
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 297
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 298
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 299
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 300
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 301
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 302
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 303
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 304
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 305
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 306
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 307
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 308
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 309
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 310
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 311
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 312
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 313
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 314
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 315
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 316
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 317
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 318
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 319
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 320
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 321
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 322
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 323
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 3,
+    "execution_order": 324
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 325
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 326
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 327
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 328
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 329
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 330
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 331
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 332
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 333
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 334
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 335
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 336
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 337
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 338
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 339
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 340
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 341
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 342
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 3,
+    "execution_order": 343
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 344
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 345
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 3,
+    "execution_order": 346
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 347
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 348
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 3,
+    "execution_order": 349
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 350
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 351
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 352
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 353
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 3,
+    "execution_order": 354
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 3,
+    "execution_order": 355
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 356
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 357
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 358
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 359
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 3,
+    "execution_order": 360
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 361
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 362
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 363
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 364
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 365
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 366
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 4,
+    "execution_order": 367
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 368
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 369
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 370
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 371
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 372
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 373
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 374
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 375
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 376
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 377
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 378
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 379
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 380
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 381
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 382
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 383
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 384
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 385
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 386
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 387
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 388
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 389
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 390
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 391
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 392
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 393
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 394
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 395
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 396
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 4,
+    "execution_order": 397
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 398
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 399
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 400
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 401
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 402
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 403
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 404
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 405
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 406
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 407
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 408
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 409
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 410
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 411
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 412
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 413
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 414
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 415
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 416
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 417
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 418
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 419
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 420
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 421
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 422
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 423
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 424
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 425
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 426
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 4,
+    "execution_order": 427
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 428
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 4,
+    "execution_order": 429
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 430
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 4,
+    "execution_order": 431
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 432
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 433
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 434
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 435
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 436
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 437
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 438
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 439
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 440
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 441
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 442
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 443
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 4,
+    "execution_order": 444
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 445
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 4,
+    "execution_order": 446
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 447
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 448
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 449
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 4,
+    "execution_order": 450
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 451
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 452
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 453
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 454
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 455
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 456
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 457
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 256,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 458
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 459
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 460
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 461
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 462
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 463
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 464
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 465
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 466
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 467
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 256,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 468
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 256,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 469
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 470
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 471
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 472
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 473
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 5,
+    "execution_order": 474
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 475
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 476
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 477
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 478
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 479
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 256,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 480
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 481
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 482
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 483
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 484
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 485
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 486
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 487
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 512,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 488
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 489
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 490
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 491
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 492
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 493
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 494
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 495
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 496
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 497
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 512,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 498
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 512,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 499
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 500
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 501
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 502
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 503
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 5,
+    "execution_order": 504
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 505
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 506
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 507
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 508
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 509
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 512,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 510
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 511
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_secuencial",
+    "variant": "restrict_c",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 512
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 513
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 514
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 515
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 516
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 517
+  },
+  {
+    "kind": "laboratory",
+    "version": "c_openmp_local",
+    "variant": "static1",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 518
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 519
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_secuencial",
+    "variant": "row_slices",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 520
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 521
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 522
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 1,
+    "repetition": 5,
+    "execution_order": 523
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 524
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 525
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 2,
+    "repetition": 5,
+    "execution_order": 526
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 527
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "block16",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 528
+  },
+  {
+    "kind": "laboratory",
+    "version": "go_paralelo",
+    "variant": "unbuffered",
+    "n": 1024,
+    "workers": 4,
+    "repetition": 5,
+    "execution_order": 529
+  },
+  {
+    "kind": "program",
+    "version": "c_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 530
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 531
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 532
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 2,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 533
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 4,
+    "repetition": 5,
+    "execution_order": 534
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 2,
+    "threads": 2,
+    "repetition": 5,
+    "execution_order": 535
+  },
+  {
+    "kind": "program",
+    "version": "c_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 4,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 536
+  },
+  {
+    "kind": "program",
+    "version": "go_secuencial",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 537
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 1,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 538
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 2,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 539
+  },
+  {
+    "kind": "program",
+    "version": "go_paralelo",
+    "variant": "baseline",
+    "n": 1024,
+    "workers": 4,
+    "processes": 1,
+    "threads": 1,
+    "repetition": 5,
+    "execution_order": 540
+  }
+]

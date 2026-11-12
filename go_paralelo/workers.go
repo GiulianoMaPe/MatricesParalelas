@@ -83,11 +83,17 @@ func computeBlockSize(n, workers int) int {
 	return size
 }
 
-// dispatchRowBlocks envía cada fila exactamente una vez. Requiere n y workers
+// dispatchRowBlocks envía bloques de computeBlockSize(n, workers) filas, a lo
+// sumo uno por worker: la granularidad canónica.
+func dispatchRowBlocks(n, workers int, tasks chan<- Task) {
+	dispatchRowBlocksOfSize(n, computeBlockSize(n, workers), tasks)
+}
+
+// dispatchRowBlocksOfSize envía cada fila exactamente una vez en bloques
+// contiguos de size filas; el último puede ser menor. Requiere n y size
 // positivos y consumidores activos, o un buffer suficiente. El productor que
 // llama a esta función conserva la responsabilidad de cerrar tasks.
-func dispatchRowBlocks(n, workers int, tasks chan<- Task) {
-	size := computeBlockSize(n, workers)
+func dispatchRowBlocksOfSize(n, size int, tasks chan<- Task) {
 	for start := 0; start < n; {
 		end := n
 		if size < n-start {
@@ -138,13 +144,20 @@ func worker(id int, tasks <-chan Task, wg *sync.WaitGroup,
 // El llamador valida antes de entrar, inicia total_s antes de vaciar C y lo
 // detiene al volver; después toma el máximo de tiempos y valida C.
 func multiplyParallelKernel(a, b, c Matrix, workers int, kernelDurations []time.Duration) {
+	multiplyParallelKernelBlocks(a, b, c, workers, computeBlockSize(a.N, workers), kernelDurations)
+}
+
+// multiplyParallelKernelBlocks es multiplyParallelKernel con blockRows filas
+// por tarea (blockRows >= 1). Solo la comparativa de granularidad usa un valor
+// distinto de computeBlockSize; el canal conserva capacidad workers.
+func multiplyParallelKernelBlocks(a, b, c Matrix, workers, blockRows int, kernelDurations []time.Duration) {
 	tasks := make(chan Task, workers)
 	var wg sync.WaitGroup
 	wg.Add(workers)
 	for id := 0; id < workers; id++ {
 		go worker(id, tasks, &wg, &a, &b, &c, kernelDurations)
 	}
-	dispatchRowBlocks(a.N, workers, tasks)
+	dispatchRowBlocksOfSize(a.N, blockRows, tasks)
 	close(tasks)
 	wg.Wait()
 }

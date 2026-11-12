@@ -1,0 +1,1 @@
+OK: entradas, particion (8 ejemplos + 4480 casos + filas vacias) y nucleo local.

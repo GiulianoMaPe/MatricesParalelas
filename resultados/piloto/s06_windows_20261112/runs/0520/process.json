@@ -1,0 +1,10 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s06-windows-build\\go_secuencial.test.exe",
+    "-test.run=^TestSprint06Observation$",
+    "-test.count=1"
+  ],
+  "exit_code": 0,
+  "stdout": "S06 laboratory observation validated\nPASS\n",
+  "stderr": ""
+}

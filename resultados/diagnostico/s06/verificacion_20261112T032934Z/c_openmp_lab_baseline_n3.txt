@@ -1,0 +1,1 @@
+{"schema":"s06-laboratory-v1","version":"c_openmp_local","variant":"baseline","n":3,"seed":42,"workers":2,"observed_threads":2,"kernel_s":0.000082494,"total_s":0.000082875,"validation_status":"OK"}

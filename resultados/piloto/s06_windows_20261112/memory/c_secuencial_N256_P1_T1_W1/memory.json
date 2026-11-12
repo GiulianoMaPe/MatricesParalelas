@@ -1,0 +1,28 @@
+{
+  "command": [
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\build\\Release\\c_secuencial.exe",
+    "--n",
+    "256",
+    "--seed",
+    "42"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "wall_s": 0.06153959999983272,
+  "processes": [
+    {
+      "pid": 13196,
+      "working_set_bytes": 6615040,
+      "peak_working_set_bytes": 6803456,
+      "private_bytes": 2977792,
+      "process_affinity_mask": 4095,
+      "system_affinity_mask": 4095,
+      "private_bytes_sampled_max": 2977792
+    }
+  ],
+  "max_simultaneous_working_set_bytes": 6615040,
+  "max_simultaneous_private_bytes": 2977792,
+  "remaining_pids": [],
+  "sample_count": 2,
+  "maximum_sample_gap_s": 0.026058600000396837
+}

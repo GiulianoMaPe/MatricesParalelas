@@ -1,0 +1,1 @@
+Usage: laboratory N baseline|restrict_c|static1

@@ -1,0 +1,18 @@
+{
+  "c_secuencial": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\build\\Release\\c_secuencial.exe",
+    "sha256": "37677ef54947e7122c930c898e54d591ed329a783735a0ca5b29d692a8f6d8c6"
+  },
+  "c_paralelo": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release\\c_paralelo.exe",
+    "sha256": "31b8e350281b654247650950c44d38fa1c2d8633df30f78686ffa7da06ce5565"
+  },
+  "go_secuencial": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "sha256": "645deeabd8144b104153a3ffaf203d5915b4197d36488c9a1e591bee5729c179"
+  },
+  "go_paralelo": {
+    "path": "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+    "sha256": "c8c9bafa6ab9c3e2a393cf8cdc48af8626f489376337a8791c27c630c8b7e5d3"
+  }
+}

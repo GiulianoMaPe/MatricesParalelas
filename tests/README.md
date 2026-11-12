@@ -36,23 +36,6 @@ Requiere binarios recién compilados de las dos versiones secuenciales. Desde la
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version go_secuencial -Configuration Debug
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test_windows.ps1 -Version c_secuencial -Configuration Debug
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\go_secuencial_io_test.ps1 -Configuration Debug
-```
-
-Repetir con `-Configuration Release` en los tres comandos. La batería realiza
-**148 ejecuciones por configuración**: 65 entradas comunes en ambos programas
-(17 válidas y 48 inválidas) y nueve pares de generación N=1,3,5 con semillas
-0,42,4294967295. Incluye los cinco fixtures, LF/CRLF, filas largas, decimales,
-límites finitos, errores de estructura/codificación y desbordamiento del producto.
-Construye además una entrada a partir de las salidas reales de ambos escritores.
-
-Cada proceso tiene un timeout de 15 segundos. En éxito se comprueban el CSV y
-todos los valores de la matriz con el comparador común; en error se exige
-código 1, stdout vacío, stderr y conservación del destino anterior. Cualquier
-fallo termina la batería con 1. Los archivos de entrada, salida, diagnósticos
-y `summary.csv` quedan en `go_secuencial/build/<configuración>/s05-io/<id>/`,
-ignorados por Git; no se reutilizan salidas de otra corrida.
-
-Las pruebas Go comprueban por bits los extremos numéricos y la serialización,
 para detectar pérdida de subnormales o del signo de cero que la tolerancia de
 productos no detectaría. También inyectan errores de lectura/escritura y
 capacidad insuficiente. El acta y las limitaciones están en
@@ -90,6 +73,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\sprint05_errors_
 MPI requiere permiso para lanzar procesos de MS-MPI. Una restricción del
 entorno se reporta como fallo; no se omite la prueba ni se presenta como éxito.
 
+
 ## Sprint 7 — caso `c_paralelo` del script de campaña
 
 `bench_c_paralelo_test.ps1` prueba las funciones puras de
@@ -106,3 +90,53 @@ El script hace dot-source de `bench_windows.ps1` y ejecuta 23 pruebas. No sustit
 la campaña real: esta requiere compilar Release, MS-MPI y permisos para lanzar
 procesos.
 
+=======
+## Diagnóstico del Sprint 6
+
+Los archivos `go_secuencial/sprint06_test.go` y `go_paralelo/sprint06_test.go`
+contienen candidatas aisladas y comprobaciones de producto, repetición e
+inmutabilidad. No sustituyen los kernels de producción. Las observaciones
+`TestSprint06Observation` solo se activan con `S06_OUTPUT` y usan un esquema
+propio de laboratorio, no el CSV de campaña.
+
+`tests/sprint06_kernel_bench.c` se enlaza con `tests/sprint06_candidates.c`
+como unidad independiente y por separado con C secuencial o con el
+kernel local OpenMP (`S06_OPENMP`); este último no ejecuta comunicación MPI.
+Cada observación usa la referencia independiente i,j,k y verifica cada celda.
+
+En Linux con Python 3.9+, GCC/OpenMP, Go compatible con go.mod y GNU time:
+
+```bash
+python3 -B tests/sprint06_lab_test.py
+python3 -B scripts/sprint06_lab.py --go /ruta/a/go --sizes 256 512 1024 --workers 1 2 4
+```
+
+El runner construye los harnesses, toma un calentamiento y cinco medidas por
+combinación, alterna el orden por rondas y conserva fuentes, hashes, entorno,
+memoria RSS y datos originales bajo `resultados/diagnostico/s06/`. Incluye
+bloqueo por repositorio, timeout del grupo de procesos y validación de salida;
+no sobreescribe intentos ni modifica los programas de campaña.
+
+Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
+cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
+los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).
+# ===========================================================================
+#  Main dispatch for c_secuencial (I1)
+# ===========================================================================
+if ($Version -eq 'c_secuencial') {
+    $dimensions = if ($Fase -eq 'piloto') {
+        @(256, 512, 1024)
+    } else {
+        @(512, 1024, 2048)
+    }
+
+    $result = Invoke-CSecuencialCampaign `
+        -Dimensions $dimensions `
+        -CampaignSeed $Seed `
+        -MeasuredReps $Repetitions
+    if (-not $result) {
+        [Console]::Error.WriteLine("ERROR: campana c_secuencial fallida.")
+        exit 1
+    }
+    exit 0
+}

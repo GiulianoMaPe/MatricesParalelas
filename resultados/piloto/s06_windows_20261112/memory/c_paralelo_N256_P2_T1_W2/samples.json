@@ -1,0 +1,83 @@
+[
+  {
+    "elapsed_s": 0.011592600000312814,
+    "processes": [],
+    "simultaneous_working_set_bytes": 0,
+    "simultaneous_private_bytes": 0
+  },
+  {
+    "elapsed_s": 0.037461700000221754,
+    "processes": [
+      {
+        "pid": 16204,
+        "working_set_bytes": 2719744,
+        "peak_working_set_bytes": 2719744,
+        "private_bytes": 491520,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      },
+      {
+        "pid": 2596,
+        "working_set_bytes": 2199552,
+        "peak_working_set_bytes": 2199552,
+        "private_bytes": 405504,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 4919296,
+    "simultaneous_private_bytes": 897024
+  },
+  {
+    "elapsed_s": 0.0643964999999298,
+    "processes": [
+      {
+        "pid": 16204,
+        "working_set_bytes": 8216576,
+        "peak_working_set_bytes": 8216576,
+        "private_bytes": 1777664,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      },
+      {
+        "pid": 2596,
+        "working_set_bytes": 7548928,
+        "peak_working_set_bytes": 7548928,
+        "private_bytes": 1675264,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 15765504,
+    "simultaneous_private_bytes": 3452928
+  },
+  {
+    "elapsed_s": 0.09008970000013505,
+    "processes": [
+      {
+        "pid": 16204,
+        "working_set_bytes": 8499200,
+        "peak_working_set_bytes": 8499200,
+        "private_bytes": 2936832,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      },
+      {
+        "pid": 2596,
+        "working_set_bytes": 9940992,
+        "peak_working_set_bytes": 9940992,
+        "private_bytes": 4517888,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 18440192,
+    "simultaneous_private_bytes": 7454720
+  },
+  {
+    "elapsed_s": 0.11650790000021516,
+    "processes": [],
+    "simultaneous_working_set_bytes": 0,
+    "simultaneous_private_bytes": 0
+  }
+]

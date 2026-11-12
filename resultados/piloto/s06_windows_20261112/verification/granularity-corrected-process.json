@@ -1,0 +1,14 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-count=1",
+    "-v",
+    "-run",
+    "^TestGranularityExperiment$",
+    "."
+  ],
+  "exit_code": 0,
+  "stdout": "=== RUN   TestGranularityExperiment\n    granularity_test.go:249: N=17 repetición 0 completada\n    granularity_test.go:249: N=17 repetición 1 completada\n    granularity_test.go:249: N=17 repetición 2 completada\n    granularity_test.go:249: N=17 repetición 3 completada\n    granularity_test.go:249: N=17 repetición 4 completada\n    granularity_test.go:249: N=17 repetición 5 completada\n--- PASS: TestGranularityExperiment (0.01s)\nPASS\nok  \tmatrices/go_paralelo\t0.289s\n",
+  "stderr": ""
+}

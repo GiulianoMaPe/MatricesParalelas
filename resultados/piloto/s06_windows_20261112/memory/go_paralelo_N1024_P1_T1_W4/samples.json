@@ -1,0 +1,2762 @@
+[
+  {
+    "elapsed_s": 0.014981400000124268,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 8003584,
+        "peak_working_set_bytes": 8003584,
+        "private_bytes": 29933568,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 8003584,
+    "simultaneous_private_bytes": 29933568
+  },
+  {
+    "elapsed_s": 0.042374000000108936,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 24723456,
+        "peak_working_set_bytes": 24723456,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 24723456,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.06865590000006705,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 24817664,
+        "peak_working_set_bytes": 24817664,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 24817664,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.09638630000017656,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 24817664,
+        "peak_working_set_bytes": 24817664,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 24817664,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.12379710000004707,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 24883200,
+        "peak_working_set_bytes": 24883200,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 24883200,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.15021980000028634,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 24948736,
+        "peak_working_set_bytes": 24948736,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 24948736,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.17858539999997447,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25014272,
+        "peak_working_set_bytes": 25014272,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25014272,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.20476080000025831,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25014272,
+        "peak_working_set_bytes": 25014272,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25014272,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.23123770000029253,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25079808,
+        "peak_working_set_bytes": 25079808,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25079808,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.25878110000030574,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25145344,
+        "peak_working_set_bytes": 25145344,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25145344,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.2851644000002125,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25145344,
+        "peak_working_set_bytes": 25145344,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25145344,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.3135701000001063,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25210880,
+        "peak_working_set_bytes": 25210880,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25210880,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.3411740000001373,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25276416,
+        "peak_working_set_bytes": 25276416,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25276416,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.3688089000002037,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25276416,
+        "peak_working_set_bytes": 25276416,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25276416,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.3970539000001736,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25341952,
+        "peak_working_set_bytes": 25341952,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25341952,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.4228658000001815,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25407488,
+        "peak_working_set_bytes": 25407488,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25407488,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.4524709000002076,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25473024,
+        "peak_working_set_bytes": 25473024,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25473024,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.4813426000000618,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25473024,
+        "peak_working_set_bytes": 25473024,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25473024,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.5091052000002492,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25538560,
+        "peak_working_set_bytes": 25538560,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25538560,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.5366352999999435,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25604096,
+        "peak_working_set_bytes": 25604096,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25604096,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.5662836999999854,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25669632,
+        "peak_working_set_bytes": 25669632,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25669632,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.5937728000003517,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25735168,
+        "peak_working_set_bytes": 25735168,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25735168,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.6202885000002425,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25735168,
+        "peak_working_set_bytes": 25735168,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25735168,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.6480111999999281,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25800704,
+        "peak_working_set_bytes": 25800704,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25800704,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.6756869000000734,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25866240,
+        "peak_working_set_bytes": 25866240,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25866240,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.7037912000000688,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25866240,
+        "peak_working_set_bytes": 25866240,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25866240,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.7325399000001198,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25931776,
+        "peak_working_set_bytes": 25931776,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25931776,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.759987700000238,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 25997312,
+        "peak_working_set_bytes": 25997312,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 25997312,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.7868063999999322,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26062848,
+        "peak_working_set_bytes": 26062848,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26062848,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.8157231000000138,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26062848,
+        "peak_working_set_bytes": 26062848,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26062848,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.8428456000001461,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26128384,
+        "peak_working_set_bytes": 26128384,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26128384,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.868474100000185,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26193920,
+        "peak_working_set_bytes": 26193920,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26193920,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.8962970000002315,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26193920,
+        "peak_working_set_bytes": 26193920,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26193920,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.9230803000000378,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26259456,
+        "peak_working_set_bytes": 26259456,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26259456,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.9507195999999567,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26324992,
+        "peak_working_set_bytes": 26324992,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26324992,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 0.9790040000002591,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26390528,
+        "peak_working_set_bytes": 26390528,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26390528,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.0060512000000017,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26390528,
+        "peak_working_set_bytes": 26390528,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26390528,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.0331029000003582,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26456064,
+        "peak_working_set_bytes": 26456064,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26456064,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.0609461000003648,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26521600,
+        "peak_working_set_bytes": 26521600,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26521600,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.0883655000002364,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26521600,
+        "peak_working_set_bytes": 26521600,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26521600,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.1160452000003716,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26587136,
+        "peak_working_set_bytes": 26587136,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26587136,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.143929400000161,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26652672,
+        "peak_working_set_bytes": 26652672,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26652672,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.1717679000003045,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26652672,
+        "peak_working_set_bytes": 26652672,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26652672,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.1995732000000316,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26718208,
+        "peak_working_set_bytes": 26718208,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26718208,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.226922100000138,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26783744,
+        "peak_working_set_bytes": 26783744,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26783744,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.253436700000293,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26796032,
+        "peak_working_set_bytes": 26796032,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26796032,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.28304049999997,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26914816,
+        "peak_working_set_bytes": 26914816,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26914816,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.3126046000002134,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26914816,
+        "peak_working_set_bytes": 26914816,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26914816,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.339788000000226,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 26980352,
+        "peak_working_set_bytes": 26980352,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 26980352,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.3692856000002394,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27045888,
+        "peak_working_set_bytes": 27045888,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27045888,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.3993847000001551,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27111424,
+        "peak_working_set_bytes": 27111424,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27111424,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.4266624000001684,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27176960,
+        "peak_working_set_bytes": 27176960,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27176960,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.4548121000002538,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27176960,
+        "peak_working_set_bytes": 27176960,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27176960,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.4834147999999914,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27242496,
+        "peak_working_set_bytes": 27242496,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27242496,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.5112081000002036,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27308032,
+        "peak_working_set_bytes": 27308032,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27308032,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.5373928000003616,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27373568,
+        "peak_working_set_bytes": 27373568,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27373568,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.5653383000003487,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27373568,
+        "peak_working_set_bytes": 27373568,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27373568,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.5925124000000324,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27439104,
+        "peak_working_set_bytes": 27439104,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27439104,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.620315699999992,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27504640,
+        "peak_working_set_bytes": 27504640,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27504640,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.6473132000000987,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27570176,
+        "peak_working_set_bytes": 27570176,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27570176,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.6744367999999668,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27570176,
+        "peak_working_set_bytes": 27570176,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27570176,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.7014489000002868,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27635712,
+        "peak_working_set_bytes": 27635712,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27635712,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.7288416000001234,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27701248,
+        "peak_working_set_bytes": 27701248,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27701248,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.756825100000242,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27766784,
+        "peak_working_set_bytes": 27766784,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27766784,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.7835916000003635,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27766784,
+        "peak_working_set_bytes": 27766784,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27766784,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.8109386000000995,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27832320,
+        "peak_working_set_bytes": 27832320,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27832320,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.8375206000000617,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27897856,
+        "peak_working_set_bytes": 27897856,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27897856,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.8659519000002547,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27963392,
+        "peak_working_set_bytes": 27963392,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27963392,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.8942470000001776,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 27963392,
+        "peak_working_set_bytes": 27963392,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 27963392,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.9205231999999341,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28028928,
+        "peak_working_set_bytes": 28028928,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28028928,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.9496250000001965,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28094464,
+        "peak_working_set_bytes": 28094464,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28094464,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 1.9775644999999713,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28160000,
+        "peak_working_set_bytes": 28160000,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28160000,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.0047104000000218,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28160000,
+        "peak_working_set_bytes": 28160000,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28160000,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.0323514000001524,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28225536,
+        "peak_working_set_bytes": 28225536,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28225536,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.059664900000371,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28291072,
+        "peak_working_set_bytes": 28291072,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28291072,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.085518100000172,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28356608,
+        "peak_working_set_bytes": 28356608,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28356608,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.113294499999938,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28356608,
+        "peak_working_set_bytes": 28356608,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28356608,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.14067840000007,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28422144,
+        "peak_working_set_bytes": 28422144,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28422144,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.167609099999936,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28487680,
+        "peak_working_set_bytes": 28487680,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28487680,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.1955379000000903,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28487680,
+        "peak_working_set_bytes": 28487680,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28487680,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.22237720000021,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28553216,
+        "peak_working_set_bytes": 28553216,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28553216,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.2493303999999625,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28618752,
+        "peak_working_set_bytes": 28618752,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28618752,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.2749699000000874,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28684288,
+        "peak_working_set_bytes": 28684288,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28684288,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.3041384000002836,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28684288,
+        "peak_working_set_bytes": 28684288,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28684288,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.3331152000000657,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28749824,
+        "peak_working_set_bytes": 28749824,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28749824,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.359276900000168,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28815360,
+        "peak_working_set_bytes": 28815360,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28815360,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.3852443000000676,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28815360,
+        "peak_working_set_bytes": 28815360,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28815360,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.412705900000219,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28880896,
+        "peak_working_set_bytes": 28880896,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28880896,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.4385762000001705,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 28905472,
+        "peak_working_set_bytes": 28905472,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 28905472,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.4654020000002674,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29011968,
+        "peak_working_set_bytes": 29011968,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29011968,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.4919356000000334,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29011968,
+        "peak_working_set_bytes": 29011968,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29011968,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.518002300000262,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29077504,
+        "peak_working_set_bytes": 29077504,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29077504,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.544455300000209,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29143040,
+        "peak_working_set_bytes": 29143040,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29143040,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.570684700000129,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29143040,
+        "peak_working_set_bytes": 29143040,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29143040,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.598241500000313,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29208576,
+        "peak_working_set_bytes": 29208576,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29208576,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.6246444000003066,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29274112,
+        "peak_working_set_bytes": 29274112,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29274112,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.6508215000003474,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29274112,
+        "peak_working_set_bytes": 29274112,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29274112,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.679212400000324,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29339648,
+        "peak_working_set_bytes": 29339648,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29339648,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.7056407000000036,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29405184,
+        "peak_working_set_bytes": 29405184,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29405184,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.732636000000184,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29405184,
+        "peak_working_set_bytes": 29405184,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29405184,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.7587866000003487,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29470720,
+        "peak_working_set_bytes": 29470720,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29470720,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.7848861000002216,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29536256,
+        "peak_working_set_bytes": 29536256,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29536256,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.8118781000002855,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29601792,
+        "peak_working_set_bytes": 29601792,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29601792,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.840370200000052,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29601792,
+        "peak_working_set_bytes": 29601792,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29601792,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.8675169000002825,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29667328,
+        "peak_working_set_bytes": 29667328,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29667328,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.8944768000001204,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29732864,
+        "peak_working_set_bytes": 29732864,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29732864,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.92087360000005,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29732864,
+        "peak_working_set_bytes": 29732864,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29732864,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.9478542000001653,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29798400,
+        "peak_working_set_bytes": 29798400,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29798400,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 2.9736096000001453,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29798400,
+        "peak_working_set_bytes": 29798400,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29798400,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.0007723000003352,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29863936,
+        "peak_working_set_bytes": 29863936,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29863936,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.03039200000012,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29929472,
+        "peak_working_set_bytes": 29929472,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29929472,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.0582139000002826,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 29995008,
+        "peak_working_set_bytes": 29995008,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 29995008,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.08648680000033,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30060544,
+        "peak_working_set_bytes": 30060544,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30060544,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.115140600000359,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30126080,
+        "peak_working_set_bytes": 30126080,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30126080,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.142103500000303,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30126080,
+        "peak_working_set_bytes": 30126080,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30126080,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.1701763999999457,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30191616,
+        "peak_working_set_bytes": 30191616,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30191616,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.1985179000002972,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30257152,
+        "peak_working_set_bytes": 30257152,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30257152,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.2263710000001993,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30322688,
+        "peak_working_set_bytes": 30322688,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30322688,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.2545671000002585,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30388224,
+        "peak_working_set_bytes": 30388224,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30388224,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.2849670000000515,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30453760,
+        "peak_working_set_bytes": 30453760,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30453760,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.3133762000002207,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30519296,
+        "peak_working_set_bytes": 30519296,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30519296,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.3410225000002356,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30584832,
+        "peak_working_set_bytes": 30584832,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30584832,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.37053190000006,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30650368,
+        "peak_working_set_bytes": 30650368,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30650368,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.3995740000000296,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30715904,
+        "peak_working_set_bytes": 30715904,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30715904,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.4277357999999367,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30715904,
+        "peak_working_set_bytes": 30715904,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30715904,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.4559564000001046,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30781440,
+        "peak_working_set_bytes": 30781440,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30781440,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.4857488000002377,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30846976,
+        "peak_working_set_bytes": 30846976,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30846976,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.514259300000049,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30912512,
+        "peak_working_set_bytes": 30912512,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30912512,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.540672600000107,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30978048,
+        "peak_working_set_bytes": 30978048,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30978048,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.569220000000314,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 30986240,
+        "peak_working_set_bytes": 30986240,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 30986240,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.5977537000003394,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31109120,
+        "peak_working_set_bytes": 31109120,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31109120,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.6256859000000077,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31109120,
+        "peak_working_set_bytes": 31109120,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31109120,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.6536439999999857,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31174656,
+        "peak_working_set_bytes": 31174656,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31174656,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.68098050000026,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31240192,
+        "peak_working_set_bytes": 31240192,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31240192,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.710409499999969,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31305728,
+        "peak_working_set_bytes": 31305728,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31305728,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.7391336000000592,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31371264,
+        "peak_working_set_bytes": 31371264,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31371264,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.7669825000002675,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31371264,
+        "peak_working_set_bytes": 31371264,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31371264,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.7949897000003148,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31436800,
+        "peak_working_set_bytes": 31436800,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31436800,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.8233084000003146,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31502336,
+        "peak_working_set_bytes": 31502336,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31502336,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.8505849000002854,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31567872,
+        "peak_working_set_bytes": 31567872,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31567872,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.878896000000168,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31633408,
+        "peak_working_set_bytes": 31633408,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31633408,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.908371299999999,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31698944,
+        "peak_working_set_bytes": 31698944,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31698944,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.937778299999991,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31698944,
+        "peak_working_set_bytes": 31698944,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31698944,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 3.983074100000067,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31764480,
+        "peak_working_set_bytes": 31764480,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31764480,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.025528300000133,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31830016,
+        "peak_working_set_bytes": 31830016,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31830016,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.053486400000111,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31895552,
+        "peak_working_set_bytes": 31895552,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31895552,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.081375900000239,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 31961088,
+        "peak_working_set_bytes": 31961088,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 31961088,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.1084092000000965,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32026624,
+        "peak_working_set_bytes": 32026624,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32026624,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.138500600000043,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32092160,
+        "peak_working_set_bytes": 32092160,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32092160,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.167949300000146,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32157696,
+        "peak_working_set_bytes": 32157696,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32157696,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.1957704999999805,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32223232,
+        "peak_working_set_bytes": 32223232,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32223232,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.225487500000327,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32288768,
+        "peak_working_set_bytes": 32288768,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32288768,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.253190200000063,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32288768,
+        "peak_working_set_bytes": 32288768,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32288768,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.28233900000032,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32354304,
+        "peak_working_set_bytes": 32354304,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32354304,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.312008100000185,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32419840,
+        "peak_working_set_bytes": 32419840,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32419840,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.341356800000085,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32485376,
+        "peak_working_set_bytes": 32485376,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32485376,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.370991000000231,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32550912,
+        "peak_working_set_bytes": 32550912,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32550912,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.398333399999956,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32616448,
+        "peak_working_set_bytes": 32616448,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32616448,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.426519500000268,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32681984,
+        "peak_working_set_bytes": 32681984,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32681984,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.455055500000071,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32747520,
+        "peak_working_set_bytes": 32747520,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32747520,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.484123600000203,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32747520,
+        "peak_working_set_bytes": 32747520,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32747520,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.513505800000075,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32813056,
+        "peak_working_set_bytes": 32813056,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32813056,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.539957299999969,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32878592,
+        "peak_working_set_bytes": 32878592,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32878592,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.566041400000358,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32944128,
+        "peak_working_set_bytes": 32944128,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32944128,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.594051400000353,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 32944128,
+        "peak_working_set_bytes": 32944128,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 32944128,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.621838100000332,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 33009664,
+        "peak_working_set_bytes": 33009664,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 33009664,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.649957300000096,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 33075200,
+        "peak_working_set_bytes": 33075200,
+        "private_bytes": 38633472,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 33075200,
+    "simultaneous_private_bytes": 38633472
+  },
+  {
+    "elapsed_s": 4.676220000000285,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.703054300000076,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.729757999999947,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.756993400000283,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.784423600000082,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.810991800000011,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.83804740000005,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.865269200000057,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.892066900000373,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.921550000000025,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.94887000000017,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 4.976568700000371,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 5.00368460000027,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 5.030499200000122,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 5.057503200000156,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41508864,
+        "peak_working_set_bytes": 41508864,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41508864,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 5.086511299999984,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41512960,
+        "peak_working_set_bytes": 41512960,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41512960,
+    "simultaneous_private_bytes": 47079424
+  },
+  {
+    "elapsed_s": 5.1138562000001,
+    "processes": [
+      {
+        "pid": 6172,
+        "working_set_bytes": 41512960,
+        "peak_working_set_bytes": 41512960,
+        "private_bytes": 47079424,
+        "process_affinity_mask": 4095,
+        "system_affinity_mask": 4095
+      }
+    ],
+    "simultaneous_working_set_bytes": 41512960,
+    "simultaneous_private_bytes": 47079424
+  }
+]

@@ -2,7 +2,7 @@
 
 **Versión:** 1.3 (Auditoría de Cronometría y Equivalencia de Límites · Sprint 5 · 2026-11-05; Integrante 7 Andrés)
 **Estado:** Auditoría técnica del protocolo de medición y fronteras temporales completada en S5. Se certifica que las cuatro referencias cumplen la estricta segregación de `kernel_s` y `total_s`, excluyendo generación, I/O y validación numérica. Las campañas piloto y oficial corresponden a S7/S8.
-**Documentos relacionados:** `docs/Guia_Sprints.md`, [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
+**Documentos relacionados:** [plan de sprints](sprints/README.md), [`docs/contrato.md`](contrato.md), [`docs/bibliografia.md`](bibliografia.md)
 
 ---
 
@@ -15,7 +15,12 @@ Este documento establece el **Protocolo de Medición Versión Inicial** del proy
 * `go_paralelo`: Implementación concurrente en Go con pool acotado de workers, canales tipados y `sync.WaitGroup`.
 
 > [!IMPORTANT]
-> Siguiendo el contrato del proyecto, las solicitudes de cálculo actuales devuelven código `2` (operación pendiente); los smoke tests correctos devuelven 0. Los errores se convierten a 1. Ninguna prueba de instalación o smoke test se reporta como medición de rendimiento. Las mediciones reales se habilitarán únicamente cuando los algoritmos de multiplicación pasen la verificación matemática elemento a elemento ($\text{atol}=10^{-9}, \text{rtol}=10^{-9}$).
+> Las cuatro versiones implementan el producto y su validación desde S3–S5.
+> `bench_windows.ps1` continúa pendiente de automatización hasta S7 y devuelve 2;
+> cambiar los estados JSON no lo habilita. Los errores de programas se convierten
+> a 1 y el éxito validado a 0. Los smoke tests solo prueban instalación.
+> Los ensayos Linux de S6 se guardan en `resultados/diagnostico/` y no constituyen
+> observaciones de la campaña Windows ni certifican MSVC/MS-MPI.
 
 ---
 

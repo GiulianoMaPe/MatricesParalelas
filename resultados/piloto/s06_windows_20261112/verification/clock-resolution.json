@@ -1,0 +1,14 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-count=1",
+    "-v",
+    "-run",
+    "^TestPreciseClockResolution$",
+    "."
+  ],
+  "exit_code": 0,
+  "stdout": "=== RUN   TestPreciseClockResolution\n    granularity_test.go:101: QueryPerformanceCounter: paso mínimo 100ns; time.Now: paso mínimo 495.6µs\n--- PASS: TestPreciseClockResolution (0.12s)\nPASS\nok  \tmatrices/go_paralelo\t0.391s\n",
+  "stderr": ""
+}

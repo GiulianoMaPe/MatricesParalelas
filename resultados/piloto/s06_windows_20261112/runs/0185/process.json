@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Program Files\\Microsoft MPI\\Bin\\mpiexec.exe",
+    "-affinity_layout",
+    "0",
+    "-n",
+    "4",
+    "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release\\c_paralelo.exe",
+    "--n",
+    "1024",
+    "--seed",
+    "42",
+    "--repetition",
+    "2"
+  ],
+  "exit_code": 0,
+  "stdout": "timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status\r\n2026-11-12T05:23:43Z,c_paralelo,72417b989c5ef8792970f57724a8f7bd639ca7e2,PCG1UL14N0,AMD Ryzen 5 3600 6-Core Processor              ,15.912,Windows 10 Pro build 26300.9711,c_paralelo_P4_T1,1024,42,4,1,1,1,,2,false,0.298919700,0.307361800,OK\r\n",
+  "stderr": ""
+}

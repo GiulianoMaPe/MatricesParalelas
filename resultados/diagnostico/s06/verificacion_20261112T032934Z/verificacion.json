@@ -1,0 +1,1214 @@
+{
+  "platform": "Linux-only; Windows compile is not execution",
+  "checks": [
+    {
+      "name": "go_secuencial_test",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_secuencial",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_secuencial_vet",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_secuencial",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_secuencial_race",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_secuencial",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_secuencial_windows_compile",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-c",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_secuencial_windows.test.exe",
+        "."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_secuencial",
+      "environment_overrides": {
+        "GOOS": "windows",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_test",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_paralelo",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_vet",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_paralelo",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_race",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_paralelo",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_windows_compile",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "test",
+        "-c",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_paralelo_windows.test.exe",
+        "."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_paralelo",
+      "environment_overrides": {
+        "GOOS": "windows",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_kernel_debug_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/matrix_kernel_test.c",
+        "c_secuencial/src/matrix.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_kernel_debug"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 1,
+      "status": "ENVIRONMENT_MISSING_LIBASAN"
+    },
+    {
+      "name": "c_seq_contract_debug_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/pending_test.c",
+        "c_secuencial/src/matrix.c",
+        "c_secuencial/src/input.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_seq_contract_debug"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 1,
+      "status": "ENVIRONMENT_MISSING_LIBASAN"
+    },
+    {
+      "name": "c_par_local_debug_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fopenmp",
+        "-include",
+        "/tmp/matrices-s06-compat.h",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/pending_test.c",
+        "c_paralelo/src/matrix.c",
+        "c_paralelo/src/input.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_par_local_debug"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 1,
+      "status": "ENVIRONMENT_MISSING_LIBASAN"
+    },
+    {
+      "name": "partition_debug_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/partition_test.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/partition_debug"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 1,
+      "status": "ENVIRONMENT_MISSING_LIBASAN"
+    },
+    {
+      "name": "c_kernel_release_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/matrix_kernel_test.c",
+        "c_secuencial/src/matrix.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_kernel_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_kernel_release",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_kernel_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_seq_contract_release_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/pending_test.c",
+        "c_secuencial/src/matrix.c",
+        "c_secuencial/src/input.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_seq_contract_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_seq_contract_release",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_seq_contract_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_par_local_release_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fopenmp",
+        "-include",
+        "/tmp/matrices-s06-compat.h",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/pending_test.c",
+        "c_paralelo/src/matrix.c",
+        "c_paralelo/src/input.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_par_local_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_par_local_release",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_par_local_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "partition_release_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/partition_test.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/partition_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "partition_release",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/partition_release"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "comparator",
+      "command": [
+        "/tmp/matrices-s06-tools/powershell/pwsh",
+        "-NoProfile",
+        "-File",
+        "tests/compare_results_test.ps1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "lab_summary_tests",
+      "command": [
+        "python3",
+        "-B",
+        "tests/sprint06_lab_test.py"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_baseline_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "1",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_restrict_c_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "1",
+        "restrict_c"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_baseline_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "1",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_static1_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "1",
+        "static1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_baseline_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "3",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_restrict_c_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "3",
+        "restrict_c"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_baseline_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "3",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_static1_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "3",
+        "static1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_baseline_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "7",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_restrict_c_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "7",
+        "restrict_c"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_baseline_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "7",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_static1_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "7",
+        "static1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_baseline_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "17",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_restrict_c_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "17",
+        "restrict_c"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_baseline_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "17",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_static1_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "17",
+        "static1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_baseline_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "65",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_secuencial_lab_restrict_c_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_secuencial_lab",
+        "65",
+        "restrict_c"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_baseline_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "65",
+        "baseline"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_openmp_lab_static1_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_openmp_lab",
+        "65",
+        "static1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "environment_overrides": {},
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_kernel_debug_plain_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/matrix_kernel_test.c",
+        "c_secuencial/src/matrix.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_kernel_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_kernel_debug_plain_run",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_kernel_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_seq_contract_debug_plain_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_secuencial/include",
+        "c_secuencial/tests/pending_test.c",
+        "c_secuencial/src/matrix.c",
+        "c_secuencial/src/input.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_seq_contract_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_seq_contract_debug_plain_run",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_seq_contract_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_par_local_debug_plain_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fopenmp",
+        "-include",
+        "/tmp/matrices-s06-compat.h",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/pending_test.c",
+        "c_paralelo/src/matrix.c",
+        "c_paralelo/src/input.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_par_local_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_par_local_debug_plain_run",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_par_local_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "partition_debug_plain_build",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O0",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/c_paralelo/include",
+        "c_paralelo/tests/partition_test.c",
+        "c_paralelo/src/partition.c",
+        "-lm",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/partition_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "partition_debug_plain_run",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/partition_debug_plain"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "lab_process_final_tests",
+      "command": [
+        "python3",
+        "-B",
+        "tests/sprint06_lab_test.py"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_baseline_vectorization",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "c_secuencial/include",
+        "-fopt-info-vec-all=/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/verificacion_20261112T032934Z/c_baseline_vectorization.report.txt",
+        "-c",
+        "c_secuencial/src/matrix.c",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_baseline_vectorization.o"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "c_candidate_vectorization",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "c_secuencial/include",
+        "-fopt-info-vec-all=/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/verificacion_20261112T032934Z/c_candidate_vectorization.report.txt",
+        "-c",
+        "tests/sprint06_kernel_bench.c",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_candidate_vectorization.o"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_secuencial_linux_cli_build",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "build",
+        "-buildvcs=true",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_secuencial_unsupported_linux",
+        "."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_secuencial",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_secuencial_linux_cli_refusal",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_secuencial_unsupported_linux",
+        "--n",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_linux_cli_build",
+      "command": [
+        "/tmp/matrices-s06-tools/go/go/bin/go",
+        "build",
+        "-buildvcs=true",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_paralelo_unsupported_linux",
+        "."
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/go_paralelo",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "go_paralelo_linux_cli_refusal",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/go_paralelo_unsupported_linux",
+        "--n",
+        "1",
+        "--seed",
+        "42",
+        "--workers",
+        "1"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "c_candidate_controlled_vectorization",
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fopt-info-vec-all=/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/verificacion_20261112T032934Z/c_candidate_controlled_vectorization.report.txt",
+        "-c",
+        "tests/sprint06_candidates.c",
+        "-o",
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/.cache/s06/c_candidate_controlled_vectorization.o"
+      ],
+      "cwd": "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "lab_final_controlled_tests",
+      "command": [
+        "python3",
+        "-B",
+        "tests/sprint06_lab_test.py"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_baseline_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "1",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_restrict_c_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "1",
+        "restrict_c"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_baseline_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "3",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_restrict_c_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "3",
+        "restrict_c"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_baseline_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "7",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_restrict_c_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "7",
+        "restrict_c"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_baseline_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "17",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_restrict_c_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "17",
+        "restrict_c"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_baseline_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "65",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_restrict_c_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "65",
+        "restrict_c"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_invalid_69",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "0",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_invalid_70",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "-1",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_invalid_71",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "4097",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_invalid_72",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "3",
+        "invalid"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_secuencial_invalid_73",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_secuencial",
+        "3"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_baseline_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "1",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_static1_n1",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "1",
+        "static1"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_baseline_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "3",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_static1_n3",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "3",
+        "static1"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_baseline_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "7",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_static1_n7",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "7",
+        "static1"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_baseline_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "17",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_static1_n17",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "17",
+        "static1"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_baseline_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "65",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_static1_n65",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "65",
+        "static1"
+      ],
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_invalid_84",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "0",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_invalid_85",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "-1",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_invalid_86",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "4097",
+        "baseline"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_invalid_87",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "3",
+        "invalid"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "controlled_c_openmp_local_invalid_88",
+      "command": [
+        "/mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/resultados/diagnostico/s06/20261112T035217Z_fedora/build/c_openmp_local",
+        "3"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    }
+  ],
+  "pass": false,
+  "available_checks_pass": true,
+  "limitations": [
+    "ASan runtime absent; sanitizer builds failed and original logs retained. Plain -O0/-g and -O2 executed successfully.",
+    "MSVC/MS-MPI Windows runtime not executed. Windows Go compilation only, not execution."
+  ]
+}

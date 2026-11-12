@@ -1,0 +1,1 @@
+ok  	matrices/go_secuencial	1.112s
