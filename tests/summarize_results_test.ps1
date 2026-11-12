@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Suite de pruebas automatizadas para scripts/summarize_results.ps1.
 

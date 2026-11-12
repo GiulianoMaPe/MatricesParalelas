@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Procesa observaciones de medición (CSV de 20 columnas) y genera el resumen
     estadístico no paramétrico (medianas, cuartiles, IQR, min, max) y métricas
