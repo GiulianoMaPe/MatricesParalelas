@@ -4,8 +4,8 @@
 Se integraron las entregas I4 e I7 con prioridad de sus ramas; I8 ya estaba en
 main mediante PR #43. Se conserva el algoritmo de las cuatro versiones,
 con candidatas aisladas y decisiones basadas en evidencia Windows nativa.
-La entrega integrada se tramita por PR hacia main; su revisión final y estado
-de integración se registran al final de este documento.
+El [PR #47](https://github.com/GiulianoMaPe/MatricesParalelas/pull/47) registra
+esta entrega y su integración hacia main; su estado es la referencia del cierre.
 
 Rama: `feature/s06-optimizacion-evidencia`. Issue de cierre:
 [#46](https://github.com/GiulianoMaPe/MatricesParalelas/issues/46).
@@ -163,3 +163,15 @@ aceptación y la revisión de arriba describen su resolución durante el cierre.
 - Pruebas y evidencias: Entregable `docs/arquitectura.md` completado y actualizado con las Secciones 9 a 12. Se fundamenta la jerarquía de memoria (L1/L2/L3), líneas de caché de 64 bytes y la superioridad de stride-1 en el orden canónico $i \to k \to j$ frente a $i \to j \to k$ (Dongarra et al., Hennessy & Patterson). Se analiza el particionado jerárquico comparado con H-SUMMA (Quintin & Wagner 2013) y la ausencia de sobrecostes de empaquetado 2D en el reparto 1D continuo por filas. Se fundamenta el modelo CSP de Go (Hoare, Golani et al. 2021). Se formulan las decisiones de diseño para descartar tiling manual y SIMD asimétrico en favor de la auto-vectorización del compilador y la equidad algorítmica. Se formaliza el Marco Normativo de Congelamiento Algorítmico en 5 criterios inviolables para las campañas de los Sprints 7 y 8.
 - Bloqueos y decisiones: Se declara oficialmente congelado el algoritmo canónico $i \to k \to j$ en sus cuatro versiones (`c_secuencial`, `c_paralelo`, `go_secuencial`, `go_paralelo`), prohibiendo alteraciones de bucles que distorsionen la comparabilidad de rendimiento.
 - Revision y criterio de aceptacion: Entregable de I8 finalizado y conforme; listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly pendiente a la publicación de su PR de Sprint 6.
+
+## Integración y base entregada
+
+Entrega consolidada: [PR #47](https://github.com/GiulianoMaPe/MatricesParalelas/pull/47),
+que resuelve [issue #46](https://github.com/GiulianoMaPe/MatricesParalelas/issues/46).
+Las ramas I4/I7 se conservan como padres de la integración; I8 ya era parte
+de main. El árbol publicado antes de esta referencia editorial fue
+4e2710379e50b09202b0e27aa9e58b4f3fd1154f, idéntico al árbol local revisado.
+La [comprobación de fuentes](../../resultados/piloto/s06_windows_20261112/production-source-check.json)
+confirma que las 30 fuentes de producción coinciden con las medidas.
+Los cambios editoriales de cierre no alteran cálculo, buffers ni cronómetros.
+S7 debe identificar su revisión de automatización después del piloto.

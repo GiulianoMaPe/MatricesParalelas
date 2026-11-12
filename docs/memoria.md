@@ -185,3 +185,8 @@ El máximo de WS y privados simultáneos puede corresponder a instantes distinto
   disponible de nuevo antes de cada piloto; 50% es un filtro, no una garantía.
 
 No se confunde esta capacidad candidata con la campaña congelada de S7.
+
+La suma de working sets por rank puede contar páginas compartidas de DLL varias
+veces: no equivale a RAM física única consumida por el conjunto. Los máximos
+individuales son los máximos observados del contador del sistema; una salida
+entre muestras puede limitar la última lectura. Private Bytes se informa aparte.
