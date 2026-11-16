@@ -1,0 +1,18 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "arguments":  [
+                      "--n",
+                      "1",
+                      "--seed",
+                      "0",
+                      "--repetition",
+                      "4"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-12T21:33:38.9948976Z",
+    "wall_s":  0.026172599999999997,
+    "pid":  3492,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  ""
+}

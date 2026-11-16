@@ -1,0 +1,7 @@
+execution_order,n,configuration,seed,repetition,is_warmup
+1,256,go_secuencial,42,0,true
+2,256,go_secuencial,42,1,false
+3,256,go_secuencial,42,2,false
+4,256,go_secuencial,42,3,false
+5,256,go_secuencial,42,4,false
+6,256,go_secuencial,42,5,false

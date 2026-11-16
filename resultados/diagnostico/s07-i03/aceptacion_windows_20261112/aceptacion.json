@@ -1,0 +1,30 @@
+{
+    "date_local":  "2026-11-12",
+    "timezone":  "America/Lima",
+    "powershell":  "5.1.26100.9711",
+    "os":  "Microsoft Windows NT 10.0.26300.0",
+    "host_name":  "PCG1UL14N0",
+    "head":  "97f77291025b207b32331316294f262610db33bd",
+    "working_tree":  "modified; pruebas de desarrollo, no congelacion oficial",
+    "go":  "go version go1.27.4 windows/amd64",
+    "binary_sha256":  "72B3F0EF0549E48CB13D2C6340BA38FE116F04CC654438559CC2BE043CEB79E1",
+    "go_metadata":  [
+                        "go_secuencial/build/Release/go_secuencial.exe: go1.27.4",
+                        "\tpath\tmatrices/go_secuencial",
+                        "\tmod\tmatrices/go_secuencial\t(devel)\t",
+                        "\tbuild\t-buildmode=exe",
+                        "\tbuild\t-compiler=gc",
+                        "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                        "\tbuild\tCGO_ENABLED=0",
+                        "\tbuild\tGOARCH=amd64",
+                        "\tbuild\tGOOS=windows",
+                        "\tbuild\tGOAMD64=v1",
+                        "\tbuild\tvcs=git",
+                        "\tbuild\tvcs.revision=97f77291025b207b32331316294f262610db33bd",
+                        "\tbuild\tvcs.time=2026-11-12T14:21:29Z",
+                        "\tbuild\tvcs.modified=true"
+                    ],
+    "go_tests":  81,
+    "c_parallel_tests":  23,
+    "go_parallel_tests":  26
+}

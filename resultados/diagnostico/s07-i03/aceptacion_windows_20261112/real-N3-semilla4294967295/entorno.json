@@ -1,0 +1,47 @@
+{
+    "scope":  "S7 I3: Go secuencial; no es el piloto integrado",
+    "protocol":  "1.3",
+    "build":  {
+                  "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+                  "commit":  "97f77291025b207b32331316294f262610db33bd",
+                  "configuration":  "Release",
+                  "sha256":  "72B3F0EF0549E48CB13D2C6340BA38FE116F04CC654438559CC2BE043CEB79E1",
+                  "metadata":  [
+                                   "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe: go1.27.4",
+                                   "\tpath\tmatrices/go_secuencial",
+                                   "\tmod\tmatrices/go_secuencial\t(devel)\t",
+                                   "\tbuild\t-buildmode=exe",
+                                   "\tbuild\t-compiler=gc",
+                                   "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                   "\tbuild\tCGO_ENABLED=0",
+                                   "\tbuild\tGOARCH=amd64",
+                                   "\tbuild\tGOOS=windows",
+                                   "\tbuild\tGOAMD64=v1",
+                                   "\tbuild\tvcs=git",
+                                   "\tbuild\tvcs.revision=97f77291025b207b32331316294f262610db33bd",
+                                   "\tbuild\tvcs.time=2026-11-12T14:21:29Z",
+                                   "\tbuild\tvcs.modified=true"
+                               ],
+                  "settings":  {
+                                   "vcs":  "git",
+                                   "DefaultGODEBUG":  "containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                   "vcs.revision":  "97f77291025b207b32331316294f262610db33bd",
+                                   "-compiler":  "gc",
+                                   "GOAMD64":  "v1",
+                                   "vcs.time":  "2026-11-12T14:21:29Z",
+                                   "-buildmode":  "exe",
+                                   "GOOS":  "windows",
+                                   "GOARCH":  "amd64",
+                                   "vcs.modified":  "true",
+                                   "CGO_ENABLED":  "0"
+                               }
+              },
+    "hostname":  "PCG1UL14N0",
+    "n":  3,
+    "seed":  4294967295,
+    "repetitions":  5,
+    "warmups":  1,
+    "gomaxprocs":  1,
+    "timeout_s":  30,
+    "status":  "COMPLETE"
+}
