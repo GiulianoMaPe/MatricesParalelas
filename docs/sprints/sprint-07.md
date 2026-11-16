@@ -163,3 +163,24 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
 - [Sebastián aprobó el PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934).
   Giuliano autorizó resolver los conflictos y fusionarlo a `main`. La coordinación
   con I5 y la campaña integrada siguen pendientes; no se declara cerrado S7.
+
+### I8 · Roberto · 16/11/2026
+
+- **Rama:** `feature/s07-i08-congelacion-experimental`, desde `aba95790f0b9eb793a014ec6b69c09cd2ff6b249`.
+- **Participantes y horas reales:** Roberto (**8 h reales**: 3 h fijación de versión candidata y parámetros oficiales de medición en `docs/campana.md`, 3 h reproducción y análisis empírico del piloto automatizado en Windows, 1 h coordinación general del equipo, 1 h revisión cruzada asignada).
+- **Entregable oficial:** [`docs/campana.md`](../campana.md) ("*Acta de Congelación Experimental y Definición de Parámetros de Campaña*").
+- **Implementación y alcance:**
+  - Formalización del Marco de Congelamiento Experimental para dar paso a la campaña masiva del Sprint 8.
+  - Fijación del commit base congelado (`aba95790f0b9eb793a014ec6b69c09cd2ff6b249`), estableciendo la inmutabilidad estricta de las rutinas de cómputo aritmético (`matrix_accumulate`, `multiplyKernel`, `multiplyBlock`) y el orden canónico $i \to k \to j$.
+  - Definición de la matriz oficial de parámetros para el Sprint 8: dimensiones $N \in \{512, 1024, 2048\}$ (con $N=4096$ como estrés condicional seguro), semilla canónica obligatoria `--seed 42`, 1 warmup + 5 repeticiones formales medidas, y espacio de configuraciones de concurrencia ($W \in \{1, 2, 4, 6, 8, 12, 16\}$ en Go; $P \in \{1, 2, 4\}$ y $T \in \{1, 2, 4\}$ en C).
+  - Criterios normativos de validez y descarte: cumplimiento del invariante temporal $0.0 < \text{kernel}_s \le \text{total}_s$, verificación numérica `validation_status=OK`, esquema estricto de 20 columnas y protocolo de aislamiento térmico de la máquina (CPU idle $< 5\%$ previo al lote).
+- **Pruebas y evidencias (Reproducción del Piloto en `PC-PETEL`):**
+  - Reproducción empírica en hardware físico: AMD Ryzen 5 7600X (6C/12T Zen 4, 4.7-5.3 GHz, 32 MB L3), 16 GB DDR5 5200 MT/s, Windows 11 Pro 64-bit build 26300.9974, Go 1.27.1 windows/amd64.
+  - **Go Secuencial:** Ejecutado mediante `powershell -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_secuencial -N 256 -Repetitions 5`. Resultado: 6/6 corridas exitosas (1 warmup + 5 medidas). Mediana de `kernel_s` = 0.0092288 s con dispersión $< 3.8\%$. Esquema CSV de 20 columnas íntegro y `validation_status=OK`.
+  - **Go Paralelo:** Ejecutado mediante `powershell -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_paralelo -N 256 -Workers 2 -Repetitions 5`. Resultado: 6/6 corridas exitosas. Mediana de `kernel_s` = 0.0055860 s, alcanzando un speedup preliminar $S_2 \approx 1.65\times$ y una eficiencia del $82.5\%$ para $N=256$.
+  - Invariante de cronometría verificado en todas las observaciones: $0.0 < \text{kernel}_s \le \text{total}_s$.
+- **Bloqueos y decisiones:**
+  - Código fuente y parámetros de campaña oficialmente congelados de cara al inicio del Sprint 8.
+  - El arnés automatizado `bench_windows.ps1` queda validado empíricamente en Windows para la generación desatendida de resultados.
+- **Revisión y criterio de aceptación:** Entregable de I8 (`docs/campana.md`) completado y conforme. Listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly completada sobre su entrega de C secuencial.
+
