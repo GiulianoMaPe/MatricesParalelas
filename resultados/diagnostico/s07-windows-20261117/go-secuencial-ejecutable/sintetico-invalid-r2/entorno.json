@@ -1,0 +1,17 @@
+{
+    "scope":  "S7 I3: Go secuencial; no es el piloto integrado",
+    "protocol":  "1.3",
+    "build":  {
+                  "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\outputs\\s07-i03\\99417287b20c4abcb5a95bc07415a999\\binario-sintetico.txt",
+                  "commit":  "0123456789abcdef0123456789abcdef01234567",
+                  "sha256":  "A6B02FC1A29B80FC5FA5DB5FECAD5CC10FBFEE70F751F1BF9BFEEF0B95E57C60"
+              },
+    "hostname":  "PCG1UL14N0",
+    "n":  3,
+    "seed":  42,
+    "repetitions":  5,
+    "warmups":  1,
+    "gomaxprocs":  1,
+    "timeout_s":  10,
+    "status":  "FAILED"
+}

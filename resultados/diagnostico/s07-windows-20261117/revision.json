@@ -1,0 +1,37 @@
+{
+  "recorded_at_utc": "2026-11-17T14:11:18.626957+00:00",
+  "head": "66900cd4787edd565d82444136e16b9edc6071af",
+  "branch": "feature/s07-cierre-integrado",
+  "working_tree": [
+    " M docs/campana.md",
+    " M docs/sprints/sprint-07.md",
+    " M resultados/diagnostico/s06/20261112T033150Z_fedora/resumen.csv",
+    " M resultados/diagnostico/s06/20261112T035217Z_fedora/resumen.csv",
+    " M scripts/accept_sprint07_windows.ps1",
+    " M scripts/test_windows.ps1",
+    " M tests/README.md",
+    "?? resultados/diagnostico/s07-windows-20261117/",
+    "?? tests/accept_sprint07_windows_test.ps1"
+  ],
+  "accepted_frozen_candidate": false,
+  "integrated_pilot_complete": false,
+  "reproduction_complete": false,
+  "blocker": "Smart App Control blocks go_paralelo.exe; CodeIntegrity 3077",
+  "source_sha256": {
+    "scripts/accept_sprint07_windows.ps1": "cabd540cae1bfbb8a489f9d4b665002c8fc7f9f52df0405ac3cead9ccbd1b860",
+    "scripts/test_windows.ps1": "1ab3b9b71936cd5eb006d0215ca5bd7a01b3027c242891f3ef932f6ed8024010",
+    "tests/accept_sprint07_windows_test.ps1": "fce0e2450c0c63e67a9fa26b238ac4d34111df6863a6441984f19964c093d665",
+    "docs/campana.md": "88f11cd3d3182eb3d0935804ddc8d60f91b5dcfe7ef6106f89e133fe4a5fb197",
+    "docs/sprints/sprint-07.md": "11737b315efbfb986ff869e8b393e5a0b9cf5d6a00fe143f4fd542bdc28ae014",
+    "tests/README.md": "2b313ed90a5b03bb9a3277e51d13cea5711762eb76a783a8c3bf96c7c04660d3"
+  },
+  "user_confirmations": {
+    "official_pc": true,
+    "reviewer": "responsable/usuario de esta sesion",
+    "declared_hours_per_member": 8,
+    "team_members": 8,
+    "temperature_sensor_available": false,
+    "s8_dedicated_time_slot": null
+  },
+  "security_policy_changed": false
+}

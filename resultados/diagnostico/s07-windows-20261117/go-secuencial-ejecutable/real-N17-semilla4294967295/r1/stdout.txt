@@ -1,0 +1,2 @@
+timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
+2026-11-17T14:02:45Z,go_secuencial,66900cd4787edd565d82444136e16b9edc6071af,PCG1UL14N0,AMD Ryzen 5 3600 6-Core Processor,15.912,Windows 11 Pro build 26300.9711,go_secuencial,17,4294967295,1,1,1,1,1,1,false,0.000000000,0.000000000,OK

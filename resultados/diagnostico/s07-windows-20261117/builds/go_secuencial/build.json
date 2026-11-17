@@ -1,0 +1,63 @@
+{
+    "version":  "go_secuencial",
+    "configuration":  "Release",
+    "target":  "x64",
+    "commit":  "66900cd4787edd565d82444136e16b9edc6071af",
+    "dirty":  true,
+    "built_at_utc":  "2026-11-17T13:59:42.4224040Z",
+    "sha256":  "DC4B80CBADFEB596EE305019F83053557AD1E360CE608245EA4CC4722413CFDE",
+    "arguments":  [
+                      "build",
+                      "-o",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+                      "-buildvcs=true",
+                      "."
+                  ],
+    "tools":  {
+                  "go":  "go version go1.27.4 windows/amd64",
+                  "go_build_metadata":  [
+                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe: go1.27.4",
+                                            "\tpath\tmatrices/go_secuencial",
+                                            "\tmod\tmatrices/go_secuencial\t(devel)\t",
+                                            "\tbuild\t-buildmode=exe",
+                                            "\tbuild\t-compiler=gc",
+                                            "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                            "\tbuild\tCGO_ENABLED=0",
+                                            "\tbuild\tGOARCH=amd64",
+                                            "\tbuild\tGOOS=windows",
+                                            "\tbuild\tGOAMD64=v1",
+                                            "\tbuild\tvcs=git",
+                                            "\tbuild\tvcs.revision=66900cd4787edd565d82444136e16b9edc6071af",
+                                            "\tbuild\tvcs.time=2026-11-17T05:26:02Z",
+                                            "\tbuild\tvcs.modified=true"
+                                        ]
+              },
+    "source_sha256":  {
+                          "go_secuencial/README.md":  "BEE9F0C24456BC774AA700651037BBFD2F1B05C8C8C56FBDBAFD771105887286",
+                          "go_secuencial/environment.go":  "63EB371672AE19D5D7C1B3E5295C48BB0B2DA4AE916967971D5679AE3C9DEEF9",
+                          "go_secuencial/environment_other.go":  "AEE7432CE94E721F1EF22DD3A5A1D5D580A952C4FC04F78FAC262C2C767F49B6",
+                          "go_secuencial/environment_windows.go":  "E33116E7B54BE9A540BBE91797912C43800A08DEACE9A64168A8D522FCED0915",
+                          "go_secuencial/environment_windows_test.go":  "D79A0C51D0C0D56D8F155A5E8A4D35179019BFA7174E1B20A81ABB4330874857",
+                          "go_secuencial/go.mod":  "5532420B12B23420C51236BD7DB336DAF65F9DF895BF00FF5B87F15F59C65E95",
+                          "go_secuencial/input.go":  "89D557353C6E9A69E4261EC453E8C88D6D434590D8DD24D17DAB7A425A3303EA",
+                          "go_secuencial/input_errors_test.go":  "D2B5E3F064FCDAF6DB36898A7D8FB0058AF6C7404DB95018AFB71E18831FBE52",
+                          "go_secuencial/input_test.go":  "DAD4CCFBD9E9939A239C713C491BDA6F04C5AC94B41A83504811D0C7F3BF3CC6",
+                          "go_secuencial/main.go":  "1DF9D331952ED7E0D7AD3C58963D49C827DFE7F0BCF7025B4B1910342417D20F",
+                          "go_secuencial/main_test.go":  "27BD6908CEDBFBB3246DCF22C6D8F8DF07DA18307D4B3729582CAED06B7B793D",
+                          "go_secuencial/matrix.go":  "8C1123BDC6E2468FE932B7337283D0DCF24131E2FEEA37682C82055D2741062D",
+                          "go_secuencial/matrix_test.go":  "DC742E56B2D0C57B14A526818C7ADFDFE10D831492FD6DA238781439AF50B6DA",
+                          "go_secuencial/out.txt":  "1999C58A5A46AD92DCABF00F22522296989A71D7B723BC5F26371B88AEA8DB91",
+                          "go_secuencial/smoke.go":  "EFDE2EB09BA683FBA71888D7590BFE3E26FD4A7B888603780DB61B98622629A9",
+                          "go_secuencial/sprint06_test.go":  "CA4A7AEABAE796D9F5032BFF964CB485B04685F8B874E8DDEDE494ACF3AEBF14",
+                          "go_secuencial/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                          "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                          "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                      },
+    "build_environment":  {
+                              "CL":  null,
+                              "_CL_":  null,
+                              "LINK":  null,
+                              "GOFLAGS":  null,
+                              "GOEXPERIMENT":  null
+                          }
+}

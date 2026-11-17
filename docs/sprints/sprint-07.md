@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: integración técnica S7 preparada y verificada con pruebas controladas en Linux; pendiente aceptación del piloto completo y reproducción en Windows nativo. El registro del 17/11/2026 al final sustituye los estados históricos anteriores.
+Estado: integración técnica verificada en Windows y bloqueo de ejecución resuelto por el propietario; se prepara candidata limpia para piloto completo y reproducción. PC oficial, revisor y 8 h por integrante confirmados por el responsable. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -442,3 +442,90 @@ No se ejecutaron MSVC, MS-MPI, PowerShell 5.1 ni nuevos binarios Windows.
 El procedimiento y criterios actuales están en [docs/campana.md](../campana.md).
 S7 permanece abierto hasta acreditar estos puntos; el dry-run y los datos previos
 no se reclasifican como piloto completo.
+
+## Aceptación nativa Windows · 17/11/2026
+
+El responsable confirma que esta es la PC oficial, que él revisará el piloto,
+que se declaran **8 h por integrante (64 h de equipo)** y que no hay sensor de
+temperatura. Es una declaración del responsable, sin desglose nuevo ni
+conformidades independientes atribuidas a otros integrantes. No se ha indicado
+todavía una fecha/franja de máquina dedicada para S8. La falta de sensor queda
+como limitación experimental; no se afirma ausencia de calentamiento o throttling.
+
+Equipo observado: Ryzen 5 3600, 6 núcleos físicos/12 lógicos, 17085501440 bytes
+de RAM visible, Windows 11 Pro build 26300, alimentación AC y plan Equilibrado.
+Dependencias nativas: PowerShell 5.1.26100.9711, MSVC 14.44.35207, Windows SDK
+10.0.26100.0, MS-MPI Runtime 10.1.12498.52 y Go 1.27.4 windows/amd64.
+
+### Correcciones realizadas durante la aceptación
+
+- `accept_sprint07_windows.ps1 -SkipBuild` omitía el build inicial, pero
+  `test_windows.ps1` recompilaba durante la regresión. La regresión ahora admite
+  `-SkipBuild`, utilizado por el aceptador después de su build único. Se verifican
+  manifiestos/fuentes y hashes antes y después de las pruebas. La reproducción
+  conserva los ejecutables del primer intento.
+- Los errores nativos de stderr de PowerShell 5.1 podían interrumpir el registro
+  antes del mensaje de diagnóstico. El aceptador conserva la salida completa y
+  comunica etiqueta, código real y ruta del log.
+- Se añadieron 12 comprobaciones controladas de aceptación: build único,
+  reproducción sin build, preservación del ID, rechazo de mutación de binarios y
+  conservación de stdout/stderr con fallo de un proceso. No son mediciones.
+- Dos CSV históricos de S6 presentaban solo conversión LF/CRLF. Se conservaron
+  sus copias locales y hashes en `.cache/s07-preexistentes-20261117/` antes de
+  recuperar los bytes originales de HEAD; no se alteraron sus datos.
+
+### Pruebas y evidencia
+
+Evidencia persistente: [diagnóstico Windows](../../resultados/diagnostico/s07-windows-20261117/README.md).
+
+| Comprobación | Resultado nativo Windows |
+| --- | --- |
+| Build Release de cuatro versiones y pruebas C | Código 0 |
+| Regresión con `-SkipBuild`: C secuencial, C híbrido y Go secuencial | Código 0; hashes de los cuatro binarios idénticos antes/después |
+| CSV I5 | Fila válida aceptada y tres rechazos esperados |
+| Funciones C paralelo I2 | 23/23 |
+| Go secuencial I3 con ejecutable real | 81/81 |
+| Go paralelo I4 controlado | 26/26 |
+| Go paralelo I4 con ejecutable real | Falla por Control de aplicaciones; no aprobado |
+| Resumen I7 | 43/43 |
+| Integridad de resumen | 11/11 |
+| Manifiestos | 10/10 |
+| Campaña integrada controlada | 48/48 |
+| Aceptación controlada | 12/12 |
+| Parser de 31 scripts/pruebas PowerShell | Sin errores |
+| Dry-run nativo: N=256/512/1024, semilla 42, W=1/2/4 | 198 corridas planificadas, sin exclusiones; cero observaciones |
+
+### Bloqueo y candidata
+
+El intento `s07_windows_20261117_piloto_01` se detuvo en regresión antes de medir.
+Windows bloquea `go_paralelo/build/Release/go_paralelo.exe`; CodeIntegrity
+registra evento 3077 y política `{0283ac0f-fff1-49ae-ada1-8a933130cad6}`.
+`Get-MpComputerStatus` confirma SmartAppControlState=On. El intento real I4
+independiente reproduce el bloqueo. Los logs conservan el fallo; no existe
+piloto integrado COMPLETE ni estimación experimental de duración.
+
+Según [Microsoft](https://support.microsoft.com/en-gb/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions),
+Smart App Control no ofrece excepciones por aplicación. La autorización del
+usuario para investigar/permitir estos ejecutables no se registra como un cambio
+de seguridad ya aplicado. Se necesita resolver la ejecución mediante un método
+admitido antes de reintentar la campaña.
+
+HEAD de procedencia: `66900cd4787edd565d82444136e16b9edc6071af`.
+Las correcciones de aceptación están en el árbol de trabajo y requieren una
+nueva candidata limpia, reconstrucción y ambos intentos completos. Ese HEAD no
+se declara congelación final de las correcciones ni de S8.
+
+Pendientes efectivos: desbloquear la ejecución; fijar candidata limpia; piloto
+integrado de 198 corridas; reproducción con iguales binarios y parámetros;
+revisión del responsable sobre CSV/logs/condiciones y limitación térmica;
+estimación y franja concreta de máquina S8; acta de congelación y aceptación final.
+No se declara cerrado S7 con pruebas parciales o datos de planificación.
+
+### Desbloqueo confirmado · 17/11/2026
+
+El propietario acepta expresamente el cambio de alcance global y desactiva
+Smart App Control manualmente. Se comprueba SmartAppControlState=Off y una
+ejecución Go paralelo N=2/semilla42/W=2 con CSV OK. No se atribuye el cambio a
+una excepción por binario. Se conservan los fallos anteriores y se prepara una
+nueva candidata limpia para `s07_windows_20261117_piloto_02` y
+`s07_windows_20261117_reproduccion_02`, sin recompilar entre ambos intentos.

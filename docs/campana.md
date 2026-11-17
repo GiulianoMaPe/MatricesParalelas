@@ -1,8 +1,9 @@
 # Campaña y candidata experimental S7
 
-Estado al 17/11/2026: integración implementada; aceptación del piloto completo y
-reproducción pendientes en Windows nativo. No se habilita todavía el cierre S7
-ni se afirma una congelación final para S8.
+Estado al 17/11/2026: integración probada en Windows nativo; bloqueo de Smart
+App Control resuelto por el propietario y ejecución Go paralelo comprobada.
+PC oficial, revisor y 8 h por integrante confirmados. Se prepara la candidata
+limpia para completar y aceptar piloto y reproducción antes de cerrar S7.
 
 ## Procedencia de las entregas
 
@@ -83,6 +84,49 @@ metadatos y logs. No sustituye la ejecución nativa ni la revisión del entorno.
 `estimacion.json` proyecta inicialmente 8 veces la duración del piloto por duplicar
 N con coste cúbico y sugiere 50% de margen. Es una estimación, no una medición S8
 ni una reserva efectiva en el calendario.
+
+El aceptador compila una sola vez; ejecuta la regresión con
+`test_windows.ps1 -SkipBuild` y verifica manifiestos/fuentes/hashes antes y
+después de las pruebas. En reproducción, `-SkipBuild` del aceptador conserva
+también esa omisión durante la regresión. Faltando ejecutables o pruebas C,
+hay que construir y reiniciar ambos intentos, sin recompilar entre ellos.
+
+## Estado nativo de la PC oficial · 17/11/2026
+
+El responsable confirma la PC oficial, su revisión personal, 8 h por integrante
+y ausencia de sensor térmico. No se atribuyen revisiones independientes nuevas
+a otros integrantes. No hay todavía franja de máquina S8 confirmada. Sin sensor
+se documenta la limitación y se revisan carga, memoria, alimentación, pausas e
+incidencias; no se afirma estabilidad térmica medida.
+
+Ryzen 5 3600, 6 núcleos físicos/12 lógicos, Windows 11 Pro build 26300,
+17085501440 bytes de RAM visible, AC y plan Equilibrado. MSVC 14.44.35207,
+Windows SDK 10.0.26100.0, MS-MPI Runtime 10.1.12498.52, Go 1.27.4 windows/amd64
+y PowerShell 5.1.26100.9711. Las opciones y hashes observados se conservan en
+el [diagnóstico Windows](../resultados/diagnostico/s07-windows-20261117/README.md).
+
+El dry-run nativo planifica 198 corridas sin exclusiones: 33 calentamientos y
+165 medidas, N=256/512/1024, semilla 42 y W=1/2/4. Sigue siendo planificación.
+El intento `s07_windows_20261117_piloto_01` se detuvo antes de medir al bloquear
+Windows el binario Go paralelo (evento CodeIntegrity 3077; política
+`{0283ac0f-fff1-49ae-ada1-8a933130cad6}`; SmartAppControlState=On).
+No existe piloto integrado COMPLETE, reproducción ni estimación basada en él.
+
+HEAD de procedencia: `66900cd4787edd565d82444136e16b9edc6071af`.
+La corrección de recompilación involuntaria y sus pruebas están pendientes de
+fijarse como nueva candidata limpia. Resolver primero el bloqueo de ejecución,
+conservar todos los intentos y reiniciar la aceptación con nuevos IDs. La
+congelación final incluirá esa nueva revisión, hashes de ambos intentos, revisión
+de la evidencia y reserva concreta de máquina para S8.
+
+Actualización posterior del 17/11/2026: el propietario acepta expresamente el
+cambio global y desactiva Smart App Control manualmente. La consulta posterior
+confirma Off y Go paralelo N=2/W=2 devuelve CSV OK. Los registros de bloqueo
+anteriores se conservan como historia. Se reinicia la aceptación con una nueva
+candidata limpia y los IDs `s07_windows_20261117_piloto_02` y
+`s07_windows_20261117_reproduccion_02`. Las carpetas de salida de ambos intentos
+y sus planes se excluyen localmente durante las mediciones para que generar
+evidencia no modifique el estado de las fuentes; su publicación será explícita.
 
 ## Análisis y condición de cierre
 

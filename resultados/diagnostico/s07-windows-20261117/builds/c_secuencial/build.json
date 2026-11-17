@@ -1,0 +1,58 @@
+{
+    "version":  "c_secuencial",
+    "configuration":  "Release",
+    "target":  "x64",
+    "commit":  "66900cd4787edd565d82444136e16b9edc6071af",
+    "dirty":  true,
+    "built_at_utc":  "2026-11-17T13:59:18.6944032Z",
+    "sha256":  "1C81F24787E13A318F483102DB089196B71FCF12678B9B18DB598AE66074CAA1",
+    "arguments":  [
+                      "/nologo",
+                      "/TC",
+                      "/std:c11",
+                      "/W4",
+                      "/WX",
+                      "/fp:precise",
+                      "/I",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\include",
+                      "/O2",
+                      "/MD",
+                      "/D_WIN32_WINNT=0x0600",
+                      "/I",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\build\\Release",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\input.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\main.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\matrix.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\timer.c",
+                      "/Fe:c_secuencial.exe",
+                      "/link",
+                      "/MACHINE:X64",
+                      "advapi32.lib"
+                  ],
+    "tools":  {
+                  "msvc":  "19.44.35230.0",
+                  "windows_sdk":  "10.0.26100.0"
+              },
+    "source_sha256":  {
+                          "c_secuencial/README.md":  "0E5E4C9DA64C1923E3168B36353C0E3A00C7D8EA0B7CC7798424585CEBE4B16E",
+                          "c_secuencial/include/input.h":  "1C4AD036D0C178876FAD791216C2EF612207178ACE97658475D9C21A81853B36",
+                          "c_secuencial/include/matrix.h":  "049F01C3590F211C86E5C76E933BC10DF6008B1C695A9DFC10C3B0998E6FEC64",
+                          "c_secuencial/include/timer.h":  "7DAD13F901EF0655CCD9C417FCADF946CC5A42E2BE56133A4E78D4909A59BE14",
+                          "c_secuencial/src/input.c":  "D5B5B194FE027BCAD29F59BAD1D948AFEECF8A538E5DAEECDCE68B979B88C8FE",
+                          "c_secuencial/src/main.c":  "A6F861287CCA01F8F6F123724990313FFD93798D14DA302C5CF15B93E584359A",
+                          "c_secuencial/src/matrix.c":  "4D772401747B795487E6FB8C1A789524B3D5EE675F943DF3F803BD47C6DD2D3D",
+                          "c_secuencial/src/timer.c":  "26FA9876589D677DFCE1AF7AC8B70D5FB266A794BCB6906545F75AF3F01A6CFF",
+                          "c_secuencial/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                          "c_secuencial/tests/matrix_kernel_test.c":  "0AB3BC15C2F6353CBCFD70F44E27781F359CFDA03EBF581EC0631FA893E3A7DE",
+                          "c_secuencial/tests/pending_test.c":  "C729AA7C4EDCC09E620665D652F40BACDF173FE3947C7AC1253133403BA711E0",
+                          "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                          "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                      },
+    "build_environment":  {
+                              "CL":  null,
+                              "_CL_":  null,
+                              "LINK":  null,
+                              "GOFLAGS":  null,
+                              "GOEXPERIMENT":  null
+                          }
+}

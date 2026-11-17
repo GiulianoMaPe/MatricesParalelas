@@ -181,6 +181,14 @@ Pruebas adicionales ejecutables en PowerShell 5.1/7:
   duplicados, warmup, fallos, NaN/Inf, cero temporal y CSV mal formado.
 - `tests/bench_csv_validation_test.ps1`: conserva los cuatro casos de I5,
   cargando el validador desde el módulo extraído de C secuencial.
+- `tests/accept_sprint07_windows_test.ps1`: 12 comprobaciones del aceptador en
+  PowerShell 5.1, con scripts controlados: build único, reproducción sin build,
+  preservación del ID/logs, rechazo de binarios modificados durante las pruebas
+  y conservación de stdout/stderr con el código de fallo real.
+
+`scripts/test_windows.ps1 -SkipBuild` ejecuta la regresión contra los binarios
+existentes. El aceptador lo utiliza en ambos intentos para no recompilar durante
+las pruebas; comprueba además los manifiestos/fuentes/hashes antes y después.
 
 Los procesos y archivos controlados de las pruebas no son observaciones de
 rendimiento. La batería original de I4 usa `.cmd` y debe ejecutarse en Windows;
