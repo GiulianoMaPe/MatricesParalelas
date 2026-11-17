@@ -1,6 +1,6 @@
 # Sprint 8 · Plan I3 · Giuliano · Go secuencial
 
-**Estado:** planificación preparada; no se han ejecutado mediciones de S8.
+**Estado:** dry-run oficial aprobado; mediciones S8 pendientes.
 **Rama:** `feature/s08-i03-go-secuencial`.
 
 ## Objetivo y alcance
@@ -35,6 +35,21 @@ Se esperan 3 combinaciones Go secuencial y 18 filas en su extracción: 3
 calentamientos y 15 medidas. La campaña oficial completa incluye además las
 configuraciones asignadas a I1, I2 e I4, en una sola tabla y con un único
 `campaign_id`.
+
+## Preflight ejecutado · 17/11/2026
+
+| Comprobación | Resultado |
+| --- | --- |
+| Candidata y árbol | HEAD `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`; limpio |
+| Manifiestos Release | Los cuatro binarios presentes; commit, arquitectura x64 y hashes coinciden |
+| Recursos | 10030 MiB RAM libre; plan Equilibrado; huella matricial estimada 288 MiB |
+| GPU antes del lote | GTX 1070, 44 °C, utilización 2% |
+| Lock/procesos de medición | Sin lock ni ejecutables del proyecto activos |
+| Dry-run oficial | 198 filas planificadas, 33 grupos, 0 exclusiones; Go secuencial: 3 grupos/18 filas |
+| Evidencia | `resultados/diagnostico/s08_i03_preflight/s08_i03_preflight/` |
+
+El dry-run no ejecutó matrices. CPU no tiene lectura térmica; el preflight no
+afirma que el equipo esté aislado de otras cargas.
 
 ## Secuencia de trabajo
 
