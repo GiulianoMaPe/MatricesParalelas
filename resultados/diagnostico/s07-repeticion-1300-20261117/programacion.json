@@ -1,0 +1,29 @@
+{
+    "status":  "SCHEDULED",
+    "task_name":  "Codex-S7-Repeticion-20261117-1300",
+    "task_state":  "Ready",
+    "start":  "2026-11-17T13:00:00-05:00",
+    "end":  "2026-11-17T14:00:00-05:00",
+    "stop_measurement_by":  "2026-11-17T13:55:00-05:00",
+    "timezone":  "America/Lima",
+    "windows_timezone":  "SA Pacific Standard Time",
+    "wake_to_run":  true,
+    "start_when_available":  false,
+    "execution_time_limit":  "PT1H",
+    "run_level":  "Limited",
+    "user":  "giuli",
+    "executable":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "arguments":  "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File \"D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s07_1300\\repetir_s07.ps1\"",
+    "working_directory":  "D:\\Escritorio\\Proyectos\\MatricesParalelas",
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "gpu_monitoring":  true,
+    "cpu_temperature_available":  false,
+    "cpu_driver_installed":  false,
+    "human_acceptance":  false,
+    "script_sha256":  {
+                          "comparar_campanas.py":  "3B873A3F9CF5DA5CD9E012BE1A4526525B03EA3EF8A82ED85847E9FF5C1914F7",
+                          "crear_informe.py":  "EB0EEAF414437C7B7AFEBA128E032002FBE2E52B0A9656C3641EAB9E8D106A0C",
+                          "registrar_gpu.ps1":  "E61E5BCDA6CB6F81525119008130CDC4BE704B567628FD75A18EB281A12AD2E3",
+                          "repetir_s07.ps1":  "42509EDEA57062D6E40A8D988FE4161F0BC568B5D10CF5E098B31A5089BDB733"
+                      }
+}

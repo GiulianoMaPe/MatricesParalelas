@@ -1,0 +1,21 @@
+{
+  "status": "PROVISIONAL_PENDING_IDLE_REPEAT_AND_ACCEPTANCE",
+  "authorization": "Owner authorized selecting the necessary hours and committed to adapt PC use.",
+  "timezone": "America/Lima",
+  "start": "2026-11-18T09:00:00-05:00",
+  "end": "2026-11-18T12:00:00-05:00",
+  "reserved_seconds": 10800,
+  "estimated_campaign_seconds": 5726.8521888,
+  "estimated_with_margin_seconds": 8590.2782832,
+  "setup_and_review_seconds": 1800,
+  "projection_not_s8_measurement": true,
+  "n_values": [
+    512,
+    1024,
+    2048
+  ],
+  "maximum_matrix_bytes_n2048": 301989888,
+  "timeout_per_run_seconds": 300,
+  "recheck_memory_and_load_before_start": true,
+  "temperature_sensor_available": false
+}

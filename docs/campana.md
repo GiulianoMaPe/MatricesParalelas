@@ -1,9 +1,12 @@
 # Campaña y candidata experimental S7
 
-Estado al 17/11/2026: integración probada en Windows nativo; bloqueo de Smart
-App Control resuelto por el propietario y ejecución Go paralelo comprobada.
-PC oficial, revisor y 8 h por integrante confirmados. Se prepara la candidata
-limpia para completar y aceptar piloto y reproducción antes de cerrar S7.
+Estado al 17/11/2026: piloto integrado y reproducción completos y verificados en
+Windows nativo, 198 observaciones OK y 33 grupos por intento. Candidata limpia
+`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, mismos binarios y fuentes.
+El responsable no acepta todavía estos lotes por dudas de uso concurrente
+(Zoom/navegador) y solicita repetir con la PC dedicada el 17/11, 13:00–14:00
+America/Lima. Se medirá GPU; CPU quedará sin lectura térmica por elección del
+responsable. Reserva S8 provisional: 18/11, 09:00–12:00, sujeta a esta repetición.
 
 ## Procedencia de las entregas
 
@@ -127,6 +130,100 @@ candidata limpia y los IDs `s07_windows_20261117_piloto_02` y
 `s07_windows_20261117_reproduccion_02`. Las carpetas de salida de ambos intentos
 y sus planes se excluyen localmente durante las mediciones para que generar
 evidencia no modifique el estado de las fuentes; su publicación será explícita.
+
+## Resultado integrado Windows · 17/11/2026
+
+Este resultado sustituye los pendientes técnicos de los registros anteriores.
+El [informe de cierre](../resultados/piloto/s07_windows_20261117_cierre/README.md)
+conserva comprobaciones cruzadas, hashes, condiciones, diferencias y reserva.
+
+| Intento | Estado | Observaciones / grupos | Duración |
+| --- | --- | --- | --- |
+| `s07_windows_20261117_piloto_02` | COMPLETE / VERIFIED | 198 OK / 33 COMPLETE | 715.7244307 s |
+| `s07_windows_20261117_reproduccion_02` | COMPLETE / VERIFIED | 198 OK / 33 COMPLETE | 715.8565236 s |
+
+Commit experimental: **`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`**.
+Los dos intentos tienen fuentes/builds limpios, mismo plan byte a byte, hashes
+de fuentes y cuatro binarios idénticos, mismas herramientas y parámetros.
+N=256/512/1024, semilla 42, W=1/2/4, 33 warmups y 165 medidas por intento;
+ninguna exclusión. La reproducción pasa toda la aceptación con `-SkipBuild`.
+Los CSV, stdout/stderr, procesos, ranks y grupos pasan el verificador.
+
+Herramientas observadas: compilador MSVC 19.44.35230.0 (toolset 14.44.35207),
+Windows SDK 10.0.26100.0, MS-MPI Runtime 10.1.12498.52, Go 1.27.4 windows/amd64
+y PowerShell 5.1.26100.9711. El SDK MPI se identifica por hashes en los manifiestos.
+
+Se conservaron todos los datos y los dos resúmenes independientes. La mediana
+del cambio absoluto relativo de medianas `total_s` entre 33 grupos es 3.6004%;
+el máximo es 28.2531% en C paralelo N=512/P2/T2. No se afirma equivalencia
+temporal exacta ni se eliminan outliers/speedups lentos. No hay sensor térmico;
+se registraron cargas de 1–80% y 1–57% y RAM libre mínima 2015820/3180024 KiB.
+Las muestras pueden incluir carga anterior y no acreditan aislamiento perfecto.
+La revisión del responsable debe aceptar expresamente estas limitaciones; no se
+atribuyen diferencias a caché, temperatura o tareas de fondo sin medición causal.
+
+### Reserva y ejecución posterior de S8
+
+El propietario autorizó elegir las horas necesarias y adaptar su uso de la PC.
+Se reserva **18/11/2026 de 09:00 a 12:00, America/Lima (UTC−5)**. El mayor piloto
+proyecta 95.4475 min de campaña, 143.1713 min con margen del 50%, más 30 min de
+preparación/revisión y redondeo a tres horas. Es una estimación inicial.
+N=2048 requiere hasta 288 MiB matriciales estimados más runtime/pilas; volver a
+comprobar memoria/carga/AC/plan y anotar ausencia de sensor antes de medir.
+Timeout inicial 300 s por corrida; máximo observado en piloto 8.5629233 s
+(proyección cúbica simple 68.5034 s, sin garantía de tiempos futuros).
+
+La copia local `.cache/s08-candidata-97ccc98` contiene el commit medido,
+fuentes byte a byte y los cuatro binarios originales. Sus manifiestos se
+validaron con el requisito `Official`, y su árbol está limpio. La documentación
+y evidencia de cierre se versionan después, sin cambiar esa candidata.
+Para S8 en esta PC, usar esa copia y comprobar HEAD/limpieza antes de medir:
+
+Desde la raíz de este repositorio:
+
+```powershell
+Set-Location .\.cache\s08-candidata-97ccc98
+git rev-parse HEAD
+git status --short
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_oficial_01 -TimeoutSeconds 300
+```
+
+El comando oficial es preparación para S8: no se ha ejecutado como parte de S7.
+Si faltan la copia/binarios en otro clon, reconstruir y repetir aceptación;
+no asumir los hashes originales. El registro humano de aceptación final está
+en `resultados/piloto/s07_windows_20261117_cierre/aceptacion_responsable.json`.
+
+## Revisión diferida y repetición en reposo · 17/11/2026
+
+El responsable informa que está utilizando Zoom y Google/navegador y prefiere
+repetir antes de aceptar el cierre. Se conservan íntegros ambos lotes `_02` y
+sus verificaciones técnicas; no se declaran aceptados para cerrar S7 ni se
+atribuye causalmente la dispersión a una aplicación concreta.
+
+Confirma disponibilidad dedicada hoy de **13:00 a 14:00 (Lima)**. Se prepara
+la tarea local `Codex-S7-Repeticion-20261117-1300`, con la misma candidata y
+binarios de `.cache/s08-candidata-97ccc98`, y nuevos IDs
+`s07_windows_20261117_piloto_03` / `s07_windows_20261117_reproduccion_03`.
+La supervisión comprueba ausencia de Zoom/navegadores y carga media inicial
+de CPU no superior al 10% (heurística operativa, no umbral retroactivo del
+protocolo), deja dos minutos de reposo entre lotes y conserva parciales ante fallo.
+Si reaparece una aplicación bloqueada, interrumpe sus propios procesos de prueba;
+no cierra aplicaciones del usuario. Se reserva el tramo desde 13:55 para archivo.
+
+La GTX 1070 permite leer temperatura/carga mediante `nvidia-smi`, ya instalado;
+se probó un registrador finito cada cinco segundos con tres muestras reales.
+La interfaz ACPI consultada no entrega temperatura CPU. LibreHardwareMonitor
+0.9.6 fue descargado de su repositorio oficial y verificado por SHA-256, pero
+el responsable eligió **solo GPU**, sin instalar el controlador PawnIO.
+No se instaló ningún controlador. GPU no sustituye la temperatura del Ryzen
+ni acredita estabilidad térmica de CPU. Los registros GPU se correlacionarán
+por UTC con las mediciones y se conservarán en `monitor_externo/`.
+
+Estado operativo y motivos de bloqueo: `.cache/s07_1300/estado.json`.
+Los nuevos datos se copiarán a `resultados/piloto/`; el informe técnico se
+generará en `s07_windows_20261117_cierre_03/`, sin conceder aceptación humana
+automáticamente. La reserva S8 se revisará con esas duraciones y el cierre
+seguirá pendiente de la revisión del responsable.
 
 ## Análisis y condición de cierre
 

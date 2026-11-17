@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: integración técnica verificada en Windows y bloqueo de ejecución resuelto por el propietario; se prepara candidata limpia para piloto completo y reproducción. PC oficial, revisor y 8 h por integrante confirmados por el responsable. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
+Estado: los dos lotes nativos `_02` están completos y verificados, pero el responsable difiere su aceptación y solicita repetición con PC dedicada el 17/11, 13:00–14:00 (Lima), con sensor GPU y CPU sin lectura térmica. S7 sigue abierto y la reserva S8 es provisional. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -529,3 +529,66 @@ ejecución Go paralelo N=2/semilla42/W=2 con CSV OK. No se atribuye el cambio a
 una excepción por binario. Se conservan los fallos anteriores y se prepara una
 nueva candidata limpia para `s07_windows_20261117_piloto_02` y
 `s07_windows_20261117_reproduccion_02`, sin recompilar entre ambos intentos.
+
+## Resultado técnico y propuesta de cierre · 17/11/2026
+
+Se completaron en la PC oficial los dos intentos sobre
+**`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`**:
+
+| Intento | Estado | Corridas OK / grupos completos | Tiempo de campaña |
+| --- | --- | --- | --- |
+| Piloto `s07_windows_20261117_piloto_02` | COMPLETE / VERIFIED | 198 / 33 | 715.7244307 s |
+| Reproducción `s07_windows_20261117_reproduccion_02` | COMPLETE / VERIFIED | 198 / 33 | 715.8565236 s |
+
+Cada lote incluye 33 warmups y 165 medidas, N=256/512/1024, semilla 42, todas
+las configuraciones W=1/2/4 de las cuatro versiones y ninguna exclusión por RAM.
+Pasaron ambas aceptaciones completas: regresión común (24 comparaciones, 49
+errores controlados y batería de 148 ejecuciones C/Go), I2 23/23, I3 real 81/81,
+I4 real 27/27, CSV, resumen 43/43, manifiestos 10/10, integridad 11/11,
+campaña controlada 48/48 y aceptador controlado 12/12.
+
+La reproducción no recompiló: conserva los cuatro hashes, manifiestos, fuentes,
+plan byte a byte, herramientas y parámetros. Ambos árboles/builds están limpios.
+Los verificadores cotejan plan/CSV/stdout/procesos/ranks y 33 grupos COMPLETE.
+Se conservan datos originales y resúmenes separados, sin eliminar outliers.
+
+El [informe concreto de cierre](../../resultados/piloto/s07_windows_20261117_cierre/README.md)
+recoge las doce comprobaciones cruzadas y la comparación: mediana de cambios
+absolutos relativos de medianas `total_s` 3.6004%, máximo 28.2531% en C paralelo
+N=512/P2/T2. Carga observada 1–80%/1–57%, RAM libre mínima 2015820/3180024 KiB,
+AC y plan Equilibrado. No hay sensor térmico ni inferencia causal de esas
+variaciones. La aceptación del procedimiento no certifica igualdad de tiempos,
+estabilidad térmica medida o aislamiento perfecto de carga.
+
+El responsable confirma PC oficial, que se hará cargo de la revisión y 8 h declaradas por
+integrante (64 h de equipo); no se atribuyen nuevas revisiones independientes
+a otros integrantes. Autorizó elegir las horas de PC y adaptarse: se reserva
+**18/11/2026, 09:00–12:00, America/Lima**, para S8. La proyección conservadora
+es 95.4475 min, 143.1713 min con margen y 30 min adicionales de preparación,
+redondeados a tres horas. N=2048: hasta 288 MiB matriciales estimados más runtime;
+revalidar memoria/carga y mantener timeout inicial 300 s.
+
+Se preparó y verificó la copia limpia `.cache/s08-candidata-97ccc98` con fuentes
+y binarios originales. Permite documentar el cierre sin mover el commit medido.
+La campaña oficial S8 sigue separada y no se ejecutó anticipadamente.
+
+Pendiente únicamente la conformidad final del responsable sobre esta propuesta,
+incluida revisión centralizada y limitaciones de entorno. Su registro será
+`resultados/piloto/s07_windows_20261117_cierre/aceptacion_responsable.json`.
+
+### Aceptación diferida por el responsable · 17/11/2026
+
+El responsable informa uso actual de Zoom y Google/navegador y solicita repetir
+antes de aprobar. Los 396 registros `_02` y sus diferencias quedan intactos;
+su verificación técnica no se convierte en conformidad humana ni se atribuye
+una causa demostrada a su dispersión. Se confirma PC dedicada hoy 13:00–14:00
+(Lima), con IDs `_piloto_03` / `_reproduccion_03`, mismos fuentes/binarios y dos
+minutos de reposo entre intentos. La tarea local tiene comprobaciones previas,
+supervisión de aplicaciones y límite de ejecución; no cierra Zoom/navegadores.
+
+Se verificó lectura real GPU de la GTX 1070 con `nvidia-smi`, incluyendo tres
+muestras cada cinco segundos. ACPI no proporciona lectura CPU en esta PC.
+El responsable elige medir solo GPU y documentar CPU sin lectura; no se instala
+PawnIO ni otro controlador. La temperatura GPU no acredita la de CPU.
+El informe nuevo quedará en `resultados/piloto/s07_windows_20261117_cierre_03/`;
+S7 permanece abierto hasta revisar la repetición. Véase el [acta](../campana.md).

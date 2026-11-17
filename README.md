@@ -84,8 +84,8 @@ Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
 El script `bench_windows.ps1 -Version go_secuencial` implementa la medición
 individual de S7/I3 con el ejecutable Release, calentamiento y cinco medidas.
 Los cuatro casos individuales están disponibles en módulos separados; `all`
-ejecuta la campaña integrada en rondas alternadas. La aceptación completa en
-Windows sigue pendiente; véase [campaña S7](docs/campana.md).
+ejecuta la campaña integrada en rondas alternadas. El piloto y la reproducción
+Windows están verificados (198 corridas por intento); véase [campaña S7](docs/campana.md).
 Consultar [uso, pruebas y aceptación Windows](docs/validacion_s07_i03.md).
 
 ## Organización
@@ -126,7 +126,9 @@ S7 integra `bench_windows.ps1 -Version all` y el análisis de
 `scripts/summarize_results.ps1`. Para compilar, probar y ejecutar el piloto en
 Windows PowerShell 5.1, usar `scripts/accept_sprint07_windows.ps1`; el procedimiento
 y los límites de aceptación están en [docs/campana.md](docs/campana.md).
-El piloto completo y su reproducción siguen pendientes. Los datos S7 se guardan
+El piloto y su reproducción están completos; la conformidad final se registra
+en el [informe S7](resultados/piloto/s07_windows_20261117_cierre/README.md). El responsable solicita
+repetir con la PC dedicada el 17/11, 13:00–14:00 (Lima), antes de cerrar S7. Los datos S7 se guardan
 en `resultados/piloto/`, separados de los datos oficiales S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes
@@ -140,8 +142,7 @@ la validación de resultados, el flujo de entrada/salida y las métricas integra
 C paralelo integra el particionado, la comunicación MPI y el núcleo OpenMP;
 Go paralelo integra los workers con su ejecutable. Ambos cumplen la aceptación
 funcional de S4. S5 completa la batería integral, los errores y la estabilidad.
-Las campañas
-experimentales oficiales siguen programadas para S7 y S8.
+S7 completó el piloto integrado y su reproducción; la campaña oficial corresponde a S8.
 El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
 línea propia y N valores por fila. El protocolo distingue cálculo (`kernel_s`)

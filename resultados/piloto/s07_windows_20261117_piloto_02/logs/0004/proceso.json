@@ -1,0 +1,35 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+    "arguments":  [
+                      "--n",
+                      "256",
+                      "--seed",
+                      "42",
+                      "--repetition",
+                      "0",
+                      "--workers",
+                      "1"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-17T14:26:23.8581020Z",
+    "wall_s":  0.0650769,
+    "pid":  5680,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  "",
+    "child_environment":  {
+                              "OMP_NUM_THREADS":  null,
+                              "GOMAXPROCS":  "1",
+                              "S06_DIAGNOSTICS":  null,
+                              "OMP_DYNAMIC":  null
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

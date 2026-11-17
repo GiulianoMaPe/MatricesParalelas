@@ -1,0 +1,33 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "arguments":  [
+                      "--n",
+                      "512",
+                      "--seed",
+                      "42",
+                      "--repetition",
+                      "2"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-17T14:32:00.6382049Z",
+    "wall_s":  0.7602184,
+    "pid":  6752,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  "",
+    "child_environment":  {
+                              "OMP_NUM_THREADS":  null,
+                              "GOMAXPROCS":  "1",
+                              "S06_DIAGNOSTICS":  null,
+                              "OMP_DYNAMIC":  null
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

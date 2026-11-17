@@ -1,0 +1,4 @@
+sample_utc,timestamp_local,gpu_name,gpu_temperature_c,gpu_utilization_percent,gpu_memory_utilization_percent
+2026-11-17T15:27:49.7357829Z,2026/11/17 10:27:49.781, NVIDIA GeForce GTX 1070, 52, 49, 27
+2026-11-17T15:27:54.7482535Z,2026/11/17 10:27:54.794, NVIDIA GeForce GTX 1070, 52, 47, 26
+2026-11-17T15:27:59.7730713Z,2026/11/17 10:27:59.818, NVIDIA GeForce GTX 1070, 52, 45, 26

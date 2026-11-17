@@ -1,0 +1,29 @@
+{
+    "checked_at_utc":  "2026-11-17T15:23:39.8542880Z",
+    "ready":  false,
+    "busy_apps":  [
+                      "Zoom"
+                  ],
+    "cpu_load_percent_samples":  [
+                                     46,
+                                     42,
+                                     34,
+                                     27,
+                                     22
+                                 ],
+    "mean_cpu_load_percent":  34.2,
+    "heuristic_max_idle_mean_percent":  10,
+    "gpu_preview":  [
+                        "NVIDIA GeForce GTX 1070, 54"
+                    ],
+    "gpu_sensor_available":  true,
+    "cpu_temperature_available":  false,
+    "cpu_temperature_reason":  "User chose GPU only; CPU driver not installed.",
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "binary_sha256":  {
+                          "c_secuencial":  "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+                          "c_paralelo":  "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+                          "go_secuencial":  "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+                          "go_paralelo":  "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A"
+                      }
+}

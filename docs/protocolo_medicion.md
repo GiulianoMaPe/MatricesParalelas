@@ -18,8 +18,9 @@ Este documento establece el **Protocolo de Medición Versión Inicial** del proy
 > Las cuatro versiones implementan el producto y su validación desde S3–S5.
 > S7 dispone de los cuatro casos individuales y de la campaña integrada
 > `bench_windows.ps1 -Version all`, con rondas alternadas, metadatos y logs.
-> La integración se verificó con procesos controlados en Linux; siguen pendientes
-> el piloto completo y su reproducción nativa Windows. Véase [campaña](campana.md).
+> La integración se verificó con procesos controlados y completó piloto y
+> reproducción nativos Windows: 198 corridas por intento y misma candidata
+> limpia, con condiciones y límites en [campaña](campana.md).
 > Los errores de programas se convierten
 > a 1 y el éxito validado a 0. Los smoke tests solo prueban instalación.
 > Los ensayos Linux de S6 se guardan en `resultados/diagnostico/` y no constituyen

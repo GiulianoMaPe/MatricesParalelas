@@ -1,0 +1,18 @@
+{
+  "recorded_at_utc": "2026-11-17T15:42:03.672965+00:00",
+  "gpu": "NVIDIA GeForce GTX 1070",
+  "gpu_reading_supported": true,
+  "cpu_thermal_wmi_supported": false,
+  "user_choice": "GPU only; CPU temperature unavailable; no PawnIO installation authorized.",
+  "pawnio_installed_by_agent": false,
+  "lhm_executed": false,
+  "package_source": "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases/tag/v0.9.6",
+  "package_sha256": "086d9f1b5a99e643edc2cfaaac16051685b551e4c5ac0b32a57c58c0e529c001",
+  "gpu_sampler_test_samples": 3,
+  "supervisor_controlled_cases_passed": [
+    "busy",
+    "deadline",
+    "success"
+  ],
+  "native_matrix_runs_executed_during_this_preparation": false
+}

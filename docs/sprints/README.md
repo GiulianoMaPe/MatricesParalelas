@@ -94,5 +94,8 @@ La fijación del algoritmo no sustituye el piloto ni la congelación experimenta
 Al 17/11/2026, S7 dispone de integración técnica en la rama de cierre: cuatro
 casos, campaña alternada, análisis, verificación y comando de aceptación Windows.
 Se recuperaron los PR #54/#55 y la evidencia individual I2/I4, además del acta I8
-recibida por #56. La validación local es controlada en Linux; el piloto completo
-y su reproducción siguen pendientes en Windows. Véase [estado S7](sprint-07.md).
+recibida por #56. Se completaron piloto y reproducción nativos Windows, cada
+uno con 198 observaciones OK y 33 grupos completos, misma candidata limpia
+`97ccc981e9068d8ec0753cd8a4b7572a6bece34d` y binarios. La reserva S8 es el
+18/11/2026, 09:00–12:00 (Lima), provisional. El responsable solicita repetición
+en reposo el 17/11, 13:00–14:00, antes de aceptar S7. Véase [estado S7](sprint-07.md).
