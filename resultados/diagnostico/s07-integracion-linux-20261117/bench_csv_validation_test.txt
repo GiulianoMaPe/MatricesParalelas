@@ -1,0 +1,4 @@
+ERROR: comilla CSV fuera de lugar en posición 52.
+ERROR: timestamp='2026-02-30T16:16:08Z' no es una fecha válida.
+ERROR: ram_gb='16,0' debe ser un decimal finito positivo.
+CSV validation tests: PASS (valid row accepted; malformed quote, invalid date and decimal rejected).

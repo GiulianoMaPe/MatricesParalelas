@@ -1,10 +1,10 @@
-<#
+﻿<#
 .SYNOPSIS
     Suite de pruebas automatizadas para scripts/summarize_results.ps1.
 
 .DESCRIPTION
     Verifica matemáticamente y conforme al protocolo (docs/protocolo_medicion.md §6 y §7):
-      1. Rechazo de esquemas inválidos y preservación de cabecera estándar de 31 columnas.
+      1. Rechazo de esquemas inválidos y preservación de cabecera estándar de 32 columnas.
       2. Descarte estricto de precalentamiento (is_warmup=true) y estados != OK.
       3. Cálculo exacto de mediana, Q1, Q3, IQR, min y max.
       4. Cálculo de Speedup y Eficiencia referenciado al secuencial del mismo lenguaje.
@@ -162,7 +162,7 @@ try {
 
     $csvLines = [System.IO.File]::ReadAllLines($tempOut)
     $head = $csvLines[0]
-    Assert-Equal -TestName "Cabecera contiene 31 columnas" -Actual ($head.Split(',').Count) -Expected 31
+    Assert-Equal -TestName "Cabecera contiene 32 columnas" -Actual ($head.Split(',').Count) -Expected 32
     Assert-Equal -TestName "Total de filas (1 cabecera + 5 grupos)" -Actual $csvLines.Length -Expected 6
 } finally {
     if (Test-Path -LiteralPath $tempOut) { Remove-Item -LiteralPath $tempOut -Force }

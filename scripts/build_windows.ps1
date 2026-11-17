@@ -1,4 +1,4 @@
-param(
+﻿param(
     [ValidateSet('all','c_secuencial','c_paralelo','go_secuencial','go_paralelo')][string]$Version = 'all',
     [ValidateSet('Debug','Release')][string]$Configuration = 'Debug',
     [switch]$Tests
@@ -13,17 +13,25 @@ foreach ($item in $selected) {
         $build = Join-Path $module "build\$Configuration"
         New-Item -ItemType Directory -Force -Path $build | Out-Null
         Write-Host "Compilando $item ($Configuration)..."
+        $toolVersions = [ordered]@{}
+        $effectiveArguments = @()
         if ($item.StartsWith('go_')) {
             $go = Initialize-Go
             Push-Location $module
             try {
                 $arguments = @('build', '-o', (Join-Path $build "$item.exe"))
-                if ($item -eq 'go_secuencial') { $arguments += '-buildvcs=true' }
+                $arguments += '-buildvcs=true'
                 if ($Configuration -eq 'Debug') { $arguments += '-gcflags=all=-N -l' }
-                Invoke-Native $go ($arguments + '.')
+                $effectiveArguments = @($arguments + '.')
+                $toolVersions.go = (& $go version) -join ' '
+                Invoke-Native $go $effectiveArguments
+                $toolVersions.go_build_metadata = @(& $go version -m (Join-Path $build "$item.exe"))
+                if ($LASTEXITCODE -ne 0) { throw 'No se pudo inspeccionar el build Go.' }
             } finally { Pop-Location }
         } else {
             $cl = Initialize-MSVC
+            $toolVersions.msvc = [string](Get-Item -LiteralPath $cl).VersionInfo.FileVersion
+            $toolVersions.windows_sdk = $env:WindowsSDKVersion.TrimEnd('\')
             $options = @('/nologo','/TC','/std:c11','/W4','/WX','/fp:precise', '/I', (Join-Path $module 'include'))
             $options += if ($Configuration -eq 'Debug') { @('/Od','/Zi','/MDd') } else { @('/O2','/MD') }
             $linkOptions = @('/link','/MACHINE:X64')
@@ -45,12 +53,15 @@ foreach ($item in $selected) {
             }
             if ($item -eq 'c_paralelo') {
                 $mpi = Assert-MPISdk
+                $toolVersions.msmpi_runtime = [string](Get-Item -LiteralPath (Get-MPILauncher)).VersionInfo.FileVersion
+                $toolVersions.msmpi_sdk = [ordered]@{ mpi_h_sha256 = (Get-FileHash (Join-Path $mpi.Include 'mpi.h')).Hash; msmpi_lib_sha256 = (Get-FileHash (Join-Path $mpi.Library 'msmpi.lib')).Hash }
                 $options += @('/openmp','/I',$mpi.Include)
                 $linkOptions += @("/LIBPATH:$($mpi.Library)",'msmpi.lib')
             }
             $sources = @(Get-ChildItem -LiteralPath (Join-Path $module 'src') -Filter '*.c' | ForEach-Object FullName)
             Push-Location $build
-            try { Invoke-MSVC $cl ($options + $sources + "/Fe:$item.exe" + $linkOptions) }
+            $effectiveArguments = @($options + $sources + "/Fe:$item.exe" + $linkOptions)
+            try { Invoke-MSVC $cl $effectiveArguments }
             finally { Pop-Location }
             if ($Tests) {
                 $testBuild = Join-Path $build 'tests'
@@ -71,6 +82,25 @@ foreach ($item in $selected) {
                 }
             }
         }
+        $binary = Join-Path $build "$item.exe"
+        $buildCommit = & git -C $script:ProjectRoot rev-parse HEAD
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo registrar HEAD del build.' }
+        $sourceStatus = @(& git -C $script:ProjectRoot status --porcelain)
+        $sourceHashes = [ordered]@{}
+        $buildSources = @(& git -C $script:ProjectRoot ls-files --cached --others --exclude-standard -- $item scripts/build_windows.ps1 scripts/common_windows.ps1)
+        foreach ($relative in $buildSources) {
+            $source = Join-Path $script:ProjectRoot $relative
+            if (Test-Path -LiteralPath $source -PathType Leaf) { $sourceHashes[$relative] = (Get-FileHash -LiteralPath $source).Hash }
+        }
+        $manifest = [ordered]@{
+            version=$item; configuration=$Configuration; target='x64'; commit=$buildCommit
+            dirty=($sourceStatus.Count -gt 0); built_at_utc=[datetime]::UtcNow.ToString('o')
+            sha256=(Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash
+            arguments=$effectiveArguments; tools=$toolVersions; source_sha256=$sourceHashes
+            build_environment=[ordered]@{ CL=$env:CL; _CL_=$env:_CL_; LINK=$env:LINK; GOFLAGS=$env:GOFLAGS; GOEXPERIMENT=$env:GOEXPERIMENT }
+        }
+        [IO.File]::WriteAllText((Join-Path $build 'build.json'),
+            ($manifest | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
     } catch {
         $failures += $item
         Write-Warning "$item : $($_.Exception.Message)"

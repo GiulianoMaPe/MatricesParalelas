@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: entrega técnica de I3 validada en Windows y aprobada por I2; coordinación con I5 pendiente. Las demás entregas y el cierre de equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
+Estado: integración técnica S7 preparada y verificada con pruebas controladas en Linux; pendiente aceptación del piloto completo y reproducción en Windows nativo. El registro del 17/11/2026 al final sustituye los estados históricos anteriores.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -211,6 +211,8 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
 
 ### I8 · Roberto · 16/11/2026
 
+> Registro individual histórico. La [campaña vigente](../campana.md) corrige sus reglas incompatibles con el protocolo y limita la evidencia a los dos casos Go declarados; la aceptación integral Windows permanece pendiente.
+
 - **Rama:** `feature/s07-i08-congelacion-experimental`, desde `aba95790f0b9eb793a014ec6b69c09cd2ff6b249`.
 - **Participantes y horas reales:** Roberto (**8 h reales**: 3 h fijación de versión candidata y parámetros oficiales de medición en `docs/campana.md`, 3 h reproducción y análisis empírico del piloto automatizado en Windows, 1 h coordinación general del equipo, 1 h revisión cruzada asignada).
 - **Entregable oficial:** [`docs/campana.md`](../campana.md) ("*Acta de Congelación Experimental y Definición de Parámetros de Campaña*").
@@ -229,3 +231,214 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
   - El arnés automatizado `bench_windows.ps1` queda validado empíricamente en Windows para la generación desatendida de resultados.
 - **Revisión y criterio de aceptación:** Entregable de I8 (`docs/campana.md`) completado y conforme. Listo para revisión formal por Integrante 7 (Andrés). Revisión a I1 Yessly completada sobre su entrega de C secuencial.
 
+
+
+## Entregas recuperadas de las ramas de S7
+
+Los siguientes registros conservan lo declarado por I2/I4 en sus ramas; las referencias a integración pendiente describen su estado original. La actualización del 17/11/2026 rige el estado actual.
+
+## Entrega de I2 (Sprint 7) — caso C paralelo
+
+**Estado:** implementación, pruebas unitarias y dry-run del piloto entregados;
+**pendiente de revisión final de I1** y de campaña real por I6.
+
+**Rama/PR:** `feature/s07-i02-c-paralelo-bench`.
+
+**Archivos:**
+
+- `scripts/bench_windows.ps1`: caso `c_paralelo` (P × T), `plan.csv`,
+  `entorno.json`, `bitacora.txt`, `mediciones.csv`, logs, parser/validador,
+  filas de fallo, timeout, lock y `-DryRun`.
+- `tests/bench_c_paralelo_test.ps1`: 23 pruebas unitarias sin MSVC ni MS-MPI.
+- `docs/sprints/sprint-07-i02-plan.md`: plan y decisiones de I2.
+
+**Alcance entregado:**
+
+- Combinaciones `P1_T1` … `P4_T1` siempre; `P1_T8` … `P8_T1` solo con ≥ 8
+  núcleos físicos (la PC de I2 tiene 6, así que el dry-run usa W ≤ 4).
+- Commit derivado con `git rev-parse HEAD` y registrado con estado limpio/sucio
+  y diff; no se fija un hash a mano.
+- Solo se implementa `c_paralelo`: `-Version all` falla de forma explícita hasta
+  que I5 integre los cuatro casos.
+- Filas de fallo con `kernel_s`/`total_s` vacíos y estado `PENDING`, `MISMATCH`,
+  `OOM`, `TIMEOUT` o `ERROR`; nunca se inventan tiempos.
+
+**Comandos reproducibles:**
+
+```powershell
+# Pruebas unitarias (23)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_c_paralelo_test.ps1
+
+# Dry-run piloto parcial (no requiere MSVC ni MS-MPI)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 `
+    -Version c_paralelo -NList 256,512,1024 `
+    -Configurations P1_T1,P1_T2,P2_T1,P1_T4,P2_T2,P4_T1 `
+    -Seed 42 -Warmups 1 -Repetitions 5 -TimeoutSeconds 120 -DryRun
+
+# Campaña real (el revisor debe compilar antes)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_windows.ps1 -Version c_paralelo -Configuration Release
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 `
+    -Version c_paralelo -Configuration Release -Seed 42 -Warmups 1 -Repetitions 5
+```
+
+**Evidencia local de I2:**
+
+- Dry-run ejecutado el 12/11/2026 en `DESKTOP-JIHSDJ6`, commit `d180f4e`,
+  `dirty=False`.
+- Plan generado: 108 corridas = 6 configuraciones (P1_T1, P1_T2, P2_T1, P1_T4,
+  P2_T2, P4_T1) × 3 tamaños (256, 512, 1024) × (1 warmup + 5 repeticiones)
+  = 18 warmups + 90 medidas.
+- Pruebas unitarias: **23/23 OK** (parser, validador, clasificador de fallos,
+  configuración P×T, exclusiones por núcleos/memoria, lock de campaña, parser
+  CSV con comillas y comas).
+- Destino previsto del piloto: `resultados\piloto\20261112T180148Z_DESKTOP-JIHSDJ6_d180f4e_i02`
+- No se ejecutó campaña real: esta máquina no tiene `cl.exe`, `mpiexec.exe` ni
+  `c_paralelo.exe` Release.
+
+**Checklist para el revisor (I1):**
+
+- [x] El dry-run respeta N, configuraciones, warmups y 5 repeticiones.
+- [ ] `-Version all` falla con un mensaje claro (integración pendiente de I5).
+- [ ] W=8 se excluye en máquinas con menos de 8 núcleos físicos.
+- [ ] El parser rechaza filas corruptas, P/T incorrectos y `observed_threads != T`.
+- [ ] Los fallos conservan tiempos vacíos y no se mezclan como `OK`.
+- [ ] La campaña real genera `entorno.json`, `plan.csv`, `mediciones.csv`,
+      `bitacora.txt` y logs por corrida.
+- [ ] `commit`, `hostname` y SHA-256 del ejecutable coinciden con la campaña.
+- [ ] El lock impide campañas simultáneas y se libera al terminar.
+
+**Horas reales de I2:** 8 h (3 h caso híbrido P×T, 3 h registro/validación de
+procesos e hilos observados, 1 h revisión cruzada de I3, 1 h coordinación).
+
+## Registro de cierre
+
+- Participantes y horas reales: I2 (Sebastian) — 8 h reales.
+- Issues y pull requests: I2 — [PR #51](https://github.com/GiulianoMaPe/MatricesParalelas/pull/51), aprobado por I1.
+- Pruebas y evidencias: 23 pruebas unitarias OK; dry-run de 108 corridas planificadas
+  (18 warmups + 90 medidas) en commit d180f4e (reproducido con 180 corridas en host de 8 núcleos físicos por I1).
+- Bloqueos y decisiones: campaña real bloqueada por falta de cl.exe/mpiexec.exe en
+  la máquina de I2; validado en entorno MSVC/MS-MPI por I1 e I6 ejecutará el piloto en la PC oficial.
+- Revision y criterio de aceptacion: conforme según revisión de I1.
+
+
+#### Integrante 4 (Eva)
+
+- **Participantes y horas reales:** Eva Moreno (I4). El plan contempla 3 h para completar el caso go_paralelo con distintos workers, 3 h para comprobar el paralelismo solicitado y evitar campañas simultáneas, 1 h de revisión cruzada a I5 (Fernando) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
+
+- **Issues y pull requests:** rama de trabajo `feature/s07-i04-bench-go-paralelo`; [PR #53](https://github.com/GiulianoMaPe/MatricesParalelas/pull/53). La revisión corresponde a I3 (Giuliano) según la rotación; la integración de los cuatro casos, a I5.
+
+- **Entregable:** caso `go_paralelo` de [`scripts/bench_windows.ps1`](../../scripts/bench_windows.ps1). Solo se tocaron el bloque reservado para I4, su entrada en el despacho, el parámetro `-GoWorkers` y la guarda de dot-source, para no interferir con I1, I2 e I3.
+  - **Serie de workers:** sin `-GoWorkers` se usa la del [protocolo](../protocolo_medicion.md): W=1, 2, 4 y W=8 solo con 8 o más núcleos físicos. Una lista explícita se ordena, se eliminan duplicados y se rechaza W=0, W>1024 o W mayor que los procesadores lógicos, porque `GOMAXPROCS=W` no daría paralelismo real.
+  - **Paralelismo efectivo:** además del contrato CSV (`Validate-CsvRow` de I1), cada fila debe cumplir `workers=W`, `gomaxprocs=W` (valor efectivo de `runtime.GOMAXPROCS(0)`), `configuration=go_paralelo_W{W}` y `processes=threads=observed_threads=1`. Se elimina `GOMAXPROCS` del entorno del proceso hijo, para que no lo altere una variable heredada. Como diagnóstico, se registra en stderr el cociente entre tiempo de CPU y tiempo de pared del proceso.
+  - **Campañas simultáneas:** se rechaza la campaña si hay un ejecutable de medición del proyecto en marcha (`c_secuencial`, `c_paralelo`, `go_secuencial`, `go_paralelo`, `mpiexec` o `smpd`). Además, se toma `.cache\bench.lock` con el mismo modo exclusivo y el mismo formato JSON que el lock del caso c_paralelo (I2, [PR #51](https://github.com/GiulianoMaPe/MatricesParalelas/pull/51)), para que ambas campañas se excluyan. El lock se libera en `finally` y nunca se borra uno ajeno.
+  - **Robustez:** cada corrida tiene un plazo de 1800 s; si lo supera, se termina el árbol de procesos. La campaña se detiene ante el primer error, rechaza más de 5 repeticiones medidas (el ejecutable acepta `--repetition` 0..5) y registra en stderr el SHA-256 del ejecutable.
+
+- **Pruebas y evidencias:**
+  - **Pruebas automáticas:** [`tests/bench_go_paralelo_test.ps1`](../../tests/bench_go_paralelo_test.ps1) usa ejecutables falsos (`.cmd`) y pasa sus 27 casos con `-WithExecutable`, que añade una campaña real corta con N=64 y W=1, 2 y 16. Cubre fila válida y calentamiento, cinco formas de paralelismo no efectivo, versión, repetición, estado, `kernel_s > total_s`, filas sobrantes, códigos 1 y 2, ejecutable ausente, plazo excedido, la serie de workers y sus rechazos, el lock (exclusivo, liberado y con huérfano ajeno conservado) y la detección de mediciones en curso.
+  - **Comprobación de las pruebas:** en una copia aislada del repositorio inyecté tres fallos: quitar la comprobación de `gomaxprocs`, hacer el lock no exclusivo y no detectar procesos en curso. Las pruebas fallaron en los tres casos.
+  - **Piloto real · 12/11/2026:** con `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_paralelo -Fase piloto` en el equipo de I4 (FLDSMDFR: AMD Ryzen 7 3700X, 8 núcleos y 16 hilos, 15,9 GB, Windows 11 Pro 26200, Go 1.27.1), sobre el commit `7cf0aae` más los cambios de esta rama. Resultados:
+    - 72 de 72 corridas correctas en 156 s: N ∈ {256, 512, 1024} y W ∈ {1, 2, 4, 8}, con 1 calentamiento y 5 medidas cada una;
+    - cabecera idéntica al contrato y todas las filas con `validation_status=OK`, `gomaxprocs=workers` y `kernel_s ≤ total_s`;
+    - SHA-256 del ejecutable: `498153DA…103CE7`.
+    - Los datos están en [`resultados/piloto/s07_i04_go_paralelo/`](../../resultados/piloto/s07_i04_go_paralelo/).
+
+    | N | W=1 | W=2 | W=4 | W=8 |
+    | ---: | ---: | ---: | ---: | ---: |
+    | 256 | 0,0158 s | 0,0110 s | 0,0042 s | 0,0044 s |
+    | 512 | 0,1360 s | 0,0710 s | 0,0398 s | 0,0229 s |
+    | 1024 | 1,1304 s | 0,6310 s | 0,4007 s | 0,2270 s |
+
+    *Mediana de `total_s` de las 5 medidas.*
+  - **Campaña simultánea:** con el piloto en curso, una segunda campaña se rechazó en 1,5 s con "Hay mediciones en curso: go_paralelo[17472]", sin medir ni tocar el lock de la primera.
+  - **Reloj:** con Go 1.27.1, `time.Now()` avanzó a pasos de 303,8 µs, frente a 100 ns de `QueryPerformanceCounter` ([`resolucion_reloj.txt`](../../resultados/piloto/s07_i04_go_paralelo/resolucion_reloj.txt)). Según la política de cierre del S6, los grupos con `total_s` menor de 100 ms (N=256 y N=512 con W≥2) quedan como diagnóstico de tiempos cortos.
+
+- **Bloqueos y decisiones:**
+  - El diagnóstico CPU/pared crece con W a partir de N ≥ 512 (con N=1024: 0,97 con W=1 y 1,24 con W=8), pero no llega a W. El tiempo de pared del proceso incluye la generación y la referencia secuencial. La verificación del paralelismo es `gomaxprocs=W`; el cociente es solo orientativo y no se usa para aceptar o rechazar.
+  - Para la integración de I5: el lock y la detección de procesos se pueden unificar con los de I2, y la guarda de dot-source con la de I3.
+  - Con `-Version all` el script sigue emitiendo una cabecera por caso; la unificación de la salida corresponde a I5.
+
+- **Revisión y criterio de aceptación:** el caso go_paralelo genera CSV válido, repite correctamente, comprueba el paralelismo efectivo, detecta fallos y rechaza campañas simultáneas. Quedan pendientes la revisión de I3, mi revisión cruzada a I5 cuando publique su integración, las horas reales y la aceptación del equipo.
+
+
+#### Integrante 5 (Fernando)
+
+- **Estado de avance:** rama `feature/s07-i05-integracion-campana` creada desde `main` para integrar y revisar la campaña.
+- **Trabajo preparatorio realizado:** reforcé `Validate-CsvRow` en `scripts/bench_windows.ps1` para rechazar comillas CSV mal formadas, metadatos obligatorios vacíos, timestamp/commit inválidos y valores numéricos fuera de formato/rango; la lectura decimal usa cultura invariante.
+- **Dependencias para completar el entregable:** faltan las implementaciones de campaña de I2 (`c_paralelo`), I3 (`go_secuencial`) e I4 (`go_paralelo`). Hasta que estén disponibles no se puede revisar la integración de los cuatro casos ni aceptar la campaña completa.
+- **Verificaciones y bloqueos del entorno:** la sintaxis de `bench_windows.ps1` pasó con el parser de PowerShell y `powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\bench_csv_validation_test.ps1` pasó: acepta una fila válida y rechaza comilla fuera de lugar, fecha inexistente y decimal con coma. No se encontraron `cl.exe`, `vswhere.exe` ni `VsDevCmd.bat` en las ubicaciones estándar; `build_windows.ps1 -Version c_secuencial -Configuration Release` no pudo compilar porque no hay MSVC inicializado ni `vswhere`. El intento de piloto con `-Version c_secuencial -Fase piloto -Repetitions 1` se detuvo antes de medir: falta `c_secuencial/build/Release/c_secuencial.exe`. No se instaló ninguna herramienta. Para desbloquear esa verificación hay que usar una consola x64 Native Tools de Visual Studio o disponer de Visual Studio Build Tools C++ y Windows SDK; después compilar Release y repetir el piloto.
+- **Alcance que sí queda disponible:** el control inicial del estado de cada versión continúa rechazando campañas si el algoritmo o su validación están pendientes, y el manejador de cada ejecutable rechaza el código de salida `2` sin aceptar una fila de medición. La revisión empírica de esos rechazos y la validación completa de todas las variantes quedan pendientes de disponer de los ejecutables y de las campañas I2–I4.
+- **Horas reales, revisión cruzada y aceptación:** pendientes de confirmar al cierre; no se declaran como completadas en este avance.
+
+
+## Integración técnica · Codex · 17/11/2026
+
+Autorizada por el responsable para completar e integrar S7. Al confirmarse que
+Windows está en otra partición, el alcance de esta sesión se limita a integración,
+verificación Linux y preparación de la aceptación nativa. No se atribuyen nuevas
+horas, coordinaciones ni conformidades personales a integrantes del equipo.
+
+### Trabajo integrado y completado
+
+| Entrega | Procedencia y estado actual |
+| --- | --- |
+| I1 · C secuencial | PR #50 ya integrado; se conserva su medidor y normalización de etiquetas. |
+| I2 · C paralelo | Funciones ya recuperadas en PR #49; se importan registro y plan de su rama/PR #51. |
+| I3 · Go secuencial | PR #49 ya integrado, con aceptación individual Windows 81/81 y aprobación I2. |
+| I4 · Go paralelo | Funciones ya recuperadas en PR #49; se importan registro y 72 observaciones originales del PR #53. |
+| I5 · Integración | Se incorpora el validador estricto y sus pruebas del PR #55; se completa `all` con tabla común, rondas alternadas, un CSV y lock compartido. |
+| I6 · Piloto | Procedimiento automatizado listo; falta ejecución en PC oficial. Los ensayos de I1/I3/I4/I8 no sustituyen la campaña integrada. |
+| I7 · Análisis | Rama/PR #54 integrada conservando sus commits y 43 pruebas. Se refuerza aislamiento entre archivos, completitud, duplicados, fallos, NaN/Inf y cero temporal. |
+| I8 · Congelación | PR #56 recibido desde main; acta original preservada, reglas corregidas según protocolo v1.3. Falta reproducir la candidata integrada y aceptar la congelación final. |
+
+`scripts/bench_campaign.ps1` combina los módulos individuales y reutiliza el
+planificador, CSV y lock de I1/I2/I4/I5 y el registrador de procesos de I3.
+Verifica builds Release x64, HEAD, SHA-256, inventario/hash de fuentes y metadatos
+VCS Go. Las fuentes del piloto sucio se archivan; oficial exige limpieza.
+Cada corrida conserva stdout/stderr, argumentos, PID, código real, timeout y
+entorno de runtime relevante. C híbrido registra y comprueba filas e hilos de
+cada rank mediante los diagnósticos existentes, posteriores al cronómetro.
+No se modifican algoritmos C/Go ni sus fronteras temporales.
+
+La selección respeta W=1/2/4/8 según núcleos físicos y la memoria disponible;
+se conserva el orden real y se aborta al primer error, guardando parciales.
+La carga y memoria se registran por corrida en Windows. Temperatura/sensores y
+condiciones de uso requieren revisión humana; no se declaran observaciones
+que el sistema no pueda obtener.
+
+### Verificación ejecutada
+
+PowerShell **7.4.6 linux-x64 portable**, 17/11/2026. Evidencia persistente en
+[resultados/diagnostico/s07-integracion-linux-20261117/](../../resultados/diagnostico/s07-integracion-linux-20261117/verificacion.json).
+
+| Batería | Resultado |
+| --- | --- |
+| Validador CSV I5 | Fila válida aceptada y tres entradas inválidas rechazadas |
+| Manifiestos de compilación | 10 comprobaciones aprobadas |
+| Resumen I7 original | 43/43 aprobadas |
+| Integridad de resumen | 11 comprobaciones aprobadas |
+| Funciones C paralelo I2 | 23/23 aprobadas |
+| Go secuencial I3 controlado | 75/75 aprobadas |
+| Campaña integrada controlada | 48 comprobaciones aprobadas |
+| Sintaxis PowerShell de scripts y pruebas | Sin errores |
+
+La prueba integrada ejecuta procesos PowerShell controlados para las cuatro
+versiones, valida grupos completos y fallidos, planificación de 198/288 corridas,
+locks, ranks MPI simulados y el verificador de evidencia. Son pruebas del arnés,
+no campañas experimentales. La batería original I4 usa `.cmd`: el intento Linux
+falló al iniciar ese formato; debe ejecutarse en Windows y no figura como aprobada.
+No se ejecutaron MSVC, MS-MPI, PowerShell 5.1 ni nuevos binarios Windows.
+
+### Pendientes para aceptar el cierre
+
+1. Ejecutar `scripts/accept_sprint07_windows.ps1` en Windows PowerShell 5.1 con
+   MSVC/SDK/MS-MPI/Go nativos, sobre esta candidata y en la PC oficial.
+2. Completar piloto N=256/512/1024 con toda la tabla habilitada; revisar carga,
+   memoria, alimentación y temperatura/incidencias, además de los CSV/logs.
+3. Reproducir en una carpeta nueva con la misma candidata, binarios y parámetros.
+4. Confirmar estimación/reserva de máquina y congelación final antes de S8.
+5. Registrar aceptación y conformidades/horas personales que aún falten,
+   conservando la distinción entre lo declarado y lo realmente verificado.
+
+El procedimiento y criterios actuales están en [docs/campana.md](../campana.md).
+S7 permanece abierto hasta acreditar estos puntos; el dry-run y los datos previos
+no se reclasifican como piloto completo.

@@ -1,0 +1,53 @@
+{
+  "date_utc": "2026-11-17T05:23:07.780613+00:00",
+  "platform": "Linux-7.2.15-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "powershell": "7.4.6 linux-x64 portable",
+  "base_commit": "5af572d327df8e74c937e5fd16ffccfa7c9c89cc",
+  "scope": "Controlled tests only; no native Windows pilot, no S8 measurements",
+  "tests": [
+    {
+      "test": "tests/bench_csv_validation_test.ps1",
+      "exit_code": 0,
+      "log": "bench_csv_validation_test.txt"
+    },
+    {
+      "test": "tests/bench_build_manifest_test.ps1",
+      "exit_code": 0,
+      "log": "bench_build_manifest_test.txt"
+    },
+    {
+      "test": "tests/summarize_results_test.ps1",
+      "exit_code": 0,
+      "log": "summarize_results_test.txt"
+    },
+    {
+      "test": "tests/summarize_integrity_test.ps1",
+      "exit_code": 0,
+      "log": "summarize_integrity_test.txt"
+    },
+    {
+      "test": "tests/bench_c_paralelo_test.ps1",
+      "exit_code": 0,
+      "log": "bench_c_paralelo_test.txt"
+    },
+    {
+      "test": "tests/bench_go_secuencial_test.ps1",
+      "exit_code": 0,
+      "log": "bench_go_secuencial_test.txt"
+    },
+    {
+      "test": "tests/bench_campaign_test.ps1",
+      "exit_code": 0,
+      "log": "bench_campaign_test.txt"
+    },
+    {
+      "test": "PowerShell parser scripts/*.ps1 tests/*.ps1",
+      "exit_code": 0,
+      "log": "syntax.txt"
+    }
+  ],
+  "not_run": [
+    "Windows PowerShell 5.1 native Release build/test and integrated pilot/reproduction",
+    "bench_go_paralelo_test.ps1: uses Windows CMD; attempted on Linux and failed at .cmd process launch, not a passed test"
+  ]
+}

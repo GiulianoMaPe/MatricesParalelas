@@ -84,7 +84,8 @@ Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
 El script `bench_windows.ps1 -Version go_secuencial` implementa la medición
 individual de S7/I3 con el ejecutable Release, calentamiento y cinco medidas.
 Los cuatro casos individuales están disponibles en módulos separados; `all`
-sigue reservado a la integración de I5 y devuelve 2 sin medir.
+ejecuta la campaña integrada en rondas alternadas. La aceptación completa en
+Windows sigue pendiente; véase [campaña S7](docs/campana.md).
 Consultar [uso, pruebas y aceptación Windows](docs/validacion_s07_i03.md).
 
 ## Organización
@@ -121,10 +122,12 @@ no vuelven a asignarse como trabajo de desarrollo ya realizado.
 Las rutas acordadas son `docs/formato_datos.md` y `docs/protocolo_medicion.md`.
 Los diagnósticos, informes y scripts que aún no existen se crearán en el sprint
 asignado. `scripts/compare_results.ps1` implementa la comparación de S3 y
-`scripts/summarize_results.ps1` corresponde a S7. `bench_windows.ps1` implementa
-el caso individual Go secuencial; falta integrar la campaña completa. El piloto
-se guardará en
-`resultados/piloto/`, separado de los datos oficiales de S8 en `resultados/raw/`.
+S7 integra `bench_windows.ps1 -Version all` y el análisis de
+`scripts/summarize_results.ps1`. Para compilar, probar y ejecutar el piloto en
+Windows PowerShell 5.1, usar `scripts/accept_sprint07_windows.ps1`; el procedimiento
+y los límites de aceptación están en [docs/campana.md](docs/campana.md).
+El piloto completo y su reproducción siguen pendientes. Los datos S7 se guardan
+en `resultados/piloto/`, separados de los datos oficiales S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes
 

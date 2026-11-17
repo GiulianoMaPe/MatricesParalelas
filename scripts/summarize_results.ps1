@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Procesa observaciones de medición (CSV de 20 columnas) y genera el resumen
     estadístico no paramétrico (medianas, cuartiles, IQR, min, max) y métricas
@@ -42,6 +42,8 @@ param(
     [Alias('OutputCsv')]
     [string]$OutputPath,
 
+    [string]$CampaignId,
+
     [switch]$PassThru
 )
 
@@ -61,49 +63,13 @@ begin {
 
     # Cabecera oficial del resumen estadístico
     $script:SummaryHeader = @(
-        'version','configuration','n','seed','processes','threads','workers','gomaxprocs',
+        'campaign_id','version','configuration','n','seed','processes','threads','workers','gomaxprocs',
         'reps_count','status',
         'kernel_s_median','kernel_s_q1','kernel_s_q3','kernel_s_iqr','kernel_s_min','kernel_s_max',
         'total_s_median','total_s_q1','total_s_q3','total_s_iqr','total_s_min','total_s_max',
         'speedup','efficiency','gflops_kernel','gflops_total',
         'hostname','cpu_model','ram_gb','os_version','commit'
     )
-
-    # Parser RFC 4180 compatible con PowerShell 5.1 y 7+
-    function Parse-CsvLine {
-        param([string]$Line)
-        $fields = New-Object System.Collections.Generic.List[string]
-        $sb = New-Object System.Text.StringBuilder
-        $inQuotes = $false
-        $len = $Line.Length
-
-        for ($i = 0; $i -lt $len; $i++) {
-            $c = $Line[$i]
-            if ($inQuotes) {
-                if ($c -eq '"') {
-                    if ($i + 1 -lt $len -and $Line[$i + 1] -eq '"') {
-                        [void]$sb.Append('"')
-                        $i++
-                    } else {
-                        $inQuotes = $false
-                    }
-                } else {
-                    [void]$sb.Append($c)
-                }
-            } else {
-                if ($c -eq '"') {
-                    $inQuotes = $true
-                } elseif ($c -eq ',') {
-                    $fields.Add($sb.ToString())
-                    $sb.Length = 0
-                } else {
-                    [void]$sb.Append($c)
-                }
-            }
-        }
-        $fields.Add($sb.ToString())
-        return $fields.ToArray()
-    }
 
     # Formateador RFC 4180
     function Format-CsvField {
@@ -127,124 +93,95 @@ process {
 }
 
 end {
-    # 1. Cargar archivos si se especificaron por parámetro
-    if ($null -ne $InputPath -and $InputPath.Count -gt 0) {
-        foreach ($p in $InputPath) {
-            if (-not (Test-Path -LiteralPath $p -PathType Leaf)) {
-                throw "El archivo especificado no existe: $p"
-            }
-            $fileLines = [System.IO.File]::ReadAllLines((Resolve-Path -LiteralPath $p).Path)
-            foreach ($fl in $fileLines) {
-                if (-not [string]::IsNullOrWhiteSpace($fl)) {
-                    $rawLines.Add($fl)
-                }
-            }
-        }
+    $InputPath = @($InputPath | Where-Object { $_ })
+    # Each input file is an independent campaign/attempt. Never pool files merely
+    # because their host/commit match; filenames are retained in summary identity.
+    if ($rawLines.Count -and $InputPath.Count) { throw 'Use archivos o pipeline, no ambos.' }
+    if ($CampaignId -and $InputPath.Count -gt 1) { throw 'CampaignId requiere una sola entrada.' }
+    $sources = New-Object System.Collections.Generic.List[object]
+    foreach ($path in $InputPath) {
+        $full = (Resolve-Path -LiteralPath $path -ErrorAction Stop).Path
+        $id = if ($CampaignId) { $CampaignId } else { $full }
+        $sources.Add([pscustomobject]@{ Id=$id; Text=[IO.File]::ReadAllText($full) })
     }
-
-    if ($rawLines.Count -eq 0) {
-        # Si no se pasó entrada, intentar buscar resultados/piloto/mediciones.csv por defecto
-        $defaultCsv = Join-Path (Split-Path -Parent $PSScriptRoot) 'resultados\piloto\mediciones.csv'
-        if (Test-Path -LiteralPath $defaultCsv -PathType Leaf) {
-            $fileLines = [System.IO.File]::ReadAllLines((Resolve-Path -LiteralPath $defaultCsv).Path)
-            foreach ($fl in $fileLines) {
-                if (-not [string]::IsNullOrWhiteSpace($fl)) {
-                    $rawLines.Add($fl)
-                }
-            }
-        } else {
-            throw "No se proporcionaron observaciones para procesar. Especifique -InputPath <archivo.csv> o entregue datos mediante la tuberia."
-        }
+    if ($rawLines.Count) {
+        $id = if ($CampaignId) { $CampaignId } else { 'pipeline' }
+        $sources.Add([pscustomobject]@{ Id=$id; Text=($rawLines -join "`n") })
     }
-
-    # 2. Parsear líneas e identificar cabecera
+    if ($sources.Count -eq 0) { throw 'Indique -InputPath o datos por pipeline.' }
+    Add-Type -AssemblyName Microsoft.VisualBasic
     $parsedRows = New-Object System.Collections.Generic.List[psobject]
-    $headerMap = @{}
-    $headerFound = $false
-
-    foreach ($line in $rawLines) {
-        $trimmed = $line.Trim()
-        if ($trimmed.StartsWith('#')) { continue } # Comentarios permitidos
-
-        $fields = Parse-CsvLine -Line $trimmed
-        if ($fields.Length -lt 20) { continue }
-
-        # Detectar cabecera
-        if (-not $headerFound -and $fields[0] -eq 'timestamp' -and $fields[1] -eq 'version') {
-            for ($h = 0; $h -lt $fields.Length; $h++) {
-                $colName = $fields[$h].Trim().ToLowerInvariant()
-                $headerMap[$colName] = $h
+    foreach ($source in $sources) {
+        $reader = [IO.StringReader]::new($source.Text)
+        $parser = [Microsoft.VisualBasic.FileIO.TextFieldParser]::new($reader)
+        try {
+            $parser.SetDelimiters(','); $parser.HasFieldsEnclosedInQuotes=$true; $parser.TrimWhiteSpace=$false
+            $header = $parser.ReadFields()
+            if ($null -eq $header -or $header.Count -ne 20 -or ($header -join ',') -cne ($script:ExpectedHeader -join ',')) {
+                throw 'Cabecera debe contener exactamente las veinte columnas canonicas en orden.'
             }
-            # Validar que contenga las 20 columnas del contrato
-            foreach ($expected in $script:ExpectedHeader) {
-                if (-not $headerMap.ContainsKey($expected)) {
-                    throw "La cabecera no contiene la columna requerida por contrato: $expected"
-                }
+            while (-not $parser.EndOfData) {
+                $fields = $parser.ReadFields()
+                if ($fields.Count -ne 20) { throw 'Observacion debe contener exactamente veinte campos.' }
+                $row = [ordered]@{ campaign_id=$source.Id }
+                for ($i=0; $i -lt 20; $i++) { $row[$script:ExpectedHeader[$i]]=$fields[$i] }
+                $parsedRows.Add([pscustomobject]$row)
             }
-            $headerFound = $true
-            continue
-        }
-
-        # Si ya se encontró la cabecera y encontramos otra fila con "timestamp,version...", ignorarla
-        if ($fields[0] -eq 'timestamp' -and $fields[1] -eq 'version') {
-            continue
-        }
-
-        if (-not $headerFound) {
-            # Asumir cabecera canónica si los datos no traen fila de cabecera explícita
-            for ($h = 0; $h -lt $script:ExpectedHeader.Length; $h++) {
-                $headerMap[$script:ExpectedHeader[$h]] = $h
-            }
-            $headerFound = $true
-        }
-
-        # Extraer fila mapeada
-        $rowObj = [ordered]@{}
-        foreach ($col in $script:ExpectedHeader) {
-            $idx = $headerMap[$col]
-            $rowObj[$col] = if ($idx -lt $fields.Length) { $fields[$idx].Trim() } else { '' }
-        }
-        $parsedRows.Add([pscustomobject]$rowObj)
+        } finally { $parser.Dispose(); $reader.Dispose() }
     }
-
-    if ($parsedRows.Count -eq 0) {
-        [Console]::Error.WriteLine("ADVERTENCIA: No se encontraron filas de datos validas.")
-        return
-    }
-
-    # 3. Filtrar observaciones segun protocolo de medicion §6.1 y §6.3:
-    #    - Descartar precalentamiento (is_warmup == true o repetition == 0)
-    #    - Conservar unicamentes filas con validacion OK
+    # Validate before excluding warmups/failures; invalid rows cannot silently
+    # disappear and turn a damaged experiment into a complete sample.
     $validObservations = New-Object System.Collections.Generic.List[psobject]
     foreach ($r in $parsedRows) {
-        $isWarmup = ($r.is_warmup.ToLowerInvariant() -eq 'true') -or ($r.repetition -eq '0')
-        if ($isWarmup) { continue } # Excluir calentamiento de las estadisticas
-
-        if ($r.validation_status -ne 'OK') {
-            # Corridas fallidas no entran a las estadisticas de tiempo (protocolo §3.3 y §4.1)
+        $rep=0; $n=0; $seed=[uint32]0
+        if (-not [int]::TryParse($r.repetition,[ref]$rep) -or $rep -lt 0 -or $rep -gt 5 -or
+            -not [int]::TryParse($r.n,[ref]$n) -or $n -lt 1 -or
+            -not [uint32]::TryParse($r.seed,[ref]$seed)) { throw 'N, semilla o repeticion invalida.' }
+        $warm = ($rep -eq 0).ToString().ToLowerInvariant()
+        if ($r.is_warmup -cne $warm) { throw 'is_warmup no coincide con repetition.' }
+        if ($r.version -notin @('c_secuencial','c_paralelo','go_secuencial','go_paralelo')) { throw 'Version desconocida.' }
+        if ($r.commit -notmatch '^[a-fA-F0-9]{7,40}$') { throw 'Commit invalido.' }
+        foreach ($key in @('hostname','cpu_model','os_version')) { if ([string]::IsNullOrWhiteSpace($r.$key)) { throw "Falta $key" } }
+        $time = [datetime]::MinValue
+        if (-not [datetime]::TryParseExact($r.timestamp,'yyyy-MM-ddTHH:mm:ssZ',$culture,[Globalization.DateTimeStyles]::None,[ref]$time)) { throw 'Timestamp invalido.' }
+        $ram=0.0
+        if (-not [double]::TryParse($r.ram_gb,[Globalization.NumberStyles]::Float,$culture,[ref]$ram) -or [double]::IsNaN($ram) -or [double]::IsInfinity($ram) -or $ram -le 0) { throw 'RAM invalida.' }
+        foreach ($key in @('processes','threads','workers')) {
+            $number=0
+            if (-not [int]::TryParse($r.$key,[ref]$number) -or $number -lt 1) { throw "$key invalido." }
+        }
+        $p=[int]$r.processes; $t=[int]$r.threads; $w=[int]$r.workers
+        $canonical = switch ($r.version) {
+            'c_paralelo' { "c_paralelo_P${p}_T${t}" }
+            'go_paralelo' { "go_paralelo_W$w" }
+            default { $r.version }
+        }
+        if ($r.configuration -cne $canonical) { throw 'Configuracion no canonica.' }
+        if ($r.version -ne 'c_paralelo' -and ($p -ne 1 -or $t -ne 1)) { throw 'Procesos/hilos fuera de C paralelo.' }
+        if ($r.version -ne 'go_paralelo' -and $w -ne 1) { throw 'Workers fuera de Go paralelo.' }
+        if ($r.version.StartsWith('c_')) {
+            if ($r.gomaxprocs -cne '') { throw 'GOMAXPROCS debe estar vacio para C.' }
+        } elseif ($r.gomaxprocs -cne [string]$w) { throw 'GOMAXPROCS no coincide con workers.' }
+        if ($r.validation_status -cne 'OK') {
+            if ($r.validation_status -notin @('ERROR','PENDING','MISMATCH','OOM','TIMEOUT') -or $r.kernel_s -ne '' -or $r.total_s -ne '') { throw 'Estado fallido o tiempos invalidos.' }
             continue
         }
-
-        $kParsed = 0.0
-        $tParsed = 0.0
-        $kOk = [double]::TryParse($r.kernel_s, [System.Globalization.NumberStyles]::Float, $culture, [ref]$kParsed)
-        $tOk = [double]::TryParse($r.total_s, [System.Globalization.NumberStyles]::Float, $culture, [ref]$tParsed)
-
-        if (-not $kOk -or -not $tOk -or $kParsed -lt 0.0 -or $tParsed -lt 0.0 -or $kParsed -gt $tParsed) {
-            # Valores no validos o incoherentes
-            continue
-        }
-
-        $validObservations.Add($r)
+        $observed=0
+        if (-not [int]::TryParse($r.observed_threads,[ref]$observed) -or $observed -ne $t) { throw 'Hilos observados incorrectos.' }
+        $kParsed=0.0; $tParsed=0.0
+        if (-not [double]::TryParse($r.kernel_s,[Globalization.NumberStyles]::Float,$culture,[ref]$kParsed) -or
+            -not [double]::TryParse($r.total_s,[Globalization.NumberStyles]::Float,$culture,[ref]$tParsed) -or
+            [double]::IsNaN($kParsed) -or [double]::IsInfinity($kParsed) -or
+            [double]::IsNaN($tParsed) -or [double]::IsInfinity($tParsed) -or
+            $kParsed -lt 0 -or $tParsed -lt 0 -or $kParsed -gt $tParsed) { throw 'Tiempos no finitos o incoherentes.' }
+        if ($rep -gt 0) { $validObservations.Add($r) }
     }
 
     # 4. Agrupar por clave canónica (campaña / host / commit / version / configuration / N / seed)
     $groups = @{}
-    foreach ($obs in $validObservations) {
-        $groupKey = "$($obs.hostname)|$($obs.commit)|$($obs.version)|$($obs.configuration)|$($obs.n)|$($obs.seed)"
-        if (-not $groups.ContainsKey($groupKey)) {
-            $groups[$groupKey] = New-Object System.Collections.Generic.List[psobject]
-        }
+    foreach ($obs in $parsedRows) {
+        $groupKey = @($obs.campaign_id,$obs.hostname,$obs.cpu_model,$obs.ram_gb,$obs.os_version,$obs.commit,$obs.version,$obs.configuration,$obs.n,$obs.seed) | ConvertTo-Json -Compress
+        if (-not $groups.ContainsKey($groupKey)) { $groups[$groupKey] = New-Object System.Collections.Generic.List[psobject] }
         $groups[$groupKey].Add($obs)
     }
 
@@ -254,8 +191,9 @@ end {
     $summaryGroups = New-Object System.Collections.Generic.List[psobject]
 
     foreach ($key in $groups.Keys) {
-        $items = $groups[$key]
-        $first = $items[0]
+        $allItems = $groups[$key]
+        $first = $allItems[0]
+        $items = @($allItems | Where-Object { $_.validation_status -ceq 'OK' -and $_.repetition -ne '0' })
 
         $nVal = [int]$first.n
         $seedVal = [uint32]$first.seed
@@ -275,12 +213,14 @@ end {
         $tList.Sort()
 
         $repsCount = $items.Count
-        $isComplete = ($repsCount -eq 5)
+        $isComplete = ($repsCount -eq 5 -and $allItems.Count -eq 6 -and
+            (@($allItems | Where-Object { $_.validation_status -cne 'OK' }).Count -eq 0) -and
+            ((@($allItems.repetition | Sort-Object) -join ',') -ceq '0,1,2,3,4,5'))
         $statusStr = if ($isComplete) { 'COMPLETE' } else { 'INCOMPLETE' }
 
         # Estadísticas no paramétricas
-        $kMed = 0.0; $kQ1 = 0.0; $kQ3 = 0.0; $kIqr = 0.0; $kMin = 0.0; $kMax = 0.0
-        $tMed = 0.0; $tQ1 = 0.0; $tQ3 = 0.0; $tIqr = 0.0; $tMin = 0.0; $tMax = 0.0
+        $kMed = $null; $kQ1 = $null; $kQ3 = $null; $kIqr = $null; $kMin = $null; $kMax = $null
+        $tMed = $null; $tQ1 = $null; $tQ3 = $null; $tIqr = $null; $tMin = $null; $tMax = $null
 
         if ($repsCount -eq 5) {
             # Regla estricta del protocolo para 5 observaciones
@@ -294,7 +234,7 @@ end {
             $kMin = $kList[0]; $kMax = $kList[$repsCount - 1]
             $tMin = $tList[0]; $tMax = $tList[$repsCount - 1]
 
-            $mid = [int]($repsCount / 2)
+            $mid = [int][Math]::Floor($repsCount / 2.0)
             if ($repsCount % 2 -eq 1) {
                 $kMed = $kList[$mid]
                 $tMed = $tList[$mid]
@@ -307,6 +247,7 @@ end {
         }
 
         $groupObj = [ordered]@{
+            campaign_id      = $first.campaign_id
             version          = $first.version
             configuration    = $first.configuration
             n                = $nVal
@@ -348,7 +289,7 @@ end {
     $secLookup = @{}
     foreach ($sg in $summaryGroups) {
         if ($sg.version -in @('c_secuencial', 'go_secuencial') -and $sg.status -eq 'COMPLETE' -and $sg.total_s_median -gt 0.0) {
-            $secKey = "$($sg.hostname)|$($sg.commit)|$($sg.version)|$($sg.n)|$($sg.seed)"
+            $secKey = @($sg.campaign_id,$sg.hostname,$sg.cpu_model,$sg.ram_gb,$sg.os_version,$sg.commit,$sg.version,$sg.n,$sg.seed) | ConvertTo-Json -Compress
             $secLookup[$secKey] = $sg
         }
     }
@@ -368,12 +309,12 @@ end {
 
         # Speedup y Eficiencia
         if ($sg.version -in @('c_secuencial', 'go_secuencial')) {
-            if ($sg.status -eq 'COMPLETE') {
+            if ($sg.status -eq 'COMPLETE' -and $sg.total_s_median -gt 0.0) {
                 $sg.speedup = 1.0
                 $sg.efficiency = 1.0
             }
         } elseif ($sg.version -eq 'c_paralelo') {
-            $secKey = "$($sg.hostname)|$($sg.commit)|c_secuencial|$($sg.n)|$($sg.seed)"
+            $secKey = @($sg.campaign_id,$sg.hostname,$sg.cpu_model,$sg.ram_gb,$sg.os_version,$sg.commit,'c_secuencial',$sg.n,$sg.seed) | ConvertTo-Json -Compress
             if ($sg.status -eq 'COMPLETE' -and $secLookup.ContainsKey($secKey)) {
                 $base = $secLookup[$secKey]
                 if ($sg.total_s_median -gt 0.0) {
@@ -384,7 +325,7 @@ end {
                 }
             }
         } elseif ($sg.version -eq 'go_paralelo') {
-            $secKey = "$($sg.hostname)|$($sg.commit)|go_secuencial|$($sg.n)|$($sg.seed)"
+            $secKey = @($sg.campaign_id,$sg.hostname,$sg.cpu_model,$sg.ram_gb,$sg.os_version,$sg.commit,'go_secuencial',$sg.n,$sg.seed) | ConvertTo-Json -Compress
             if ($sg.status -eq 'COMPLETE' -and $secLookup.ContainsKey($secKey)) {
                 $base = $secLookup[$secKey]
                 if ($sg.total_s_median -gt 0.0) {
@@ -398,7 +339,7 @@ end {
     }
 
     # 8. Ordenar grupos de salida canónicamente (version, n, configuration)
-    $sortedSummary = $summaryGroups | Sort-Object -Property version, n, configuration
+    $sortedSummary = $summaryGroups | Sort-Object -Property campaign_id, version, n, configuration
 
     # 9. Construir líneas CSV de salida
     $outCsvLines = New-Object System.Collections.Generic.List[string]

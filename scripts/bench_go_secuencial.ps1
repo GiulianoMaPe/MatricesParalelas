@@ -73,7 +73,9 @@ function Invoke-GoSequentialProcess {
         [Parameter(Mandatory=$true)][string]$Executable,
         [Parameter(Mandatory=$true)][string[]]$Arguments,
         [Parameter(Mandatory=$true)][string]$RunDirectory,
-        [ValidateRange(1,86400)][int]$TimeoutSeconds = 300
+        [ValidateRange(1,86400)][int]$TimeoutSeconds = 300,
+        [hashtable]$ChildEnvironment = @{ GOMAXPROCS = '1' },
+        [switch]$TerminateTree
     )
     # No shell, compilation or go run. Numeric CLI arguments need no escaping;
     # quoted paths are also supported for controlled process tests on PS 5.1.
@@ -102,19 +104,28 @@ function Invoke-GoSequentialProcess {
         $process.StartInfo.StandardOutputEncoding = $script:GoSequentialUtf8
         $process.StartInfo.StandardErrorEncoding = $script:GoSequentialUtf8
         # Set the child's environment only; the calling session is unchanged.
-        $process.StartInfo.EnvironmentVariables['GOMAXPROCS'] = '1'
+        foreach ($key in $ChildEnvironment.Keys) {
+            if ($null -eq $ChildEnvironment[$key]) { [void]$process.StartInfo.EnvironmentVariables.Remove($key) }
+            else { $process.StartInfo.EnvironmentVariables[$key] = [string]$ChildEnvironment[$key] }
+        }
+        $record.gomaxprocs = if ($process.StartInfo.EnvironmentVariables.ContainsKey('GOMAXPROCS')) { $process.StartInfo.EnvironmentVariables['GOMAXPROCS'] } else { $null }
+        $record.child_environment = $ChildEnvironment
+        $record.inherited_runtime_environment = [ordered]@{}
+        foreach ($key in @('GOGC','GOMEMLIMIT','GODEBUG','OMP_PROC_BIND','OMP_PLACES','OMP_SCHEDULE','KMP_AFFINITY')) {
+            $record.inherited_runtime_environment[$key] = [Environment]::GetEnvironmentVariable($key,'Process')
+        }
         $started = $process.Start()
-        if (-not $started) { throw 'No se pudo iniciar Go secuencial.' }
+        if (-not $started) { throw 'No se pudo iniciar el proceso de medicion.' }
         $record.pid = $process.Id
         $stdoutTask = $process.StandardOutput.ReadToEndAsync()
         $stderrTask = $process.StandardError.ReadToEndAsync()
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
             $record.status = 'TIMEOUT'
-            throw "Go secuencial excedio $TimeoutSeconds segundos."
+            throw "El proceso de medicion excedio $TimeoutSeconds segundos."
         }
         $record.exit_code = $process.ExitCode
-        if ($process.ExitCode -ne 0) { throw "Go secuencial termino con codigo $($process.ExitCode)." }
-        if ($stderrTask.Result.Length -ne 0) { throw 'Go secuencial emitio diagnosticos; revisar stderr.txt.' }
+        if ($process.ExitCode -ne 0) { throw "El proceso de medicion termino con codigo $($process.ExitCode)." }
+        if ($stderrTask.Result.Length -ne 0) { throw 'El proceso emitio diagnosticos; revisar stderr.txt.' }
         $record.status = 'OK'
         return $stdoutTask.Result
     } catch {
@@ -123,9 +134,11 @@ function Invoke-GoSequentialProcess {
     } finally {
         try {
             if ($started -and -not $process.HasExited) {
-                # This Go executable creates no child processes or MPI ranks.
-                $process.Kill()
-                if (-not $process.WaitForExit(5000)) { throw 'No se pudo terminar Go secuencial.' }
+                # The integrated caller requests tree termination for MPI; the standalone Go executable has no children.
+                if ($TerminateTree -and $env:OS -eq 'Windows_NT') {
+                    & taskkill.exe /PID $process.Id /T /F 2>&1 | Out-Null
+                } else { $process.Kill() }
+                if (-not $process.WaitForExit(5000)) { throw 'No se pudo terminar el proceso de medicion.' }
             }
             if ($started) { $record.exit_code = $process.ExitCode }
             foreach ($entry in @(@('stdout.txt',$stdoutTask), @('stderr.txt',$stderrTask))) {

@@ -1,0 +1,8 @@
+fecha: 2026-11-12T12:41:27.9355135-05:00
+equipo: FLDSMDFR
+go version go1.27.1 windows/amd64
+=== RUN   TestPreciseClockResolution
+    granularity_test.go:101: QueryPerformanceCounter: paso mínimo 100ns; time.Now: paso mínimo 303.8µs
+--- PASS: TestPreciseClockResolution (0.26s)
+PASS
+ok  	matrices/go_paralelo	0.783s

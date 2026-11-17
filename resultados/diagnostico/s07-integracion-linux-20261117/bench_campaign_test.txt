@@ -1,0 +1,3 @@
+Campana: /tmp/s07-campaign-9c947bf5787f4730b4f97486b31e29a7/dry; 198 corridas planificadas.
+Campana: /tmp/s07-campaign-9c947bf5787f4730b4f97486b31e29a7/evidence; 24 corridas planificadas.
+Integrated campaign: 48 checks PASS (controlled processes, no experimental observations).

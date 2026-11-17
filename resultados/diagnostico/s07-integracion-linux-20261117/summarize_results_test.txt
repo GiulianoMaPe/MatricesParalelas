@@ -1,0 +1,62 @@
+=== INICIO DE PRUEBAS DE AUTOMATIZACION: summarize_results.ps1 ===
+
+Test 1: Procesamiento de control_mediciones.csv con -PassThru...
+  [PASS] Cantidad total de grupos agregados
+
+Test 2: Verificación de métricas para c_secuencial (N=256)...
+  [PASS] c_secuencial: repeticiones medidas válidas
+  [PASS] c_secuencial: estado completo
+  [PASS] c_secuencial: kernel_s_median
+  [PASS] c_secuencial: kernel_s_q1
+  [PASS] c_secuencial: kernel_s_q3
+  [PASS] c_secuencial: kernel_s_iqr
+  [PASS] c_secuencial: kernel_s_min
+  [PASS] c_secuencial: kernel_s_max
+  [PASS] c_secuencial: total_s_median
+  [PASS] c_secuencial: total_s_q1
+  [PASS] c_secuencial: total_s_q3
+  [PASS] c_secuencial: total_s_iqr
+  [PASS] c_secuencial: total_s_min
+  [PASS] c_secuencial: total_s_max
+  [PASS] c_secuencial: speedup base
+  [PASS] c_secuencial: eficiencia base
+  [PASS] c_secuencial: gflops_kernel
+  [PASS] c_secuencial: gflops_total
+
+Test 3: Verificación de métricas para c_paralelo_P2_T2 (N=256)...
+  [PASS] c_paralelo: repeticiones medidas válidas
+  [PASS] c_paralelo: estado completo
+  [PASS] c_paralelo: kernel_s_median
+  [PASS] c_paralelo: kernel_s_iqr
+  [PASS] c_paralelo: total_s_median
+  [PASS] c_paralelo: total_s_iqr
+  [PASS] c_paralelo: speedup relativo a c_secuencial
+  [PASS] c_paralelo: eficiencia paralela (P*T=4)
+  [PASS] c_paralelo: gflops_kernel
+
+Test 4: Verificación de Go secuencial y paralelo (N=256)...
+  [PASS] go_secuencial: total_s_median
+  [PASS] go_secuencial: speedup base
+  [PASS] go_paralelo: total_s_median
+  [PASS] go_paralelo: speedup relativo a go_secuencial
+  [PASS] go_paralelo: eficiencia paralela (W=4)
+
+Test 5: Verificación de caso incompleto con error (N=512)...
+  [PASS] c_paralelo N=512: reps_count excluyendo ERROR
+  [PASS] c_paralelo N=512: estado incompleto
+  [PASS] c_paralelo N=512: speedup nulo
+  [PASS] c_paralelo N=512: eficiencia nula
+  [PASS] c_paralelo N=512: gflops nulo
+
+Test 6: Exportación a archivo y verificación UTF-8 sin BOM...
+  [PASS] Archivo generado en disco
+  [PASS] Ausencia de BOM UTF-8
+  [PASS] Cabecera contiene 32 columnas
+  [PASS] Total de filas (1 cabecera + 5 grupos)
+
+Test 7: Verificación de canalización por tubería...
+  [PASS] Resultados vía tubería coinciden en conteo
+
+=======================================================
+RESULTADOS: 43 pruebas superadas, 0 fallidas.
+=======================================================

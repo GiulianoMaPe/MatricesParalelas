@@ -14,3 +14,6 @@ resultados/diagnostico/** -text -whitespace
 resultados/piloto/s06_windows_*/** -text -whitespace
 docs/optimizaciones_i7_original_s06.md -whitespace
 resultados/experimentos/granularidad_go/** -whitespace
+
+# Preserve I4 original pilot observations and logs without newline conversion.
+resultados/piloto/s07_i04_go_paralelo/** -text -whitespace

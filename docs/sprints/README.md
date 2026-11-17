@@ -89,3 +89,10 @@ este cierre fue encargada expresamente a Codex por el responsable como excepció
 al flujo de revisión humana. El [acta S6](sprint-06.md) enlaza corridas originales,
 comparativas, memoria por rank, regresión, decisiones y horas realmente declaradas.
 La fijación del algoritmo no sustituye el piloto ni la congelación experimental S7.
+
+
+Al 17/11/2026, S7 dispone de integración técnica en la rama de cierre: cuatro
+casos, campaña alternada, análisis, verificación y comando de aceptación Windows.
+Se recuperaron los PR #54/#55 y la evidencia individual I2/I4, además del acta I8
+recibida por #56. La validación local es controlada en Linux; el piloto completo
+y su reproducción siguen pendientes en Windows. Véase [estado S7](sprint-07.md).
