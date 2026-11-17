@@ -1,7 +1,7 @@
 # Sprint 8 · Plan I3 · Giuliano · Go secuencial
 
-**Estado:** subcampaña I3 en ejecución con ID nuevo tras recuperar el entorno;
-se preservan el timeout inicial y el intento interrumpido.
+**Estado:** entrega técnica I3 completa y verificada; revisión humana I2 pendiente.
+Se preservan todos los intentos y sus incidencias.
 **Rama:** `feature/s08-i03-go-secuencial`.
 
 ## Objetivo y alcance
@@ -164,6 +164,20 @@ los cronómetros internos y no se usa como `kernel_s` ni `total_s`.
 
 ## Registro de cierre I3
 
-Completar después de la campaña: `campaign_id`, hashes, ruta/hash de extracción,
-conteos por N, incidencias, resultado de revisión I2, horas reales y enlace al
-PR de esta rama.
+Entrega técnica completa: `s08_i03_go_secuencial_03`, **72/72 corridas válidas**,
+12 grupos completos y 0 exclusiones. La extracción I3 contiene **18/18 filas
+válidas: 3 warmups y 15 medidas**. [Resultados, hashes y verificación](../../resultados/raw/s08_i03_go_secuencial_03/README.md).
+
+| N | Warmups | Medidas OK | Mediana kernel (s) | Mediana total (s) | Mín.–máx. total (s) |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 512 | 1 | 5 | 0.090260100 | 0.090260100 | 0.089870700–0.095034000 |
+| 1024 | 1 | 5 | 0.711943000 | 0.712950300 | 0.694328800–0.730602200 |
+| 2048 | 1 | 5 | 6.172516400 | 6.177566100 | 6.117811500–6.266355400 |
+
+- CSV I3: `resultados/raw/go_secuencial.csv`; fuente y hashes en `revision_i3.json`.
+- Se preservan los cuatro intentos y sus incidencias, sin mezclar filas ni seleccionar tiempos.
+- Revisión I2→I3: pendiente de solicitar a Sebastián (`@SebastianMalca`) mediante el PR.
+- Coordinación humana con I5–I8: pendiente de confirmación; no atribuida a la auditoría automática.
+- Horas: 8 h presupuestadas (3+3+1+1); no se presume un desglose real no declarado para S8.
+- Esta entrega individual con controles no cierra la campaña integral ni el sprint del equipo.
+- PR: pendiente de crear tras publicar esta evidencia.
