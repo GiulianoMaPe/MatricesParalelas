@@ -16,7 +16,7 @@ Integrante 1  Ejecutar y supervisar los lotes de C secuencial (3 h). Revisar int
 
 Integrante 2  Ejecutar y supervisar las combinaciones del híbrido C (3 h). Verificar participación de procesos e hilos y registrar anomalías (3 h). Entregable: CSV originales de C paralelo. Ubicación: resultados/raw/c_paralelo.csv.
 
-Integrante 3  Ejecutar y supervisar la campaña Go secuencial (3 h). Revisar equivalencia de entradas y condiciones de ejecución (3 h). Entregable: CSV originales de Go secuencial. Ubicación: resultados/raw/go_secuencial.csv.
+Integrante 3 (Giuliano/I3)  Ejecutar y supervisar la campaña Go secuencial (3 h). Revisar equivalencia de entradas y condiciones de ejecución (3 h). Entregable: CSV de Go secuencial derivado sin modificar el CSV original de la campaña integrada. Ubicación: `resultados/raw/go_secuencial.csv`; conservar como fuente `resultados/raw/<campaign_id>/mediciones.csv`. Véase el [plan I3 de S8](sprint-08-i03-plan.md).
 
 Integrante 4  Ejecutar y supervisar los lotes de Go paralelo (3 h). Revisar workers efectivos y estabilidad de las repeticiones (3 h). Entregable: CSV originales de Go paralelo. Ubicación: resultados/raw/go_paralelo.csv.
 
