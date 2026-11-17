@@ -1,0 +1,32 @@
+{
+    "executable":  "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "arguments":  [
+                      "-NoProfile",
+                      "-NonInteractive",
+                      "-File",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\outputs\\s07-i03\\99417287b20c4abcb5a95bc07415a999\\proceso con espacios.ps1",
+                      "-Mode",
+                      "timeout",
+                      "-Value",
+                      "ruta con espacios"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-17T14:02:42.4637812Z",
+    "wall_s":  1.0264076,
+    "pid":  21780,
+    "exit_code":  -1,
+    "status":  "TIMEOUT",
+    "detail":  "El proceso de medicion excedio 1 segundos.",
+    "child_environment":  {
+                              "GOMAXPROCS":  "1"
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

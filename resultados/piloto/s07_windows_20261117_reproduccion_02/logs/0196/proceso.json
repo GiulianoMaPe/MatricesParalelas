@@ -1,0 +1,36 @@
+{
+    "executable":  "C:\\Program Files\\Microsoft MPI\\Bin\\mpiexec.exe",
+    "arguments":  [
+                      "-n",
+                      "2",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release\\c_paralelo.exe",
+                      "--n",
+                      "1024",
+                      "--seed",
+                      "42",
+                      "--repetition",
+                      "5"
+                  ],
+    "gomaxprocs":  null,
+    "start_utc":  "2026-11-17T14:55:08.6223225Z",
+    "wall_s":  6.9204474,
+    "pid":  16416,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  "",
+    "child_environment":  {
+                              "OMP_NUM_THREADS":  "2",
+                              "GOMAXPROCS":  null,
+                              "S06_DIAGNOSTICS":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\resultados\\piloto\\s07_windows_20261117_reproduccion_02\\logs\\0196",
+                              "OMP_DYNAMIC":  "FALSE"
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

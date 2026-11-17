@@ -1,0 +1,35 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\go_paralelo\\build\\Release\\go_paralelo.exe",
+    "arguments":  [
+                      "--n",
+                      "512",
+                      "--seed",
+                      "42",
+                      "--repetition",
+                      "0",
+                      "--workers",
+                      "4"
+                  ],
+    "gomaxprocs":  "4",
+    "start_utc":  "2026-11-17T17:00:13.5928626Z",
+    "wall_s":  0.8439154,
+    "pid":  11424,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  "",
+    "child_environment":  {
+                              "OMP_NUM_THREADS":  null,
+                              "GOMAXPROCS":  "4",
+                              "S06_DIAGNOSTICS":  null,
+                              "OMP_DYNAMIC":  null
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

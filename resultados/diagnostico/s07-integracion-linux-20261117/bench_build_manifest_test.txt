@@ -1,0 +1,1 @@
+Build manifests: 10 checks PASS (controlled files).

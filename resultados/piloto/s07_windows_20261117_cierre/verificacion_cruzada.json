@@ -1,0 +1,77 @@
+{
+  "recorded_at_utc": "2026-11-17T14:56:03.712533+00:00",
+  "campaigns": [
+    "s07_windows_20261117_piloto_02",
+    "s07_windows_20261117_reproduccion_02"
+  ],
+  "commit": "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+  "checks": {
+    "same_commit": true,
+    "clean_sources": true,
+    "clean_builds": true,
+    "same_binaries": true,
+    "same_sources": true,
+    "same_plan_bytes": true,
+    "same_experiment": true,
+    "same_hardware_and_power": true,
+    "complete_198_each": true,
+    "verified_33_groups_each": true,
+    "all_groups_complete": true,
+    "three_sizes_all_versions": true
+  },
+  "executable_sha256": {
+    "c_secuencial": "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+    "c_paralelo": "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+    "go_secuencial": "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+    "go_paralelo": "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A"
+  },
+  "data_sha256": {
+    "s07_windows_20261117_piloto_02": "72ca92bb6c8f1e56e944afca70a07cecab752a5134f93e442240f5751a31dce0",
+    "s07_windows_20261117_reproduccion_02": "b5e5cee3491551c7f8df57a620f6b83c13a0b3a38049f957d924d9d74bd117ab"
+  },
+  "pilot_wall_seconds": 715.7244307,
+  "reproduction_wall_seconds": 715.8565236,
+  "estimates": [
+    {
+      "pilot_wall_seconds": 715.7244307,
+      "official_machine_seconds_estimate": 5725.7954456,
+      "suggested_reservation_seconds": 8588.6931684,
+      "assumption": "Escalado cubico al duplicar N, misma tabla. Estimacion inicial, no medicion S8 ni reserva de calendario.",
+      "pending": "Revisar memoria/carga/temperatura, confirmar duracion y disponibilidad; reproducir mismo commit/binarios."
+    },
+    {
+      "pilot_wall_seconds": 715.8565236,
+      "official_machine_seconds_estimate": 5726.8521888,
+      "suggested_reservation_seconds": 8590.2782832,
+      "assumption": "Escalado cubico al duplicar N, misma tabla. Estimacion inicial, no medicion S8 ni reserva de calendario.",
+      "pending": "Revisar memoria/carga/temperatura, confirmar duracion y disponibilidad; reproducir mismo commit/binarios."
+    }
+  ],
+  "conditions": [
+    {
+      "campaign_id": "s07_windows_20261117_piloto_02",
+      "load_samples": 198,
+      "cpu_load_percent_min": 1.0,
+      "cpu_load_percent_max": 80.0,
+      "minimum_free_memory_kib": 2015820,
+      "temperature_sensor": "unavailable",
+      "maximum_process_wall_seconds": 8.5629233,
+      "interpretation": "Samples precede each run and may include prior benchmark load; no thermal measurement or attribution to background tasks."
+    },
+    {
+      "campaign_id": "s07_windows_20261117_reproduccion_02",
+      "load_samples": 198,
+      "cpu_load_percent_min": 1.0,
+      "cpu_load_percent_max": 57.0,
+      "minimum_free_memory_kib": 3180024,
+      "temperature_sensor": "unavailable",
+      "maximum_process_wall_seconds": 7.7020693,
+      "interpretation": "Samples precede each run and may include prior benchmark load; no thermal measurement or attribution to background tasks."
+    }
+  ],
+  "median_absolute_relative_change_percent": 3.6004158170404996,
+  "maximum_absolute_relative_change_percent": 28.253104544352542,
+  "human_acceptance_file": "aceptacion_responsable.json",
+  "s8_reservation_file": "reserva_maquina.json",
+  "caveat": "No cross-attempt pooling, outlier deletion, thermal stability claim, or arbitrary performance equivalence threshold."
+}

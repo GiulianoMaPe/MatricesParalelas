@@ -1,0 +1,7 @@
+{
+    "pilot_wall_seconds":  715.7244307,
+    "official_machine_seconds_estimate":  5725.7954456,
+    "suggested_reservation_seconds":  8588.6931684,
+    "assumption":  "Escalado cubico al duplicar N, misma tabla. Estimacion inicial, no medicion S8 ni reserva de calendario.",
+    "pending":  "Revisar memoria/carga/temperatura, confirmar duracion y disponibilidad; reproducir mismo commit/binarios."
+}

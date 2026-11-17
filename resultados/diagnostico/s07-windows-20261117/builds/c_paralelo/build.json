@@ -1,0 +1,70 @@
+{
+    "version":  "c_paralelo",
+    "configuration":  "Release",
+    "target":  "x64",
+    "commit":  "66900cd4787edd565d82444136e16b9edc6071af",
+    "dirty":  true,
+    "built_at_utc":  "2026-11-17T13:59:27.8652611Z",
+    "sha256":  "08AC3A0C2ADBAD2451BFA00498F2040197F240B35F0FA835117E770097EB3334",
+    "arguments":  [
+                      "/nologo",
+                      "/TC",
+                      "/std:c11",
+                      "/W4",
+                      "/WX",
+                      "/fp:precise",
+                      "/I",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\include",
+                      "/O2",
+                      "/MD",
+                      "/D_WIN32_WINNT=0x0600",
+                      "/I",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release",
+                      "/openmp",
+                      "/I",
+                      "C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Include",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\input.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\main.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\matrix.c",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\partition.c",
+                      "/Fe:c_paralelo.exe",
+                      "/link",
+                      "/MACHINE:X64",
+                      "advapi32.lib",
+                      "/LIBPATH:C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Lib\\x64",
+                      "msmpi.lib"
+                  ],
+    "tools":  {
+                  "msvc":  "19.44.35230.0",
+                  "windows_sdk":  "10.0.26100.0",
+                  "msmpi_runtime":  "10.1.12498.52",
+                  "msmpi_sdk":  {
+                                    "mpi_h_sha256":  "CC23825FAEE71FFACF666300C375F4C73D605E72CD04310CE5EFAE778244FD7B",
+                                    "msmpi_lib_sha256":  "B68E974D63EAADCBC77BB07F388F06BE4B7066E2FC5D1B8743AFA56E6D16AD1B"
+                                }
+              },
+    "source_sha256":  {
+                          "c_paralelo/README.md":  "E0C6156B73BC16D8280BBD451D1E6967D0697DB46D5287639C50A758A6953656",
+                          "c_paralelo/include/input.h":  "914907A7FD65EB698122C522A19D6744711D97E2458B4349F722501C0F4889A9",
+                          "c_paralelo/include/matrix.h":  "BB782856F70307E887462BAD6761B0DA09F70D26999448E3488971A4F1E30FB8",
+                          "c_paralelo/include/partition.h":  "4ED2F4FE8A192482F164400E90F0615FA587895F374CAF911E1F193DFC7207FC",
+                          "c_paralelo/src/input.c":  "8BB30AA5BFEC92541E42D22318D9FC59BAF69EE721A1762991ED415E06719283",
+                          "c_paralelo/src/main.c":  "4A479461808B882FF360DFFF56160FFFCEBEF7E839D19D59AA1CBAE58F745DE9",
+                          "c_paralelo/src/matrix.c":  "9CA0B3B867E2F1CC492EF77B7BA266690DD61DFD143826ACA9F9CD7897CF5FF5",
+                          "c_paralelo/src/partition.c":  "6E95E5BB57D53273DE45DEB7F5C5AC2FEF07C103162E292A5A6720AAFF2AC810",
+                          "c_paralelo/status.json":  "4E0F8CF163DF447405B44C5E7276F5EBE595BAA3B630099C62296B69E37BE64B",
+                          "c_paralelo/tests/partition_test.c":  "01B6CC07187728378EDC28724CDE5A786C023CC8E2EB4124D44AC9AABB6449FC",
+                          "c_paralelo/tests/pending_test.c":  "385F4496819FDC79A58989236D21AD3B36754925D2D2F549CE2FED7C4373D895",
+                          "c_paralelo/tests/registro_fallos.md":  "F02239ABD4AE09CE87B6367DF9D46732CAA74F30DFB68F13615997BBD5564664",
+                          "c_paralelo/tests/reporte_particionado.md":  "1D9C2D86163F0F8970BE0CAAE163ED4ADCEE7816FA7B118F37AD40CF162561D4",
+                          "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                          "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                      },
+    "build_environment":  {
+                              "CL":  null,
+                              "_CL_":  null,
+                              "LINK":  null,
+                              "GOFLAGS":  null,
+                              "GOEXPERIMENT":  null
+                          }
+}

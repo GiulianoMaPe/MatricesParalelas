@@ -1,0 +1,74 @@
+[
+  {
+    "check": "csv",
+    "exit_code": 0,
+    "log": "csv.txt"
+  },
+  {
+    "check": "c-paralelo",
+    "exit_code": 0,
+    "log": "c-paralelo.txt"
+  },
+  {
+    "check": "go-secuencial",
+    "exit_code": 0,
+    "log": "go-secuencial.txt"
+  },
+  {
+    "check": "go-paralelo-controlado",
+    "exit_code": 0,
+    "log": "go-paralelo-controlado.txt"
+  },
+  {
+    "check": "resumen",
+    "exit_code": 0,
+    "log": "resumen.txt"
+  },
+  {
+    "check": "manifiestos",
+    "exit_code": 0,
+    "log": "manifiestos.txt"
+  },
+  {
+    "check": "integridad-resumen",
+    "exit_code": 0,
+    "log": "integridad-resumen.txt"
+  },
+  {
+    "check": "campana-controlada",
+    "exit_code": 0,
+    "log": "campana-controlada.txt"
+  },
+  {
+    "check": "aceptacion-controlada",
+    "exit_code": 0,
+    "log": "aceptacion-controlada.txt"
+  },
+  {
+    "check": "go-paralelo-con-ejecutable",
+    "exit_code": 1,
+    "log": "go-paralelo-con-ejecutable.txt",
+    "status": "BLOCKED_BY_SMART_APP_CONTROL"
+  },
+  {
+    "check": "planificacion",
+    "exit_code": 0,
+    "log": "planificacion.txt",
+    "observations": 0
+  },
+  {
+    "check": "regresion-sin-build-c_secuencial",
+    "exit_code": 0,
+    "log": "regresion-sin-build-c_secuencial.txt"
+  },
+  {
+    "check": "regresion-sin-build-c_paralelo",
+    "exit_code": 0,
+    "log": "regresion-sin-build-c_paralelo.txt"
+  },
+  {
+    "check": "regresion-sin-build-go_secuencial",
+    "exit_code": 0,
+    "log": "regresion-sin-build-go_secuencial.txt"
+  }
+]

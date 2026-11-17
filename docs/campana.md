@@ -1,184 +1,252 @@
-# Acta de Congelación Experimental y Definición de Parámetros de Campaña
+# Campaña y candidata experimental S7
 
-**Sprint: 7** Automatizar los experimento
+Estado al 17/11/2026: **Sprint 7 cerrado con aceptación del responsable**.
+Piloto integrado y reproducción completos y verificados en Windows nativo,
+198 observaciones OK y 33 grupos por intento. Candidata limpia
+`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, mismos binarios y fuentes.
+Se midió GPU; CPU quedó sin lectura térmica por elección del responsable.
+Reserva S8 provisional: 18/11, 09:00–12:00.
 
----
+## Procedencia de las entregas
 
-## 1. Objeto y Alcance del Acta
+Se conserva la entrega de I8, integrada por el [PR #56](https://github.com/GiulianoMaPe/MatricesParalelas/pull/56),
+en el [acta original](campana_i8_original_s07.md). Sus dos lotes Go N=256 en
+PC-PETEL son evidencia individual declarada por Roberto. No incluyen los cuatro
+casos, la tabla completa ni los metadatos/logs de una campaña integrada.
+El candidato anterior `aba9579` tenía `all` deshabilitado: sus lotes no acreditan
+la integración actual. Las 72 observaciones de I4 se preservan en
+[resultados/piloto/s07_i04_go_paralelo/](../resultados/piloto/s07_i04_go_paralelo/).
+No se reúnen lotes de distintas PCs o intentos para simular un piloto completo.
 
-El propósito de la presente acta es formalizar la **congelación experimental del código** y la **definición exhaustiva de los parámetros de medición** que regirán la campaña oficial de recolección de datos del **Sprint 8**. Asimismo, se documenta la **reproducción empírica del piloto automatizado** ejecutado sobre el hardware de evaluación del integrante 8, validando la integridad del arnés central `scripts/bench_windows.ps1` y su compatibilidad con el esquema canónico CSV de 20 columnas.
+La presente acta sustituye las reglas del acta original que contradicen el
+[protocolo v1.3](protocolo_medicion.md): presupuestos W=1/2/4/8 limitados por núcleos
+físicos; cero temporal válido; speedup de medianas de `total_s`; N=4096 condicional.
+No se atribuyen variaciones a caché ni throttling sin mediciones de esos fenómenos.
+No se garantiza una pausa térmica automática: el sensor no está disponible en
+este arnés y su revisión se registra manualmente en la bitácora.
 
-Con este documento se garantiza que:
+## Código y parámetros candidatos
 
-1. No se introducirán alteraciones algorítmicas, estructurales ni sintácticas en los núcleos de cómputo durante la fase de medición masiva.
-2. La totalidad de las ejecuciones experimentales respetará un espacio de parámetros uniforme, exhaustivo y libre de asimetrías metodológicas.
-3. El arnés automatizado detecta fallos, preserva los 20 campos del protocolo y respeta el aislamiento cronométrico.
+- Conservar los núcleos C/Go y fronteras temporales aceptados en S6; esta entrega
+  modifica automatización, validación y documentación.
+- Identificar la candidata con `git rev-parse HEAD`. Registrar el commit completo,
+  estado del árbol, hashes de fuentes y de los cuatro binarios. `build.json`
+  registra las opciones y herramientas efectivas, sin fijar versiones de otra PC.
+- Compilar en Release, x64, con MSVC/Windows SDK y MS-MPI nativos. Go usa
+  `-buildvcs=true`, optimizaciones predeterminadas y sin instrumentación.
+- Piloto: N=256,512,1024; oficial S8: N=512,1024,2048; semilla 42.
+- Un calentamiento por combinación y cinco rondas: orden directo en rondas
+  impares e inverso en pares, según la tabla del protocolo.
+- Hasta 4 núcleos físicos: W=1/2/4 según capacidad. W=8 solo con al menos 8
+  núcleos físicos. En 6 núcleos: 11 configuraciones por N, 198 corridas; con
+  W=8 habilitado: 16 por N, 288 corridas.
+- Memoria matricial estimada: `4*8*N*N` en secuenciales/Go; `(P+5)*8*N*N` en
+  C híbrido. Excluir N en las cuatro versiones si alguna combinación excede
+  50% de RAM disponible, conservando ambos baselines. No incluye runtime/pilas.
+- Timeout inicial 300 s por corrida en el comando de aceptación; ajustar con
+  el piloto documentando cualquier nuevo intento, nunca sustituyendo filas.
 
----
+## Ejecución y reproducción en Windows PowerShell 5.1
 
-## 2. Versión Candidata y Congelamiento de Código
+```powershell
+# Construye, prueba, planifica, mide y verifica; falla al primer error.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\accept_sprint07_windows.ps1 -CampaignId s07_piloto_01
 
-De conformidad con los dictámenes de arquitectura ([`docs/arquitectura.md`](arquitectura.md)) y evaluación de optimizaciones ([`docs/optimizaciones.md`](optimizaciones.md)) aprobados en el Sprint 6:
-
-### 2.1. Identificación del Commit Base
-
-- **Commit Oficial de Congelación:** `aba95790f0b9eb793a014ec6b69c09cd2ff6b249` (HEAD consolidado de `main` integrando los medidores de Sprint 7).
-- **Regla de Inmutabilidad del Núcleo:** Queda estrictamente vedado realizar modificaciones sobre:
-  - El orden de bucles canónico $i \to k \to j$.
-  - La estructura contigua _row-major_ plana de una sola dimensión (`N * N`).
-  - Los métodos de acumulación: `matrix_accumulate` y `matrix_accumulate_rows` en C; `multiplyKernel` y `multiplyBlock` en Go.
-  - La semántica de reparto de carga 1D por bloques contiguos de filas en OpenMP, MPI y Go.
-
-### 2.2. Política de Compilación de Binarios
-
-Toda medición oficial debe ejecutarse obligatoriamente sobre binarios compilados en configuración **`Release`** con optimizaciones del compilador habilitadas:
-
-- **C (`c_secuencial` y `c_paralelo`):** Compilación MSVC 64-bit con directivas `/std:c11 /O2 /fp:precise /MD`, añadiendo `/openmp` para la versión híbrida y enlace con `msmpi.lib`. Se prohíbe el uso de opciones no portables como `/GL` (Whole Program Optimization), `/fp:fast` o intrínsecos AVX manuales asimétricos.
-- **Go (`go_secuencial` y `go_paralelo`):** Compilación mediante `go build` en Go 1.27.x para `windows/amd64` con optimizaciones predeterminadas (`-gcflags` estándar, sin banderas de depuración ni instrumentación de profiling).
-
----
-
-## 3. Matriz Oficial de Parámetros Aceptados para Medir
-
-Para asegurar la validez estadística y la comparabilidad entre todas las referencias, se fija la siguiente matriz de parámetros para la campaña experimental:
-
-```
-                    MATRIZ EXPERIMENTAL OFICIAL (SPRINT 8)
- ┌────────────────────────────────────────────────────────────────────────┐
- │ Dimensiones (N)        : 512, 1024, 2048 (Piloto: 256, 512, 1024)      │
- │ Semilla canónica       : 42 (fija para todas las corridas)             │
- │ Calentamiento (Warmup) : 1 corrida (repetition=0, is_warmup=true)      │
- │ Repeticiones medidas   : 5 corridas (repetition=1..5, is_warmup=false) │
- │ Configuración binaria  : Release (estricta)                            │
- │ Protocolo de salida    : Esquema CSV unificado de 20 columnas (stdout) │
- └────────────────────────────────────────────────────────────────────────┘
-```
-
-### 3.1. Dimensiones de Matriz ($N$)
-
-- **Piloto de Validación / Calibración:** $N \in \{256, 512, 1024\}$.
-- **Campaña Oficial de Rendimiento (Sprint 8):** $N \in \{512, 1024, 2048\}$.
-  - $N=512$: Carga moderada (~$2 \text{ MB}$ por matriz). Las tres matrices caben en la caché L3 combinada del procesador.
-  - $N=1024$: Carga media (~$8 \text{ MB}$ por matriz). Supera la caché L2 individual, generando tráfico sistemático a L3 y DRAM.
-  - $N=2048$: Carga masiva (~$32 \text{ MB}$ por matriz; ~$96 \text{ MB}$ el conjunto $A, B, C$). Desborda holgadamente la memoria caché L3, evaluando el ancho de banda del controlador de memoria DRAM.
-- **Límite Seguro de Estrés ($N=4096$):** Conforme al análisis de capacidad en `docs/memoria.md`, $N=4096$ requiere ~$128 \text{ MB}$ por matriz en secuencial y $\le 1.5 \text{ GB}$ en el proceso raíz MPI. Se reserva como punto exploratorio condicional, sujeto a estabilidad de RAM física.
-
-### 3.2. Semilla Pseudoaleatoria Canónica
-
-- Se estipula el valor **`--seed 42`** para la totalidad de las mediciones de la campaña.
-- La implementación idéntica del generador congruencial lineal (LCG) en C y Go garantiza la igualdad bit a bit de los operandos $A$ y $B$, descartando cualquier variabilidad debida a valores numéricos o condicionamiento de matrices.
-
-### 3.3. Protocolo de Calentamiento y Repeticiones
-
-- **1 Calentamiento (`is_warmup=true`, `repetition=0`):** Permite inicializar páginas de memoria en el sistema operativo (_page faults_ iniciales), calentar las líneas de caché y estabilizar el planificador de Go/OpenMP. Se registra en el CSV pero se descarta en el cálculo de medianas y speedups.
-- **5 Repeticiones Medidas (`is_warmup=false`, `repetition=1..5`):** Proporcionan la muestra estadística requerida para el cálculo de mediana, desviación estándar y rango intercuartílico conforme a `scripts/summarize_results.ps1`.
-
-### 3.4. Grados de Concurrencia y Paralelismo por Versión
-
-| Versión                        | Procesos ($P$) |    Hilos ($T$)    |     Workers ($W$)     | `GOMAXPROCS` | Propósito Experimental                                                       |
-| :----------------------------- | :------------: | :---------------: | :-------------------: | :----------: | :--------------------------------------------------------------------------- |
-| **`c_secuencial`**             |       1        |         1         |           1           |      -       | Línea base secuencial en lenguaje nativo C.                                  |
-| **`go_secuencial`**            |       1        |         1         |           1           |      1       | Línea base secuencial en Go (`runtime.GOMAXPROCS(1)`).                       |
-| **`go_paralelo`**              |       1        |         1         | 1, 2, 4, 6, 8, 12, 16 |    $= W$     | Escalabilidad con pool de goroutines y canales CSP.                          |
-| **`c_paralelo` (OpenMP puro)** |       1        | 1, 2, 4, 6, 8, 12 |           -           |      -       | Escalabilidad de memoria compartida sin sobrecoste MPI.                      |
-| **`c_paralelo` (MPI puro)**    |   1, 2, 4, 6   |         1         |           -           |      -       | Escalabilidad de memoria distribuida por paso de mensajes.                   |
-| **`c_paralelo` (Híbrido)**     |      2, 4      |       2, 4        |           -           |      -       | Escalabilidad jerárquica multinivel ($P \times T \le \text{hilos lógicos}$). |
-
----
-
-## 4. Reproducción del Piloto Automatizado en PC Candidata
-
-En cumplimiento de las tareas del Integrante 8, se procedió a reproducir la ejecución automatizada del piloto mediante el script oficial `scripts/bench_windows.ps1` sobre la estación de trabajo física del integrante 8
-
-### 4.1. Caracterización del Hardware de Medición
-
-- **Procesador (CPU):** AMD Ryzen 5 7600X 6-Core Processor
-  - Microarquitectura: Zen 4 (5 nm)
-  - Núcleos / Hilos: 6 núcleos físicos, 12 subprocesos lógicos
-  - Frecuencia base: 4.70 GHz · Frecuencia turbo: hasta 5.30 GHz
-  - Jerarquía de caché: L1 384 KB (64 KB/core), L2 6 MB (1 MB/core), L3 32 MB compartida
-- **Memoria RAM:** 16.0 GB DDR5 a 5200 MT/s (15.148 GB visible para el SO)
-- **Sistema Operativo:** Microsoft Windows 11 Pro 64-bit (build 26300.9974)
-- **Herramientas de Ejecución:** Windows PowerShell 5.1.26100.9974, Go 1.27.1 windows/amd64, MinGW GCC 6.3.0
-
-### 4.2. Ejecución Automatizada: Caso Go Secuencial (`go_secuencial`)
-
-- **Comando ejecutado:**
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_secuencial -N 256 -Repetitions 5
-  ```
-- **Resultado del lote:** 6 ejecuciones completadas (1 warmup + 5 repeticiones).
-- **Observaciones recolectadas (CSV oficial de 20 columnas):**
-
-```csv
-timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","0","true","0.008641000","0.008641000","OK"
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","1","false","0.009545300","0.009545300","OK"
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","2","false","0.009228800","0.009228800","OK"
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","3","false","0.009264600","0.009264600","OK"
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","4","false","0.009191000","0.009191000","OK"
-"2026-11-16T17:21:52Z","go_secuencial","aba95790f0b9eb793a014ec6b69c09cd2ff6b249","PC-PETEL","AMD Ryzen 5 7600X 6-Core Processor","15.148","Windows 11 Pro build 26300.9974","go_secuencial","256","42","1","1","1","1","1","5","false","0.009218700","0.009218700","OK"
+# Nueva carpeta, mismos binarios, misma candidata y parámetros; repetir en reposo.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\accept_sprint07_windows.ps1 -CampaignId s07_reproduccion_01 -SkipBuild
 ```
 
-- **Análisis de estabilidad:**
-  - Mediana de `kernel_s` medido: $0.0092288 \text{ s}$.
-  - Dispersión relativa: $< 3.8\%$, demostrando una altísima estabilidad de cronometraje en Windows 11.
-  - Correctitud numérica: `validation_status = OK` en el 100% de las repeticiones.
+No ejecutar ambos comandos a la vez. Antes de cada uno, confirmar PC oficial,
+alimentación, plan de energía constante y ausencia de otras mediciones. Registrar
+carga de fondo, sensores/temperatura, incidencias y disponibilidad de máquina.
+Si no hay sensor, declarar esa limitación; no inventar temperaturas.
 
-### 4.3. Ejecución Automatizada: Caso Go Paralelo (`go_paralelo`)
+La carpeta `resultados/piloto/<campaign_id>/` conserva `entorno.json`, `plan.csv`,
+`mediciones.csv`, `bitacora.txt`, `estado.json`, `source-hashes.json`, resumen,
+logs de procesos y aceptación, verificación y estimación inicial de duración.
+Cada proceso registra argumentos, entorno hijo, PID, salida real, stdout/stderr,
+timeout y tiempo de pared. Los ranks MPI conservan filas/hilos observados en
+archivos individuales y bitácora. El SDK MPI queda identificado por hashes de
+su cabecera y biblioteca cuando no ofrece versión de archivo. Un fallo conserva parciales, tiempos vacíos y estado
+INCOMPLETE; se repite el lote completo en una carpeta nueva.
 
-- **Comando ejecutado:**
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version go_paralelo -N 256 -Workers 2 -Repetitions 5
-  ```
-- **Resultado del lote:** 6 ejecuciones completadas (1 warmup + 5 repeticiones).
-- **Observaciones recolectadas (CSV oficial de 20 columnas):**
+Los pilotos con cambios locales archivan también diff, estado y fuentes, incluidas
+las no rastreadas. `oficial` exige árbol y builds limpios; los binarios se comprueban
+contra HEAD, hash, fuentes de compilación, arquitectura y metadatos VCS Go.
+Los modos individuales de I1–I4 siguen disponibles para diagnóstico.
 
-```csv
-timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,0,true,0.005021400,0.005021400,OK
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,1,false,0.006115000,0.006115000,OK
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,2,false,0.005586000,0.005586000,OK
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,3,false,0.006223200,0.006223200,OK
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,4,false,0.005167100,0.005167100,OK
-2026-11-16T17:22:12Z,go_paralelo,aba95790f0b9eb793a014ec6b69c09cd2ff6b249,PC-PETEL,AMD Ryzen 5 7600X 6-Core Processor,15.148,Windows 11 Pro build 26300.9974,go_paralelo_W2,256,42,1,1,1,2,2,5,false,0.005097700,0.005097700,OK
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase piloto -DryRun
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify_campaign.ps1 -CampaignDirectory .\resultados\piloto\s07_piloto_01
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\summarize_results.ps1 -InputPath .\resultados\piloto\s07_piloto_01\mediciones.csv -OutputPath .\resultados\piloto\s07_piloto_01\resumen_estadistico.csv
 ```
 
-- **Análisis de speedup y escalabilidad:**
-  - Mediana de `kernel_s` con $W=2$: $0.0055860 \text{ s}$.
-  - Speedup empírico preliminar ($S_2 = T_{\text{sec}} / T_{W=2}$):
-    $$
-    S_2 = \frac{0.0092288}{0.0055860} \approx 1.65\times
-    $$
-  - Eficiencia paralela preliminar: $E_2 = 1.65 / 2 \approx 82.5\%$, plenamente coherente para un tamaño de matriz pequeño ($N=256$) donde la creación del pool de workers y la sincronización representan una fracción perceptible del tiempo.
+El verificador comprueba tabla/orden, grupos 0..5 completos, coherencia del CSV,
+metadatos y logs. No sustituye la ejecución nativa ni la revisión del entorno.
+`estimacion.json` proyecta inicialmente 8 veces la duración del piloto por duplicar
+N con coste cúbico y sugiere 50% de margen. Es una estimación, no una medición S8
+ni una reserva efectiva en el calendario.
 
----
+El aceptador compila una sola vez; ejecuta la regresión con
+`test_windows.ps1 -SkipBuild` y verifica manifiestos/fuentes/hashes antes y
+después de las pruebas. En reproducción, `-SkipBuild` del aceptador conserva
+también esa omisión durante la regresión. Faltando ejecutables o pruebas C,
+hay que construir y reiniciar ambos intentos, sin recompilar entre ellos.
 
-## 5. Criterios de Validez Experimental y Rechazo de Mediciones
+## Estado nativo de la PC oficial · 17/11/2026
 
-Para el desarrollo del Sprint 8, se estipulan los siguientes filtros automáticos de descarte y control de calidad:
+El responsable confirma la PC oficial, su revisión personal, 8 h por integrante
+y ausencia de sensor térmico. No se atribuyen revisiones independientes nuevas
+a otros integrantes. No hay todavía franja de máquina S8 confirmada. Sin sensor
+se documenta la limitación y se revisan carga, memoria, alimentación, pausas e
+incidencias; no se afirma estabilidad térmica medida.
 
-1. **Invariante Temporal Monotónico:**
-   - Se exige estrictamente:
-     $$
-     0.0 < \text{kernel}_s \le \text{total}_s
-     $$
-   - Cualquier corrida donde $\text{kernel}_s > \text{total}_s$ o donde cualquiera de los dos sea menor o igual a cero se considerará anomalía de temporizador y será descartada inmediatamente.
-2. **Conformidad Estricta del Esquema CSV:**
-   - La salida debe contener exactamente las 20 columnas canónicas con los nombres y tipos definidos en `docs/protocolo_medicion.md`. Filas con campos nulos o desplazados provocarán el aborto del lote (`FailFast`).
-3. **Condiciones de Máquina y Aislamiento Térmico:**
-   - **Carga de fondo:** El uso de CPU previo al inicio de una batería debe ser inferior al $5\%$.
-   - **Alimentación:** Plan de energía de alto rendimiento con la estación conectada permanentemente a la red eléctrica; desactivar reposo y ahorro energético.
-   - **Monitoreo Térmico:** Si el procesador entra en estrangulamiento térmico (_thermal throttling_, $> 95^\circ\text{C}$), la campaña debe pausarse automáticamente para permitir la disipación térmica.
-4. **Verificación Numérica Categórica:**
-   - El campo `validation_status` debe ser incondicionalmente `OK`. Registros con `FAIL`, `NaN` o discrepancias superiores a la tolerancia universal ($10^{-9}$) descalifican el experimento.
+Ryzen 5 3600, 6 núcleos físicos/12 lógicos, Windows 11 Pro build 26300,
+17085501440 bytes de RAM visible, AC y plan Equilibrado. MSVC 14.44.35207,
+Windows SDK 10.0.26100.0, MS-MPI Runtime 10.1.12498.52, Go 1.27.4 windows/amd64
+y PowerShell 5.1.26100.9711. Las opciones y hashes observados se conservan en
+el [diagnóstico Windows](../resultados/diagnostico/s07-windows-20261117/README.md).
 
----
+El dry-run nativo planifica 198 corridas sin exclusiones: 33 calentamientos y
+165 medidas, N=256/512/1024, semilla 42 y W=1/2/4. Sigue siendo planificación.
+El intento `s07_windows_20261117_piloto_01` se detuvo antes de medir al bloquear
+Windows el binario Go paralelo (evento CodeIntegrity 3077; política
+`{0283ac0f-fff1-49ae-ada1-8a933130cad6}`; SmartAppControlState=On).
+No existe piloto integrado COMPLETE, reproducción ni estimación basada en él.
 
-## 6. Dictamen de Aprobación y Visto Bueno
+HEAD de procedencia: `66900cd4787edd565d82444136e16b9edc6071af`.
+La corrección de recompilación involuntaria y sus pruebas están pendientes de
+fijarse como nueva candidata limpia. Resolver primero el bloqueo de ejecución,
+conservar todos los intentos y reiniciar la aceptación con nuevos IDs. La
+congelación final incluirá esa nueva revisión, hashes de ambos intentos, revisión
+de la evidencia y reserva concreta de máquina para S8.
 
-Habiendo comprobado que:
+Actualización posterior del 17/11/2026: el propietario acepta expresamente el
+cambio global y desactiva Smart App Control manualmente. La consulta posterior
+confirma Off y Go paralelo N=2/W=2 devuelve CSV OK. Los registros de bloqueo
+anteriores se conservan como historia. Se reinicia la aceptación con una nueva
+candidata limpia y los IDs `s07_windows_20261117_piloto_02` y
+`s07_windows_20261117_reproduccion_02`. Las carpetas de salida de ambos intentos
+y sus planes se excluyen localmente durante las mediciones para que generar
+evidencia no modifique el estado de las fuentes; su publicación será explícita.
 
-1. Las especificaciones algorítmicas se encuentran formalmente congeladas y alineadas con la literatura científica.
-2. La versión candidata del código base (`aba9579`) ejecuta de forma reproducible, estable y determinista en la plataforma Windows 11.
-3. El arnés de automatización `scripts/bench_windows.ps1` emite el formato estándar sin intervención manual y maneja correctamente el flujo de calentamiento y repeticiones.
+## Resultado integrado Windows · 17/11/2026
+
+Este resultado sustituye los pendientes técnicos de los registros anteriores.
+El [informe de cierre](../resultados/piloto/s07_windows_20261117_cierre/README.md)
+conserva comprobaciones cruzadas, hashes, condiciones, diferencias y reserva.
+
+| Intento | Estado | Observaciones / grupos | Duración |
+| --- | --- | --- | --- |
+| `s07_windows_20261117_piloto_02` | COMPLETE / VERIFIED | 198 OK / 33 COMPLETE | 715.7244307 s |
+| `s07_windows_20261117_reproduccion_02` | COMPLETE / VERIFIED | 198 OK / 33 COMPLETE | 715.8565236 s |
+
+Commit experimental: **`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`**.
+Los dos intentos tienen fuentes/builds limpios, mismo plan byte a byte, hashes
+de fuentes y cuatro binarios idénticos, mismas herramientas y parámetros.
+N=256/512/1024, semilla 42, W=1/2/4, 33 warmups y 165 medidas por intento;
+ninguna exclusión. La reproducción pasa toda la aceptación con `-SkipBuild`.
+Los CSV, stdout/stderr, procesos, ranks y grupos pasan el verificador.
+
+Herramientas observadas: compilador MSVC 19.44.35230.0 (toolset 14.44.35207),
+Windows SDK 10.0.26100.0, MS-MPI Runtime 10.1.12498.52, Go 1.27.4 windows/amd64
+y PowerShell 5.1.26100.9711. El SDK MPI se identifica por hashes en los manifiestos.
+
+Se conservaron todos los datos y los dos resúmenes independientes. La mediana
+del cambio absoluto relativo de medianas `total_s` entre 33 grupos es 3.6004%;
+el máximo es 28.2531% en C paralelo N=512/P2/T2. No se afirma equivalencia
+temporal exacta ni se eliminan outliers/speedups lentos. No hay sensor térmico;
+se registraron cargas de 1–80% y 1–57% y RAM libre mínima 2015820/3180024 KiB.
+Las muestras pueden incluir carga anterior y no acreditan aislamiento perfecto.
+La revisión del responsable debe aceptar expresamente estas limitaciones; no se
+atribuyen diferencias a caché, temperatura o tareas de fondo sin medición causal.
+
+### Reserva y ejecución posterior de S8
+
+El propietario autorizó elegir las horas necesarias y adaptar su uso de la PC.
+Se reserva **18/11/2026 de 09:00 a 12:00, America/Lima (UTC−5)**. El mayor piloto
+proyecta 95.4475 min de campaña, 143.1713 min con margen del 50%, más 30 min de
+preparación/revisión y redondeo a tres horas. Es una estimación inicial.
+N=2048 requiere hasta 288 MiB matriciales estimados más runtime/pilas; volver a
+comprobar memoria/carga/AC/plan y anotar ausencia de sensor antes de medir.
+Timeout inicial 300 s por corrida; máximo observado en piloto 8.5629233 s
+(proyección cúbica simple 68.5034 s, sin garantía de tiempos futuros).
+
+La copia local `.cache/s08-candidata-97ccc98` contiene el commit medido,
+fuentes byte a byte y los cuatro binarios originales. Sus manifiestos se
+validaron con el requisito `Official`, y su árbol está limpio. La documentación
+y evidencia de cierre se versionan después, sin cambiar esa candidata.
+Para S8 en esta PC, usar esa copia y comprobar HEAD/limpieza antes de medir:
+
+Desde la raíz de este repositorio:
+
+```powershell
+Set-Location .\.cache\s08-candidata-97ccc98
+git rev-parse HEAD
+git status --short
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_oficial_01 -TimeoutSeconds 300
+```
+
+El comando oficial es preparación para S8: no se ha ejecutado como parte de S7.
+Si faltan la copia/binarios en otro clon, reconstruir y repetir aceptación;
+no asumir los hashes originales. El registro humano de aceptación final está
+en `resultados/piloto/s07_windows_20261117_cierre_06/aceptacion_responsable.json`.
+
+## Revisión diferida y repetición · 17/11/2026
+
+Histórico antes de la repetición final: el responsable solicitó repetir antes
+de aceptar el cierre. Se conservan
+íntegros los lotes anteriores y sus verificaciones técnicas; no se declaran
+aceptados para cerrar S7 ni se atribuye causalmente la dispersión a una causa
+concreta.
+
+El responsable confirmó disponibilidad de la PC de 13:00 a 14:00 (Lima) y luego
+autorizó continuar tras reiniciar, manteniendo el entorno tal como estuviera.
+El intento parcial `_03` y su telemetría GPU se conservaron fuera del análisis.
+Las campañas completas usan IDs nuevos, la misma candidata/binarios y dos
+minutos entre lotes. La carga CPU se registró por corrida y la temperatura/carga
+GPU cada cinco segundos; no se exigió reposo.
+
+La GTX 1070 permite leer temperatura/carga mediante `nvidia-smi`, ya instalado;
+se probó un registrador finito cada cinco segundos con tres muestras reales.
+La interfaz ACPI consultada no entrega temperatura CPU. LibreHardwareMonitor
+0.9.6 fue descargado de su repositorio oficial y verificado por SHA-256, pero
+el responsable eligió **solo GPU**, sin instalar el controlador PawnIO.
+No se instaló ningún controlador. GPU no sustituye la temperatura del Ryzen
+ni acredita estabilidad térmica de CPU. Los registros GPU se correlacionarán
+por UTC con las mediciones y se conservarán en `monitor_externo/`.
+
+Estado operativo e historial de bloqueos: `.cache/s07_1300/estado.json` y
+`.cache/s07_1300/repeticion_06/estado.json`. El disparador programado sigue
+deshabilitado. Las campañas completas y su [informe técnico](../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+están disponibles. La aceptación humana del cierre está registrada en
+`aceptacion_responsable.json`. La reserva S8 quedó provisional para el 18/11,
+09:00–12:00 (Lima), con proyección de tres horas.
+
+El intento inmediato `_04` no ejecutó matrices por un bloqueo del preflight; se
+conservan el estado y los diagnósticos. La aceptación post-reinicio `_04`
+encontró el lock huérfano del `_03` y falló antes de medir. Se archivó tras
+comprobar que ningún proceso lo mantenía; la campaña `_05` empezó con IDs nuevos.
+
+El piloto `_05` completó 198/198 observaciones y 33 grupos `COMPLETE/VERIFIED`
+(711.317 s); la reproducción `_06` también completó 198/198 y 33 grupos
+(702.354 s). Ambas usaron el mismo commit, binarios, fuentes y plan. Las
+temperaturas GPU estuvieron entre 46 y 47 °C; CPU queda sin lectura térmica por
+decisión expresa. El cambio absoluto mediano fue 1.39% y el máximo 18.81%, sin
+filtrar observaciones. El responsable aprobó el cierre de S7.
+
+## Análisis y condición de cierre
+
+Se integró el análisis de I7 ([PR #54](https://github.com/GiulianoMaPe/MatricesParalelas/pull/54)):
+mediana, Q1=x2, Q3=x4, IQR, mínimo/máximo, speedup contra secuencial del mismo
+lenguaje, eficiencia y GFLOPS estimados. El resumen añade `campaign_id` a sus
+32 columnas; el CSV crudo conserva veinte. Cada archivo de entrada identifica
+un intento independiente; no se calcula speedup cruzando archivos. Para pipeline
+usar `-CampaignId` y suministrar una sola campaña. COMPLETE requiere exactamente
+un warmup OK y repeticiones 1..5 únicas OK. Fallos o duplicados dejan el grupo
+incompleto; NaN/Inf, esquema y parámetros incoherentes se rechazan. Ceros válidos
+no producen divisiones por cero. Los grupos fallidos quedan visibles.
+
+El cierre técnico y la revisión centralizada del responsable están completos.
+La reserva S8 sigue provisional y deberá reconfirmarse antes de la campaña; no
+forma parte de la aceptación de Sprint 7.

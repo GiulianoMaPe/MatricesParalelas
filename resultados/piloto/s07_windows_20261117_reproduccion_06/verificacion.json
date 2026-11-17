@@ -1,0 +1,11 @@
+{
+    "status":  "VERIFIED",
+    "campaign_id":  "s07_windows_20261117_reproduccion_06",
+    "verified_at_utc":  "2026-11-17T18:15:48Z",
+    "observations":  198,
+    "groups":  33,
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "native_execution_required":  "La procedencia Windows se acredita con entorno y logs; esta verificacion no ejecuta los binarios.",
+    "human_environment_review":  "Confirmar PC oficial, carga/temperatura/alimentacion y reproduccion antes de cerrar S7.",
+    "data_sha256":  "F00AF4B73642CF0B71379CD363EBA58AC9552BDE455CAD0E92AB0833EABDB486"
+}

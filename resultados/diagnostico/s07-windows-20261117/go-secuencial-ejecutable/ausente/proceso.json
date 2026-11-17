@@ -1,0 +1,26 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\tests\\outputs\\s07-i03\\99417287b20c4abcb5a95bc07415a999\\ausente.exe",
+    "arguments":  [
+                      "--n",
+                      "3"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-17T14:02:43.5170509Z",
+    "wall_s":  0.0035231999999999998,
+    "pid":  null,
+    "exit_code":  null,
+    "status":  "ERROR",
+    "detail":  "Excepción al llamar a \"Start\" con los argumentos \"0\": \"El sistema no puede encontrar el archivo especificado\"",
+    "child_environment":  {
+                              "GOMAXPROCS":  "1"
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

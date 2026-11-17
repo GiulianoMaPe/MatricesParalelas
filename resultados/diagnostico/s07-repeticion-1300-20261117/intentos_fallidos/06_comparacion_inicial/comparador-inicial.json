@@ -1,0 +1,14 @@
+{
+    "status":  "FAILED_OR_BLOCKED",
+    "started_at_utc":  "2026-11-17T18:00:28.6673704Z",
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "campaigns":  [
+                      "s07_windows_20261117_reproduccion_06"
+                  ],
+    "cpu_temperature_available":  false,
+    "gpu_sensor_available":  true,
+    "human_acceptance":  "not granted",
+    "current_campaign":  "s07_windows_20261117_reproduccion_06",
+    "reason":  "Fallo de comparacion/telemetria; revisar comparacion.log.",
+    "ended_at_utc":  "2026-11-17T18:15:51.2048009Z"
+}

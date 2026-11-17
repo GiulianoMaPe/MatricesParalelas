@@ -1,0 +1,106 @@
+{
+    "protocol_version":  "1.3",
+    "campaign_id":  "s07_windows_20261117_reproduccion_02_plan",
+    "phase":  "piloto",
+    "dry_run":  true,
+    "started_at_utc":  "2026-11-17T14:43:31Z",
+    "operator":  "giuli",
+    "hostname":  "PCG1UL14N0",
+    "git":  {
+                "dirty":  false,
+                "commit_full":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                "diff_file":  null
+            },
+    "hardware":  {
+                     "physical_cores":  6,
+                     "temperature_monitoring":  "unavailable: registrar manualmente sensor y episodios de throttling en bitacora.txt",
+                     "ram_available_at_start_bytes":  4862386176,
+                     "os_build":  "26300",
+                     "power_plan":  "Equilibrado",
+                     "os_edition":  "Microsoft Windows 11 Pro",
+                     "ram_visible_bytes":  17085501440,
+                     "logical_processors":  12,
+                     "power_source":  "AC",
+                     "cpu_model":  "AMD Ryzen 5 3600 6-Core Processor"
+                 },
+    "build":  {
+                  "goarch":  "amd64",
+                  "msmpi_sdk_version":  null,
+                  "msvc_version":  null,
+                  "msmpi_runtime_version":  null,
+                  "executable_sha256_by_version":  {
+                                                       "c_secuencial":  null,
+                                                       "c_paralelo":  null,
+                                                       "go_secuencial":  null,
+                                                       "go_paralelo":  null
+                                                   },
+                  "go_version":  null,
+                  "windows_sdk_version":  null,
+                  "target":  "x64",
+                  "goos":  "windows",
+                  "configuration":  "Release",
+                  "effective_options_by_version":  {
+                                                       "c_secuencial":  null,
+                                                       "c_paralelo":  null,
+                                                       "go_secuencial":  null,
+                                                       "go_paralelo":  null
+                                                   },
+                  "manifests":  {
+
+                                }
+              },
+    "experiment":  {
+                       "campaign_machine_time_budget_seconds":  23760,
+                       "measured_repetitions":  5,
+                       "gomaxprocs_by_configuration":  {
+                                                           "go_secuencial":  1,
+                                                           "go_paralelo_W1":  1,
+                                                           "go_paralelo_W2":  2,
+                                                           "go_paralelo_W4":  4
+                                                       },
+                       "plan_file":  "plan.csv",
+                       "matrix_sizes":  [
+                                            256,
+                                            512,
+                                            1024
+                                        ],
+                       "seed":  42,
+                       "log_file":  "bitacora.txt",
+                       "estimated_matrix_peak_bytes":  75497472,
+                       "enabled_budgets":  [
+                                               1,
+                                               2,
+                                               4
+                                           ],
+                       "warmups_per_combination":  1,
+                       "excluded_combinations_and_reasons":  [
+
+                                                             ],
+                       "observations_file":  "mediciones.csv",
+                       "omp_dynamic":  "FALSE",
+                       "timeout_per_run_seconds":  120,
+                       "ordered_configurations":  [
+                                                      "c_secuencial",
+                                                      "go_secuencial",
+                                                      "c_paralelo_P1_T1",
+                                                      "go_paralelo_W1",
+                                                      "c_paralelo_P1_T2",
+                                                      "c_paralelo_P2_T1",
+                                                      "go_paralelo_W2",
+                                                      "c_paralelo_P1_T4",
+                                                      "c_paralelo_P2_T2",
+                                                      "c_paralelo_P4_T1",
+                                                      "go_paralelo_W4"
+                                                  ],
+                       "maximum_matrix_fraction_of_available_ram":  0.5,
+                       "omp_num_threads_by_configuration":  {
+                                                                "c_paralelo_P1_T1":  1,
+                                                                "c_paralelo_P1_T2":  2,
+                                                                "c_paralelo_P2_T1":  1,
+                                                                "c_paralelo_P1_T4":  4,
+                                                                "c_paralelo_P2_T2":  2,
+                                                                "c_paralelo_P4_T1":  1
+                                                            },
+                       "order_policy":  "N ascending, protocol table order; odd rounds forward, even rounds reverse"
+                   }
+}

@@ -1,0 +1,25 @@
+PASS Cabecera CSV exacta
+PASS Parser CSV con comillas y comas
+PASS Parser acepta una fila valida
+PASS Parser acepta cpu_model con coma entre comillas
+PASS Parser rechaza linea extra
+PASS Parser rechaza campo faltante
+PASS Validador rechaza observed_threads distinto de T
+PASS Validador rechaza configuracion que no coincide
+PASS Validador rechaza is_warmup incoherente
+PASS Validador rechaza kernel_s mayor que total_s
+PASS Validador rechaza commit ajeno
+PASS Validador rechaza validation_status distinto de OK
+PASS Clasificacion de fallos
+PASS Fila de fallo sin tiempos inventados
+PASS Configuracion P x T
+PASS Configuraciones por defecto segun nucleos fisicos
+PASS Configuracion que excede nucleos fisicos se excluye
+PASS Exclusion por memoria disponible
+PASS Plan con warmup y rondas alternadas
+PASS plan.csv tiene cabecera y orden consecutivo
+PASS entorno.json se genera con los campos obligatorios
+PASS Lock impide dos campanas simultaneas
+PASS Comando MPI cita rutas con espacios
+
+OK: 23 pruebas de c_paralelo pasaron.

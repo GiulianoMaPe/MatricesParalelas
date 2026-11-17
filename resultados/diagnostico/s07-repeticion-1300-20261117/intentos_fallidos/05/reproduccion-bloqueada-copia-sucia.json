@@ -1,0 +1,15 @@
+{
+    "status":  "FAILED_OR_BLOCKED",
+    "started_at_utc":  "2026-11-17T17:40:52.8123923Z",
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "campaigns":  [
+                      "s07_windows_20261117_piloto_05",
+                      "s07_windows_20261117_reproduccion_05"
+                  ],
+    "cpu_temperature_available":  false,
+    "gpu_sensor_available":  true,
+    "human_acceptance":  "not granted",
+    "current_campaign":  "s07_windows_20261117_piloto_05",
+    "reason":  "Copia congelada modificada: ?? resultados/piloto/s07_windows_20261117_piloto_05/ ?? resultados/piloto/s07_windows_20261117_piloto_05_plan/",
+    "ended_at_utc":  "2026-11-17T17:58:32.9942522Z"
+}

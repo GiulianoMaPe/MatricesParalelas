@@ -8,7 +8,9 @@ completado; quedan cuatro conformidades personales para el cierre administrativo
 S6 conserva el algoritmo de producción y completa la aceptación Windows:
 entregas I4/I7/I8 integradas, comparativas, memoria MPI por rank y revisión.
 Consultar [acta S6](docs/sprints/sprint-06.md) y
-[evidencia Windows](docs/cierre_s06_windows.md). S7 recibe esta base para su piloto.
+[evidencia Windows](docs/cierre_s06_windows.md). S7 está cerrado con piloto y
+reproducción Windows aceptados por el responsable, 198 observaciones cada uno.
+Véase el [informe técnico S7](resultados/piloto/s07_windows_20261117_cierre_06/README.md).
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |
@@ -84,7 +86,8 @@ Go paralelo añade `--workers W`. C paralelo recibe P y T mediante
 El script `bench_windows.ps1 -Version go_secuencial` implementa la medición
 individual de S7/I3 con el ejecutable Release, calentamiento y cinco medidas.
 Los cuatro casos individuales están disponibles en módulos separados; `all`
-sigue reservado a la integración de I5 y devuelve 2 sin medir.
+ejecuta la campaña integrada en rondas alternadas. El piloto y la reproducción
+Windows están verificados (198 corridas por intento); véase [campaña S7](docs/campana.md).
 Consultar [uso, pruebas y aceptación Windows](docs/validacion_s07_i03.md).
 
 ## Organización
@@ -121,10 +124,13 @@ no vuelven a asignarse como trabajo de desarrollo ya realizado.
 Las rutas acordadas son `docs/formato_datos.md` y `docs/protocolo_medicion.md`.
 Los diagnósticos, informes y scripts que aún no existen se crearán en el sprint
 asignado. `scripts/compare_results.ps1` implementa la comparación de S3 y
-`scripts/summarize_results.ps1` corresponde a S7. `bench_windows.ps1` implementa
-el caso individual Go secuencial; falta integrar la campaña completa. El piloto
-se guardará en
-`resultados/piloto/`, separado de los datos oficiales de S8 en `resultados/raw/`.
+S7 integra `bench_windows.ps1 -Version all` y el análisis de
+`scripts/summarize_results.ps1`. Para compilar, probar y ejecutar el piloto en
+Windows PowerShell 5.1, usar `scripts/accept_sprint07_windows.ps1`; el procedimiento
+y los límites de aceptación están en [docs/campana.md](docs/campana.md).
+El piloto y su reproducción están completos y aceptados; el [informe S7](resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+registra el cierre. Los datos S7 se guardan
+en `resultados/piloto/`, separados de los datos oficiales S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes
 
@@ -137,8 +143,7 @@ la validación de resultados, el flujo de entrada/salida y las métricas integra
 C paralelo integra el particionado, la comunicación MPI y el núcleo OpenMP;
 Go paralelo integra los workers con su ejecutable. Ambos cumplen la aceptación
 funcional de S4. S5 completa la batería integral, los errores y la estabilidad.
-Las campañas
-experimentales oficiales siguen programadas para S7 y S8.
+S7 completó el piloto integrado y su reproducción; la campaña oficial corresponde a S8.
 El contrato fija salida 0 para éxito, 1 para
 errores y 2 solo para operaciones pendientes; el formato de matrices exige N en
 línea propia y N valores por fila. El protocolo distingue cálculo (`kernel_s`)

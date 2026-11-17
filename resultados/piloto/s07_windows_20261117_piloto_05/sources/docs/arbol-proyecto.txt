@@ -1,0 +1,129 @@
+MatricesParalelas/ (arbol local; contenido de .git, .cache y build omitido)
++-- .cache/ [local; contenido omitido]
++-- .git/ [local; contenido omitido]
++-- .github/
+|   +-- ISSUE_TEMPLATE/
+|   |   \-- tarea.md
+|   \-- pull_request_template.md
++-- .vscode/
+|   +-- c_cpp_properties.json
+|   +-- extensions.json
+|   +-- launch.json
+|   +-- settings.json
+|   \-- tasks.json
++-- c_paralelo/
+|   +-- build/ [local; contenido omitido]
+|   +-- include/
+|   |   +-- input.h
+|   |   +-- matrix.h
+|   |   \-- partition.h
+|   +-- src/
+|   |   +-- input.c
+|   |   +-- main.c
+|   |   +-- matrix.c
+|   |   \-- partition.c
+|   +-- tests/
+|   |   \-- pending_test.c
+|   +-- README.md
+|   \-- status.json
++-- c_secuencial/
+|   +-- build/ [local; contenido omitido]
+|   +-- include/
+|   |   +-- input.h
+|   |   +-- matrix.h
+|   |   \-- timer.h
+|   +-- src/
+|   |   +-- input.c
+|   |   +-- main.c
+|   |   +-- matrix.c
+|   |   \-- timer.c
+|   +-- tests/
+|   |   \-- pending_test.c
+|   +-- README.md
+|   \-- status.json
++-- docs/
+|   +-- entorno/
+|   |   +-- 1-yessly.md
+|   |   +-- 2-sebastian.md
+|   |   +-- 3-giuliano.md
+|   |   +-- 4-eva.md
+|   |   +-- 5-fernando.md
+|   |   +-- 6-gerardo.md
+|   |   +-- 7-andres.md
+|   |   +-- 8-roberto.md
+|   |   \-- plantilla.md
+|   +-- sprints/
+|   |   +-- README.md
+|   |   +-- sprint-01.md
+|   |   +-- sprint-02.md
+|   |   +-- sprint-03.md
+|   |   +-- sprint-04.md
+|   |   +-- sprint-05.md
+|   |   +-- sprint-06.md
+|   |   +-- sprint-07.md
+|   |   +-- sprint-08.md
+|   |   +-- sprint-09.md
+|   |   \-- sprint-10.md
+|   +-- arbol-proyecto.txt
+|   +-- contrato.md
+|   +-- formato_datos.md
+|   +-- guia-extraida.txt
+|   +-- instalacion-windows.md
+|   +-- protocolo_medicion.md
+|   \-- verificacion-inicial.md
++-- go_paralelo/
+|   +-- build/ [local; contenido omitido]
+|   +-- go.mod
+|   +-- input.go
+|   +-- input_test.go
+|   +-- main.go
+|   +-- matrix.go
+|   +-- matrix_test.go
+|   +-- README.md
+|   +-- status.json
+|   +-- workers.go
+|   \-- workers_test.go
++-- go_secuencial/
+|   +-- build/ [local; contenido omitido]
+|   +-- go.mod
+|   +-- input.go
+|   +-- input_test.go
+|   +-- main.go
+|   +-- matrix.go
+|   +-- matrix_test.go
+|   +-- README.md
+|   +-- smoke.go
+|   \-- status.json
++-- resultados/
+|   +-- graficos/
+|   |   \-- .gitkeep
+|   +-- piloto/
+|   |   \-- .gitkeep
+|   +-- raw/
+|   |   \-- .gitkeep
+|   +-- resumen/
+|   |   \-- .gitkeep
+|   \-- README.md
++-- scripts/
+|   +-- bench_windows.ps1
+|   +-- build_windows.ps1
+|   +-- check_env_windows.ps1
+|   +-- clean_windows.ps1
+|   +-- common_windows.ps1
+|   +-- run_hybrid_windows.ps1
+|   \-- test_windows.ps1
++-- tests/
+|   +-- fixtures/
+|   |   +-- cero.expected.txt
+|   |   +-- cero.input.txt
+|   |   +-- escalar.expected.txt
+|   |   +-- escalar.input.txt
+|   |   +-- identidad.expected.txt
+|   |   +-- identidad.input.txt
+|   |   +-- producto2.expected.txt
+|   |   \-- producto2.input.txt
+|   \-- README.md
++-- .gitattributes
++-- .gitignore
++-- CONTRIBUTING.md
+\-- README.md

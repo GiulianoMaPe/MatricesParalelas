@@ -1,0 +1,5 @@
+regresion-release -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\regresion-release.txt
+csv -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\csv.txt
+c-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\c-paralelo.txt
+go-secuencial -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\go-secuencial.txt
+go-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\go-paralelo.txt

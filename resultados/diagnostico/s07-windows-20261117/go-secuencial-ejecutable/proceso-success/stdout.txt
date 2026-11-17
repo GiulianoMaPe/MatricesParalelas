@@ -1,0 +1,1 @@
+GOMAXPROCS=1; valor=ruta con espacios

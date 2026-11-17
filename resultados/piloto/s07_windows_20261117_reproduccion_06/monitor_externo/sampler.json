@@ -1,0 +1,13 @@
+{
+    "started_at_utc":  "2026-11-17T18:00:46.7624503Z",
+    "ended_at_utc":  "2026-11-17T18:15:48.8319372Z",
+    "samples":  180,
+    "interval_seconds":  5,
+    "method":  "One finite nvidia-smi query per interval; raw and timestamped rows appended and flushed.",
+    "sensor":  "GPU",
+    "cpu_temperature_available":  false,
+    "cpu_reason":  "User chose GPU only; no CPU driver installed.",
+    "nvidia_smi_path":  "C:\\WINDOWS\\system32\\nvidia-smi.exe",
+    "nvidia_smi_sha256":  "1743EB3DF003071F2CA390B3392126D95CDE1CC73F2F77B98B74837057673600",
+    "script_sha256":  "E61E5BCDA6CB6F81525119008130CDC4BE704B567628FD75A18EB281A12AD2E3"
+}

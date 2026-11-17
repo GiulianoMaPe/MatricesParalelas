@@ -1,0 +1,2 @@
+OK: Go secuencial, calentamiento y cinco medidas: /mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/tests/outputs/s07-i03/6f5fd7159328481da34145256a8c4ec6/sintetico-complete
+OK: S7 I3; 75 casos; ejecutable Windows=False; evidencia: /mnt/disco-1tb/Escritorio/Proyectos/MatricesParalelas/tests/outputs/s07-i03/6f5fd7159328481da34145256a8c4ec6

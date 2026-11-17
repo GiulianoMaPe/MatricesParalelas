@@ -1,0 +1,67 @@
+{
+    "version":  "go_paralelo",
+    "configuration":  "Release",
+    "target":  "x64",
+    "commit":  "66900cd4787edd565d82444136e16b9edc6071af",
+    "dirty":  true,
+    "built_at_utc":  "2026-11-17T13:59:57.3979415Z",
+    "sha256":  "47031615DD1EF4F2E3F251A968A0B4D69E3001662BB568DF9267162FD101F904",
+    "arguments":  [
+                      "build",
+                      "-o",
+                      "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+                      "-buildvcs=true",
+                      "."
+                  ],
+    "tools":  {
+                  "go":  "go version go1.27.4 windows/amd64",
+                  "go_build_metadata":  [
+                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe: go1.27.4",
+                                            "\tpath\tmatrices/go_paralelo",
+                                            "\tmod\tmatrices/go_paralelo\t(devel)\t",
+                                            "\tbuild\t-buildmode=exe",
+                                            "\tbuild\t-compiler=gc",
+                                            "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                            "\tbuild\tCGO_ENABLED=0",
+                                            "\tbuild\tGOARCH=amd64",
+                                            "\tbuild\tGOOS=windows",
+                                            "\tbuild\tGOAMD64=v1",
+                                            "\tbuild\tvcs=git",
+                                            "\tbuild\tvcs.revision=66900cd4787edd565d82444136e16b9edc6071af",
+                                            "\tbuild\tvcs.time=2026-11-17T05:26:02Z",
+                                            "\tbuild\tvcs.modified=true"
+                                        ]
+              },
+    "source_sha256":  {
+                          "go_paralelo/README.md":  "34D37766CC5698CFF1F046AB22C1175A5E7E0454897172A2E2E1493F0541F4D5",
+                          "go_paralelo/environment.go":  "63EB371672AE19D5D7C1B3E5295C48BB0B2DA4AE916967971D5679AE3C9DEEF9",
+                          "go_paralelo/environment_other.go":  "E2F99927E17CE1829E7DB5F6ECD080DBD90D27122C96F0D23CD07A49D2A17A19",
+                          "go_paralelo/environment_windows.go":  "8243889B3F4A0AA94519483F8FE20BF5139983243AF298AFA191186B5142958F",
+                          "go_paralelo/go.mod":  "836C05C923C08FAF8687FABDD7762DC06A38E8DD02F310A83E5BBC0049AC0994",
+                          "go_paralelo/granularity_clock_other_test.go":  "CFA78C69278F1B845E92BE502D07B4AAEF0FBE587F174A4EC9B23BCB0C4570D5",
+                          "go_paralelo/granularity_clock_windows_test.go":  "48ACB7DED21A7E8B1B6CEC26523A71E33AB4994C38966D26FE8C11EFB7992828",
+                          "go_paralelo/granularity_test.go":  "43D6D8F56844F8847088F022E1FBE0B4CEA2EADBBCC573CB777BA54FAFD0EDDA",
+                          "go_paralelo/input.go":  "84C84AD6A60635C152114C2A1B5F64424609CF04C0218B38E70CBC787C24E933",
+                          "go_paralelo/input_test.go":  "0051CA62862C15E4C73CD4E3ABD27DBD0B6171FBD57F22E7DBE14842142FFDBA",
+                          "go_paralelo/main.go":  "B74F5DA14901614DFC4675D7D0646078613FC9F06BFE908AC71D7996DE835FD3",
+                          "go_paralelo/main_test.go":  "5B4D3C939A0A1710B62925FDCD54ED0E307573801E1647E7AC4C1452AD3A634E",
+                          "go_paralelo/matrix.go":  "40F59CCF3B4D1387CF457C69309CBA41BAC66FB3EDE7C27428EF12E738E9F5C5",
+                          "go_paralelo/matrix_test.go":  "E1EFC5BD7F64DF21A9C973320EDB3D6E7C5A9B6952E67D00FD9A6BE146A3A0A2",
+                          "go_paralelo/sprint06_test.go":  "A38F834B94DADC97F51118517D8F31B963ED79D7B644D5CF6304AD74E47E5CEF",
+                          "go_paralelo/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                          "go_paralelo/test_output.txt":  "A95F7435B3F178B07D389AE42D764AD0BF786148C2C963C5B0CEF386F6432CA5",
+                          "go_paralelo/workers.go":  "05AACFE085C2229D7527AE0A900E5EC1A059BF60DFE776D34FD7AF2630874BE7",
+                          "go_paralelo/workers_core_test.go":  "E116FC4A4ECDFDA8BECEBC5199E43629679AE2D1F6E678031BC2C36D4F919C57",
+                          "go_paralelo/workers_stability_test.go":  "2E00FD8B138B6157F747DE18BBCC31465C0A89CC89D8C457503D9AB5CA592144",
+                          "go_paralelo/workers_test.go":  "D2C4011AE2B38EA4A30E3F6D647D1CD39F2FD1B1F281955F718D10715604685C",
+                          "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                          "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                      },
+    "build_environment":  {
+                              "CL":  null,
+                              "_CL_":  null,
+                              "LINK":  null,
+                              "GOFLAGS":  null,
+                              "GOEXPERIMENT":  null
+                          }
+}

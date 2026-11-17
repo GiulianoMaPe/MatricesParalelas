@@ -26,20 +26,28 @@ $script:BenchInvocationLine = $MyInvocation.Line
 . "$PSScriptRoot\bench_c_secuencial.ps1"
 . "$PSScriptRoot\bench_go_paralelo.ps1"
 . "$PSScriptRoot\bench_go_secuencial.ps1"
+. "$PSScriptRoot\bench_campaign.ps1"
 
 if ($MyInvocation.InvocationName -eq '.') { return }
+$entryLock = $null
+$entryLockPath = ''
 try {
     Assert-Windows
-    $selected = if ($Version -eq 'all') { $script:Versions } else { @($Version) }
-    foreach ($item in $selected) {
-        $status = Get-Content -LiteralPath (Join-Path $script:ProjectRoot "$item\status.json") -Raw | ConvertFrom-Json
-        if ($status.algorithm -ne 'implemented' -or $status.validation -ne 'passed') {
-            [Console]::Error.WriteLine("$item : algoritmo/validacion pendientes.")
-            exit 2
-        }
-    }
+    if ($Configuration -ne 'Release') { throw 'La medicion exige Release.' }
     if ($Version -eq 'all') {
-        [Console]::Error.WriteLine('Los cuatro casos estan disponibles por separado. La campana intercalada all requiere integracion I5; no se crearon mediciones.')
+        if ($Repetitions -ne 5 -or $Warmups -ne 1) { throw 'Campana integrada exige un calentamiento y cinco rondas.' }
+        foreach ($unsupported in @('OutputDirectory','Processes','Threads','Workers','ForceUnlock')) {
+            if ($PSBoundParameters.ContainsKey($unsupported)) { throw "$unsupported no aplica a all; use Configurations/GoWorkers/OutputRoot." }
+        }
+        $sizes = if ($NList.Count) { @($NList | ForEach-Object { $_ -split ',' } | ForEach-Object { [int]$_ }) }
+                 elseif ($PSBoundParameters.ContainsKey('N')) { @($N) }
+                 elseif ($Fase -eq 'piloto') { @(256,512,1024) } else { @(512,1024,2048) }
+        Invoke-IntegratedCampaign -Sizes $sizes -Seed $Seed -RequestedC $Configurations -RequestedGo $GoWorkers -Phase $Fase -OutputRoot $OutputRoot -CampaignId $CampaignId -TimeoutSeconds $TimeoutSeconds -DryRun:$DryRun
+        exit 0
+    }
+    $status = Get-Content -LiteralPath (Join-Path $script:ProjectRoot "$Version\status.json") -Raw | ConvertFrom-Json
+    if ($status.algorithm -ne 'implemented' -or $status.validation -ne 'passed') {
+        [Console]::Error.WriteLine("$Version : algoritmo/validacion pendientes.")
         exit 2
     }
     if ($Configuration -ne 'Release') { throw 'La medicion exige Release.' }
@@ -61,6 +69,11 @@ try {
     if ($DryRun -or $ForceUnlock -or $FailFast -or $NList.Count -gt 0 -or $Configurations.Count -gt 0 -or $OutputRoot -or $CampaignId) {
         throw 'NList/Configurations/OutputRoot/CampaignId/DryRun/FailFast/ForceUnlock pertenecen al caso c_paralelo.'
     }
+    if ($Version -in @('c_secuencial','go_secuencial')) {
+        $entryLockPath = Join-Path $script:ProjectRoot '.cache/bench.lock'
+        $entryLock = Enter-GoParaleloLock -LockPath $entryLockPath -CampaignId ([guid]::NewGuid().ToString('N'))
+        Assert-NoConcurrentMeasurement
+    }
     if ($Version -eq 'go_secuencial') {
         if ($Repetitions -ne 5 -or $Warmups -ne 1) { throw 'Go secuencial exige un calentamiento y cinco repeticiones.' }
         Invoke-GoSequentialBenchmark -N $N -Seed $Seed -TimeoutSeconds $TimeoutSeconds -OutputDirectory $OutputDirectory
@@ -80,4 +93,6 @@ try {
 } catch {
     [Console]::Error.WriteLine($_.Exception.Message)
     exit 1
+} finally {
+    if ($null -ne $entryLock) { Exit-GoParaleloLock -Stream $entryLock -LockPath $entryLockPath }
 }

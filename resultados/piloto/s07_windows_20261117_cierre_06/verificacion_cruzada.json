@@ -1,0 +1,104 @@
+{
+  "recorded_at_utc": "2026-11-17T19:03:42.618153+00:00",
+  "campaigns": [
+    "s07_windows_20261117_piloto_05",
+    "s07_windows_20261117_reproduccion_06"
+  ],
+  "commit": "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+  "checks": {
+    "same_commit": true,
+    "clean_sources_except_generated_plan_dirs": true,
+    "clean_builds": true,
+    "same_binaries": true,
+    "same_sources": true,
+    "same_plan_bytes": true,
+    "same_experiment": true,
+    "same_hardware_and_power": true,
+    "complete_198_each": true,
+    "verified_33_groups_each": true,
+    "all_groups_complete": true,
+    "three_sizes_all_versions": true,
+    "gpu_samples_during_each_measurement": true
+  },
+  "git_status_explanation": "Both environment snapshots marked the worktree dirty only because the campaign plan directory had just been generated as an untracked experiment output. git_status.txt shows no other entry and diff_codigo.patch is empty. Source hashes and clean build manifests match across attempts.",
+  "executable_sha256": {
+    "c_secuencial": "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+    "c_paralelo": "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+    "go_secuencial": "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+    "go_paralelo": "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A"
+  },
+  "data_sha256": {
+    "s07_windows_20261117_piloto_05": "41b73af7c0bbadbbfa6b8b720abbd9e58de5846ab394b5a4aaedb3e378c1bf38",
+    "s07_windows_20261117_reproduccion_06": "f00af4b73642cf0b71379cd363eba58ac9552bde455cad0e92ab0833eabdb486"
+  },
+  "pilot_wall_seconds": 711.3173401,
+  "reproduction_wall_seconds": 702.3539789,
+  "estimates": [
+    {
+      "pilot_wall_seconds": 711.3173401,
+      "official_machine_seconds_estimate": 5690.5387208,
+      "suggested_reservation_seconds": 8535.8080812,
+      "assumption": "Escalado cubico al duplicar N, misma tabla. Estimacion inicial, no medicion S8 ni reserva de calendario.",
+      "pending": "Reproduction completed; before S8, recheck memory and machine availability. This projection is not an S8 measurement."
+    },
+    {
+      "pilot_wall_seconds": 702.3539789,
+      "official_machine_seconds_estimate": 5618.8318312,
+      "suggested_reservation_seconds": 8428.2477468,
+      "assumption": "Escalado cubico al duplicar N, misma tabla. Estimacion inicial, no medicion S8 ni reserva de calendario.",
+      "pending": "Reproduction completed; before S8, recheck memory and machine availability. This projection is not an S8 measurement."
+    }
+  ],
+  "s8_matrix_footprint_estimate_bytes": 301989888,
+  "s8_matrix_footprint_estimate_mib": 288,
+  "s8_footprint_excludes_runtime_and_stacks": true,
+  "conditions": [
+    {
+      "campaign_id": "s07_windows_20261117_piloto_05",
+      "load_samples": 198,
+      "cpu_load_percent_min": 5.0,
+      "cpu_load_percent_max": 40.0,
+      "minimum_free_memory_kib": 10571092,
+      "temperature_sensor": "GPU monitored; CPU unavailable",
+      "workload_mode": "as-run",
+      "idle_heuristic_enforced": false,
+      "maximum_process_wall_seconds": 7.953655299999999,
+      "interpretation": "Samples precede each run and may include prior benchmark load; no idle claim or CPU thermal measurement."
+    },
+    {
+      "campaign_id": "s07_windows_20261117_reproduccion_06",
+      "load_samples": 198,
+      "cpu_load_percent_min": 2.0,
+      "cpu_load_percent_max": 37.0,
+      "minimum_free_memory_kib": 10395056,
+      "temperature_sensor": "GPU monitored; CPU unavailable",
+      "workload_mode": "as-run",
+      "idle_heuristic_enforced": false,
+      "maximum_process_wall_seconds": 7.0886925,
+      "interpretation": "Samples precede each run and may include prior benchmark load; no idle claim or CPU thermal measurement."
+    }
+  ],
+  "median_absolute_relative_change_percent": 1.3933985844098322,
+  "maximum_absolute_relative_change_percent": 18.8116603043974,
+  "human_acceptance_file": "aceptacion_responsable.json",
+  "s8_reservation_file": "reserva_maquina.json",
+  "caveat": "No cross-attempt pooling, outlier deletion, thermal stability claim, or arbitrary performance equivalence threshold.",
+  "gpu_monitoring": [
+    {
+      "campaign_id": "s07_windows_20261117_piloto_05",
+      "gpu_samples_during_measurement": 142,
+      "gpu_temperature_c_min": 46.0,
+      "gpu_temperature_c_max": 47.0,
+      "cpu_temperature_available": false,
+      "cpu_reason": "User chose GPU only; no CPU driver installed."
+    },
+    {
+      "campaign_id": "s07_windows_20261117_reproduccion_06",
+      "gpu_samples_during_measurement": 141,
+      "gpu_temperature_c_min": 46.0,
+      "gpu_temperature_c_max": 47.0,
+      "cpu_temperature_available": false,
+      "cpu_reason": "User chose GPU only; no CPU driver installed."
+    }
+  ]
+}

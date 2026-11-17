@@ -1,0 +1,11 @@
+{
+    "status":  "VERIFIED",
+    "campaign_id":  "s07_windows_20261117_piloto_02",
+    "verified_at_utc":  "2026-11-17T14:38:17Z",
+    "observations":  198,
+    "groups":  33,
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "native_execution_required":  "La procedencia Windows se acredita con entorno y logs; esta verificacion no ejecuta los binarios.",
+    "human_environment_review":  "Confirmar PC oficial, carga/temperatura/alimentacion y reproduccion antes de cerrar S7.",
+    "data_sha256":  "72CA92BB6C8F1E56E944AFCA70A07CECAB752A5134F93E442240F5751A31DCE0"
+}

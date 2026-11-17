@@ -1,0 +1,25 @@
+{
+  "status": "DEFERRED_FOR_IDLE_REPEAT",
+  "reviewer": "Project responsible, user of this session (Windows account giuli)",
+  "technical_review": "Codex",
+  "centralized_review": false,
+  "temperature_sensor_available": false,
+  "hours_per_member_declared_by_responsible": 8,
+  "team_members": 8,
+  "no_new_independent_reviews_attributed": true,
+  "commit": "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+  "campaigns": [
+    "s07_windows_20261117_piloto_02",
+    "s07_windows_20261117_reproduccion_02"
+  ],
+  "human_acceptance": false,
+  "reason": "User reports current Zoom/browser use and requests a dedicated-PC repeat before approval; no causal attribution to a specific app.",
+  "recorded_at_utc": "2026-11-17T15:39:03.507654+00:00",
+  "repeat_window": {
+    "start": "2026-11-17T13:00:00-05:00",
+    "end": "2026-11-17T14:00:00-05:00"
+  },
+  "repeat_gpu_monitoring": true,
+  "repeat_cpu_temperature_available": false,
+  "user_choice": "GPU only; do not install CPU monitoring driver."
+}

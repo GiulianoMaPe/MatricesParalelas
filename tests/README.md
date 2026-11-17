@@ -140,3 +140,57 @@ no sobreescribe intentos ni modifica los programas de campaña.
 Los resultados Linux no certifican MSVC/MS-MPI ni la campaña Windows. Para
 cerrar S6 deben repetirse la batería común Windows en Debug/Release, P/T y
 los picos de memoria por rank según [el acta](../docs/sprints/sprint-06.md).
+
+## Sprint 7 · I7: agregación estadística y validación de speedup
+
+`tests/summarize_results_test.ps1` valida de forma automatizada e independiente
+el script de agregación y análisis [`scripts/summarize_results.ps1`](../scripts/summarize_results.ps1).
+Ejecuta 43 pruebas contra el fixture manual de control [`tests/fixtures/control_mediciones.csv`](fixtures/control_mediciones.csv):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\summarize_results_test.ps1
+```
+
+Comprueba:
+1. Rechazo de esquemas CSV no conformes con el contrato (§4) y emisión de cabecera de 32 columnas (incluye campaign_id).
+2. Descarte estricto de precalentamiento (`is_warmup=true`) y filas con estado diferente de `OK`.
+3. Cálculo exacto de estadísticas no paramétricas: mediana, $Q_1$, $Q_3$, IQR, mínimo y máximo.
+4. Cálculo de Speedup ($S$) referenciado a la línea base secuencial del mismo lenguaje, nodo, commit y semilla.
+5. Cálculo de Eficiencia Paralela ($E$) respecto al número nominal de trabajadores ($P \times T$ o $W$).
+6. Omisión de Speedup (campo vacío) si el grupo está incompleto ($< 5$ repeticiones válidas) o si falta la referencia secuencial.
+7. Cálculo de rendimiento aritmético estimado (GFLOPS) para kernel y total.
+8. Compatibilidad con entrada vía `-InputPath`, tubería (`Get-Content ... | .\summarize_results.ps1`) y exportación a archivo en UTF-8 sin BOM.
+
+
+## Integración de campaña S7 · 17/11/2026
+
+Se preservan las pruebas de I2/I3/I4/I5/I7. La aceptación nativa se ejecuta con:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\accept_sprint07_windows.ps1 -CampaignId s07_piloto_01
+```
+
+Pruebas adicionales ejecutables en PowerShell 5.1/7:
+
+- `tests/bench_campaign_test.ps1`: tabla CPU/memoria, rondas alternadas, lock,
+  cuatro versiones mediante procesos controlados, fallos parciales y diagnósticos
+  MPI por rank, preparación de campaña y verificación contra plan/logs.
+- `tests/bench_build_manifest_test.ps1`: coherencia de cuatro builds, commit,
+  hash, fuentes/inventario, Release, árbol sucio y Go instrumentado.
+- `tests/summarize_integrity_test.ps1`: separación de archivos/campañas,
+  duplicados, warmup, fallos, NaN/Inf, cero temporal y CSV mal formado.
+- `tests/bench_csv_validation_test.ps1`: conserva los cuatro casos de I5,
+  cargando el validador desde el módulo extraído de C secuencial.
+- `tests/accept_sprint07_windows_test.ps1`: 12 comprobaciones del aceptador en
+  PowerShell 5.1, con scripts controlados: build único, reproducción sin build,
+  preservación del ID/logs, rechazo de binarios modificados durante las pruebas
+  y conservación de stdout/stderr con el código de fallo real.
+
+`scripts/test_windows.ps1 -SkipBuild` ejecuta la regresión contra los binarios
+existentes. El aceptador lo utiliza en ambos intentos para no recompilar durante
+las pruebas; comprueba además los manifiestos/fuentes/hashes antes y después.
+
+Los procesos y archivos controlados de las pruebas no son observaciones de
+rendimiento. La batería original de I4 usa `.cmd` y debe ejecutarse en Windows;
+no se considera aprobada por una ejecución Linux. Los resultados y limitaciones
+vigentes se registran en [Sprint 7](../docs/sprints/sprint-07.md).

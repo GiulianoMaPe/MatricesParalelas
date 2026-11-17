@@ -33,7 +33,7 @@ e I2 en S10. Cada issue debe tener objetivo, entregable y criterio de aceptació
 | 4 | MPI/OpenMP y workers Go correctos |
 | 5 | Validación integral y manejo de errores |
 | 6 | Optimización con evidencia y estabilidad |
-| 7 | Mediciones automatizadas y piloto validado |
+| 7 | Cerrado el 17/11/2026; piloto y reproducción aceptados por el responsable |
 | 8 | Campaña oficial con datos completos |
 | 9 | Análisis, gráficos e informe |
 | 10 | Reproducción y entrega |
@@ -89,3 +89,11 @@ este cierre fue encargada expresamente a Codex por el responsable como excepció
 al flujo de revisión humana. El [acta S6](sprint-06.md) enlaza corridas originales,
 comparativas, memoria por rank, regresión, decisiones y horas realmente declaradas.
 La fijación del algoritmo no sustituye el piloto ni la congelación experimental S7.
+
+
+Al 17/11/2026, S7 quedó cerrado con aceptación del responsable. Dispone de
+integración técnica, cuatro casos, campaña alternada, análisis y verificación.
+Los dos lotes finales nativos Windows registraron 198 observaciones OK y 33
+grupos completos cada uno, con la misma candidata limpia
+`97ccc981e9068d8ec0753cd8a4b7572a6bece34d` y binarios. La reserva de S8 es
+provisional para el 18/11/2026, 09:00–12:00 (Lima). Véase [acta S7](sprint-07.md).

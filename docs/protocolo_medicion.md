@@ -16,10 +16,11 @@ Este documento establece el **Protocolo de Medición Versión Inicial** del proy
 
 > [!IMPORTANT]
 > Las cuatro versiones implementan el producto y su validación desde S3–S5.
-> En S7/I3, `bench_windows.ps1 -Version go_secuencial` implementa la medición
-> individual ([estado y validación](validacion_s07_i03.md)). Los cuatro casos
-> individuales están disponibles; `all` sigue pendiente de integración I5 y
-> devuelve 2 sin medir. Cambiar estados JSON no habilita la campaña integrada.
+> S7 dispone de los cuatro casos individuales y de la campaña integrada
+> `bench_windows.ps1 -Version all`, con rondas alternadas, metadatos y logs.
+> La integración se verificó con procesos controlados y completó piloto y
+> reproducción nativos Windows: 198 corridas por intento y misma candidata
+> limpia, con condiciones y límites en [campaña](campana.md).
 > Los errores de programas se convierten
 > a 1 y el éxito validado a 0. Los smoke tests solo prueban instalación.
 > Los ensayos Linux de S6 se guardan en `resultados/diagnostico/` y no constituyen

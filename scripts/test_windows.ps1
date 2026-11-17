@@ -1,6 +1,7 @@
 ﻿param(
     [ValidateSet('all','c_secuencial','c_paralelo','go_secuencial','go_paralelo')][string]$Version = 'all',
-    [ValidateSet('Debug','Release')][string]$Configuration = 'Debug'
+    [ValidateSet('Debug','Release')][string]$Configuration = 'Debug',
+    [switch]$SkipBuild
 )
 . "$PSScriptRoot\common_windows.ps1"
 Assert-Windows
@@ -107,10 +108,13 @@ function Get-HybridCsv {
 
 foreach ($item in $selected) {
     try {
-        Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\build_windows.ps1",'-Version',$item,'-Configuration',$Configuration,'-Tests')
+        if (-not $SkipBuild) {
+            Invoke-Native powershell.exe @('-NoProfile','-ExecutionPolicy','Bypass','-File',"$PSScriptRoot\build_windows.ps1",'-Version',$item,'-Configuration',$Configuration,'-Tests')
+        }
         $module = Join-Path $script:ProjectRoot $item
         $build = Join-Path $module "build\$Configuration"
         $exe = Join-Path $build "$item.exe"
+        if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Falta $exe; compile antes de usar -SkipBuild." }
         if ($item.StartsWith('go_')) {
             $go = Initialize-Go
             Push-Location $module
