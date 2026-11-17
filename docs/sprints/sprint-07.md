@@ -1,6 +1,10 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: los dos lotes nativos `_02` están completos y verificados, pero el responsable difiere su aceptación y solicita repetir tras reiniciar la PC, con sensor GPU y CPU sin lectura térmica. S7 sigue abierto y la reserva S8 es provisional. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
+**Estado: CERRADO · 17/11/2026.** El responsable revisó y aceptó las campañas `_piloto_05` y `_reproduccion_06`, sus resultados y las limitaciones térmicas. Este registro final sustituye los estados históricos anteriores. La reserva de S8 sigue como planificación provisional.
+
+Las notas de cada entrega conservan estados registrados antes de la campaña final.
+La aceptación agregada de este cierre cubre S7; no inventa revisiones personales
+que no estén registradas por sus autores.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -206,8 +210,8 @@ timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,se
   42 observaciones válidas repartidas en siete lotes completos. No se repitieron
   aquí los ejecutables Windows; el código de los medidores se conserva sin cambios.
 - [Sebastián aprobó el PR #49](https://github.com/GiulianoMaPe/MatricesParalelas/pull/49#pullrequestreview-5882691934).
-  Giuliano autorizó resolver los conflictos y fusionarlo a `main`. La coordinación
-  con I5 y la campaña integrada siguen pendientes; no se declara cerrado S7.
+  Giuliano autorizó resolver los conflictos y fusionarlo a `main`. En ese registro
+  previo a la campaña integrada, la coordinación con I5 seguía pendiente.
 
 ### I8 · Roberto · 16/11/2026
 
@@ -440,8 +444,8 @@ No se ejecutaron MSVC, MS-MPI, PowerShell 5.1 ni nuevos binarios Windows.
    conservando la distinción entre lo declarado y lo realmente verificado.
 
 El procedimiento y criterios actuales están en [docs/campana.md](../campana.md).
-S7 permanece abierto hasta acreditar estos puntos; el dry-run y los datos previos
-no se reclasifican como piloto completo.
+Nota histórica previa a la repetición final: S7 permanecía abierto hasta acreditar
+estos puntos; el dry-run y los datos previos no se reclasifican como piloto completo.
 
 ## Aceptación nativa Windows · 17/11/2026
 
@@ -515,11 +519,10 @@ Las correcciones de aceptación están en el árbol de trabajo y requieren una
 nueva candidata limpia, reconstrucción y ambos intentos completos. Ese HEAD no
 se declara congelación final de las correcciones ni de S8.
 
-Pendientes efectivos: desbloquear la ejecución; fijar candidata limpia; piloto
-integrado de 198 corridas; reproducción con iguales binarios y parámetros;
-revisión del responsable sobre CSV/logs/condiciones y limitación térmica;
-estimación y franja concreta de máquina S8; acta de congelación y aceptación final.
-No se declara cerrado S7 con pruebas parciales o datos de planificación.
+Estado histórico al inicio del 17/11/2026, previo a la repetición final:
+desbloquear ejecución, fijar candidata limpia, ejecutar piloto y reproducción,
+revisar CSV/logs/condiciones, y completar acta y aceptación. Estos puntos se
+resolvieron según el registro final de cierre más abajo.
 
 ### Desbloqueo confirmado · 17/11/2026
 
@@ -530,7 +533,7 @@ una excepción por binario. Se conservan los fallos anteriores y se prepara una
 nueva candidata limpia para `s07_windows_20261117_piloto_02` y
 `s07_windows_20261117_reproduccion_02`, sin recompilar entre ambos intentos.
 
-## Resultado técnico y propuesta de cierre · 17/11/2026
+## Resultado técnico y cierre · 17/11/2026
 
 Se completaron en la PC oficial los dos intentos sobre
 **`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`**:
@@ -552,13 +555,9 @@ plan byte a byte, herramientas y parámetros. Ambos árboles/builds están limpi
 Los verificadores cotejan plan/CSV/stdout/procesos/ranks y 33 grupos COMPLETE.
 Se conservan datos originales y resúmenes separados, sin eliminar outliers.
 
-El [informe concreto de cierre](../../resultados/piloto/s07_windows_20261117_cierre/README.md)
-recoge las doce comprobaciones cruzadas y la comparación: mediana de cambios
-absolutos relativos de medianas `total_s` 3.6004%, máximo 28.2531% en C paralelo
-N=512/P2/T2. Carga observada 1–80%/1–57%, RAM libre mínima 2015820/3180024 KiB,
-AC y plan Equilibrado. No hay sensor térmico ni inferencia causal de esas
-variaciones. La aceptación del procedimiento no certifica igualdad de tiempos,
-estabilidad térmica medida o aislamiento perfecto de carga.
+El [informe técnico final](../../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+recoge las 13 comprobaciones cruzadas y la comparación de los lotes finales.
+El análisis conserva cada conjunto por separado y no filtra observaciones.
 
 El responsable confirma PC oficial, que se hará cargo de la revisión y 8 h declaradas por
 integrante (64 h de equipo); no se atribuyen nuevas revisiones independientes
@@ -572,41 +571,46 @@ Se preparó y verificó la copia limpia `.cache/s08-candidata-97ccc98` con fuent
 y binarios originales. Permite documentar el cierre sin mover el commit medido.
 La campaña oficial S8 sigue separada y no se ejecutó anticipadamente.
 
-Pendiente únicamente la conformidad final del responsable sobre esta propuesta,
-incluida revisión centralizada y limitaciones de entorno. Su registro será
-`resultados/piloto/s07_windows_20261117_cierre/aceptacion_responsable.json`.
+La limitación térmica de CPU y la variación observada se incluyeron en la
+revisión centralizada. El responsable confirmó el cierre; queda registrado en
+`resultados/piloto/s07_windows_20261117_cierre_06/aceptacion_responsable.json`.
 
 ### Aceptación diferida por el responsable · 17/11/2026
 
-El responsable informa uso actual de Zoom y Google/navegador y solicita repetir
-antes de aprobar. Los 396 registros `_02` y sus diferencias quedan intactos;
-su verificación técnica no se convierte en conformidad humana ni se atribuye
-una causa demostrada a su dispersión. Un intento adelantado con IDs `_03` se
-detuvo y conservó como parcial al reaparecer Zoom durante el piloto. Los nuevos
-IDs `_piloto_05` / `_reproduccion_06` usan las mismas fuentes/binarios y dos
-minutos entre lotes. El responsable pidió reiniciar, abrir solo
-Visual Studio y trabajar con las demás aplicaciones que queden activas, sin
-cerrarlas. Se guardará una instantánea de ventanas durante el inicio, se
-vigilará la presencia de Zoom/navegadores cada cinco segundos y se conservarán
-las cargas CPU por corrida, sin exigir reposo ni atribuir a otras aplicaciones
-las diferencias de tiempo.
+El responsable solicitó repetir antes de aprobar. Los 396 registros `_02` y sus
+diferencias quedan intactos; su verificación técnica no se convierte en
+conformidad humana ni se atribuye una causa demostrada a su dispersión. Un
+intento adelantado con IDs `_03` se conservó como parcial. Los nuevos IDs
+`_piloto_05` / `_reproduccion_06` usan las mismas fuentes/binarios y dos minutos
+entre lotes. El responsable autorizó continuar tras reiniciar con el entorno
+disponible. Se conservaron cargas CPU por corrida y lecturas GPU cada cinco
+segundos, sin exigir reposo.
 
-El intento inmediato `_04` tampoco alcanzó a ejecutar matrices: el preflight
-detectó procesos de Edge en segundo plano (`--no-startup-window`), con carga
-media de CPU de 5.4%. Después, el responsable autorizó continuar tras reiniciar
-y dejar las demás aplicaciones activas. La aceptación post-reinicio `_04` falló
+El intento inmediato `_04` tampoco alcanzó a ejecutar matrices: el preflight se
+bloqueó con carga media de CPU de 5.4%. La aceptación post-reinicio `_04` falló
 antes de medir por el lock huérfano del `_03`; se archivó al comprobar que
 ningún proceso lo mantenía. El piloto `_05` y la reproducción `_06` completaron
-198/198 y 33 grupos `COMPLETE/VERIFIED`, en 711.317 s y 702.354 s. Se observó
-Zoom en una muestra de supervisión de la reproducción; no se cerró ninguna app
-ni se atribuyen a ella las variaciones.
+198/198 y 33 grupos `COMPLETE/VERIFIED`, en 711.317 s y 702.354 s.
 
-Se verificó lectura real GPU de la GTX 1070 con `nvidia-smi`, incluyendo tres
-muestras cada cinco segundos. ACPI no proporciona lectura CPU en esta PC.
-El responsable elige medir solo GPU y documentar CPU sin lectura; no se instala
-PawnIO ni otro controlador. La temperatura GPU no acredita la de CPU.
-El [informe y la comparación](../../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
-están disponibles. Las temperaturas GPU
-observadas fueron 46–47 °C; no hay lectura térmica CPU. La variación absoluta
-mediana fue 1.39%, máximo 18.81%, sin filtrar datos. S7 espera revisión y
-conformidad final del responsable. Véase el [acta](../campana.md).
+Se verificó lectura GPU durante ambas campañas. La CPU quedó sin lectura
+térmica, de acuerdo con la elección del responsable; no se instaló PawnIO ni
+otro controlador. El [informe y la comparación](../../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+y el [acta de campaña](../campana.md) registran resultados y límites. La
+aceptación quedó registrada; el cierre documental no cambia la candidata medida.
+
+| Resultado final | Piloto `_05` | Reproducción `_06` |
+| --- | ---: | ---: |
+| Observaciones OK | 198/198 | 198/198 |
+| Grupos completos | 33/33 | 33/33 |
+| Duración | 711.317 s | 702.354 s |
+| Carga CPU observada | 5–40% | 2–37% |
+| Temperatura GPU | 46–47 °C | 46–47 °C |
+| Temperatura CPU | Sin lectura | Sin lectura |
+
+| Comparación | Resultado |
+| --- | --- |
+| Comprobaciones cruzadas | 13/13 correctas |
+| Cambio absoluto mediano entre medianas | 1.39% |
+| Cambio absoluto máximo | 18.81%, disminución en C paralelo, N=256, P4/T1 |
+| Filtrado de observaciones | Ninguno |
+| Reserva S8 | 18/11/2026, 09:00–12:00 (Lima), provisional |

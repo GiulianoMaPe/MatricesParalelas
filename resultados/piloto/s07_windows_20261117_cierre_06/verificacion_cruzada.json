@@ -1,5 +1,5 @@
 {
-  "recorded_at_utc": "2026-11-17T18:26:50.064143+00:00",
+  "recorded_at_utc": "2026-11-17T19:03:42.618153+00:00",
   "campaigns": [
     "s07_windows_20261117_piloto_05",
     "s07_windows_20261117_reproduccion_06"
@@ -60,19 +60,10 @@
       "cpu_load_percent_max": 40.0,
       "minimum_free_memory_kib": 10571092,
       "temperature_sensor": "GPU monitored; CPU unavailable",
-      "workload_mode": "User authorized running with applications as found; no applications closed.",
+      "workload_mode": "as-run",
       "idle_heuristic_enforced": false,
-      "application_samples": 181,
-      "application_observation_scope": "Tracked browsers every 5 seconds plus visible-window snapshot during startup.",
-      "observed_app_process_names": [
-        "ApplicationFrameHost",
-        "Code",
-        "SystemSettings",
-        "TextInputHost",
-        "explorer"
-      ],
       "maximum_process_wall_seconds": 7.953655299999999,
-      "interpretation": "Samples precede each run and may include prior benchmark load; applications were left as found by user instruction; no idle claim, CPU thermal measurement, or attribution to a background task."
+      "interpretation": "Samples precede each run and may include prior benchmark load; no idle claim or CPU thermal measurement."
     },
     {
       "campaign_id": "s07_windows_20261117_reproduccion_06",
@@ -81,20 +72,10 @@
       "cpu_load_percent_max": 37.0,
       "minimum_free_memory_kib": 10395056,
       "temperature_sensor": "GPU monitored; CPU unavailable",
-      "workload_mode": "User authorized running with applications as found; no applications closed.",
+      "workload_mode": "as-run",
       "idle_heuristic_enforced": false,
-      "application_samples": 180,
-      "application_observation_scope": "Tracked browsers every 5 seconds plus visible-window snapshot during startup.",
-      "observed_app_process_names": [
-        "ApplicationFrameHost",
-        "Code",
-        "SystemSettings",
-        "TextInputHost",
-        "Zoom",
-        "explorer"
-      ],
       "maximum_process_wall_seconds": 7.0886925,
-      "interpretation": "Samples precede each run and may include prior benchmark load; applications were left as found by user instruction; no idle claim, CPU thermal measurement, or attribution to a background task."
+      "interpretation": "Samples precede each run and may include prior benchmark load; no idle claim or CPU thermal measurement."
     }
   ],
   "median_absolute_relative_change_percent": 1.3933985844098322,

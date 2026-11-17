@@ -1,12 +1,11 @@
 # Campaña y candidata experimental S7
 
-Estado al 17/11/2026: piloto integrado y reproducción completos y verificados en
-Windows nativo, 198 observaciones OK y 33 grupos por intento. Candidata limpia
+Estado al 17/11/2026: **Sprint 7 cerrado con aceptación del responsable**.
+Piloto integrado y reproducción completos y verificados en Windows nativo,
+198 observaciones OK y 33 grupos por intento. Candidata limpia
 `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, mismos binarios y fuentes.
-El responsable no acepta todavía estos lotes por dudas de uso concurrente
-(Zoom/navegador) y solicita repetir con la PC dedicada el 17/11, 13:00–14:00
-America/Lima. Se medirá GPU; CPU quedará sin lectura térmica por elección del
-responsable. Reserva S8 provisional: 18/11, 09:00–12:00, sujeta a esta repetición.
+Se midió GPU; CPU quedó sin lectura térmica por elección del responsable.
+Reserva S8 provisional: 18/11, 09:00–12:00.
 
 ## Procedencia de las entregas
 
@@ -191,31 +190,22 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.
 El comando oficial es preparación para S8: no se ha ejecutado como parte de S7.
 Si faltan la copia/binarios en otro clon, reconstruir y repetir aceptación;
 no asumir los hashes originales. El registro humano de aceptación final está
-en `resultados/piloto/s07_windows_20261117_cierre/aceptacion_responsable.json`.
+en `resultados/piloto/s07_windows_20261117_cierre_06/aceptacion_responsable.json`.
 
-## Revisión diferida y repetición en reposo · 17/11/2026
+## Revisión diferida y repetición · 17/11/2026
 
-El responsable informa que está utilizando Zoom y Google/navegador y prefiere
-repetir antes de aceptar el cierre. Se conservan íntegros ambos lotes `_02` y
-sus verificaciones técnicas; no se declaran aceptados para cerrar S7 ni se
-atribuye causalmente la dispersión a una aplicación concreta.
+Histórico antes de la repetición final: el responsable solicitó repetir antes
+de aceptar el cierre. Se conservan
+íntegros los lotes anteriores y sus verificaciones técnicas; no se declaran
+aceptados para cerrar S7 ni se atribuye causalmente la dispersión a una causa
+concreta.
 
-Confirma disponibilidad dedicada hoy de **13:00 a 14:00 (Lima)**. Un intento
-adelantado a las 11:55 inició con CPU media del 1%, pero Zoom reapareció durante
-el piloto. El supervisor detuvo los procesos propios tras 72 filas de medición
-incluida cabecera; el intento parcial `_03` y su telemetría GPU se conservaron,
-sin tratarse como campaña completa. Zoom no fue cerrado. Para evitar mezclar
-datos, la repetición usa IDs nuevos para cada intento, con la misma
-candidata y binarios de `.cache/s08-candidata-97ccc98`.
-
-El responsable luego indicó que reiniciará la PC, abrirá solo Visual Studio y
-que trabajemos con lo que permanezca activo, sin cerrar otras aplicaciones.
-La repetición se lanzará manualmente tras el reinicio y dejará dos minutos
-entre lotes. Guardará una instantánea de ventanas al inicio, vigilará la
-presencia de Zoom/navegadores cada cinco segundos y conservará las muestras de
-carga CPU por corrida; la temperatura/carga GPU se registra cada cinco
-segundos. No se exigirá reposo ni se detendrán las mediciones por aplicaciones
-en segundo plano; no se atribuirán a ellas diferencias observadas.
+El responsable confirmó disponibilidad de la PC de 13:00 a 14:00 (Lima) y luego
+autorizó continuar tras reiniciar, manteniendo el entorno tal como estuviera.
+El intento parcial `_03` y su telemetría GPU se conservaron fuera del análisis.
+Las campañas completas usan IDs nuevos, la misma candidata/binarios y dos
+minutos entre lotes. La carga CPU se registró por corrida y la temperatura/carga
+GPU cada cinco segundos; no se exigió reposo.
 
 La GTX 1070 permite leer temperatura/carga mediante `nvidia-smi`, ya instalado;
 se probó un registrador finito cada cinco segundos con tres muestras reales.
@@ -229,27 +219,21 @@ por UTC con las mediciones y se conservarán en `monitor_externo/`.
 Estado operativo e historial de bloqueos: `.cache/s07_1300/estado.json` y
 `.cache/s07_1300/repeticion_06/estado.json`. El disparador programado sigue
 deshabilitado. Las campañas completas y su [informe técnico](../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
-están disponibles; no se concedió aceptación
-humana automáticamente. La reserva S8 quedó provisional para mañana, 18/11,
+están disponibles. La aceptación humana del cierre está registrada en
+`aceptacion_responsable.json`. La reserva S8 quedó provisional para el 18/11,
 09:00–12:00 (Lima), con proyección de tres horas.
 
-El intento inmediato `_04` no ejecutó matrices: el preflight encontró procesos
-de Edge de inicio en segundo plano (`--no-startup-window`), aunque la carga
-media de CPU fue 5.4%. Se conserva el preflight y el estado. Después de esa
-observación, el responsable autorizó continuar tras reiniciar y dejar las demás
-aplicaciones activas; el nuevo registro medirá bajo esas condiciones. La
-aceptación post-reinicio `_04` encontró el lock huérfano del `_03` y falló antes
-de medir. Se archivó tras comprobar que ningún proceso lo mantenía; la campaña
-`_05` empezó con IDs nuevos.
+El intento inmediato `_04` no ejecutó matrices por un bloqueo del preflight; se
+conservan el estado y los diagnósticos. La aceptación post-reinicio `_04`
+encontró el lock huérfano del `_03` y falló antes de medir. Se archivó tras
+comprobar que ningún proceso lo mantenía; la campaña `_05` empezó con IDs nuevos.
 
 El piloto `_05` completó 198/198 observaciones y 33 grupos `COMPLETE/VERIFIED`
 (711.317 s); la reproducción `_06` también completó 198/198 y 33 grupos
-(702.354 s). Ambas usaron el mismo commit, binarios, fuentes y plan. Durante
-la reproducción se observó Zoom en una muestra de supervisión; el responsable
-había autorizado dejar las aplicaciones activas. No se atribuyen a Zoom ni a
-otra aplicación las variaciones. Las temperaturas GPU estuvieron entre 46 y
-47 °C; CPU queda sin lectura térmica por decisión expresa. El cambio absoluto
-mediano fue 1.39% y el máximo 18.81%, sin filtrar observaciones.
+(702.354 s). Ambas usaron el mismo commit, binarios, fuentes y plan. Las
+temperaturas GPU estuvieron entre 46 y 47 °C; CPU queda sin lectura térmica por
+decisión expresa. El cambio absoluto mediano fue 1.39% y el máximo 18.81%, sin
+filtrar observaciones. El responsable aprobó el cierre de S7.
 
 ## Análisis y condición de cierre
 
@@ -263,7 +247,6 @@ un warmup OK y repeticiones 1..5 únicas OK. Fallos o duplicados dejan el grupo
 incompleto; NaN/Inf, esquema y parámetros incoherentes se rechazan. Ceros válidos
 no producen divisiones por cero. Los grupos fallidos quedan visibles.
 
-Para cerrar S7 faltan: piloto integrado completo en la PC oficial, reproducción
-de la misma candidata/binarios, revisión de entorno y duración/reserva, y
-aceptación del responsable. Mantener las horas/revisiones declaradas por cada
-integrante; la integración por Codex no acredita conformidades personales nuevas.
+El cierre técnico y la revisión centralizada del responsable están completos.
+La reserva S8 sigue provisional y deberá reconfirmarse antes de la campaña; no
+forma parte de la aceptación de Sprint 7.

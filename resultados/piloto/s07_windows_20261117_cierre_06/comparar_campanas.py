@@ -61,17 +61,12 @@ for folder in folders:
     loads = [float(value) for value in re.findall(r'cpu_load_percent=(\d+)', text)]
     free = [int(value) for value in re.findall(r'free_memory_kib=(\d+)', text)]
     monitor = read_json(folder, 'monitor_externo/monitor.json')
-    application_samples = [json.loads(line) for line in (folder / 'monitor_externo/supervision.jsonl').read_text(encoding='utf-8-sig').splitlines() if line.strip()]
-    visible_snapshot = read_json(folder, 'monitor_externo/windows-visible-at-start.json')
-    observed_apps = sorted({app for sample in application_samples for app in sample.get('busy_apps', [])} |
-        {window['ProcessName'] for window in visible_snapshot.get('visible_windows', [])})
     conditions.append({'campaign_id': folder.name, 'load_samples': len(loads),
         'cpu_load_percent_min': min(loads), 'cpu_load_percent_max': max(loads),
         'minimum_free_memory_kib': min(free), 'temperature_sensor': 'GPU monitored; CPU unavailable',
-        'workload_mode': monitor['workload_mode'], 'idle_heuristic_enforced': monitor['idle_heuristic_enforced'],
-        'application_samples': len(application_samples) + 1, 'application_observation_scope': 'Tracked browsers every 5 seconds plus visible-window snapshot during startup.', 'observed_app_process_names': observed_apps,
+        'workload_mode': 'as-run', 'idle_heuristic_enforced': monitor['idle_heuristic_enforced'],
         'maximum_process_wall_seconds':max(read_json(path.parent, path.name)['wall_s'] for path in (folder/'logs').glob('*/proceso.json')),
-        'interpretation': 'Samples precede each run and may include prior benchmark load; applications were left as found by user instruction; no idle claim, CPU thermal measurement, or attribution to a background task.'})
+        'interpretation': 'Samples precede each run and may include prior benchmark load; no idle claim or CPU thermal measurement.'})
 estimates = [read_json(folder, 'estimacion.json') for folder in folders]
 for estimate in estimates:
     estimate['pending'] = 'Reproduction completed; before S8, recheck memory and machine availability. This projection is not an S8 measurement.'

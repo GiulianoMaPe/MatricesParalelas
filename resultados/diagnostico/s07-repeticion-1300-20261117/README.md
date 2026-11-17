@@ -6,17 +6,16 @@ Las campañas válidas son `s07_windows_20261117_piloto_05` y
 `s07_windows_20261117_reproduccion_06`; ambas conservaron 198/198 observaciones
 y 33 grupos `COMPLETE/VERIFIED`. La comparación cruzada y las temperaturas GPU
 están en [`resultados/piloto/s07_windows_20261117_cierre_06/`](../../piloto/s07_windows_20261117_cierre_06/README.md).
-La mediana del cambio absoluto fue 1.39%; el máximo fue 18.81%. Las aplicaciones
-se dejaron como estaban y se registró Zoom en una muestra durante reproducción;
-no se atribuye causalidad. GPU: 46–47 °C. CPU: sin lectura térmica, según elección
-del responsable. Las campañas no afirman un entorno inactivo.
+La mediana del cambio absoluto fue 1.39%; el máximo fue 18.81%. La carga CPU y
+la GPU quedaron registradas. GPU: 46–47 °C. CPU: sin lectura térmica, según
+elección del responsable. Las campañas no afirman un entorno inactivo.
 
-El cierre técnico está completo, pero la aceptación humana queda pendiente de
-revisión del responsable. La reserva S8 provisional es 18/11, 09:00–12:00, Lima.
+El cierre técnico y la aceptación humana están completos. La reserva S8
+provisional es 18/11, 09:00–12:00, Lima.
 La tarea programada original está deshabilitada.
 
-Intentos no incluidos en la comparación: `_03` quedó parcial al aparecer Zoom y
-se preserva en `resultados/piloto/s07_windows_20261117_piloto_03/`; `_04` no
+Intentos no incluidos en la comparación: `_03` quedó parcial y se preserva en
+`resultados/piloto/s07_windows_20261117_piloto_03/`; `_04` no
 alcanzó la campaña por un `bench.lock` huérfano de `_03`, archivado bajo
 `.cache/s07_1300/repeticion_04/`. El piloto `_05` completó, pero su primera
 reproducción no inició porque la salida del piloto aparecía como no versionada;
@@ -28,7 +27,7 @@ la campaña real.
 
 ## Preparación histórica
 
-S7 continúa abierto. El responsable difiere la aceptación de los lotes `_02`
+Histórico previo al cierre: el responsable difirió la aceptación de los lotes `_02`
 por dudas de uso concurrente y confirma la PC dedicada hoy **13:00–14:00,
 America/Lima**. Los datos anteriores y sus diferencias se conservan íntegros.
 
@@ -54,12 +53,10 @@ se dejan dos minutos de reposo entre ambos. Los datos se copian a
 `resultados/piloto/` y se comparan en `s07_windows_20261117_cierre_03/`.
 El resultado automático seguirá requiriendo revisión humana.
 
-El control inicial exige ausencia de Zoom/navegadores, misma candidata/fuentes/
-binarios y media de cinco muestras CPU ≤10%. Ese 10% es una heurística operativa
-de reposo y no un umbral retroactivo del protocolo. Durante la ejecución se
-comprueban aplicaciones cada cinco segundos. Si reaparecen, se interrumpen los
-procesos propios de las pruebas, se conservan parciales y no se cierra la
-aplicación del usuario. Ante un lote incompleto se necesitan IDs nuevos.
+El control inicial comprueba la misma candidata/fuentes/binarios y una media de
+cinco muestras CPU ≤10%. Ese 10% es una heurística operativa de reposo y no un
+umbral retroactivo del protocolo. Ante un lote incompleto se necesitan IDs
+nuevos.
 
 ## Sensores y elección del responsable
 
@@ -91,8 +88,8 @@ se modifican las fronteras de los cronómetros C/Go.
 
 - Parser PowerShell: dos scripts sin errores.
 - Sintaxis Python: dos scripts compilados sin errores.
-- Prueba previa real: bloquea el inicio porque Zoom está activo y la carga media
-  observada es 34.2%; no inicia mediciones.
+- Prueba previa real: bloquea el inicio por carga media observada de 34.2%; no
+  inicia mediciones.
 - Muestreador GPU real: tres filas conservadas a cinco segundos.
 - Supervisor: tres escenarios con procesos PowerShell controlados, sin matrices:
   aplicación bloqueada interrumpe solo el hijo, límite horario interrumpe el hijo

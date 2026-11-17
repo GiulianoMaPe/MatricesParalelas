@@ -1,5 +1,5 @@
 {
-  "status": "PENDING_REVIEW_AFTER_CURRENT_ENVIRONMENT_REPEAT",
+  "status": "ACCEPTED_CLOSED",
   "commit": "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
   "campaigns": [
     "s07_windows_20261117_piloto_05",
@@ -7,5 +7,7 @@
   ],
   "cpu_temperature_available": false,
   "gpu_monitoring_available": true,
-  "human_acceptance": false
+  "human_acceptance": true,
+  "accepted_on": "2026-11-17",
+  "acceptance_basis": "Instrucción explícita del responsable: Haz el cierre del sprint 7."
 }

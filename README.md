@@ -8,8 +8,8 @@ completado; quedan cuatro conformidades personales para el cierre administrativo
 S6 conserva el algoritmo de producción y completa la aceptación Windows:
 entregas I4/I7/I8 integradas, comparativas, memoria MPI por rank y revisión.
 Consultar [acta S6](docs/sprints/sprint-06.md) y
-[evidencia Windows](docs/cierre_s06_windows.md). S7 completó piloto y reproducción
-Windows con 198 observaciones cada uno; el cierre espera revisión del responsable.
+[evidencia Windows](docs/cierre_s06_windows.md). S7 está cerrado con piloto y
+reproducción Windows aceptados por el responsable, 198 observaciones cada uno.
 Véase el [informe técnico S7](resultados/piloto/s07_windows_20261117_cierre_06/README.md).
 
 | Versión | Tecnología | Estado |
@@ -128,9 +128,8 @@ S7 integra `bench_windows.ps1 -Version all` y el análisis de
 `scripts/summarize_results.ps1`. Para compilar, probar y ejecutar el piloto en
 Windows PowerShell 5.1, usar `scripts/accept_sprint07_windows.ps1`; el procedimiento
 y los límites de aceptación están en [docs/campana.md](docs/campana.md).
-El piloto y su reproducción están completos; la conformidad final se registra
-en el [informe S7](resultados/piloto/s07_windows_20261117_cierre/README.md). El responsable solicita
-repetir con la PC dedicada el 17/11, 13:00–14:00 (Lima), antes de cerrar S7. Los datos S7 se guardan
+El piloto y su reproducción están completos y aceptados; el [informe S7](resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+registra el cierre. Los datos S7 se guardan
 en `resultados/piloto/`, separados de los datos oficiales S8 en `resultados/raw/`.
 
 ## Desarrollo y validación pendientes
