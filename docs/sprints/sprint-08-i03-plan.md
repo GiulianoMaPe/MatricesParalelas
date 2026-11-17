@@ -176,8 +176,13 @@ válidas: 3 warmups y 15 medidas**. [Resultados, hashes y verificación](../../r
 
 - CSV I3: `resultados/raw/go_secuencial.csv`; fuente y hashes en `revision_i3.json`.
 - Se preservan los cuatro intentos y sus incidencias, sin mezclar filas ni seleccionar tiempos.
-- Revisión I2→I3: pendiente de solicitar a Sebastián (`@SebastianMalca`) mediante el PR.
+- Revisión I2→I3: pendiente; revisor asignado Sebastián (`@SebastianMalca`); seguimiento en el PR #58.
 - Coordinación humana con I5–I8: pendiente de confirmación; no atribuida a la auditoría automática.
 - Horas: 8 h presupuestadas (3+3+1+1); no se presume un desglose real no declarado para S8.
 - Esta entrega individual con controles no cierra la campaña integral ni el sprint del equipo.
-- PR: pendiente de crear tras publicar esta evidencia.
+- PR: [#58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58).
+
+Después de archivar y subir la evidencia, se retiró la copia duplicada del lote
+de la candidata tras comparar sus 296 archivos contra el archivo preservado.
+La candidata volvió a verificar fuentes limpias y cuatro builds oficiales;
+`revision_i3.json` registra `post_archive_candidate_verification`.

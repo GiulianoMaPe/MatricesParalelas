@@ -51,7 +51,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Verificador común y revisión I3: COMPLETE/VERIFIED; extracción idéntica a
   sus líneas fuente, veinte columnas, parámetros, UTC, tiempos y entorno hijo válidos.
 - GPU medida; CPU sin lectura. Rango térmico y límites documentados junto a los resultados.
-- Revisión I2→I3: pendiente de solicitar a `@SebastianMalca`; PR: pendiente de crear.
+- Revisión I2→I3: pendiente; revisor asignado `@SebastianMalca`; [PR #58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58).
 - Horas reales/coordinación: no confirmadas para S8; presupuesto I3 de 8 h.
 - Duración de los controles N=2048 superior al timeout inicial: revisar presupuesto de máquina y reserva de la campaña integral con I5/I6.
 - El alcance es I3 con controles: el resto de combinaciones, la auditoría y la

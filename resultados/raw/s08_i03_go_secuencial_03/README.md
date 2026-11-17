@@ -90,5 +90,10 @@ El intento final amplía el timeout de 300 a 900 s y conserva plan, semilla,
 fuentes y binarios. Todos sus tiempos se conservan, sin seleccionar los mejores
 entre intentos. La revisión I2→I3 y la coordinación humana con I5–I8 siguen
 pendientes de confirmación. I3 tiene 8 h presupuestadas (3+3+1+1); el tiempo
-de máquina medido no equivale a horas humanas declaradas. El PR registra la
-solicitud de revisión cuando se publique.
+de máquina medido no equivale a horas humanas declaradas. La solicitud y el estado de revisión se consultan en el
+[PR #58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58); la aprobación sigue pendiente.
+
+La copia duplicada del lote en la candidata se retiró después de archivar y subir
+los 296 originales, comparados otra vez por SHA-256. La candidata volvió a
+verificar fuentes limpias y cuatro builds oficiales; consta en
+`revision_i3.json`, campo `post_archive_candidate_verification`.

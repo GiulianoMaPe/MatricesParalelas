@@ -349,5 +349,12 @@
                                  "verificacion.json":  "21D1D70EA65AD1C2FAF83BA2794F9A6AB1B474D3A2D81EB343B49508FAE8E18B"
                              },
     "human_review":  "Pendiente I2 / SebastianMalca; no se presume conformidad",
-    "gpu_sha256":  "F4FDD37C92C32385F1699055A5AF51D3E2434D1BE4C3AC306756E3F3D9C3D74C"
+    "gpu_sha256":  "F4FDD37C92C32385F1699055A5AF51D3E2434D1BE4C3AC306756E3F3D9C3D74C",
+    "post_archive_candidate_verification":  {
+                                                "status":  "VERIFIED",
+                                                "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                "clean_sources":  true,
+                                                "builds":  4,
+                                                "verified_at_utc":  "2026-11-17T22:00:03.7604321Z"
+                                            }
 }
