@@ -28,8 +28,8 @@ filas `version=go_secuencial`; no reemplazará ni alterará el CSV fuente.
 | Calentamiento | 1 por combinación |
 | Medidas | 5 por combinación |
 | Configuración secuencial | `workers=1`, `GOMAXPROCS=1` |
-| Timeout inicial | 300 s por corrida |
-| Salida fuente I3 | `resultados/raw/s08_i03_go_secuencial_02/mediciones.csv` |
+| Timeout vigente | 900 s por corrida; inicial de 300 s conservado en los intentos previos |
+| Salida fuente I3 | `resultados/raw/s08_i03_go_secuencial_03/mediciones.csv` |
 | Entregable derivado I3 | `resultados/raw/go_secuencial.csv` |
 
 Se esperan 3 combinaciones Go secuencial y 18 filas en su extracción: 3
@@ -77,11 +77,25 @@ de procesos de medición. La candidata volvió a pasar la verificación de sus
 cuatro builds oficiales y fuentes limpias. Preflight del intento nuevo:
 10206300 KiB RAM libre; GPU GTX 1070 a 46 °C y 2% de utilización.
 
-La repetición completa usa `s08_i03_go_secuencial_02`, con el mismo plan de
+La repetición completa usa `s08_i03_go_secuencial_03`, con el mismo plan de
 72 corridas, semilla y binarios. La GPU se muestrea cada 30 s desde después
 del inicio, en un archivo complementario separado del lote original; CPU
 permanece sin lectura térmica. El permiso del responsable permite empezar y
 terminar en la franja real de ejecución, sin fijar una hora futura.
+
+## Ajuste de timeout del control MPI · 17/11/2026
+
+El intento `s08_i03_go_secuencial_02` se detuvo correctamente con estado
+`INCOMPLETE`: 11 observaciones OK y un timeout del warmup C paralelo P4/T1,
+N=2048, a los 300.135338 s. Evidencia original preservada por SHA-256 en
+`resultados/diagnostico/s08_i03_timeout_02/`, con muestras GPU complementarias.
+No llegó a las rondas medidas; no aporta filas a la entrega final.
+
+La repetición `s08_i03_go_secuencial_03` amplía el límite a 900 s para observar
+la terminación del control MPI, con idéntica candidata, binarios, plan, N y
+semilla. El acta permite ajustar el timeout con ID nuevo y sin sustituir filas.
+La duración de pared incluye preparación y validación de referencia fuera de
+los cronómetros internos y no se usa como `kernel_s` ni `total_s`.
 
 ## Secuencia de trabajo
 
@@ -98,11 +112,11 @@ terminar en la franja real de ejecución, sin fijar una hora futura.
    Set-Location .\.cache\s08-candidata-97ccc98
    git rev-parse HEAD
    git status --short
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_i03_go_secuencial_02 -Seed 42 -Configurations P4_T1 -GoWorkers 1 -TimeoutSeconds 300
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_i03_go_secuencial_03 -Seed 42 -Configurations P4_T1 -GoWorkers 1 -TimeoutSeconds 900
    ```
 
    `-Fase oficial` usa N=512/1024/2048, exige Release y árbol limpio, y guarda
-   evidencia bajo `resultados/raw/s08_i03_go_secuencial_02/`. El subplan tiene
+   evidencia bajo `resultados/raw/s08_i03_go_secuencial_03/`. El subplan tiene
    4 configuraciones (72 filas); Go secuencial aporta 18. No marcarlo como la
    campaña integral del equipo.
 3. **Revisión de I3 · 3 h.** Conservar intactos CSV, plan, entorno, manifiestos
