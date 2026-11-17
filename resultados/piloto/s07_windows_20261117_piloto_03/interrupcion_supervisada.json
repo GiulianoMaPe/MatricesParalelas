@@ -1,0 +1,16 @@
+{
+    "status":  "INTERRUPTED_PRESERVED_PARTIAL",
+    "campaign_id":  "s07_windows_20261117_piloto_03",
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "observations_persisted":  71,
+    "rows_including_header":  72,
+    "last_supervision_utc":  "2026-11-17T17:04:31.8895429Z",
+    "busy_apps_detected":  [
+                               "Zoom"
+                           ],
+    "reason":  "Se abrio Zoom/navegador durante la repeticion: Zoom",
+    "gpu_telemetry":  "monitor_externo/gpu.csv",
+    "cpu_temperature_available":  false,
+    "complete_campaign":  false,
+    "reused_for_acceptance":  false
+}

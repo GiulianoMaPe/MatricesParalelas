@@ -1,6 +1,6 @@
 # Sprint 7 Automatizar los experimentos
 
-Estado: los dos lotes nativos `_02` están completos y verificados, pero el responsable difiere su aceptación y solicita repetición con PC dedicada el 17/11, 13:00–14:00 (Lima), con sensor GPU y CPU sin lectura térmica. S7 sigue abierto y la reserva S8 es provisional. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
+Estado: los dos lotes nativos `_02` están completos y verificados, pero el responsable difiere su aceptación y solicita repetir tras reiniciar la PC, con sensor GPU y CPU sin lectura térmica. S7 sigue abierto y la reserva S8 es provisional. El último registro del 17/11/2026 sustituye los estados históricos anteriores.
 
 Semana 7 · 64 horas de equipo · 8 horas por integrante
 
@@ -581,14 +581,32 @@ incluida revisión centralizada y limitaciones de entorno. Su registro será
 El responsable informa uso actual de Zoom y Google/navegador y solicita repetir
 antes de aprobar. Los 396 registros `_02` y sus diferencias quedan intactos;
 su verificación técnica no se convierte en conformidad humana ni se atribuye
-una causa demostrada a su dispersión. Se confirma PC dedicada hoy 13:00–14:00
-(Lima), con IDs `_piloto_03` / `_reproduccion_03`, mismos fuentes/binarios y dos
-minutos de reposo entre intentos. La tarea local tiene comprobaciones previas,
-supervisión de aplicaciones y límite de ejecución; no cierra Zoom/navegadores.
+una causa demostrada a su dispersión. Un intento adelantado con IDs `_03` se
+detuvo y conservó como parcial al reaparecer Zoom durante el piloto. Los nuevos
+IDs `_piloto_05` / `_reproduccion_06` usan las mismas fuentes/binarios y dos
+minutos entre lotes. El responsable pidió reiniciar, abrir solo
+Visual Studio y trabajar con las demás aplicaciones que queden activas, sin
+cerrarlas. Se guardará una instantánea de ventanas durante el inicio, se
+vigilará la presencia de Zoom/navegadores cada cinco segundos y se conservarán
+las cargas CPU por corrida, sin exigir reposo ni atribuir a otras aplicaciones
+las diferencias de tiempo.
+
+El intento inmediato `_04` tampoco alcanzó a ejecutar matrices: el preflight
+detectó procesos de Edge en segundo plano (`--no-startup-window`), con carga
+media de CPU de 5.4%. Después, el responsable autorizó continuar tras reiniciar
+y dejar las demás aplicaciones activas. La aceptación post-reinicio `_04` falló
+antes de medir por el lock huérfano del `_03`; se archivó al comprobar que
+ningún proceso lo mantenía. El piloto `_05` y la reproducción `_06` completaron
+198/198 y 33 grupos `COMPLETE/VERIFIED`, en 711.317 s y 702.354 s. Se observó
+Zoom en una muestra de supervisión de la reproducción; no se cerró ninguna app
+ni se atribuyen a ella las variaciones.
 
 Se verificó lectura real GPU de la GTX 1070 con `nvidia-smi`, incluyendo tres
 muestras cada cinco segundos. ACPI no proporciona lectura CPU en esta PC.
 El responsable elige medir solo GPU y documentar CPU sin lectura; no se instala
 PawnIO ni otro controlador. La temperatura GPU no acredita la de CPU.
-El informe nuevo quedará en `resultados/piloto/s07_windows_20261117_cierre_03/`;
-S7 permanece abierto hasta revisar la repetición. Véase el [acta](../campana.md).
+El [informe y la comparación](../../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+están disponibles. Las temperaturas GPU
+observadas fueron 46–47 °C; no hay lectura térmica CPU. La variación absoluta
+mediana fue 1.39%, máximo 18.81%, sin filtrar datos. S7 espera revisión y
+conformidad final del responsable. Véase el [acta](../campana.md).

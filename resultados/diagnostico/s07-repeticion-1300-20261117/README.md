@@ -1,4 +1,32 @@
-# Preparación de repetición S7 en reposo · 17/11/2026
+# Resultado técnico S7 · 17/11/2026
+
+## Estado final de la campaña
+
+Las campañas válidas son `s07_windows_20261117_piloto_05` y
+`s07_windows_20261117_reproduccion_06`; ambas conservaron 198/198 observaciones
+y 33 grupos `COMPLETE/VERIFIED`. La comparación cruzada y las temperaturas GPU
+están en [`resultados/piloto/s07_windows_20261117_cierre_06/`](../../piloto/s07_windows_20261117_cierre_06/README.md).
+La mediana del cambio absoluto fue 1.39%; el máximo fue 18.81%. Las aplicaciones
+se dejaron como estaban y se registró Zoom en una muestra durante reproducción;
+no se atribuye causalidad. GPU: 46–47 °C. CPU: sin lectura térmica, según elección
+del responsable. Las campañas no afirman un entorno inactivo.
+
+El cierre técnico está completo, pero la aceptación humana queda pendiente de
+revisión del responsable. La reserva S8 provisional es 18/11, 09:00–12:00, Lima.
+La tarea programada original está deshabilitada.
+
+Intentos no incluidos en la comparación: `_03` quedó parcial al aparecer Zoom y
+se preserva en `resultados/piloto/s07_windows_20261117_piloto_03/`; `_04` no
+alcanzó la campaña por un `bench.lock` huérfano de `_03`, archivado bajo
+`.cache/s07_1300/repeticion_04/`. El piloto `_05` completó, pero su primera
+reproducción no inició porque la salida del piloto aparecía como no versionada;
+se añadió una exclusión local específica. El informe se regeneró después de que
+la reproducción `_06` terminara, sin volver a ejecutar matrices.
+
+El resto de este archivo conserva la preparación y los diagnósticos previos a
+la campaña real.
+
+## Preparación histórica
 
 S7 continúa abierto. El responsable difiere la aceptación de los lotes `_02`
 por dudas de uso concurrente y confirma la PC dedicada hoy **13:00–14:00,

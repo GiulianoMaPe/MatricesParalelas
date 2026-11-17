@@ -1,0 +1,13 @@
+{
+    "campaign_id":  "s07_windows_20261117_piloto_03",
+    "started_at_utc":  "2026-11-17T16:56:10.4229569Z",
+    "ended_at_utc":  "2026-11-17T17:04:37.0361229Z",
+    "query":  "timestamp,name,temperature.gpu,utilization.gpu,utilization.memory",
+    "timestamp_timezone":  "America/Lima",
+    "interval_seconds":  5,
+    "scope":  "Includes acceptance tests and measurement; correlate with proceso.json start_utc/wall_s.",
+    "gpu_sensor_available":  true,
+    "cpu_temperature_available":  false,
+    "cpu_reason":  "GPU-only choice; PawnIO not installed.",
+    "interruption_reason":  "Se abrio Zoom/navegador durante la repeticion: Zoom"
+}

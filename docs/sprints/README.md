@@ -33,7 +33,7 @@ e I2 en S10. Cada issue debe tener objetivo, entregable y criterio de aceptació
 | 4 | MPI/OpenMP y workers Go correctos |
 | 5 | Validación integral y manejo de errores |
 | 6 | Optimización con evidencia y estabilidad |
-| 7 | Mediciones automatizadas y piloto validado |
+| 7 | Piloto y reproducción completados; conformidad final pendiente |
 | 8 | Campaña oficial con datos completos |
 | 9 | Análisis, gráficos e informe |
 | 10 | Reproducción y entrega |

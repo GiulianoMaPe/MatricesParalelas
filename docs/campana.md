@@ -200,15 +200,22 @@ repetir antes de aceptar el cierre. Se conservan íntegros ambos lotes `_02` y
 sus verificaciones técnicas; no se declaran aceptados para cerrar S7 ni se
 atribuye causalmente la dispersión a una aplicación concreta.
 
-Confirma disponibilidad dedicada hoy de **13:00 a 14:00 (Lima)**. Se prepara
-la tarea local `Codex-S7-Repeticion-20261117-1300`, con la misma candidata y
-binarios de `.cache/s08-candidata-97ccc98`, y nuevos IDs
-`s07_windows_20261117_piloto_03` / `s07_windows_20261117_reproduccion_03`.
-La supervisión comprueba ausencia de Zoom/navegadores y carga media inicial
-de CPU no superior al 10% (heurística operativa, no umbral retroactivo del
-protocolo), deja dos minutos de reposo entre lotes y conserva parciales ante fallo.
-Si reaparece una aplicación bloqueada, interrumpe sus propios procesos de prueba;
-no cierra aplicaciones del usuario. Se reserva el tramo desde 13:55 para archivo.
+Confirma disponibilidad dedicada hoy de **13:00 a 14:00 (Lima)**. Un intento
+adelantado a las 11:55 inició con CPU media del 1%, pero Zoom reapareció durante
+el piloto. El supervisor detuvo los procesos propios tras 72 filas de medición
+incluida cabecera; el intento parcial `_03` y su telemetría GPU se conservaron,
+sin tratarse como campaña completa. Zoom no fue cerrado. Para evitar mezclar
+datos, la repetición usa IDs nuevos para cada intento, con la misma
+candidata y binarios de `.cache/s08-candidata-97ccc98`.
+
+El responsable luego indicó que reiniciará la PC, abrirá solo Visual Studio y
+que trabajemos con lo que permanezca activo, sin cerrar otras aplicaciones.
+La repetición se lanzará manualmente tras el reinicio y dejará dos minutos
+entre lotes. Guardará una instantánea de ventanas al inicio, vigilará la
+presencia de Zoom/navegadores cada cinco segundos y conservará las muestras de
+carga CPU por corrida; la temperatura/carga GPU se registra cada cinco
+segundos. No se exigirá reposo ni se detendrán las mediciones por aplicaciones
+en segundo plano; no se atribuirán a ellas diferencias observadas.
 
 La GTX 1070 permite leer temperatura/carga mediante `nvidia-smi`, ya instalado;
 se probó un registrador finito cada cinco segundos con tres muestras reales.
@@ -219,11 +226,30 @@ No se instaló ningún controlador. GPU no sustituye la temperatura del Ryzen
 ni acredita estabilidad térmica de CPU. Los registros GPU se correlacionarán
 por UTC con las mediciones y se conservarán en `monitor_externo/`.
 
-Estado operativo y motivos de bloqueo: `.cache/s07_1300/estado.json`.
-Los nuevos datos se copiarán a `resultados/piloto/`; el informe técnico se
-generará en `s07_windows_20261117_cierre_03/`, sin conceder aceptación humana
-automáticamente. La reserva S8 se revisará con esas duraciones y el cierre
-seguirá pendiente de la revisión del responsable.
+Estado operativo e historial de bloqueos: `.cache/s07_1300/estado.json` y
+`.cache/s07_1300/repeticion_06/estado.json`. El disparador programado sigue
+deshabilitado. Las campañas completas y su [informe técnico](../resultados/piloto/s07_windows_20261117_cierre_06/README.md)
+están disponibles; no se concedió aceptación
+humana automáticamente. La reserva S8 quedó provisional para mañana, 18/11,
+09:00–12:00 (Lima), con proyección de tres horas.
+
+El intento inmediato `_04` no ejecutó matrices: el preflight encontró procesos
+de Edge de inicio en segundo plano (`--no-startup-window`), aunque la carga
+media de CPU fue 5.4%. Se conserva el preflight y el estado. Después de esa
+observación, el responsable autorizó continuar tras reiniciar y dejar las demás
+aplicaciones activas; el nuevo registro medirá bajo esas condiciones. La
+aceptación post-reinicio `_04` encontró el lock huérfano del `_03` y falló antes
+de medir. Se archivó tras comprobar que ningún proceso lo mantenía; la campaña
+`_05` empezó con IDs nuevos.
+
+El piloto `_05` completó 198/198 observaciones y 33 grupos `COMPLETE/VERIFIED`
+(711.317 s); la reproducción `_06` también completó 198/198 y 33 grupos
+(702.354 s). Ambas usaron el mismo commit, binarios, fuentes y plan. Durante
+la reproducción se observó Zoom en una muestra de supervisión; el responsable
+había autorizado dejar las aplicaciones activas. No se atribuyen a Zoom ni a
+otra aplicación las variaciones. Las temperaturas GPU estuvieron entre 46 y
+47 °C; CPU queda sin lectura térmica por decisión expresa. El cambio absoluto
+mediano fue 1.39% y el máximo 18.81%, sin filtrar observaciones.
 
 ## Análisis y condición de cierre
 

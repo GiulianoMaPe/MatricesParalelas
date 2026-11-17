@@ -1,0 +1,13 @@
+{
+    "archived_at_utc":  "2026-11-17T17:40:42.8285800Z",
+    "original_path":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\.cache\\bench.lock",
+    "original_sha256":  "83FAFF8936FF3584D2F6F5F4EE2289744A9C2CEB7332E4CF1984BF41DC5B86C4",
+    "contents":  {
+                     "pid":  22924,
+                     "hostname":  "PCG1UL14N0",
+                     "campaign_id":  "s07_windows_20261117_piloto_03",
+                     "started_at_utc":  "2026-11-17T16:59:38Z"
+                 },
+    "exclusive_open_test":  "PASS; no process held the file",
+    "reason":  "Prior interrupted acceptance left a stale guard lock."
+}

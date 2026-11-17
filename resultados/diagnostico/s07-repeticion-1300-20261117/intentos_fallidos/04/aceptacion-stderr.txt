@@ -1,0 +1,10 @@
+go-paralelo fallo (codigo 1). Revise D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-
+acceptance\s07_windows_20261117_piloto_04\go-paralelo.txt
+En D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\scripts\accept_sprint07_windows.ps1: 29 
+Car�cter: 33
++ ... de -ne 0) { throw "$Label fallo (codigo $checkExitCode). Revise $log" ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (go-paralelo fal...go-paralelo.txt:String) [], RuntimeException
+    + FullyQualifiedErrorId : go-paralelo fallo (codigo 1). Revise D:\Escritorio\Proyectos\MatricesParalelas\.cache\s0 
+   8-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_04\go-paralelo.txt
+ 

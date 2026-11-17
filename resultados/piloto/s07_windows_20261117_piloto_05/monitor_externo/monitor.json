@@ -1,0 +1,16 @@
+{
+    "campaign_id":  "s07_windows_20261117_piloto_05",
+    "started_at_utc":  "2026-11-17T17:41:08.6694584Z",
+    "ended_at_utc":  "2026-11-17T17:56:16.3808300Z",
+    "query":  "timestamp,name,temperature.gpu,utilization.gpu,utilization.memory",
+    "timestamp_timezone":  "America/Lima",
+    "interval_seconds":  5,
+    "scope":  "Includes acceptance tests and measurement; correlate with proceso.json start_utc/wall_s.",
+    "workload_mode":  "User authorized running with applications as found; no applications closed.",
+    "idle_heuristic_enforced":  false,
+    "supervision_log":  "supervision.jsonl",
+    "gpu_sensor_available":  true,
+    "cpu_temperature_available":  false,
+    "cpu_reason":  "GPU-only choice; PawnIO not installed.",
+    "interruption_reason":  ""
+}

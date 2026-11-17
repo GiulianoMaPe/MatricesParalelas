@@ -8,7 +8,9 @@ completado; quedan cuatro conformidades personales para el cierre administrativo
 S6 conserva el algoritmo de producción y completa la aceptación Windows:
 entregas I4/I7/I8 integradas, comparativas, memoria MPI por rank y revisión.
 Consultar [acta S6](docs/sprints/sprint-06.md) y
-[evidencia Windows](docs/cierre_s06_windows.md). S7 recibe esta base para su piloto.
+[evidencia Windows](docs/cierre_s06_windows.md). S7 completó piloto y reproducción
+Windows con 198 observaciones cada uno; el cierre espera revisión del responsable.
+Véase el [informe técnico S7](resultados/piloto/s07_windows_20261117_cierre_06/README.md).
 
 | Versión | Tecnología | Estado |
 | --- | --- | --- |

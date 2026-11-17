@@ -1,0 +1,12 @@
+regresion-release -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\regresion-release.txt
+csv -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\csv.txt
+c-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\c-paralelo.txt
+go-secuencial -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\go-secuencial.txt
+go-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\go-paralelo.txt
+resumen -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\resumen.txt
+manifiestos -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\manifiestos.txt
+integridad-resumen -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\integridad-resumen.txt
+campana-controlada -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\campana-controlada.txt
+aceptacion-controlada -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\aceptacion-controlada.txt
+plan-piloto -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\plan-piloto.txt
+piloto-real -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_03\piloto-real.txt

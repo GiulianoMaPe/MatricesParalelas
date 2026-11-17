@@ -1,0 +1,14 @@
+regresion-release -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\regresion-release.txt
+csv -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\csv.txt
+c-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\c-paralelo.txt
+go-secuencial -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\go-secuencial.txt
+go-paralelo -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\go-paralelo.txt
+resumen -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\resumen.txt
+manifiestos -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\manifiestos.txt
+integridad-resumen -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\integridad-resumen.txt
+campana-controlada -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\campana-controlada.txt
+aceptacion-controlada -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\aceptacion-controlada.txt
+plan-piloto -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\plan-piloto.txt
+piloto-real -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\piloto-real.txt
+verificacion -> D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\.cache\s07-acceptance\s07_windows_20261117_piloto_05\verificacion.txt
+Piloto verificado: D:\Escritorio\Proyectos\MatricesParalelas\.cache\s08-candidata-97ccc98\resultados\piloto\s07_windows_20261117_piloto_05. Falta revisar entorno y reproducir antes de cerrar S7.
