@@ -1,7 +1,7 @@
 # Sprint 8 · Plan I3 · Giuliano · Go secuencial
 
-**Estado:** un intento integrado completo se interrumpió por timeout ajeno a I3;
-la subserie I3 sigue pendiente de completar en un intento nuevo.
+**Estado:** subcampaña I3 en ejecución con ID nuevo tras recuperar el entorno;
+se preservan el timeout inicial y el intento interrumpido.
 **Rama:** `feature/s08-i03-go-secuencial`.
 
 ## Objetivo y alcance
@@ -29,7 +29,7 @@ filas `version=go_secuencial`; no reemplazará ni alterará el CSV fuente.
 | Medidas | 5 por combinación |
 | Configuración secuencial | `workers=1`, `GOMAXPROCS=1` |
 | Timeout inicial | 300 s por corrida |
-| Salida fuente I3 | `resultados/raw/s08_i03_go_secuencial_01/mediciones.csv` |
+| Salida fuente I3 | `resultados/raw/s08_i03_go_secuencial_02/mediciones.csv` |
 | Entregable derivado I3 | `resultados/raw/go_secuencial.csv` |
 
 Se esperan 3 combinaciones Go secuencial y 18 filas en su extracción: 3
@@ -64,6 +64,25 @@ por SHA-256 y es idéntico al original; la copia duplicada se retiró de la
 candidata para restaurar su limpieza. Las filas Go secuencial solo incluyen
 warmups, así que aún no son entregables.
 
+## Recuperación del entorno · 17/11/2026
+
+El primer subplan, `s08_i03_go_secuencial_01`, quedó interrumpido con 9 filas
+OK de warmup, sin `estado.json` y sin procesos de medición activos al recuperar
+el acceso. Se archivaron sus 40 archivos y se compararon por SHA-256 antes de
+retirar la copia duplicada de la candidata. Evidencia:
+`resultados/diagnostico/s08_i03_interrumpido_01/`. No se usa como dato medido.
+
+Se retiró el lock huérfano solo después de confirmar la ausencia de su PID y
+de procesos de medición. La candidata volvió a pasar la verificación de sus
+cuatro builds oficiales y fuentes limpias. Preflight del intento nuevo:
+10206300 KiB RAM libre; GPU GTX 1070 a 46 °C y 2% de utilización.
+
+La repetición completa usa `s08_i03_go_secuencial_02`, con el mismo plan de
+72 corridas, semilla y binarios. La GPU se muestrea cada 30 s desde después
+del inicio, en un archivo complementario separado del lote original; CPU
+permanece sin lectura térmica. El permiso del responsable permite empezar y
+terminar en la franja real de ejecución, sin fijar una hora futura.
+
 ## Secuencia de trabajo
 
 1. **Preflight y trazabilidad · 3 h de ejecución/supervisión.** Desde la copia
@@ -79,11 +98,11 @@ warmups, así que aún no son entregables.
    Set-Location .\.cache\s08-candidata-97ccc98
    git rev-parse HEAD
    git status --short
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_i03_go_secuencial_01 -Seed 42 -Configurations P4_T1 -GoWorkers 1 -TimeoutSeconds 300
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\bench_windows.ps1 -Version all -Fase oficial -CampaignId s08_i03_go_secuencial_02 -Seed 42 -Configurations P4_T1 -GoWorkers 1 -TimeoutSeconds 300
    ```
 
    `-Fase oficial` usa N=512/1024/2048, exige Release y árbol limpio, y guarda
-   evidencia bajo `resultados/raw/s08_i03_go_secuencial_01/`. El subplan tiene
+   evidencia bajo `resultados/raw/s08_i03_go_secuencial_02/`. El subplan tiene
    4 configuraciones (72 filas); Go secuencial aporta 18. No marcarlo como la
    campaña integral del equipo.
 3. **Revisión de I3 · 3 h.** Conservar intactos CSV, plan, entorno, manifiestos
