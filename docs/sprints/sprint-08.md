@@ -44,7 +44,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Participantes y horas reales:** Eva Moreno (I4). El plan contempla 3 h para ejecutar y supervisar los lotes de Go paralelo, 3 h para revisar los workers efectivos y la estabilidad de las repeticiones, 1 h de revisión cruzada a I5 (Fernando, `docs/calidad_datos.md`) y 1 h de coordinación. Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s08-i04-go-paralelo-oficial`. La revisión corresponde a I3 (Giuliano) según la rotación.
+- **Issues y pull requests:** rama de trabajo `feature/s08-i04-go-paralelo-oficial`; [PR #60](https://github.com/GiulianoMaPe/MatricesParalelas/pull/60). La revisión corresponde a I3 (Giuliano) según la rotación.
 
 - **Estado del entregable `resultados/raw/go_paralelo.csv`: pendiente de la campaña en la PC oficial.** Según [docs/campana.md](../campana.md), la PC oficial es `PCG1UL14N0` (Ryzen 5 3600, 6 núcleos físicos, Go 1.27.4) y la candidata congelada es `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`. El equipo de I4 (Ryzen 7 3700X, 8 núcleos, Go 1.27.1) no es esa PC: medir aquí produciría otro hardware y otras herramientas, y activaría W=8, que la PC oficial no tiene. Por eso no se generó ni se simuló el CSV oficial, igual que en la entrega de I2.
 
