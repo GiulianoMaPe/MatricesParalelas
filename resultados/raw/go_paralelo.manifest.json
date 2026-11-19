@@ -1,0 +1,278 @@
+{
+    "tool":  "scripts/extract_s08_go_paralelo.ps1",
+    "generated_at_utc":  "2026-11-19T21:07:28Z",
+    "status":  "VERIFIED",
+    "requested_phase":  "oficial",
+    "campaign":  {
+                     "id":  "s08_i04_go_paralelo_01",
+                     "phase":  "oficial",
+                     "directory":  "resultados/raw/s08_i04_go_paralelo_01",
+                     "state":  "COMPLETE",
+                     "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                     "expected_commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                     "hostname":  "PCG1UL14N0",
+                     "cpu_model":  "AMD Ryzen 5 3600 6-Core Processor",
+                     "physical_cores":  6,
+                     "logical_processors":  12,
+                     "seed":  "42",
+                     "matrix_sizes":  [
+                                          512,
+                                          1024,
+                                          2048
+                                      ]
+                 },
+    "sources":  {
+                    "mediciones.csv":  "2D8A9222EC26AE34AAB5ECCCD07D884D2F5D21411A4A04B8AEFD565328776CE4",
+                    "plan.csv":  "60A186D0F57D9D04C895CABF34BE82E07088167F37D18C22A31BFEBC9B67380C",
+                    "entorno.json":  "EDFFFCA513B92673ECC6E6D34991894B861B43A88DD7E806D190B4A090F61DC7",
+                    "estado.json":  "39B22581B4BDF7A7F8B9F90CC3BB8D30B6D8937627C10078E085C0008524F21F"
+                },
+    "output":  {
+                   "path":  "resultados/raw/go_paralelo.csv",
+                   "written":  true,
+                   "sha256":  "11B68F7EE37979EE35B621F0E03433B3635A1E01C3BAD87F756DC62D0F14BD4C",
+                   "rows":  54,
+                   "warmups":  9,
+                   "measured":  45
+               },
+    "controls":  {
+                     "worker_series":  [
+                                           1,
+                                           2,
+                                           4
+                                       ],
+                     "allowed_workers":  [
+                                             1,
+                                             2,
+                                             4
+                                         ],
+                     "dispersion_threshold_iqr_over_median":  0.1,
+                     "short_time_threshold_s":  0.1,
+                     "quartiles":  "Q1=x2, mediana=x3, Q3=x4 con cinco medidas (summarize_results.ps1)"
+                 },
+    "groups":  [
+                   {
+                       "n":  512,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "0.134684400",
+                       "q1_total_s":  "0.134664700",
+                       "q3_total_s":  "0.135094300",
+                       "min_total_s":  "0.131078100",
+                       "max_total_s":  "0.136390900",
+                       "iqr_over_median":  "0.0032",
+                       "max_over_min":  "1.0405",
+                       "median_kernel_s":  "0.134180500"
+                   },
+                   {
+                       "n":  512,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.068841200",
+                       "q1_total_s":  "0.067516300",
+                       "q3_total_s":  "0.069577400",
+                       "min_total_s":  "0.067374000",
+                       "max_total_s":  "0.069795100",
+                       "iqr_over_median":  "0.0299",
+                       "max_over_min":  "1.0359",
+                       "median_kernel_s":  "0.068339200"
+                   },
+                   {
+                       "n":  512,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.037443700",
+                       "q1_total_s":  "0.036606300",
+                       "q3_total_s":  "0.037784600",
+                       "min_total_s":  "0.035672400",
+                       "max_total_s":  "0.040039600",
+                       "iqr_over_median":  "0.0315",
+                       "max_over_min":  "1.1224",
+                       "median_kernel_s":  "0.036924200"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "1.079369700",
+                       "q1_total_s":  "1.074187200",
+                       "q3_total_s":  "1.128527200",
+                       "min_total_s":  "1.062354500",
+                       "max_total_s":  "1.137220900",
+                       "iqr_over_median":  "0.0503",
+                       "max_over_min":  "1.0705",
+                       "median_kernel_s":  "1.078364700"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "dispersion_alta"
+                                 ],
+                       "median_total_s":  "0.602657700",
+                       "q1_total_s":  "0.560580100",
+                       "q3_total_s":  "0.625122300",
+                       "min_total_s":  "0.542168800",
+                       "max_total_s":  "0.631973500",
+                       "iqr_over_median":  "0.1071",
+                       "max_over_min":  "1.1656",
+                       "median_kernel_s":  "0.601653500"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "dispersion_alta"
+                                 ],
+                       "median_total_s":  "0.316919100",
+                       "q1_total_s":  "0.301691800",
+                       "q3_total_s":  "0.337814700",
+                       "min_total_s":  "0.296801300",
+                       "max_total_s":  "0.356724800",
+                       "iqr_over_median":  "0.1140",
+                       "max_over_min":  "1.2019",
+                       "median_kernel_s":  "0.315914300"
+                   },
+                   {
+                       "n":  2048,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "9.014317200",
+                       "q1_total_s":  "9.002163700",
+                       "q3_total_s":  "9.037581700",
+                       "min_total_s":  "8.833805800",
+                       "max_total_s":  "9.069100400",
+                       "iqr_over_median":  "0.0039",
+                       "max_over_min":  "1.0266",
+                       "median_kernel_s":  "9.008259500"
+                   },
+                   {
+                       "n":  2048,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "4.543911700",
+                       "q1_total_s":  "4.528057100",
+                       "q3_total_s":  "4.546937200",
+                       "min_total_s":  "4.469754800",
+                       "max_total_s":  "4.700400300",
+                       "iqr_over_median":  "0.0042",
+                       "max_over_min":  "1.0516",
+                       "median_kernel_s":  "4.539346700"
+                   },
+                   {
+                       "n":  2048,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "2.614747800",
+                       "q1_total_s":  "2.602654600",
+                       "q3_total_s":  "2.619974200",
+                       "min_total_s":  "2.561475200",
+                       "max_total_s":  "2.676561400",
+                       "iqr_over_median":  "0.0066",
+                       "max_over_min":  "1.0449",
+                       "median_kernel_s":  "2.610206500"
+                   }
+               ],
+    "speedup_vs_w1":  [
+                          {
+                              "n":  512,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.956",
+                              "efficiency":  "0.978"
+                          },
+                          {
+                              "n":  512,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.597",
+                              "efficiency":  "0.899"
+                          },
+                          {
+                              "n":  1024,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.791",
+                              "efficiency":  "0.896"
+                          },
+                          {
+                              "n":  1024,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.406",
+                              "efficiency":  "0.851"
+                          },
+                          {
+                              "n":  2048,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.984",
+                              "efficiency":  "0.992"
+                          },
+                          {
+                              "n":  2048,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.447",
+                              "efficiency":  "0.862"
+                          }
+                      ],
+    "anomalies":  [
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=512 W=2: mediana de total_s 0.068841200 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=512 W=4: mediana de total_s 0.037443700 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "warning",
+                          "code":  "dispersion_alta",
+                          "detail":  "N=1024 W=2: IQR/mediana de total_s = 10,7 % (umbral 10 %); se conservan las cinco medidas."
+                      },
+                      {
+                          "severity":  "warning",
+                          "code":  "dispersion_alta",
+                          "detail":  "N=1024 W=4: IQR/mediana de total_s = 11,4 % (umbral 10 %); se conservan las cinco medidas."
+                      }
+                  ],
+    "critical":  0
+}
