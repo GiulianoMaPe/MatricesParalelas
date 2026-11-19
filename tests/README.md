@@ -211,3 +211,20 @@ escribirse fuera de `resultados/raw/`.
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\extract_s08_go_paralelo_test.ps1
 ```
+
+## Sprint 8 · I7: auditoría de dispersión y resumen provisional
+
+`tests/audit_dispersion_test.ps1` valida de forma automatizada las métricas de
+dispersión y variabilidad experimental de [`scripts/audit_dispersion.ps1`](../scripts/audit_dispersion.ps1)
+sobre el resumen provisional [`resultados/resumen/resumen_provisional.csv`](../resultados/resumen/resumen_provisional.csv):
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\audit_dispersion_test.ps1
+```
+
+Comprueba:
+1. Cálculo exacto de $\text{RSD}_{\text{IQR}} = (\text{IQR} / \text{mediana}) \times 100\%$.
+2. Clasificación de estabilidad (`EXCELENTE`, `ESTABLE`, `MODERADA`, `ALTA`).
+3. Detección de dispersión alta (> 10%) en $N=1024$ ($W=2$ y $W=4$).
+4. Emisión conforme del dictamen `CONSERVAR_CONFORME` según protocolo §6.3.
+5. Exportación de reportes CSV y Markdown en codificación UTF-8 sin BOM.
