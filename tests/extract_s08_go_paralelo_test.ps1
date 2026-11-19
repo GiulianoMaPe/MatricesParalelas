@@ -107,6 +107,40 @@ try {
         param($run, $campaign)
         Assert-That (-not (Test-Path -LiteralPath $run.Output)) 'Se escribio la vista con anomalias criticas.'
     }
+    Test-Case 'fase-oficial-rechaza-otro-host' -ExpectedExit 1 -ExpectedStatus 'INCOMPLETE' -ExpectedCode 'host_oficial' -Arguments @('-Phase', 'oficial') -Mutation {
+        param($campaign)
+        Set-JsonValue (Join-Path $campaign 'entorno.json') { param($e) $e.hostname = 'PC-DE-PRUEBA' }
+    }
+    Test-Case 'fase-oficial-exige-semilla-42' -ExpectedExit 1 -ExpectedStatus 'INCOMPLETE' -ExpectedCode 'semilla_oficial' -Arguments @('-Phase', 'oficial') -Mutation {
+        param($campaign)
+        Set-JsonValue (Join-Path $campaign 'entorno.json') { param($e) $e.experiment.seed = 101 }
+    }
+    Test-Case 'fase-oficial-rechaza-semilla-distinta-en-plan' -ExpectedExit 1 -ExpectedStatus 'INCOMPLETE' -ExpectedCode 'semilla_plan' -Arguments @('-Phase', 'oficial') -Mutation {
+        param($campaign)
+        $order = Get-GoOrder $campaign 512 4 3
+        $planPath = Join-Path $campaign 'plan.csv'
+        $planRows = @(Import-Csv -LiteralPath $planPath)
+        $planRows[$order - 1].seed = '101'
+        $planRows | Export-Csv -LiteralPath $planPath -NoTypeInformation -Encoding UTF8
+    }
+    Test-Case 'incompleto-preserva-csv-y-manifiesto-oficiales' -ExpectedExit 1 -ExpectedStatus 'INCOMPLETE' -ExpectedCode 'fase' -Arguments @('-Phase', 'oficial', '-AllowIncomplete') -Extra {
+        param($run, $campaign)
+        Assert-That (Test-Path -LiteralPath $run.Output) 'No se guardo la vista incompleta con una ruta fuera de raw.'
+        $isolatedRoot = Join-Path $testRoot 'repositorio-aislado'
+        $raw = Join-Path $isolatedRoot 'resultados\raw'
+        New-Item -ItemType Directory -Path $raw -Force | Out-Null
+        Copy-Item -LiteralPath (Split-Path -Parent $extractor) -Destination (Join-Path $isolatedRoot 'scripts') -Recurse
+        $isolatedExtractor = Join-Path $isolatedRoot 'scripts\extract_s08_go_paralelo.ps1'
+        $officialCsv = Join-Path $raw 'go_paralelo.csv'
+        $officialManifest = Join-Path $raw 'go_paralelo.manifest.json'
+        $original = 'Evidencia oficial previa.'
+        foreach ($path in @($officialCsv, $officialManifest)) { [IO.File]::WriteAllText($path, $original, $utf8) }
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $isolatedExtractor -CampaignDirectory $campaign -Phase oficial -AllowIncomplete | Out-Null
+        Assert-That ($LASTEXITCODE -eq 1) 'Un intento incompleto en fase oficial debe fallar.'
+        foreach ($path in @($officialCsv, $officialManifest)) {
+            Assert-That ([IO.File]::ReadAllText($path) -ceq $original) "Se sobrescribio un archivo oficial: $path"
+        }
+    }
     Test-Case 'gomaxprocs-entorno-hijo' -ExpectedExit 1 -ExpectedStatus 'INCOMPLETE' -ExpectedCode 'gomaxprocs_entorno' -Mutation {
         param($campaign)
         $order = Get-GoOrder $campaign 512 4 3

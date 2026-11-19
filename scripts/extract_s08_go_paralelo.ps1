@@ -20,14 +20,15 @@
 
 .PARAMETER OutputPath
     Ruta de la vista derivada. Por defecto, resultados/raw/go_paralelo.csv en
-    fase oficial. En fases no oficiales se exige una ruta explicita.
+    fase oficial. En fases no oficiales se exige una ruta explicita fuera de raw.
 
 .PARAMETER ManifestPath
-    Ruta del manifiesto JSON. Por defecto, junto a OutputPath.
+    Ruta del manifiesto JSON. Por defecto, junto a OutputPath. Si la validacion
+    oficial falla, un manifiesto dentro de raw se preserva intacto.
 
 .PARAMETER Phase
-    oficial:     exige campana oficial COMPLETE, arbol limpio, N=512/1024/2048,
-                 el commit candidato y stderr vacio.
+    oficial:     exige campana oficial COMPLETE en PCG1UL14N0, semilla 42, arbol
+                 limpio, N=512/1024/2048, el commit candidato y stderr vacio.
     piloto:      extrae un piloto completo.
     diagnostico: permite lotes incompletos; pensado para evidencia.
 
@@ -44,8 +45,8 @@
     segun la politica de reloj del cierre de S6 (aviso informativo).
 
 .PARAMETER AllowIncomplete
-    Escribe la vista aunque existan anomalias criticas, marcandola INCOMPLETE.
-    El proceso termina con error para no acreditar el lote.
+    Escribe una vista INCOMPLETE solo si el CSV y el manifiesto tienen rutas
+    fuera de resultados/raw. El proceso termina con error.
 #>
 param(
     [Parameter(Mandatory = $true)][string]$CampaignDirectory,
@@ -155,6 +156,8 @@ if ($Phase -eq 'oficial') {
     if ($campaignPhase -cne 'oficial') { Add-Anomaly critical 'fase' "La campana es de fase '$campaignPhase'." }
     if (Get-OptionalProperty $gitInfo 'dirty') { Add-Anomaly critical 'arbol_sucio' 'La campana oficial exige arbol limpio.' }
     if (($sizes -join ',') -ne '512,1024,2048') { Add-Anomaly critical 'tamanos' "Tamanos $($sizes -join ',') distintos de 512,1024,2048." }
+    if ($hostname -ine 'PCG1UL14N0') { Add-Anomaly critical 'host_oficial' "La PC oficial es PCG1UL14N0; el entorno declara '$hostname'." }
+    if ($campaignSeed -cne '42') { Add-Anomaly critical 'semilla_oficial' "La semilla oficial es 42; el entorno declara '$campaignSeed'." }
 }
 if ($physicalCores -lt 1) { Add-Anomaly critical 'hardware' 'entorno.json no registra nucleos fisicos.' }
 
@@ -191,6 +194,9 @@ foreach ($planRow in $planGo) {
     $order = [int]$planRow.execution_order
     $w = [int]$planRow.configuration.Substring(13)
     $tag = "order=$order N=$($planRow.n) W=$w rep=$($planRow.repetition)"
+    if ($Phase -eq 'oficial' -and $planRow.seed -cne $campaignSeed) {
+        Add-Anomaly critical 'semilla_plan' "${tag}: el plan declara la semilla '$($planRow.seed)'; el entorno declara '$campaignSeed'."
+    }
     if ($order -ge $dataLines.Count) {
         Add-Anomaly $incompleteSeverity 'fila_ausente' "${tag}: no hay fila en mediciones.csv."
         continue
@@ -367,9 +373,20 @@ if (-not $OutputPath) {
 $OutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
 if (-not $ManifestPath) { $ManifestPath = [IO.Path]::ChangeExtension($OutputPath, '.manifest.json') }
 $ManifestPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ManifestPath)
+$rawRoot = Join-Path $script:ProjectRoot 'resultados\raw'
+$rawPrefix = $rawRoot + [IO.Path]::DirectorySeparatorChar
+$rawPaths = @(@($OutputPath, $ManifestPath) | Where-Object {
+    $_.Equals($rawRoot, [StringComparison]::OrdinalIgnoreCase) -or $_.StartsWith($rawPrefix, [StringComparison]::OrdinalIgnoreCase)
+})
+if ($Phase -ne 'oficial' -and $rawPaths.Count -gt 0) { throw 'Las fases no oficiales requieren rutas fuera de resultados/raw.' }
+
 $status = if ($script:CriticalCount -gt 0) { 'INCOMPLETE' } elseif ($Phase -eq 'oficial') { 'VERIFIED' } elseif ($Phase -eq 'piloto') { 'VERIFIED_PILOT' } else { 'DIAGNOSTIC' }
-$writeView = $script:CriticalCount -eq 0 -or $AllowIncomplete
-foreach ($path in @($OutputPath, $ManifestPath)) {
+$writeView = $script:CriticalCount -eq 0 -or ($AllowIncomplete -and $rawPaths.Count -eq 0)
+$writeManifest = $script:CriticalCount -eq 0 -or $ManifestPath -notin $rawPaths
+$pathsToWrite = @()
+if ($writeView) { $pathsToWrite += $OutputPath }
+if ($writeManifest) { $pathsToWrite += $ManifestPath }
+foreach ($path in $pathsToWrite) {
     $directory = Split-Path -Parent $path
     if ($directory -and -not (Test-Path -LiteralPath $directory)) { New-Item -ItemType Directory -Force -Path $directory | Out-Null }
 }
@@ -412,7 +429,7 @@ $manifest = [ordered]@{
     anomalies = $script:Anomalies
     critical = $script:CriticalCount
 }
-Write-Utf8NoBom -Path $ManifestPath -Text ($manifest | ConvertTo-Json -Depth 6)
+if ($writeManifest) { Write-Utf8NoBom -Path $ManifestPath -Text ($manifest | ConvertTo-Json -Depth 6) }
 
 # --- Resumen en consola -------------------------------------------------------
 Write-Output "Estado: $status ($($selected.Count) filas go_paralelo, $script:CriticalCount anomalias criticas)"
@@ -423,6 +440,6 @@ foreach ($group in $groups) {
 }
 foreach ($item in $script:Anomalies | Where-Object { $_.severity -eq 'critical' }) { Write-Output "  CRITICA $($item.code): $($item.detail)" }
 if ($writeView) { Write-Output "Vista: $OutputPath" }
-Write-Output "Manifiesto: $ManifestPath"
+if ($writeManifest) { Write-Output "Manifiesto: $ManifestPath" }
 if ($script:CriticalCount -gt 0) { exit 1 }
 exit 0

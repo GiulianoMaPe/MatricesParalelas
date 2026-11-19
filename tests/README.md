@@ -203,6 +203,11 @@ caso introduce un defecto y comprueba que `scripts/extract_s08_go_paralelo.ps1`
 lo detecte con la anomalía y el estado esperados. No modifica la campaña
 original ni produce observaciones.
 
+La batería comprueba que la fase oficial exija `PCG1UL14N0` y semilla `42`,
+y que un intento incompleto con `-AllowIncomplete` preserve tanto el CSV
+como el manifiesto oficiales preexistentes. La vista incompleta solo puede
+escribirse fuera de `resultados/raw/`.
+
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\extract_s08_go_paralelo_test.ps1
 ```
