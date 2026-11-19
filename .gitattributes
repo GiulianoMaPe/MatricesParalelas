@@ -19,3 +19,6 @@ resultados/experimentos/granularidad_go/** -whitespace
 resultados/piloto/s07_i04_go_paralelo/** -text -whitespace
 # Preserve native integrated S7 campaign observations and logs byte-for-byte.
 resultados/piloto/s07_windows_20261117_*/** -text -whitespace
+
+# Preserve official S8 observations and process records byte-for-byte.
+resultados/raw/** -text -whitespace

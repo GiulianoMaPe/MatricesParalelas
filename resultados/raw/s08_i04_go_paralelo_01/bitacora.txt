@@ -1,0 +1,235 @@
+Inicio 2026-11-19T19:37:18Z; ejecucion serial; timeout=900 s
+order=1 cpu_load_percent=13 free_memory_kib=10633352 temperature=unavailable
+order=1 N=512 c_secuencial rep=0 status=OK 
+order=2 cpu_load_percent=20 free_memory_kib=10635072 temperature=unavailable
+order=2 N=512 go_secuencial rep=0 status=OK 
+order=3 cpu_load_percent=20 free_memory_kib=10587532 temperature=unavailable
+order=3 {"rank":0,"pid":15404,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.057295700,"total_s":0.059507100,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=3 N=512 c_paralelo_P1_T1 rep=0 status=OK 
+order=4 cpu_load_percent=49 free_memory_kib=10539028 temperature=unavailable
+order=4 N=512 go_paralelo_W1 rep=0 status=OK 
+order=5 cpu_load_percent=27 free_memory_kib=10530840 temperature=unavailable
+order=5 N=512 go_paralelo_W2 rep=0 status=OK 
+order=6 cpu_load_percent=9 free_memory_kib=10550896 temperature=unavailable
+order=6 N=512 go_paralelo_W4 rep=0 status=OK 
+order=7 cpu_load_percent=17 free_memory_kib=10549460 temperature=unavailable
+order=7 N=1024 c_secuencial rep=0 status=OK 
+order=8 cpu_load_percent=27 free_memory_kib=10505352 temperature=unavailable
+order=8 N=1024 go_secuencial rep=0 status=OK 
+order=9 cpu_load_percent=13 free_memory_kib=10503000 temperature=unavailable
+order=9 {"rank":0,"pid":13324,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.479315500,"total_s":0.483884000,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=9 N=1024 c_paralelo_P1_T1 rep=0 status=OK 
+order=10 cpu_load_percent=12 free_memory_kib=10510220 temperature=unavailable
+order=10 N=1024 go_paralelo_W1 rep=0 status=OK 
+order=11 cpu_load_percent=9 free_memory_kib=10495424 temperature=unavailable
+order=11 N=1024 go_paralelo_W2 rep=0 status=OK 
+order=12 cpu_load_percent=20 free_memory_kib=10414124 temperature=unavailable
+order=12 N=1024 go_paralelo_W4 rep=0 status=OK 
+order=13 cpu_load_percent=12 free_memory_kib=10462500 temperature=unavailable
+order=13 N=2048 c_secuencial rep=0 status=OK 
+order=14 cpu_load_percent=23 free_memory_kib=10208800 temperature=unavailable
+order=14 N=2048 go_secuencial rep=0 status=OK 
+order=15 cpu_load_percent=12 free_memory_kib=10172148 temperature=unavailable
+order=15 {"rank":0,"pid":2416,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":5.076732900,"total_s":5.091321600,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=15 N=2048 c_paralelo_P1_T1 rep=0 status=OK 
+order=16 cpu_load_percent=12 free_memory_kib=10672064 temperature=unavailable
+order=16 N=2048 go_paralelo_W1 rep=0 status=OK 
+order=17 cpu_load_percent=23 free_memory_kib=10516128 temperature=unavailable
+order=17 N=2048 go_paralelo_W2 rep=0 status=OK 
+order=18 cpu_load_percent=14 free_memory_kib=10451424 temperature=unavailable
+order=18 N=2048 go_paralelo_W4 rep=0 status=OK 
+order=19 cpu_load_percent=9 free_memory_kib=10453148 temperature=unavailable
+order=19 N=512 c_secuencial rep=1 status=OK 
+order=20 cpu_load_percent=7 free_memory_kib=10449016 temperature=unavailable
+order=20 N=512 go_secuencial rep=1 status=OK 
+order=21 cpu_load_percent=29 free_memory_kib=10404712 temperature=unavailable
+order=21 {"rank":0,"pid":10140,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.056331400,"total_s":0.057283500,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=21 N=512 c_paralelo_P1_T1 rep=1 status=OK 
+order=22 cpu_load_percent=39 free_memory_kib=10380756 temperature=unavailable
+order=22 N=512 go_paralelo_W1 rep=1 status=OK 
+order=23 cpu_load_percent=25 free_memory_kib=10416228 temperature=unavailable
+order=23 N=512 go_paralelo_W2 rep=1 status=OK 
+order=24 cpu_load_percent=18 free_memory_kib=10428260 temperature=unavailable
+order=24 N=512 go_paralelo_W4 rep=1 status=OK 
+order=25 cpu_load_percent=19 free_memory_kib=10411864 temperature=unavailable
+order=25 N=1024 c_secuencial rep=1 status=OK 
+order=26 cpu_load_percent=20 free_memory_kib=10407776 temperature=unavailable
+order=26 N=1024 go_secuencial rep=1 status=OK 
+order=27 cpu_load_percent=27 free_memory_kib=10417112 temperature=unavailable
+order=27 {"rank":0,"pid":7800,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.464454400,"total_s":0.468392000,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=27 N=1024 c_paralelo_P1_T1 rep=1 status=OK 
+order=28 cpu_load_percent=26 free_memory_kib=10384656 temperature=unavailable
+order=28 N=1024 go_paralelo_W1 rep=1 status=OK 
+order=29 cpu_load_percent=8 free_memory_kib=10370920 temperature=unavailable
+order=29 N=1024 go_paralelo_W2 rep=1 status=OK 
+order=30 cpu_load_percent=10 free_memory_kib=10376768 temperature=unavailable
+order=30 N=1024 go_paralelo_W4 rep=1 status=OK 
+order=31 cpu_load_percent=20 free_memory_kib=10337752 temperature=unavailable
+order=31 N=2048 c_secuencial rep=1 status=OK 
+order=32 cpu_load_percent=23 free_memory_kib=10404556 temperature=unavailable
+order=32 N=2048 go_secuencial rep=1 status=OK 
+order=33 cpu_load_percent=22 free_memory_kib=10317836 temperature=unavailable
+order=33 {"rank":0,"pid":3392,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":4.785143100,"total_s":4.808257800,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=33 N=2048 c_paralelo_P1_T1 rep=1 status=OK 
+order=34 cpu_load_percent=15 free_memory_kib=10591444 temperature=unavailable
+order=34 N=2048 go_paralelo_W1 rep=1 status=OK 
+order=35 cpu_load_percent=15 free_memory_kib=10489672 temperature=unavailable
+order=35 N=2048 go_paralelo_W2 rep=1 status=OK 
+order=36 cpu_load_percent=20 free_memory_kib=10465572 temperature=unavailable
+order=36 N=2048 go_paralelo_W4 rep=1 status=OK 
+order=37 cpu_load_percent=24 free_memory_kib=10440804 temperature=unavailable
+order=37 N=2048 go_paralelo_W4 rep=2 status=OK 
+order=38 cpu_load_percent=18 free_memory_kib=10390896 temperature=unavailable
+order=38 N=2048 go_paralelo_W2 rep=2 status=OK 
+order=39 cpu_load_percent=11 free_memory_kib=10354920 temperature=unavailable
+order=39 N=2048 go_paralelo_W1 rep=2 status=OK 
+order=40 cpu_load_percent=9 free_memory_kib=10426208 temperature=unavailable
+order=40 {"rank":0,"pid":5480,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":5.091371200,"total_s":5.114265000,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=40 N=2048 c_paralelo_P1_T1 rep=2 status=OK 
+order=41 cpu_load_percent=14 free_memory_kib=10356752 temperature=unavailable
+order=41 N=2048 go_secuencial rep=2 status=OK 
+order=42 cpu_load_percent=16 free_memory_kib=10629460 temperature=unavailable
+order=42 N=2048 c_secuencial rep=2 status=OK 
+order=43 cpu_load_percent=4 free_memory_kib=10557136 temperature=unavailable
+order=43 N=1024 go_paralelo_W4 rep=2 status=OK 
+order=44 cpu_load_percent=14 free_memory_kib=10542068 temperature=unavailable
+order=44 N=1024 go_paralelo_W2 rep=2 status=OK 
+order=45 cpu_load_percent=4 free_memory_kib=10545832 temperature=unavailable
+order=45 N=1024 go_paralelo_W1 rep=2 status=OK 
+order=46 cpu_load_percent=21 free_memory_kib=10642080 temperature=unavailable
+order=46 {"rank":0,"pid":13232,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.467645200,"total_s":0.471179300,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=46 N=1024 c_paralelo_P1_T1 rep=2 status=OK 
+order=47 cpu_load_percent=20 free_memory_kib=10607320 temperature=unavailable
+order=47 N=1024 go_secuencial rep=2 status=OK 
+order=48 cpu_load_percent=32 free_memory_kib=10596088 temperature=unavailable
+order=48 N=1024 c_secuencial rep=2 status=OK 
+order=49 cpu_load_percent=20 free_memory_kib=10616320 temperature=unavailable
+order=49 N=512 go_paralelo_W4 rep=2 status=OK 
+order=50 cpu_load_percent=19 free_memory_kib=10600368 temperature=unavailable
+order=50 N=512 go_paralelo_W2 rep=2 status=OK 
+order=51 cpu_load_percent=17 free_memory_kib=10597740 temperature=unavailable
+order=51 N=512 go_paralelo_W1 rep=2 status=OK 
+order=52 cpu_load_percent=21 free_memory_kib=10594940 temperature=unavailable
+order=52 {"rank":0,"pid":2392,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.057810500,"total_s":0.058743600,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=52 N=512 c_paralelo_P1_T1 rep=2 status=OK 
+order=53 cpu_load_percent=15 free_memory_kib=10596584 temperature=unavailable
+order=53 N=512 go_secuencial rep=2 status=OK 
+order=54 cpu_load_percent=28 free_memory_kib=10595376 temperature=unavailable
+order=54 N=512 c_secuencial rep=2 status=OK 
+order=55 cpu_load_percent=29 free_memory_kib=10581668 temperature=unavailable
+order=55 N=512 c_secuencial rep=3 status=OK 
+order=56 cpu_load_percent=9 free_memory_kib=10590500 temperature=unavailable
+order=56 N=512 go_secuencial rep=3 status=OK 
+order=57 cpu_load_percent=7 free_memory_kib=10592376 temperature=unavailable
+order=57 {"rank":0,"pid":2420,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.058587100,"total_s":0.059508700,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=57 N=512 c_paralelo_P1_T1 rep=3 status=OK 
+order=58 cpu_load_percent=8 free_memory_kib=10579296 temperature=unavailable
+order=58 N=512 go_paralelo_W1 rep=3 status=OK 
+order=59 cpu_load_percent=11 free_memory_kib=10593652 temperature=unavailable
+order=59 N=512 go_paralelo_W2 rep=3 status=OK 
+order=60 cpu_load_percent=7 free_memory_kib=10594080 temperature=unavailable
+order=60 N=512 go_paralelo_W4 rep=3 status=OK 
+order=61 cpu_load_percent=5 free_memory_kib=10587372 temperature=unavailable
+order=61 N=1024 c_secuencial rep=3 status=OK 
+order=62 cpu_load_percent=22 free_memory_kib=10592260 temperature=unavailable
+order=62 N=1024 go_secuencial rep=3 status=OK 
+order=63 cpu_load_percent=10 free_memory_kib=10609968 temperature=unavailable
+order=63 {"rank":0,"pid":8400,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.445449700,"total_s":0.448846400,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=63 N=1024 c_paralelo_P1_T1 rep=3 status=OK 
+order=64 cpu_load_percent=9 free_memory_kib=10612228 temperature=unavailable
+order=64 N=1024 go_paralelo_W1 rep=3 status=OK 
+order=65 cpu_load_percent=23 free_memory_kib=10607372 temperature=unavailable
+order=65 N=1024 go_paralelo_W2 rep=3 status=OK 
+order=66 cpu_load_percent=21 free_memory_kib=10605248 temperature=unavailable
+order=66 N=1024 go_paralelo_W4 rep=3 status=OK 
+order=67 cpu_load_percent=28 free_memory_kib=10620912 temperature=unavailable
+order=67 N=2048 c_secuencial rep=3 status=OK 
+order=68 cpu_load_percent=27 free_memory_kib=10576724 temperature=unavailable
+order=68 N=2048 go_secuencial rep=3 status=OK 
+order=69 cpu_load_percent=1 free_memory_kib=10593840 temperature=unavailable
+order=69 {"rank":0,"pid":6140,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":4.814890500,"total_s":4.829953300,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=69 N=2048 c_paralelo_P1_T1 rep=3 status=OK 
+order=70 cpu_load_percent=15 free_memory_kib=10619716 temperature=unavailable
+order=70 N=2048 go_paralelo_W1 rep=3 status=OK 
+order=71 cpu_load_percent=10 free_memory_kib=10616488 temperature=unavailable
+order=71 N=2048 go_paralelo_W2 rep=3 status=OK 
+order=72 cpu_load_percent=14 free_memory_kib=10582512 temperature=unavailable
+order=72 N=2048 go_paralelo_W4 rep=3 status=OK 
+order=73 cpu_load_percent=28 free_memory_kib=10669952 temperature=unavailable
+order=73 N=2048 go_paralelo_W4 rep=4 status=OK 
+order=74 cpu_load_percent=14 free_memory_kib=10527212 temperature=unavailable
+order=74 N=2048 go_paralelo_W2 rep=4 status=OK 
+order=75 cpu_load_percent=14 free_memory_kib=10537180 temperature=unavailable
+order=75 N=2048 go_paralelo_W1 rep=4 status=OK 
+order=76 cpu_load_percent=7 free_memory_kib=10521720 temperature=unavailable
+order=76 {"rank":0,"pid":12388,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":5.076908800,"total_s":5.096983400,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=76 N=2048 c_paralelo_P1_T1 rep=4 status=OK 
+order=77 cpu_load_percent=31 free_memory_kib=10477572 temperature=unavailable
+order=77 N=2048 go_secuencial rep=4 status=OK 
+order=78 cpu_load_percent=21 free_memory_kib=10454284 temperature=unavailable
+order=78 N=2048 c_secuencial rep=4 status=OK 
+order=79 cpu_load_percent=19 free_memory_kib=10420168 temperature=unavailable
+order=79 N=1024 go_paralelo_W4 rep=4 status=OK 
+order=80 cpu_load_percent=20 free_memory_kib=10408192 temperature=unavailable
+order=80 N=1024 go_paralelo_W2 rep=4 status=OK 
+order=81 cpu_load_percent=26 free_memory_kib=10404784 temperature=unavailable
+order=81 N=1024 go_paralelo_W1 rep=4 status=OK 
+order=82 cpu_load_percent=26 free_memory_kib=10396668 temperature=unavailable
+order=82 {"rank":0,"pid":6132,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.446611400,"total_s":0.449921700,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=82 N=1024 c_paralelo_P1_T1 rep=4 status=OK 
+order=83 cpu_load_percent=19 free_memory_kib=10404156 temperature=unavailable
+order=83 N=1024 go_secuencial rep=4 status=OK 
+order=84 cpu_load_percent=18 free_memory_kib=10392720 temperature=unavailable
+order=84 N=1024 c_secuencial rep=4 status=OK 
+order=85 cpu_load_percent=13 free_memory_kib=10396628 temperature=unavailable
+order=85 N=512 go_paralelo_W4 rep=4 status=OK 
+order=86 cpu_load_percent=18 free_memory_kib=10388352 temperature=unavailable
+order=86 N=512 go_paralelo_W2 rep=4 status=OK 
+order=87 cpu_load_percent=12 free_memory_kib=10392440 temperature=unavailable
+order=87 N=512 go_paralelo_W1 rep=4 status=OK 
+order=88 cpu_load_percent=10 free_memory_kib=10379248 temperature=unavailable
+order=88 {"rank":0,"pid":9092,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.058344400,"total_s":0.059297500,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=88 N=512 c_paralelo_P1_T1 rep=4 status=OK 
+order=89 cpu_load_percent=7 free_memory_kib=10375068 temperature=unavailable
+order=89 N=512 go_secuencial rep=4 status=OK 
+order=90 cpu_load_percent=13 free_memory_kib=10374996 temperature=unavailable
+order=90 N=512 c_secuencial rep=4 status=OK 
+order=91 cpu_load_percent=18 free_memory_kib=10370036 temperature=unavailable
+order=91 N=512 c_secuencial rep=5 status=OK 
+order=92 cpu_load_percent=24 free_memory_kib=10365048 temperature=unavailable
+order=92 N=512 go_secuencial rep=5 status=OK 
+order=93 cpu_load_percent=9 free_memory_kib=10372696 temperature=unavailable
+order=93 {"rank":0,"pid":12264,"rows":512,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.057766300,"total_s":0.058716200,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=93 N=512 c_paralelo_P1_T1 rep=5 status=OK 
+order=94 cpu_load_percent=5 free_memory_kib=10373356 temperature=unavailable
+order=94 N=512 go_paralelo_W1 rep=5 status=OK 
+order=95 cpu_load_percent=3 free_memory_kib=10372152 temperature=unavailable
+order=95 N=512 go_paralelo_W2 rep=5 status=OK 
+order=96 cpu_load_percent=10 free_memory_kib=10334848 temperature=unavailable
+order=96 N=512 go_paralelo_W4 rep=5 status=OK 
+order=97 cpu_load_percent=5 free_memory_kib=10576364 temperature=unavailable
+order=97 N=1024 c_secuencial rep=5 status=OK 
+order=98 cpu_load_percent=16 free_memory_kib=10548212 temperature=unavailable
+order=98 N=1024 go_secuencial rep=5 status=OK 
+order=99 cpu_load_percent=9 free_memory_kib=10541516 temperature=unavailable
+order=99 {"rank":0,"pid":6564,"rows":1024,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":0.459518500,"total_s":0.462989300,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=99 N=1024 c_paralelo_P1_T1 rep=5 status=OK 
+order=100 cpu_load_percent=15 free_memory_kib=10497624 temperature=unavailable
+order=100 N=1024 go_paralelo_W1 rep=5 status=OK 
+order=101 cpu_load_percent=14 free_memory_kib=10511268 temperature=unavailable
+order=101 N=1024 go_paralelo_W2 rep=5 status=OK 
+order=102 cpu_load_percent=22 free_memory_kib=10507296 temperature=unavailable
+order=102 N=1024 go_paralelo_W4 rep=5 status=OK 
+order=103 cpu_load_percent=34 free_memory_kib=10492424 temperature=unavailable
+order=103 N=2048 c_secuencial rep=5 status=OK 
+order=104 cpu_load_percent=8 free_memory_kib=10393204 temperature=unavailable
+order=104 N=2048 go_secuencial rep=5 status=OK 
+order=105 cpu_load_percent=1 free_memory_kib=10443464 temperature=unavailable
+order=105 {"rank":0,"pid":6424,"rows":2048,"first_row":0,"requested_threads":1,"timed_observed_threads":1,"kernel_s":4.873428900,"total_s":4.887203600,"process_affinity_mask":4095,"system_affinity_mask":4095}
+order=105 N=2048 c_paralelo_P1_T1 rep=5 status=OK 
+order=106 cpu_load_percent=21 free_memory_kib=10634468 temperature=unavailable
+order=106 N=2048 go_paralelo_W1 rep=5 status=OK 
+order=107 cpu_load_percent=17 free_memory_kib=10537128 temperature=unavailable
+order=107 N=2048 go_paralelo_W2 rep=5 status=OK 
+order=108 cpu_load_percent=5 free_memory_kib=10632944 temperature=unavailable
+order=108 N=2048 go_paralelo_W4 rep=5 status=OK 

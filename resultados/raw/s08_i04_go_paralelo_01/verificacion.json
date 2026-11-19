@@ -1,0 +1,11 @@
+{
+    "status":  "VERIFIED",
+    "campaign_id":  "s08_i04_go_paralelo_01",
+    "verified_at_utc":  "2026-11-19T21:07:21Z",
+    "observations":  108,
+    "groups":  18,
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "native_execution_required":  "La procedencia Windows se acredita con entorno y logs; esta verificacion no ejecuta los binarios.",
+    "human_environment_review":  "Confirmar PC oficial, carga/temperatura/alimentacion y reproduccion antes de cerrar S7.",
+    "data_sha256":  "2D8A9222EC26AE34AAB5ECCCD07D884D2F5D21411A4A04B8AEFD565328776CE4"
+}

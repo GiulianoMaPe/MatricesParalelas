@@ -1,0 +1,289 @@
+{
+    "tool":  "scripts/extract_s08_go_paralelo.ps1",
+    "generated_at_utc":  "2026-11-19T17:53:52Z",
+    "status":  "VERIFIED_PILOT",
+    "requested_phase":  "piloto",
+    "campaign":  {
+                     "id":  "s07_windows_20261117_reproduccion_06",
+                     "phase":  "piloto",
+                     "directory":  "resultados/piloto/s07_windows_20261117_reproduccion_06",
+                     "state":  "COMPLETE",
+                     "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                     "expected_commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                     "hostname":  "PCG1UL14N0",
+                     "cpu_model":  "AMD Ryzen 5 3600 6-Core Processor",
+                     "physical_cores":  6,
+                     "logical_processors":  12,
+                     "seed":  "42",
+                     "matrix_sizes":  [
+                                          256,
+                                          512,
+                                          1024
+                                      ]
+                 },
+    "sources":  {
+                    "mediciones.csv":  "F00AF4B73642CF0B71379CD363EBA58AC9552BDE455CAD0E92AB0833EABDB486",
+                    "plan.csv":  "F8723DF739D97C285CD587F51A540AB319D98A8EA31A2E86F0E18DE4FEA78CE5",
+                    "entorno.json":  "620B628F764EB3FF2F8F66B530952181EA7506B6532A954935C6C313D4A00219",
+                    "estado.json":  "4065D2E17316B32626D9946DF142D2ABA5B479D7A29B86A239618A89E4CFCAB6"
+                },
+    "output":  {
+                   "path":  "resultados/diagnostico/s08_i04_go_paralelo/go_paralelo_reproduccion_06.csv",
+                   "written":  true,
+                   "sha256":  "A8B1933A684F3249053C3060EEBF3FAEA371ED2AE37EB063D5918989E4F30F67",
+                   "rows":  54,
+                   "warmups":  9,
+                   "measured":  45
+               },
+    "controls":  {
+                     "worker_series":  [
+                                           1,
+                                           2,
+                                           4
+                                       ],
+                     "allowed_workers":  [
+                                             1,
+                                             2,
+                                             4
+                                         ],
+                     "dispersion_threshold_iqr_over_median":  0.1,
+                     "short_time_threshold_s":  0.1,
+                     "quartiles":  "Q1=x2, mediana=x3, Q3=x4 con cinco medidas (summarize_results.ps1)"
+                 },
+    "groups":  [
+                   {
+                       "n":  256,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.016677700",
+                       "q1_total_s":  "0.016670900",
+                       "q3_total_s":  "0.016719800",
+                       "min_total_s":  "0.016665000",
+                       "max_total_s":  "0.019083500",
+                       "iqr_over_median":  "0.0029",
+                       "max_over_min":  "1.1451",
+                       "median_kernel_s":  "0.016670900"
+                   },
+                   {
+                       "n":  256,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.008534000",
+                       "q1_total_s":  "0.008054300",
+                       "q3_total_s":  "0.008542500",
+                       "min_total_s":  "0.007788600",
+                       "max_total_s":  "0.009129200",
+                       "iqr_over_median":  "0.0572",
+                       "max_over_min":  "1.1721",
+                       "median_kernel_s":  "0.008042200"
+                   },
+                   {
+                       "n":  256,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "dispersion_alta",
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.004499800",
+                       "q1_total_s":  "0.004018500",
+                       "q3_total_s":  "0.004676600",
+                       "min_total_s":  "0.003999900",
+                       "max_total_s":  "0.005001600",
+                       "iqr_over_median":  "0.1463",
+                       "max_over_min":  "1.2504",
+                       "median_kernel_s":  "0.004018500"
+                   },
+                   {
+                       "n":  512,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "0.135605400",
+                       "q1_total_s":  "0.135499900",
+                       "q3_total_s":  "0.135923600",
+                       "min_total_s":  "0.135412800",
+                       "max_total_s":  "0.148883000",
+                       "iqr_over_median":  "0.0031",
+                       "max_over_min":  "1.0995",
+                       "median_kernel_s":  "0.135103000"
+                   },
+                   {
+                       "n":  512,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.068411300",
+                       "q1_total_s":  "0.068351000",
+                       "q3_total_s":  "0.068608500",
+                       "min_total_s":  "0.067493600",
+                       "max_total_s":  "0.069191700",
+                       "iqr_over_median":  "0.0038",
+                       "max_over_min":  "1.0252",
+                       "median_kernel_s":  "0.067909000"
+                   },
+                   {
+                       "n":  512,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+                                     "tiempo_corto"
+                                 ],
+                       "median_total_s":  "0.038731000",
+                       "q1_total_s":  "0.037167100",
+                       "q3_total_s":  "0.040255600",
+                       "min_total_s":  "0.036198100",
+                       "max_total_s":  "0.041553300",
+                       "iqr_over_median":  "0.0797",
+                       "max_over_min":  "1.1479",
+                       "median_kernel_s":  "0.037728000"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  1,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "1.091995400",
+                       "q1_total_s":  "1.082887400",
+                       "q3_total_s":  "1.112291700",
+                       "min_total_s":  "1.072224000",
+                       "max_total_s":  "1.146387800",
+                       "iqr_over_median":  "0.0269",
+                       "max_over_min":  "1.0692",
+                       "median_kernel_s":  "1.090488900"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  2,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "0.547883800",
+                       "q1_total_s":  "0.546696100",
+                       "q3_total_s":  "0.568430200",
+                       "min_total_s":  "0.541965100",
+                       "max_total_s":  "0.570055200",
+                       "iqr_over_median":  "0.0397",
+                       "max_over_min":  "1.0518",
+                       "median_kernel_s":  "0.546371900"
+                   },
+                   {
+                       "n":  1024,
+                       "workers":  4,
+                       "complete":  true,
+                       "warmups":  1,
+                       "measured":  5,
+                       "flags":  [
+
+                                 ],
+                       "median_total_s":  "0.299012000",
+                       "q1_total_s":  "0.298171900",
+                       "q3_total_s":  "0.327831600",
+                       "min_total_s":  "0.290415200",
+                       "max_total_s":  "0.335226400",
+                       "iqr_over_median":  "0.0992",
+                       "max_over_min":  "1.1543",
+                       "median_kernel_s":  "0.297469000"
+                   }
+               ],
+    "speedup_vs_w1":  [
+                          {
+                              "n":  256,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.954",
+                              "efficiency":  "0.977"
+                          },
+                          {
+                              "n":  256,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.706",
+                              "efficiency":  "0.927"
+                          },
+                          {
+                              "n":  512,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.982",
+                              "efficiency":  "0.991"
+                          },
+                          {
+                              "n":  512,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.501",
+                              "efficiency":  "0.875"
+                          },
+                          {
+                              "n":  1024,
+                              "workers":  2,
+                              "speedup_vs_w1":  "1.993",
+                              "efficiency":  "0.997"
+                          },
+                          {
+                              "n":  1024,
+                              "workers":  4,
+                              "speedup_vs_w1":  "3.652",
+                              "efficiency":  "0.913"
+                          }
+                      ],
+    "anomalies":  [
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=256 W=1: mediana de total_s 0.016677700 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=256 W=2: mediana de total_s 0.008534000 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "warning",
+                          "code":  "dispersion_alta",
+                          "detail":  "N=256 W=4: IQR/mediana de total_s = 14.6 % (umbral 10 %); se conservan las cinco medidas."
+                      },
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=256 W=4: mediana de total_s 0.004499800 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=512 W=2: mediana de total_s 0.068411300 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      },
+                      {
+                          "severity":  "info",
+                          "code":  "tiempo_corto",
+                          "detail":  "N=512 W=4: mediana de total_s 0.038731000 s \u003c 0.100 s; diagnostico de tiempos cortos (politica de reloj S6)."
+                      }
+                  ],
+    "critical":  0
+}
