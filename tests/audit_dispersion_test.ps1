@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Suite de pruebas automatizadas para scripts/audit_dispersion.ps1.
 

@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Auditoría de dispersión y variabilidad experimental para el Sprint 8 (Integrante 7 - Andrés).
 
