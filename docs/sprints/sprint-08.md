@@ -1,6 +1,6 @@
 # Sprint 8 Ejecutar la campaña oficial
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: entrega técnica I3 (Giuliano/Go secuencial) completa y verificada; revisión I2 pendiente. La campaña integral y las demás entregas del equipo siguen pendientes. Plan de desarrollo de la [guía vigente](../guia-extraida.txt).
 
 Semana 8 · 64 horas de equipo · 8 horas por integrante
 
@@ -16,7 +16,7 @@ Integrante 1  Ejecutar y supervisar los lotes de C secuencial (3 h). Revisar int
 
 Integrante 2  Ejecutar y supervisar las combinaciones del híbrido C (3 h). Verificar participación de procesos e hilos y registrar anomalías (3 h). Entregable: CSV originales de C paralelo. Ubicación: resultados/raw/c_paralelo.csv.
 
-Integrante 3  Ejecutar y supervisar la campaña Go secuencial (3 h). Revisar equivalencia de entradas y condiciones de ejecución (3 h). Entregable: CSV originales de Go secuencial. Ubicación: resultados/raw/go_secuencial.csv.
+Integrante 3 (Giuliano/I3)  Ejecutar y supervisar la campaña Go secuencial (3 h). Revisar equivalencia de entradas y condiciones de ejecución (3 h). Entregable: CSV de Go secuencial derivado sin modificar el CSV original de la campaña integrada. Ubicación: `resultados/raw/go_secuencial.csv`; conservar como fuente `resultados/raw/<campaign_id>/mediciones.csv`. Véase el [plan I3 de S8](sprint-08-i03-plan.md).
 
 Integrante 4  Ejecutar y supervisar los lotes de Go paralelo (3 h). Revisar workers efectivos y estabilidad de las repeticiones (3 h). Entregable: CSV originales de Go paralelo. Ubicación: resultados/raw/go_paralelo.csv.
 
@@ -37,3 +37,22 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+### I3 · Giuliano · 17/11/2026
+
+- Entrega técnica: [Go secuencial y resultados tabulados](../../resultados/raw/s08_i03_go_secuencial_03/README.md),
+  18 observaciones válidas (3 warmups + 15 medidas), cinco medidas únicas por
+  N=512/1024/2048, semilla 42, workers=GOMAXPROCS=1.
+- Fuente oficial: `s08_i03_go_secuencial_03`, candidata `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`,
+  subplan con **72/72 corridas OK**, 12 grupos completos y 0 exclusiones.
+  Se preservan CSV, plan, entorno, manifiestos, fuentes/hashes y logs/ranks.
+- [Plan y registro individual](sprint-08-i03-plan.md): intentos previos conservados;
+  timeout ampliado de 300 a 900 s sin cambiar los binarios ni sustituir filas.
+- Verificador común y revisión I3: COMPLETE/VERIFIED; extracción idéntica a
+  sus líneas fuente, veinte columnas, parámetros, UTC, tiempos y entorno hijo válidos.
+- GPU medida; CPU sin lectura. Rango térmico y límites documentados junto a los resultados.
+- Revisión I2→I3: pendiente; revisor asignado `@SebastianMalca`; [PR #58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58).
+- Horas reales/coordinación: no confirmadas para S8; presupuesto I3 de 8 h.
+- Duración de los controles N=2048 superior al timeout inicial: revisar presupuesto de máquina y reserva de la campaña integral con I5/I6.
+- El alcance es I3 con controles: el resto de combinaciones, la auditoría y la
+  congelación del equipo y su cierre de sprint siguen pendientes.

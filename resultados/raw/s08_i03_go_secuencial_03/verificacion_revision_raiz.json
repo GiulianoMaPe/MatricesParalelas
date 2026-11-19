@@ -1,0 +1,11 @@
+{
+    "status":  "VERIFIED",
+    "campaign_id":  "s08_i03_go_secuencial_03",
+    "verified_at_utc":  "2026-11-17T21:57:25Z",
+    "observations":  72,
+    "groups":  12,
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "native_execution_required":  "La procedencia Windows se acredita con entorno y logs; esta verificacion no ejecuta los binarios.",
+    "human_environment_review":  "Confirmar PC oficial, carga/temperatura/alimentacion y reproduccion antes de cerrar S7.",
+    "data_sha256":  "6C972DC764BB3AEF41E3C1A3CD3F091A7FC69F8925C7C0660E1CC14FE61849DC"
+}
