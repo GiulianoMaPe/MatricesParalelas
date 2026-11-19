@@ -194,3 +194,15 @@ Los procesos y archivos controlados de las pruebas no son observaciones de
 rendimiento. La batería original de I4 usa `.cmd` y debe ejecutarse en Windows;
 no se considera aprobada por una ejecución Linux. Los resultados y limitaciones
 vigentes se registran en [Sprint 7](../docs/sprints/sprint-07.md).
+
+## Sprint 8 · I4: extracción y verificación del lote go_paralelo
+
+`extract_s08_go_paralelo_test.ps1` copia una campaña real ya verificada (por
+defecto, el piloto S7 `_05` de la PC oficial) a una carpeta temporal. En cada
+caso introduce un defecto y comprueba que `scripts/extract_s08_go_paralelo.ps1`
+lo detecte con la anomalía y el estado esperados. No modifica la campaña
+original ni produce observaciones.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\extract_s08_go_paralelo_test.ps1
+```
