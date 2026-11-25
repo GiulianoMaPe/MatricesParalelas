@@ -57,3 +57,33 @@ Se revisó por encargo de I4 el [informe de Fernando](https://github.com/Giulian
 - Actualizar recepción y conteos a medida que estén disponibles los PRs. El [PR #58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58) aporta el primer lote para el inventario de Go secuencial. Registra 3 calentamientos y 15 mediciones válidas en 3 grupos. Sus 18 filas incluyen los calentamientos.
 
 El cierre del informe de calidad corresponde a I5 después de auditar los cuatro lotes.
+
+#### Integrante 7 (Andrés)
+
+- **Participantes y horas reales:** Andrés (I7). Total: 8 h reales (3 h generación del resumen provisional oficial en `resultados/resumen/resumen_provisional.csv` e implementación de `scripts/audit_dispersion.ps1`; 3 h análisis cuantitativo de dispersión relativa $\text{RSD}_{\text{IQR}}$, vallas de Tukey y redacción del dictamen técnico en `docs/auditoria_dispersion_s08.md`; 1 h revisión cruzada a I8 Roberto sobre `docs/bitacora_experimentos.md`; 1 h coordinación de equipo).
+- **PR y rama:** rama de trabajo `feature/s08-i07-resumen-provisional-dispersion`.
+- **Entregables:**
+  1. [`resultados/resumen/resumen_provisional.csv`](../../resultados/resumen/resumen_provisional.csv): Consolidado provisional de 9 grupos oficiales con 32 columnas canónicas (mediana, IQR, min, max, cuartiles y GFLOPS).
+  2. [`scripts/audit_dispersion.ps1`](../../scripts/audit_dispersion.ps1): Herramienta automatizada de auditoría estadística para variabilidad, outliers y ratios extremos.
+  3. [`resultados/resumen/dispersion_report.csv`](../../resultados/resumen/dispersion_report.csv): Reporte tabular de métricas de estabilidad por grupo.
+  4. [`docs/auditoria_dispersion_s08.md`](../../docs/auditoria_dispersion_s08.md): Informe técnico de auditoría y fundamentación de dictamen de no repetición.
+  5. [`resultados/resumen/README.md`](../../resultados/resumen/README.md): Documentación de trazabilidad y estructura del directorio de resúmenes.
+  6. [`tests/audit_dispersion_test.ps1`](../../tests/audit_dispersion_test.ps1): Suite de 17 pruebas unitarias automatizadas con 100% de éxito.
+- **Auditoría de dispersión cuantitativa:**
+  - **$N=512$:** Estabilidad excelente en $W=1$ ($\text{RSD}_{\text{IQR}} = 0.32\%$) y estable en $W=2$ ($2.99\%$) y $W=4$ ($3.15\%$).
+  - **$N=1024$:** Se detectó dispersión anormal (> 10%) en $W=2$ ($10.71\%$) y $W=4$ ($11.40\%$).
+  - **$N=2048$:** Estabilidad sobresaliente en carga pesada con $\text{RSD}_{\text{IQR}} < 0.70\%$ ($W=1: 0.39\%$, $W=2: 0.42\%$, $W=4: 0.66\%$).
+- **Dictamen de repetición justificada según protocolo (§6.3):**
+  - **Dictamen emitido:** `CONSERVAR_CONFORME` (No repetir).
+  - **Fundamento:** Las 5 observaciones por grupo son completas y válidas (`validation_status = OK`), sin abortos ni timeouts. La fluctuación en $N=1024$ es inherente al planificador del sistema operativo en duraciones cortas (< 0.6 s) y desaparece en cargas mayores. El protocolo §6.3 prohíbe el descarte selectivo o "escoger el mejor lote"; el uso de la mediana inmuniza el análisis contra estas variaciones.
+- **Pruebas y evidencias:**
+  - `tests/audit_dispersion_test.ps1`: 17 de 17 pruebas superadas (100% PASS).
+  - `tests/summarize_results_test.ps1`: 43 de 43 pruebas superadas (100% PASS en regresión).
+  - Verificación de codificación UTF-8 sin BOM en todos los artefactos generados.
+
+##### Revisión cruzada de I7 a I8 · 19/11/2026
+
+Se revisó la estructura de [`docs/bitacora_experimentos.md`](../../docs/bitacora_experimentos.md) y los criterios de congelación experimental de Roberto (I8):
+- Se verificó la trazabilidad rigurosa exigida para cada archivo CSV desde el commit congelado `97ccc981e9068d8ec0753cd8a4b7572a6bece34d` y la máquina oficial `PCG1UL14N0`.
+- Se confirmó que los nombres de archivo y metadatos coincidan exactamente con la convención del contrato (§4) y que la carpeta `resultados/raw/` conserve los datos crudos originales sin sobreescrituras.
+- Se coordinó la inclusión de los reportes de dispersión provisionales en el inventario general de cara al Sprint 9. Su trabajo queda conforme como base para la congelación final.
