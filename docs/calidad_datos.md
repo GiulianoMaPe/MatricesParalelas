@@ -1,6 +1,6 @@
 # Reporte parcial de calidad de datos — Sprint 8
 
-Estado: tres lotes oficiales verificados. La campaña integrada de 198 corridas está en curso al 25/11/2026.
+Estado: tres lotes oficiales verificados. La campaña integrada completa se está repitiendo en un nuevo intento tras interrumpirse el primero.
 
 ## Inventario de entregables
 
