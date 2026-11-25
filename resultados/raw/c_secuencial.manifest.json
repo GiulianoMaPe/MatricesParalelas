@@ -1,0 +1,58 @@
+{
+    "status":  "VERIFIED_OFFICIAL",
+    "phase":  "oficial",
+    "generated_at_utc":  "2026-11-25T01:46:52Z",
+    "extractor":  {
+                      "operator":  "Yessly (I1)",
+                      "source_campaign":  "resultados/raw/s08_i04_go_paralelo_01/mediciones.csv",
+                      "expected_commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                      "official_hostname":  "PCG1UL14N0"
+                  },
+    "verification":  {
+                         "schema_20_columns":  true,
+                         "rows_total":  18,
+                         "groups_complete":  3,
+                         "warmups":  3,
+                         "measurements":  15,
+                         "validation_status_ok":  true,
+                         "kernel_le_total":  true,
+                         "single_commit":  true,
+                         "single_hostname":  true,
+                         "single_seed":  true,
+                         "single_version":  true,
+                         "commit_matches_frozen":  true,
+                         "os_version_observation":  "Script reports \u0027Windows 10 Pro build 26300.9711\u0027, corresponding to Windows 11 kernel build."
+                     },
+    "statistics_by_n":  {
+                            "N512":  {
+                                         "min_total_s":  0.0238387,
+                                         "median_total_s":  0.0239321,
+                                         "max_total_s":  0.0240405,
+                                         "min_kernel_s":  0.0235691,
+                                         "median_kernel_s":  0.0236575,
+                                         "max_kernel_s":  0.0237581,
+                                         "relative_dispersion_pct":  0.84
+                                     },
+                            "N1024":  {
+                                          "min_total_s":  0.1898626,
+                                          "median_total_s":  0.1950226,
+                                          "max_total_s":  0.1958393,
+                                          "min_kernel_s":  0.1888777,
+                                          "median_kernel_s":  0.1940128,
+                                          "max_kernel_s":  0.1948116,
+                                          "relative_dispersion_pct":  3.06
+                                      },
+                            "N2048":  {
+                                          "min_total_s":  3.7636701,
+                                          "median_total_s":  3.7929924,
+                                          "max_total_s":  3.8791269,
+                                          "min_kernel_s":  3.7592746,
+                                          "median_kernel_s":  3.7876295,
+                                          "max_kernel_s":  3.874822,
+                                          "relative_dispersion_pct":  3.04
+                                      }
+                        },
+    "hashes":  {
+                   "c_secuencial_csv_sha256":  "0F82F9FDE140C6E928AFB0476392E22181DEDEE534F42D7D20B3271973B3C854"
+               }
+}
