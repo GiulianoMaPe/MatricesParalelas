@@ -1,6 +1,6 @@
 # Sprint 8 Ejecutar la campaña oficial
 
-Estado: pendiente de ejecución y revisión por el equipo. Plan de desarrollo de la [guía vigente](../guia-extraida.txt); no es evidencia de tareas realizadas.
+Estado: ejecución parcial y revisión pendiente. Go paralelo tiene lote oficial; C secuencial, C paralelo, Go secuencial y el control independiente siguen pendientes.
 
 Semana 8 · 64 horas de equipo · 8 horas por integrante
 
@@ -32,11 +32,11 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
+- Participantes y horas reales: Eva/I4 registrada; Gerardo/I6 inventario registrado; resto pendiente.
 - Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
-- Revision y criterio de aceptacion: pendiente.
+- Pruebas y evidencias: Go paralelo verificado; pruebas Go locales pasaron; C/MS-MPI no están disponibles en la sesión actual.
+- Bloqueos y decisiones: falta incorporar los tres lotes restantes y ejecutar el control independiente. La sesión I6 no contiene `.git`, cl.exe ni MS-MPI activos.
+- Revision y criterio de aceptacion: pendiente de las cuatro campañas y revisión cruzada.
 
 ## Registros individuales
 
