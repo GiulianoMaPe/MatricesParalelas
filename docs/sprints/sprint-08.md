@@ -40,6 +40,17 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registros individuales
 
+#### Integrante 1 (Yessly)
+
+- **Participantes y horas reales.** Yessly (I1) declaró 8 h (3 h ejecución y supervisión de lotes C secuencial, 3 h revisión de integridad, metadatos y control independiente, 1 h revisión cruzada a I2 en PR #59 y 1 h coordinación de equipo).
+- **PR y ejecución.** PR en rama `feature/s08-i01-c-secuencial-oficial`. Siguiendo el protocolo de precedencia de I4 (PR #60), se extrajo y auditó formalmente el lote oficial de C secuencial medido en la PC oficial `PCG1UL14N0` (Ryzen 5 3600, MSVC 14.44, commit `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`) a partir de la campaña integrada oficial (`resultados/raw/s08_i04_go_paralelo_01/mediciones.csv`). Adicionalmente, se ejecutó una campaña de control independiente en el host `YESSLY-TB14G9` (AMD Ryzen 7 250, Windows 11 build 26200.9974) con `scripts\bench_windows.ps1 -Version c_secuencial -Fase oficial`.
+- **Entregable.** [`resultados/raw/c_secuencial.csv`](../../resultados/raw/c_secuencial.csv) conserva exactamente las 18 filas oficiales (3 calentamientos y 15 mediciones válidas en 3 grupos $N=512, 1024, 2048$, semilla 42, `validation_status=OK`). Se generó su manifiesto de procedencia e integridad en [`resultados/raw/c_secuencial.manifest.json`](../../resultados/raw/c_secuencial.manifest.json) con SHA-256 `0F82F9FDE140C6E928AFB0476392E22181DEDEE534F42D7D20B3271973B3C854`. Los datos de control independiente se preservan en `resultados/control/s08_i01_c_secuencial_control/` con manifiesto propio.
+- **Auditoría e integridad.** Esquema de 20 columnas verificado. 18 de 18 corridas OK. En todas las filas se cumple $0 \le \text{kernel\_s} \le \text{total\_s}$. Mismo commit congelado (`97ccc981e9068d8ec0753cd8a4b7572a6bece34d`), hostname (`PCG1UL14N0`), semilla (`42`) y versión (`c_secuencial`). Dispersión relativa (rango/mediana) baja: 0.84% para $N=512$ (mediana 0.02393 s), 3.06% para $N=1024$ (mediana 0.19502 s) y 3.04% para $N=2048$ (mediana 3.79299 s). Cero fallos numéricos ni anomalías críticas. Se anota la observación de que `os_version` reporta `"Windows 10 Pro build 26300.9711"`, correspondiente a la compilación del kernel NT en Windows 11 (se conserva sin alterar el CSV crudo).
+- **Pruebas y regresión.** Se verificó compilación Release con `build_windows.ps1` y suite de regresión completa con `test_windows.ps1 -Version c_secuencial -SkipBuild` (código de salida 0, pasando pruebas de instalación, contratos S2/S5 y 5 fixtures con `compare_results.ps1`). Revisión pendiente de I8 (Roberto).
+
+##### Revisión cruzada de I1 a I2 (Sebastian) · PR #59
+Se auditó la rama `origin/feature/s08-i02-c-paralelo-oficial`. Sebastián implementó con rigor técnico el extractor `scripts/extract_s08_c_paralelo.ps1` con 13 pruebas unitarias sintéticas (13/13 OK) y regresión de S7 (23/23 OK). Reconoció honestamente la limitación de entorno en su PC (`DESKTOP-JIHSDJ6`, sin MSVC/MS-MPI ni permisos de administrador) y aplicó la política de no fabricar datos ni mezclar datos de prueba en `resultados/raw/c_paralelo.csv`. Dejó documentado el handoff para la PC oficial `PCG1UL14N0`. Su entrega es aprobada a nivel de herramienta y documentación.
+
 #### Integrante 4 (Eva)
 
 - **Participantes y horas reales.** Eva Moreno (I4) declaró 8 h. La distribución sigue la guía con 3 h de ejecución y supervisión, 3 h de auditoría de workers y estabilidad, 1 h de revisión cruzada a I5 y 1 h de coordinación. El tiempo de máquina fue de 89,70 min.
