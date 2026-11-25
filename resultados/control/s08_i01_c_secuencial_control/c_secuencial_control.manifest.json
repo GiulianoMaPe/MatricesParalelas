@@ -18,7 +18,9 @@
                          "measurements":  15,
                          "validation_status_ok":  true,
                          "kernel_le_total":  true,
-                         "os_version_observation":  "Script reports \u0027Windows 10 Pro build 26200.9974\u0027, which corresponds to Windows 11 kernel build."
+                         "os_version_observation":  "Script reports \u0027Windows 10 Pro build 26200.9974\u0027, which corresponds to Windows 11 kernel build.",
+                         "encoding":  "UTF-16 LE with BOM (0xFF 0xFE) due to standard PowerShell 5.1 redirection (\u003e); preserved as-is without rewriting.",
+                         "harness_host_check_limitation":  "bench_windows.ps1 with -Version c_secuencial and -Fase oficial does not enforce official hostname PCG1UL14N0, accepting execution on YESSLY-TB14G9 without error."
                      },
     "statistics_by_n":  {
                             "N512":  {
