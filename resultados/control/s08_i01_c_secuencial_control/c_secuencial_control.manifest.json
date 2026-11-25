@@ -1,0 +1,55 @@
+{
+    "status":  "VERIFIED_CONTROL",
+    "phase":  "control",
+    "generated_at_utc":  "2026-11-25T01:47:04Z",
+    "environment":  {
+                        "operator":  "Yessly (I1)",
+                        "hostname":  "YESSLY-TB14G9",
+                        "cpu_model":  "AMD Ryzen 7 250 w/ Radeon 780M Graphics",
+                        "ram_gb":  15.183,
+                        "os_version":  "Windows 10 Pro build 26200.9974",
+                        "commit":  "5a54ede1dc6371fc570ee12fa4560d78df7f4b0d"
+                    },
+    "verification":  {
+                         "schema_20_columns":  true,
+                         "rows_total":  18,
+                         "groups_complete":  3,
+                         "warmups":  3,
+                         "measurements":  15,
+                         "validation_status_ok":  true,
+                         "kernel_le_total":  true,
+                         "os_version_observation":  "Script reports \u0027Windows 10 Pro build 26200.9974\u0027, which corresponds to Windows 11 kernel build."
+                     },
+    "statistics_by_n":  {
+                            "N512":  {
+                                         "min_total_s":  0.0257872,
+                                         "median_total_s":  0.0276698,
+                                         "max_total_s":  0.0307049,
+                                         "min_kernel_s":  0.0250758,
+                                         "median_kernel_s":  0.0271035,
+                                         "max_kernel_s":  0.0300309,
+                                         "relative_dispersion_pct":  17.77
+                                     },
+                            "N1024":  {
+                                          "min_total_s":  0.3253129,
+                                          "median_total_s":  0.334347,
+                                          "max_total_s":  0.3596465,
+                                          "min_kernel_s":  0.323276,
+                                          "median_kernel_s":  0.3330283,
+                                          "max_kernel_s":  0.3573298,
+                                          "relative_dispersion_pct":  10.27
+                                      },
+                            "N2048":  {
+                                          "min_total_s":  5.480355,
+                                          "median_total_s":  5.6061233,
+                                          "max_total_s":  5.7776012,
+                                          "min_kernel_s":  5.471168,
+                                          "median_kernel_s":  5.5908002,
+                                          "max_kernel_s":  5.7685323,
+                                          "relative_dispersion_pct":  5.3
+                                      }
+                        },
+    "hashes":  {
+                   "c_secuencial_control_csv_sha256":  "8D7DE5634677D04605839096A6785A02AA6604FE527EDC4B559B3DCF02AE7C75"
+               }
+}
