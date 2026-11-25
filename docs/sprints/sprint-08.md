@@ -32,11 +32,25 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: Eva/I4 registrada; Gerardo/I6 inventario registrado; resto pendiente.
-- Issues y pull requests: pendiente.
-- Pruebas y evidencias: Go paralelo verificado; pruebas Go locales pasaron; C/MS-MPI no están disponibles en la sesión actual.
-- Bloqueos y decisiones: falta incorporar los tres lotes restantes y ejecutar el control independiente. La sesión I6 no contiene `.git`, cl.exe ni MS-MPI activos.
-- Revision y criterio de aceptacion: pendiente de las cuatro campañas y revisión cruzada.
+- PR integrados: [#62](https://github.com/GiulianoMaPe/MatricesParalelas/pull/62) (C secuencial y control), [#59](https://github.com/GiulianoMaPe/MatricesParalelas/pull/59) (extractor de C paralelo), [#58](https://github.com/GiulianoMaPe/MatricesParalelas/pull/58) (Go secuencial), [#60](https://github.com/GiulianoMaPe/MatricesParalelas/pull/60) (Go paralelo), [#63](https://github.com/GiulianoMaPe/MatricesParalelas/pull/63) (entorno y auditoría parcial) y [#61](https://github.com/GiulianoMaPe/MatricesParalelas/pull/61) (resumen y dispersión).
+- Verificación de integración: 13/13 pruebas del extractor de C paralelo, 23/23 pruebas del arnés híbrido, 72/72 corridas verificadas en la subcampaña de Go secuencial y hashes verificados del lote de C secuencial y su control.
+- La campaña `s08_oficial_integrada_01` se inició el 25/11/2026 a las 14:26 (Lima) en `PCG1UL14N0` con la candidata congelada. Su plan contiene 198 corridas. Los dictámenes individuales de abajo describen las entregas en la fecha de sus PR.
+- El [control independiente de C secuencial](../../resultados/control/s08_i01_c_secuencial_control/c_secuencial_control.manifest.json) aporta 18 corridas en otra PC. Usó el commit `5a54ede1dc6371fc570ee12fa4560d78df7f4b0d`. Su evidencia se conserva como control separado y su resumen no interviene en las comparaciones oficiales. El [inventario de I6](../entorno/6-gerardo.md) documenta una tercera PC.
+
+### Horas del equipo
+
+Cada integrante tiene asignadas 6 h de trabajo técnico, 1 h de revisión y 1 h de coordinación. Total previsto: 64 h. Los registros individuales respaldan las siguientes horas declaradas.
+
+| Integrante | Horas previstas | Horas declaradas |
+| --- | ---: | --- |
+| I1 · Yessly | 8 | 3 |
+| I2 · Sebastian | 8 | Pendiente de confirmación |
+| I3 · Giuliano | 8 | Pendiente de confirmación |
+| I4 · Eva | 8 | 8 |
+| I5 · Fernando | 8 | Pendiente de confirmación |
+| I6 · Gerardo | 8 | Pendiente de confirmación |
+| I7 · Andrés | 8 | 8 |
+| I8 · Roberto | 8 | Pendiente de confirmación |
 
 ## Registros individuales
 

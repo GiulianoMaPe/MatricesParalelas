@@ -14,7 +14,9 @@
 - Se generó `resultados/resumen/go_paralelo_resumen.csv` desde el CSV oficial ya recibido.
 - No se alteró `resultados/raw/go_paralelo.csv` ni su manifiesto.
 
-## Estado
+## 25/11/2026
 
-La campaña Sprint 8 sigue incompleta. Solo el lote Go paralelo de I4 está presente como CSV oficial.
-Las campañas C secuencial, C paralelo y Go secuencial, el control independiente de I6 y el congelamiento integral de `raw/` siguen pendientes.
+- Se incorporaron los lotes de C secuencial y Go secuencial, el extractor de C paralelo y el control realizado en la PC de I1. Los CSV y manifiestos de las subcampañas permanecen en sus rutas de origen.
+- Se inició `s08_oficial_integrada_01` a las 14:26 (Lima) en `PCG1UL14N0`, candidata limpia `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, semilla 42, Ryzen 5 3600, 6 núcleos físicos, alimentación AC y plan Equilibrado.
+- El plan incluye N=512/1024/2048, W=1/2/4, 33 calentamientos y 165 mediciones en rondas alternadas. El timeout por corrida se fijó en 900 s por la duración observada de los intentos MPI con N=2048.
+- El arnés registra carga y memoria disponible por corrida. La temperatura de CPU figura como no disponible. El estado final, la extracción de C paralelo y el inventario SHA-256 quedan sujetos a la verificación de este intento.

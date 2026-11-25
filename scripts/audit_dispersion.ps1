@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Auditoría de dispersión y variabilidad experimental para el Sprint 8 (Integrante 7 - Andrés).
 
@@ -107,32 +107,15 @@ $rawCandidate = if ($RawCsvPath) {
 }
 
 if ($rawCandidate -and (Test-Path -LiteralPath $rawCandidate)) {
-    $rawContent = [System.IO.File]::ReadAllLines($rawCandidate)
-    for ($r = 1; $r -lt $rawContent.Length; $r++) {
-        $rLine = $rawContent[$r].Trim()
-        if ([string]::IsNullOrWhiteSpace($rLine)) { continue }
-        $f = $rLine.Split(',')
-        if ($f.Length -ge 20) {
-            $rVersion = $f[1]
-            $rConfig = $f[7]
-            $rN = $f[8]
-            $rRep = $f[15]
-            $rWarm = $f[16]
-            $rKernel = $f[17]
-            $rTotal = $f[18]
-            $rStatus = $f[19]
-
-            if ($rWarm.ToLowerInvariant() -eq 'false' -and $rRep -ne '0' -and $rStatus -eq 'OK') {
-                $groupKey = "$rVersion|$rConfig|$rN"
-                if (-not $rawLookup.ContainsKey($groupKey)) {
-                    $rawLookup[$groupKey] = New-Object System.Collections.Generic.List[psobject]
-                }
-                $rawLookup[$groupKey].Add([pscustomobject]@{
-                    kernel_s = [double]::Parse($rKernel, $culture)
-                    total_s  = [double]::Parse($rTotal, $culture)
-                })
-            }
+    foreach ($observation in (Import-Csv -LiteralPath $rawCandidate -Encoding UTF8)) {
+        if ($observation.is_warmup -ne 'false' -or $observation.repetition -eq '0' -or $observation.validation_status -ne 'OK') {
+            continue
         }
+        $groupKey = "$($observation.version)|$($observation.configuration)|$($observation.n)"
+        if (-not $rawLookup.ContainsKey($groupKey)) {
+            $rawLookup[$groupKey] = New-Object System.Collections.Generic.List[double]
+        }
+        $rawLookup[$groupKey].Add([double]::Parse($observation.total_s, $culture))
     }
 }
 
@@ -185,19 +168,19 @@ foreach ($row in $summaryRows) {
     if ($rawLookup.ContainsKey($groupKey)) {
         $obsList = $rawLookup[$groupKey]
         $sum = 0.0
-        foreach ($o in $obsList) { $sum += $o.total_s }
+        foreach ($time in $obsList) { $sum += $time }
         $meanTotal = $sum / $obsList.Count
 
         $sumSq = 0.0
-        foreach ($o in $obsList) { $sumSq += [Math]::Pow($o.total_s - $meanTotal, 2) }
+        foreach ($time in $obsList) { $sumSq += [Math]::Pow($time - $meanTotal, 2) }
         $sdTotal = if ($obsList.Count -gt 1) { [Math]::Sqrt($sumSq / ($obsList.Count - 1)) } else { 0.0 }
         $cvTotal = if ($meanTotal -gt 0) { ($sdTotal / $meanTotal) * 100.0 } else { 0.0 }
 
         # Vallas de Tukey
         $lf = $tQ1 - 1.5 * $tIqr
         $uf = $tQ3 + 1.5 * $tIqr
-        foreach ($o in $obsList) {
-            if ($o.total_s -lt $lf -or $o.total_s -gt $uf) {
+        foreach ($time in $obsList) {
+            if ($time -lt $lf -or $time -gt $uf) {
                 $outliersCount++
             }
         }
@@ -215,7 +198,7 @@ foreach ($row in $summaryRows) {
     } elseif ($stability -eq 'ALTA') {
         # Dispersión > 10%
         $verdict = 'CONSERVAR_CONFORME'
-        $justification = "Dispersión relativa alta ($([math]::Round($rsdIqrTotal, 2))%) atribuible a variabilidad del planificador en ejecuciones cortas (< 1 s). Las 5 repeticiones son matemáticamente validas y completas. El protocolo §6.3 prohíbe el descarte selectivo; la mediana preserva la robustez sin introducir sesgo."
+        $justification = "Dispersión relativa alta ($([math]::Round($rsdIqrTotal, 2))%). Las cinco repeticiones son válidas y se conservan según el protocolo §6.3."
     } else {
         $verdict = 'CONSERVAR_CONFORME'
         $justification = "Estabilidad confirmada (RSD_IQR = $([math]::Round($rsdIqrTotal, 2))% <= $ThresholdHigh%). 5 repeticiones validas con trazabilidad completa."
@@ -305,16 +288,15 @@ if ($MarkdownPath) {
     $hostStr = $auditResults[0].hostname
     [void]$mdSb.AppendLine("# Informe de Auditoría de Dispersión y Variabilidad Experimental — Sprint 8")
     [void]$mdSb.AppendLine('')
-    [void]$mdSb.AppendLine('**Responsable:** Integrante 7 — Andrés  ')
-    [void]$mdSb.AppendLine('**Fecha:** 2026-11-19  ')
-    [void]$mdSb.AppendLine(('**Candidata evaluada:** Commit `{0}` en host oficial `{1}`  ' -f $commitStr, $hostStr))
-    [void]$mdSb.AppendLine('**Marco normativo:** docs/protocolo_medicion.md §6.3, §7.1 y docs/sprints/sprint-08.md  ')
+    [void]$mdSb.AppendLine(('- **Campaña:** `{0}`' -f $summaryRows[0].campaign_id))
+    [void]$mdSb.AppendLine(('- **Candidata evaluada:** Commit `{0}` en host `{1}`' -f $commitStr, $hostStr))
+    [void]$mdSb.AppendLine('- **Marco normativo:** docs/protocolo_medicion.md §6.3, §7.1 y docs/sprints/sprint-08.md')
     [void]$mdSb.AppendLine('')
     [void]$mdSb.AppendLine('---')
     [void]$mdSb.AppendLine('')
     [void]$mdSb.AppendLine('## 1. Resumen Ejecutivo y Alcance')
     [void]$mdSb.AppendLine('')
-    [void]$mdSb.AppendLine('En cumplimiento del plan de trabajo del Sprint 8 para el **Integrante 7**, este documento audita cuantitativamente la dispersión estadística y la estabilidad de las mediciones oficiales disponibles bajo `resultados/raw/`, con el fin de:')
+    [void]$mdSb.AppendLine('La auditoría evalúa la dispersión de los grupos del resumen indicado, con el fin de:')
     [void]$mdSb.AppendLine('1. Detectar configuraciones con dispersión anormal o atípica.')
     [void]$mdSb.AppendLine('2. Evaluar formalmente si se justifican repeticiones bajo las reglas del protocolo.')
     [void]$mdSb.AppendLine('3. Prevenir el sesgo de selección de observaciones favorables.')
@@ -361,35 +343,13 @@ if ($MarkdownPath) {
     [void]$mdSb.AppendLine("")
     [void]$mdSb.AppendLine("---")
     [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("## 4. Análisis Detallado de Dispersión Anormal")
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine('### 4.1. Detección en $N=1024$ ($W=2$ y $W=4$)')
-    [void]$mdSb.AppendLine('Se identificó dispersión relativa superior al umbral del 10% en dos configuraciones de Go paralelo:')
-    [void]$mdSb.AppendLine('- **`go_paralelo_W2` ($N=1024$):** $\text{RSD}_{\text{IQR}} = 10.71\%$, Rango extremo = $14.90\%$. Observaciones ordenadas: `[0.5422, 0.5606, 0.6027, 0.6251, 0.6320]` s.')
-    [void]$mdSb.AppendLine('- **`go_paralelo_W4` ($N=1024$):** $\text{RSD}_{\text{IQR}} = 11.40\%$, Rango extremo = $18.91\%$. Observaciones ordenadas: `[0.2968, 0.3017, 0.3169, 0.3378, 0.3567]` s.')
+    [void]$mdSb.AppendLine('## 4. Dictamen')
     [void]$mdSb.AppendLine('')
-    [void]$mdSb.AppendLine('### 4.2. Causa Raíz de la Variabilidad')
-    [void]$mdSb.AppendLine('1. **Duraciones Cortas:** En $N=1024$, las ejecuciones duran entre 0.3 s y 0.6 s. En este régimen temporal sub-segundo, pequeñas variaciones en la planificación de goroutines y cambios de contexto del kernel de Windows representan un porcentaje mayor de la duración total.')
-    [void]$mdSb.AppendLine('2. **Estabilidad en Carga Pesada ($N=2048$):** Cuando la carga aumenta a $N=2048$ (duraciones de 2.6 s a 9.0 s), la dispersión relativa cae drásticamente a **menos del 0.7%** ($W=1: 0.39\%$, $W=2: 0.42\%$, $W=4: 0.66\%$). Esto demuestra que el arnés de medición y el hardware son altamente estables y no sufren degradación térmica.')
-    [void]$mdSb.AppendLine('3. **Ausencia de Outliers Extremos:** La prueba de vallas de Tukey confirma cero valores atípicos ($0$ outliers). Todas las observaciones se encuentran dentro del rango previsible de dispersión operativa.')
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("---")
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("## 5. Dictamen Formal y Propuesta de Repeticiones Justificadas")
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("### 5.1. Reglas Normativas del Protocolo (§6.3)")
-    [void]$mdSb.AppendLine('> *"Conservar observaciones lentas o speedup menor que 1. Si una corrida falla, el grupo queda incompleto y no participa en speedup oficial. Conservar el fallo, investigar la causa y, si se repite, ejecutar un lote completo de warmup + 5 medidas en una nueva carpeta de campaña/intento... No sustituir solo la observación más lenta ni escoger el mejor lote."*')
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("### 5.2. Dictamen de Auditoría")
-    [void]$mdSb.AppendLine("- **Dictamen:** **`CONSERVAR_CONFORME` (No repetir)**.")
-    [void]$mdSb.AppendLine("- **Fundamentación:**")
-    [void]$mdSb.AppendLine("  1. Todas las ejecuciones finalizaron exitosamente con código 0 y `validation_status = OK`.")
-    [void]$mdSb.AppendLine("  2. No se registraron fallos de memoria (`OOM`), errores de proceso ni `TIMEOUT`.")
-    [void]$mdSb.AppendLine("  3. El protocolo prohíbe taxativamente descartar corridas lentas de forma arbitraria o 'escoger el mejor lote'.")
-    [void]$mdSb.AppendLine("  4. El empleo de la **mediana** como métrica central cumple con su propósito de diseño: inmunizar las conclusiones del proyecto frente a las fluctuaciones del planificador del sistema operativo sin introducir sesgos artificiales.")
-    [void]$mdSb.AppendLine("")
-    [void]$mdSb.AppendLine("---")
-    [void]$mdSb.AppendLine("Documento generado automáticamente por `scripts/audit_dispersion.ps1` — Sprint 8 (I7).")
+    $highCount = @($auditResults | Where-Object stability -eq 'ALTA').Count
+    $repeatCount = @($auditResults | Where-Object verdict -eq 'REPETICION_JUSTIFICADA').Count
+    [void]$mdSb.AppendLine(('- Grupos con dispersión alta: {0} de {1}.' -f $highCount, $auditResults.Count))
+    [void]$mdSb.AppendLine(('- Grupos con repetición justificada: {0}.' -f $repeatCount))
+    [void]$mdSb.AppendLine('- El protocolo §6.3 conserva las cinco observaciones de los grupos completos, incluidas las lentas y las señaladas por las vallas de Tukey.')
 
     [System.IO.File]::WriteAllText($resolvedMd, $mdSb.ToString(), $utf8NoBom)
 }

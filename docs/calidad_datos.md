@@ -1,15 +1,15 @@
 # Reporte parcial de calidad de datos — Sprint 8
 
-Estado: auditoría parcial realizada el 24/11/2026. El dictamen final debe esperar los cuatro lotes oficiales.
+Estado: tres lotes oficiales verificados. La campaña integrada de 198 corridas está en curso al 25/11/2026.
 
 ## Inventario de entregables
 
 | Entregable | Estado | Observaciones |
 |---|---|---|
-| `resultados/raw/c_secuencial.csv` | Ausente | Sin lote recibido |
-| `resultados/raw/c_paralelo.csv` | Ausente | Sin lote recibido |
-| `resultados/raw/go_secuencial.csv` | Ausente | Sin lote recibido |
-| `resultados/raw/go_paralelo.csv` | Completo para I4 | 54 filas: 9 calentamientos y 45 mediciones |
+| [C secuencial](../resultados/raw/c_secuencial.csv) | Verificado · `s08_i04_go_paralelo_01` | 18 filas: 3 calentamientos y 15 mediciones |
+| C paralelo | Campaña integrada en curso | 18 grupos previstos: 18 calentamientos y 90 mediciones |
+| [Go secuencial](../resultados/raw/go_secuencial.csv) | Verificado · `s08_i03_go_secuencial_03` | 18 filas: 3 calentamientos y 15 mediciones |
+| [Go paralelo](../resultados/raw/go_paralelo.csv) | Verificado · `s08_i04_go_paralelo_01` | 54 filas: 9 calentamientos y 45 mediciones |
 
 ## Auditoría de Go paralelo
 
@@ -33,17 +33,12 @@ Avisos retenidos sin borrar datos:
 
 Estos avisos no justifican descartar observaciones. Cada advertencia debe conservarse en el dictamen final.
 
-## Pruebas realizadas
+## Verificación y procedencia
 
-- `go test` pasó en `go_secuencial`.
-- `go test` pasó en `go_paralelo`.
-- El resumidor generó nueve grupos completos y sin errores para Go paralelo.
-- La ejecución Windows completa no pudo acreditarse en esta sesión por ausencia de `.git`, cl.exe y MS-MPI.
+- Los lotes de C y Go secuenciales coinciden con las filas correspondientes de sus campañas fuente y con los SHA-256 publicados. Cada uno contiene un calentamiento y cinco mediciones válidas por N.
+- El verificador común confirmó las 72 corridas y los 12 grupos de la subcampaña I3, incluidos plan, orden, logs, procesos, ranks y manifiestos de compilación.
+- El [control de C secuencial](entorno/6-gerardo.md#control-independiente-disponible) se conserva en otra carpeta. Los speedups del cierre se calcularán con la referencia secuencial del mismo lenguaje y de la misma campaña integrada.
 
 ## Pendientes para dictamen final
 
-1. Recibir los tres CSV oficiales restantes.
-2. Verificar la fase `oficial`, la PC, la semilla, el commit completo y el estado de la campaña.
-3. Comprobar cinco muestreos por configuración, la entrada de cada repetición y el estado numérico.
-4. Inventariar fallos y exclusiones sin eliminar originales.
-5. Emitir el dictamen final de los cuatro lotes.
+Verificar el estado de `s08_oficial_integrada_01`, sus 33 grupos y la trazabilidad de procesos e hilos de C paralelo. El resumen y los dictámenes de dispersión abarcarán las cuatro versiones dentro de esa campaña.
