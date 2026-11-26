@@ -1,0 +1,35 @@
+Extracto de go test -c -gcflags=-S en FLDSMDFR (no oficial), go version go1.27.1 windows/amd64
+Solo instrucciones del bucle interno (c.Data[row+j] += value * b.Data[bRow+j]).
+Matrix = {N int; Data []float64}: 8(reg) es el puntero de Data y 16(reg) su longitud.
+
+== multiplyBlock (16 instrucciones)
+0x0053 (workers.go:118)	MOVQ	8(BX), R15
+0x0057 (workers.go:118)	MOVSD	(R15)(SI*8), 
+0x005d (workers.go:118)	MULSD	X0, X2
+0x0061 (workers.go:118)	ADDSD	X2, X1
+0x0065 (workers.go:118)	MOVSD	X1, 
+0x0078 (workers.go:118)	MOVQ	16(CX), R12
+0x007c (workers.go:118)	LEAQ	(R11)(DI*1), 
+0x0080 (workers.go:118)	CMPQ	R12, R13
+0x0083 (workers.go:118)	JLS	166
+0x0085 (workers.go:118)	MOVQ	8(CX), R12
+0x0089 (workers.go:118)	MOVQ	16(BX), R15
+0x008d (workers.go:118)	LEAQ	(R11)(R9*1), 
+0x0091 (workers.go:118)	MOVSD	
+0x0097 (workers.go:118)	CMPQ	R15, SI
+0x009a (workers.go:118)	JHI	83
+0x009c (workers.go:118)	JMP	161
+
+== multiplyBlockByValue (12 instrucciones)
+0x0064 (sprint09_kernel_test.go:24)	MOVSD	
+0x006a (sprint09_kernel_test.go:24)	MULSD	
+0x006e (sprint09_kernel_test.go:24)	ADDSD	
+0x0072 (sprint09_kernel_test.go:24)	MOVSD	
+0x0088 (sprint09_kernel_test.go:24)	LEAQ	
+0x008c (sprint09_kernel_test.go:24)	CMPQ	
+0x008f (sprint09_kernel_test.go:24)	JLS	173
+0x0091 (sprint09_kernel_test.go:24)	LEAQ	
+0x0095 (sprint09_kernel_test.go:24)	MOVSD	
+0x009a (sprint09_kernel_test.go:24)	CMPQ	
+0x009d (sprint09_kernel_test.go:24)	JHI	100
+0x00a0 (sprint09_kernel_test.go:24)	JMP	168

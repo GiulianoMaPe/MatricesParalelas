@@ -1,0 +1,31 @@
+fecha: 2026-11-26T02:16:01.6874299-05:00
+equipo: FLDSMDFR (no oficial)
+go version go1.27.1 windows/amd64
+comando: go test -run '^$' -bench KernelPointerVsValue -benchtime 3x -count 5 -cpu 1 ./...
+
+goos: windows
+goarch: amd64
+pkg: matrices/go_paralelo
+cpu: AMD Ryzen 7 3700X 8-Core Processor             
+BenchmarkKernelPointerVsValue/N512/puntero         	       3	 138327600 ns/op	         1.941 GFLOPS
+BenchmarkKernelPointerVsValue/N512/puntero         	       3	 143500133 ns/op	         1.871 GFLOPS
+BenchmarkKernelPointerVsValue/N512/puntero         	       3	 145526400 ns/op	         1.845 GFLOPS
+BenchmarkKernelPointerVsValue/N512/puntero         	       3	 186807400 ns/op	         1.437 GFLOPS
+BenchmarkKernelPointerVsValue/N512/puntero         	       3	 133873067 ns/op	         2.005 GFLOPS
+BenchmarkKernelPointerVsValue/N512/valor           	       3	  87844067 ns/op	         3.056 GFLOPS
+BenchmarkKernelPointerVsValue/N512/valor           	       3	  88076900 ns/op	         3.048 GFLOPS
+BenchmarkKernelPointerVsValue/N512/valor           	       3	  88105600 ns/op	         3.047 GFLOPS
+BenchmarkKernelPointerVsValue/N512/valor           	       3	  88089700 ns/op	         3.047 GFLOPS
+BenchmarkKernelPointerVsValue/N512/valor           	       3	  87922633 ns/op	         3.053 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/puntero        	       3	1077668267 ns/op	         1.993 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/puntero        	       3	1085628367 ns/op	         1.978 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/puntero        	       3	1085579933 ns/op	         1.978 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/puntero        	       3	1087769367 ns/op	         1.974 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/puntero        	       3	1098919033 ns/op	         1.954 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/valor          	       3	 721824000 ns/op	         2.975 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/valor          	       3	 717123133 ns/op	         2.995 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/valor          	       3	 712395867 ns/op	         3.014 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/valor          	       3	 723442867 ns/op	         2.968 GFLOPS
+BenchmarkKernelPointerVsValue/N1024/valor          	       3	 718721700 ns/op	         2.988 GFLOPS
+PASS
+ok  	matrices/go_paralelo	41.510s

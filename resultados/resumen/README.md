@@ -23,3 +23,15 @@ Este directorio contiene los resúmenes estadísticos provisionales y definitivo
 ## Campaña integrada de cierre
 
 El [resumen integrado de 33 grupos](s08_oficial_integrada_03/resumen_estadistico.csv), el [CSV de dispersión](s08_oficial_integrada_03/dispersion.csv) y su [dictamen](s08_oficial_integrada_03/auditoria_dispersion.md) se generan exclusivamente a partir de la [campaña oficial única](../raw/s08_oficial_integrada_03/mediciones.csv). Las tablas anteriores conservan el análisis de la subcampaña de Go paralelo.
+
+## Análisis de Go paralelo · Sprint 9
+
+[`s09_i04_go_paralelo/analisis_go_paralelo.csv`](s09_i04_go_paralelo/analisis_go_paralelo.csv)
+contiene, para Go secuencial y Go paralelo, las medianas, cuartiles, speedups
+frente a `go_secuencial` y frente a W=1, eficiencias, cociente de `kernel_s`,
+inflación de trabajo y coste fuera del kernel. Cubre
+`s08_oficial_integrada_03` y `s08_i04_go_paralelo_01`, por separado y sin
+cruzar referencias entre campañas. Lo genera
+[`scripts/analisis_go_paralelo.ps1`](../../scripts/analisis_go_paralelo.ps1)
+desde los `mediciones.csv` preservados, y lo usa
+[docs/analisis_go_paralelo.md](../../docs/analisis_go_paralelo.md).
