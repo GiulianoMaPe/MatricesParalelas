@@ -37,3 +37,11 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+### Entrega de I3 · Giuliano
+
+- **Entregable** · Sección Go secuencial para el informe, con tiempos y dispersión, crecimiento al aumentar N, asignaciones y límites del runtime. [Análisis de Go secuencial](../analisis_go_secuencial.md).
+- **Evidencia** · Se verificó el SHA-256 del CSV oficial contra el manifiesto S8 y se recalcularon los estadísticos de sus 15 mediciones Go secuencial. El resumidor del repositorio reprodujo los 33 grupos del CSV publicado. Las asignaciones citadas provienen del diagnóstico de laboratorio S6 en N=17. [Campaña integrada](../../resultados/raw/s08_oficial_integrada_03/mediciones.csv) · [Resumen integrado](../../resultados/resumen/s08_oficial_integrada_03/resumen_estadistico.csv).
+- **Rama** · `feature/s09-i03-analisis-go-secuencial`. Issue y PR pendientes.
+- **Revisión cruzada** · Pendiente la revisión de I2 (Sebastián) a esta entrega. I3 revisará la sección de Go paralelo de I4 (Eva) cuando esté disponible. La revisión comprobará referencias secuenciales de la misma campaña, el cálculo de speedup y eficiencia por workers, y los límites de la interpretación.
+- **Coordinación y horas** · Entregable listo para integración por I7. Las horas reales, la coordinación con I1 y la aceptación quedan pendientes de registro.
