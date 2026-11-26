@@ -32,8 +32,14 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 ## Registro de cierre
 
-- Participantes y horas reales: pendiente.
+- Participantes y horas reales:
+  - I1 (Yessly): 3 h — análisis de tiempos, escalabilidad, implementación y límites de c_secuencial en docs/analisis_c_secuencial.md a partir de s08_oficial_integrada_03. Resto de integrantes pendiente.
 - Issues y pull requests: pendiente.
-- Pruebas y evidencias: pendiente.
-- Bloqueos y decisiones: pendiente.
+- Pruebas y evidencias:
+  - Verificación de 18 filas oficiales de `c_secuencial` (1 calentamiento + 5 repeticiones en N=512, 1024, 2048) en `resultados/raw/s08_oficial_integrada_03/mediciones.csv` con estado `OK`.
+  - Validación del resumen estadístico (`resumen_estadistico.csv`) y de la auditoría de dispersión (`auditoria_dispersion.md`), confirmando dispersión EXCELENTE en N=512 (0,46 %), ALTA (Alerta) en N=1024 (10,11 %, conservada conforme a protocolo §6.3) y ESTABLE en N=2048 (2,61 %).
+  - Comprobación en código congelado (`97ccc981...`) del orden de bucles `i,k,j`, compilación MSVC Release (`/std:c11 /O2 /MD /fp:precise /W4 /WX /MACHINE:X64`) sin OpenMP ni MPI, buffers contiguos row-major en `double`, cronometraje con `QueryPerformanceCounter` y validación de capacidad preventiva para 4 buffers con techo `MATRIX_MAX_N = 4096`.
+- Bloqueos y decisiones:
+  - Se declaró `s08_oficial_integrada_03` como la única fuente oficial de cómputo para el informe, preservando el lote previo `resultados/raw/c_secuencial.csv` de 2026-11-19 como corrida independiente sin mezclar datos.
+  - Se separaron estrictamente los hechos medidos (tiempos, escalabilidad de 8,53× y 18,81×, caída de 11,42 a 4,51 GFLOP/s) de las hipótesis explicativas (saturación de caché L3/ancho de banda DRAM y desplanificación en N=1024), haciendo constar explícitamente que la campaña careció de contadores de hardware (cache misses).
 - Revision y criterio de aceptacion: pendiente.
