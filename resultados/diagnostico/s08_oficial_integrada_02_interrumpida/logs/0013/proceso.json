@@ -1,0 +1,33 @@
+{
+    "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\go_secuencial\\build\\Release\\go_secuencial.exe",
+    "arguments":  [
+                      "--n",
+                      "1024",
+                      "--seed",
+                      "42",
+                      "--repetition",
+                      "0"
+                  ],
+    "gomaxprocs":  "1",
+    "start_utc":  "2026-11-25T20:40:59.3885383Z",
+    "wall_s":  5.9676506,
+    "pid":  10736,
+    "exit_code":  0,
+    "status":  "OK",
+    "detail":  "",
+    "child_environment":  {
+                              "OMP_NUM_THREADS":  null,
+                              "GOMAXPROCS":  "1",
+                              "S06_DIAGNOSTICS":  null,
+                              "OMP_DYNAMIC":  null
+                          },
+    "inherited_runtime_environment":  {
+                                          "GOGC":  null,
+                                          "GOMEMLIMIT":  null,
+                                          "GODEBUG":  null,
+                                          "OMP_PROC_BIND":  null,
+                                          "OMP_PLACES":  null,
+                                          "OMP_SCHEDULE":  null,
+                                          "KMP_AFFINITY":  null
+                                      }
+}

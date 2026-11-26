@@ -1,0 +1,447 @@
+{
+    "protocol_version":  "1.3",
+    "campaign_id":  "s08_oficial_integrada_02",
+    "phase":  "oficial",
+    "dry_run":  false,
+    "started_at_utc":  "2026-11-25T20:40:25Z",
+    "operator":  "giuli",
+    "hostname":  "PCG1UL14N0",
+    "git":  {
+                "dirty":  false,
+                "commit_full":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                "diff_file":  null
+            },
+    "hardware":  {
+                     "physical_cores":  6,
+                     "temperature_monitoring":  "unavailable: registrar manualmente sensor y episodios de throttling en bitacora.txt",
+                     "ram_available_at_start_bytes":  9660092416,
+                     "os_build":  "26300",
+                     "power_plan":  "Equilibrado",
+                     "os_edition":  "Microsoft Windows 11 Pro",
+                     "ram_visible_bytes":  17085501440,
+                     "logical_processors":  12,
+                     "power_source":  "AC",
+                     "cpu_model":  "AMD Ryzen 5 3600 6-Core Processor"
+                 },
+    "build":  {
+                  "goos":  "windows",
+                  "goarch":  "amd64",
+                  "go_version":  "go version go1.27.4 windows/amd64",
+                  "msmpi_runtime_version":  "10.1.12498.52",
+                  "windows_sdk_version":  "10.0.26100.0",
+                  "executable_sha256_by_version":  {
+                                                       "c_secuencial":  "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+                                                       "c_paralelo":  "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+                                                       "go_secuencial":  "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+                                                       "go_paralelo":  "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A"
+                                                   },
+                  "msvc_version":  "19.44.35230.0",
+                  "effective_options_by_version":  {
+                                                       "c_secuencial":  [
+                                                                            "/nologo",
+                                                                            "/TC",
+                                                                            "/std:c11",
+                                                                            "/W4",
+                                                                            "/WX",
+                                                                            "/fp:precise",
+                                                                            "/I",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\include",
+                                                                            "/O2",
+                                                                            "/MD",
+                                                                            "/D_WIN32_WINNT=0x0600",
+                                                                            "/I",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\build\\Release",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\input.c",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\main.c",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\matrix.c",
+                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\timer.c",
+                                                                            "/Fe:c_secuencial.exe",
+                                                                            "/link",
+                                                                            "/MACHINE:X64",
+                                                                            "advapi32.lib"
+                                                                        ],
+                                                       "c_paralelo":  [
+                                                                          "/nologo",
+                                                                          "/TC",
+                                                                          "/std:c11",
+                                                                          "/W4",
+                                                                          "/WX",
+                                                                          "/fp:precise",
+                                                                          "/I",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\include",
+                                                                          "/O2",
+                                                                          "/MD",
+                                                                          "/D_WIN32_WINNT=0x0600",
+                                                                          "/I",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release",
+                                                                          "/openmp",
+                                                                          "/I",
+                                                                          "C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Include",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\input.c",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\main.c",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\matrix.c",
+                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\partition.c",
+                                                                          "/Fe:c_paralelo.exe",
+                                                                          "/link",
+                                                                          "/MACHINE:X64",
+                                                                          "advapi32.lib",
+                                                                          "/LIBPATH:C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Lib\\x64",
+                                                                          "msmpi.lib"
+                                                                      ],
+                                                       "go_secuencial":  [
+                                                                             "build",
+                                                                             "-o",
+                                                                             "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+                                                                             "-buildvcs=true",
+                                                                             "."
+                                                                         ],
+                                                       "go_paralelo":  [
+                                                                           "build",
+                                                                           "-o",
+                                                                           "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+                                                                           "-buildvcs=true",
+                                                                           "."
+                                                                       ]
+                                                   },
+                  "target":  "x64",
+                  "msmpi_sdk_version":  {
+                                            "mpi_h_sha256":  "CC23825FAEE71FFACF666300C375F4C73D605E72CD04310CE5EFAE778244FD7B",
+                                            "msmpi_lib_sha256":  "B68E974D63EAADCBC77BB07F388F06BE4B7066E2FC5D1B8743AFA56E6D16AD1B"
+                                        },
+                  "manifests":  {
+                                    "go_secuencial":  {
+                                                          "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\go_secuencial\\build\\Release\\go_secuencial.exe",
+                                                          "sha256":  "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+                                                          "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                          "manifest":  {
+                                                                           "version":  "go_secuencial",
+                                                                           "configuration":  "Release",
+                                                                           "target":  "x64",
+                                                                           "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                           "dirty":  false,
+                                                                           "built_at_utc":  "2026-11-17T14:22:59.5255443Z",
+                                                                           "sha256":  "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+                                                                           "arguments":  [
+                                                                                             "build",
+                                                                                             "-o",
+                                                                                             "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe",
+                                                                                             "-buildvcs=true",
+                                                                                             "."
+                                                                                         ],
+                                                                           "tools":  {
+                                                                                         "go":  "go version go1.27.4 windows/amd64",
+                                                                                         "go_build_metadata":  [
+                                                                                                                   "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_secuencial\\build\\Release\\go_secuencial.exe: go1.27.4",
+                                                                                                                   "\tpath\tmatrices/go_secuencial",
+                                                                                                                   "\tmod\tmatrices/go_secuencial\t(devel)\t",
+                                                                                                                   "\tbuild\t-buildmode=exe",
+                                                                                                                   "\tbuild\t-compiler=gc",
+                                                                                                                   "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                                                                                                   "\tbuild\tCGO_ENABLED=0",
+                                                                                                                   "\tbuild\tGOARCH=amd64",
+                                                                                                                   "\tbuild\tGOOS=windows",
+                                                                                                                   "\tbuild\tGOAMD64=v1",
+                                                                                                                   "\tbuild\tvcs=git",
+                                                                                                                   "\tbuild\tvcs.revision=97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                                                                   "\tbuild\tvcs.time=2026-11-17T14:22:36Z",
+                                                                                                                   "\tbuild\tvcs.modified=false"
+                                                                                                               ]
+                                                                                     },
+                                                                           "source_sha256":  {
+                                                                                                 "go_secuencial/README.md":  "BEE9F0C24456BC774AA700651037BBFD2F1B05C8C8C56FBDBAFD771105887286",
+                                                                                                 "go_secuencial/environment.go":  "63EB371672AE19D5D7C1B3E5295C48BB0B2DA4AE916967971D5679AE3C9DEEF9",
+                                                                                                 "go_secuencial/environment_other.go":  "AEE7432CE94E721F1EF22DD3A5A1D5D580A952C4FC04F78FAC262C2C767F49B6",
+                                                                                                 "go_secuencial/environment_windows.go":  "E33116E7B54BE9A540BBE91797912C43800A08DEACE9A64168A8D522FCED0915",
+                                                                                                 "go_secuencial/environment_windows_test.go":  "D79A0C51D0C0D56D8F155A5E8A4D35179019BFA7174E1B20A81ABB4330874857",
+                                                                                                 "go_secuencial/go.mod":  "5532420B12B23420C51236BD7DB336DAF65F9DF895BF00FF5B87F15F59C65E95",
+                                                                                                 "go_secuencial/input.go":  "89D557353C6E9A69E4261EC453E8C88D6D434590D8DD24D17DAB7A425A3303EA",
+                                                                                                 "go_secuencial/input_errors_test.go":  "D2B5E3F064FCDAF6DB36898A7D8FB0058AF6C7404DB95018AFB71E18831FBE52",
+                                                                                                 "go_secuencial/input_test.go":  "DAD4CCFBD9E9939A239C713C491BDA6F04C5AC94B41A83504811D0C7F3BF3CC6",
+                                                                                                 "go_secuencial/main.go":  "1DF9D331952ED7E0D7AD3C58963D49C827DFE7F0BCF7025B4B1910342417D20F",
+                                                                                                 "go_secuencial/main_test.go":  "27BD6908CEDBFBB3246DCF22C6D8F8DF07DA18307D4B3729582CAED06B7B793D",
+                                                                                                 "go_secuencial/matrix.go":  "8C1123BDC6E2468FE932B7337283D0DCF24131E2FEEA37682C82055D2741062D",
+                                                                                                 "go_secuencial/matrix_test.go":  "DC742E56B2D0C57B14A526818C7ADFDFE10D831492FD6DA238781439AF50B6DA",
+                                                                                                 "go_secuencial/out.txt":  "1999C58A5A46AD92DCABF00F22522296989A71D7B723BC5F26371B88AEA8DB91",
+                                                                                                 "go_secuencial/smoke.go":  "EFDE2EB09BA683FBA71888D7590BFE3E26FD4A7B888603780DB61B98622629A9",
+                                                                                                 "go_secuencial/sprint06_test.go":  "CA4A7AEABAE796D9F5032BFF964CB485B04685F8B874E8DDEDE494ACF3AEBF14",
+                                                                                                 "go_secuencial/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                                                                                                 "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                                                                                                 "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                                                                                             },
+                                                                           "build_environment":  {
+                                                                                                     "CL":  null,
+                                                                                                     "_CL_":  null,
+                                                                                                     "LINK":  null,
+                                                                                                     "GOFLAGS":  null,
+                                                                                                     "GOEXPERIMENT":  null
+                                                                                                 }
+                                                                       }
+                                                      },
+                                    "c_secuencial":  {
+                                                         "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\c_secuencial\\build\\Release\\c_secuencial.exe",
+                                                         "sha256":  "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+                                                         "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                         "manifest":  {
+                                                                          "version":  "c_secuencial",
+                                                                          "configuration":  "Release",
+                                                                          "target":  "x64",
+                                                                          "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                          "dirty":  false,
+                                                                          "built_at_utc":  "2026-11-17T14:22:52.5780948Z",
+                                                                          "sha256":  "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+                                                                          "arguments":  [
+                                                                                            "/nologo",
+                                                                                            "/TC",
+                                                                                            "/std:c11",
+                                                                                            "/W4",
+                                                                                            "/WX",
+                                                                                            "/fp:precise",
+                                                                                            "/I",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\include",
+                                                                                            "/O2",
+                                                                                            "/MD",
+                                                                                            "/D_WIN32_WINNT=0x0600",
+                                                                                            "/I",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\build\\Release",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\input.c",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\main.c",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\matrix.c",
+                                                                                            "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_secuencial\\src\\timer.c",
+                                                                                            "/Fe:c_secuencial.exe",
+                                                                                            "/link",
+                                                                                            "/MACHINE:X64",
+                                                                                            "advapi32.lib"
+                                                                                        ],
+                                                                          "tools":  {
+                                                                                        "msvc":  "19.44.35230.0",
+                                                                                        "windows_sdk":  "10.0.26100.0"
+                                                                                    },
+                                                                          "source_sha256":  {
+                                                                                                "c_secuencial/README.md":  "0E5E4C9DA64C1923E3168B36353C0E3A00C7D8EA0B7CC7798424585CEBE4B16E",
+                                                                                                "c_secuencial/include/input.h":  "1C4AD036D0C178876FAD791216C2EF612207178ACE97658475D9C21A81853B36",
+                                                                                                "c_secuencial/include/matrix.h":  "049F01C3590F211C86E5C76E933BC10DF6008B1C695A9DFC10C3B0998E6FEC64",
+                                                                                                "c_secuencial/include/timer.h":  "7DAD13F901EF0655CCD9C417FCADF946CC5A42E2BE56133A4E78D4909A59BE14",
+                                                                                                "c_secuencial/src/input.c":  "D5B5B194FE027BCAD29F59BAD1D948AFEECF8A538E5DAEECDCE68B979B88C8FE",
+                                                                                                "c_secuencial/src/main.c":  "A6F861287CCA01F8F6F123724990313FFD93798D14DA302C5CF15B93E584359A",
+                                                                                                "c_secuencial/src/matrix.c":  "4D772401747B795487E6FB8C1A789524B3D5EE675F943DF3F803BD47C6DD2D3D",
+                                                                                                "c_secuencial/src/timer.c":  "26FA9876589D677DFCE1AF7AC8B70D5FB266A794BCB6906545F75AF3F01A6CFF",
+                                                                                                "c_secuencial/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                                                                                                "c_secuencial/tests/matrix_kernel_test.c":  "0AB3BC15C2F6353CBCFD70F44E27781F359CFDA03EBF581EC0631FA893E3A7DE",
+                                                                                                "c_secuencial/tests/pending_test.c":  "C729AA7C4EDCC09E620665D652F40BACDF173FE3947C7AC1253133403BA711E0",
+                                                                                                "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                                                                                                "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                                                                                            },
+                                                                          "build_environment":  {
+                                                                                                    "CL":  null,
+                                                                                                    "_CL_":  null,
+                                                                                                    "LINK":  null,
+                                                                                                    "GOFLAGS":  null,
+                                                                                                    "GOEXPERIMENT":  null
+                                                                                                }
+                                                                      }
+                                                     },
+                                    "go_paralelo":  {
+                                                        "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\go_paralelo\\build\\Release\\go_paralelo.exe",
+                                                        "sha256":  "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A",
+                                                        "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                        "manifest":  {
+                                                                         "version":  "go_paralelo",
+                                                                         "configuration":  "Release",
+                                                                         "target":  "x64",
+                                                                         "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                         "dirty":  false,
+                                                                         "built_at_utc":  "2026-11-17T14:23:01.0664980Z",
+                                                                         "sha256":  "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A",
+                                                                         "arguments":  [
+                                                                                           "build",
+                                                                                           "-o",
+                                                                                           "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe",
+                                                                                           "-buildvcs=true",
+                                                                                           "."
+                                                                                       ],
+                                                                         "tools":  {
+                                                                                       "go":  "go version go1.27.4 windows/amd64",
+                                                                                       "go_build_metadata":  [
+                                                                                                                 "D:\\Escritorio\\Proyectos\\MatricesParalelas\\go_paralelo\\build\\Release\\go_paralelo.exe: go1.27.4",
+                                                                                                                 "\tpath\tmatrices/go_paralelo",
+                                                                                                                 "\tmod\tmatrices/go_paralelo\t(devel)\t",
+                                                                                                                 "\tbuild\t-buildmode=exe",
+                                                                                                                 "\tbuild\t-compiler=gc",
+                                                                                                                 "\tbuild\tDefaultGODEBUG=containermaxprocs=0,cryptocustomrand=1,decoratemappings=0,gotestjsonbuildtext=1,httpcookiemaxnum=0,httpservecontentkeepheaders=1,httpservecontentmaxranges=1,multipathtcp=0,randseednop=0,rsa1024min=0,tlsmlkem=0,tlssecpmlkem=0,tlssha1=1,tracebacklabels=0,updatemaxprocs=0,urlmaxqueryparams=0,urlstrictcolons=0,winreadlinkvolume=0,winsymlink=0,x509negativeserial=1,x509rsacrt=0,x509sha256skid=0,x509sslcertoverrideplatform=0,x509usepolicies=0",
+                                                                                                                 "\tbuild\tCGO_ENABLED=0",
+                                                                                                                 "\tbuild\tGOARCH=amd64",
+                                                                                                                 "\tbuild\tGOOS=windows",
+                                                                                                                 "\tbuild\tGOAMD64=v1",
+                                                                                                                 "\tbuild\tvcs=git",
+                                                                                                                 "\tbuild\tvcs.revision=97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                                                                 "\tbuild\tvcs.time=2026-11-17T14:22:36Z",
+                                                                                                                 "\tbuild\tvcs.modified=false"
+                                                                                                             ]
+                                                                                   },
+                                                                         "source_sha256":  {
+                                                                                               "go_paralelo/README.md":  "34D37766CC5698CFF1F046AB22C1175A5E7E0454897172A2E2E1493F0541F4D5",
+                                                                                               "go_paralelo/environment.go":  "63EB371672AE19D5D7C1B3E5295C48BB0B2DA4AE916967971D5679AE3C9DEEF9",
+                                                                                               "go_paralelo/environment_other.go":  "E2F99927E17CE1829E7DB5F6ECD080DBD90D27122C96F0D23CD07A49D2A17A19",
+                                                                                               "go_paralelo/environment_windows.go":  "8243889B3F4A0AA94519483F8FE20BF5139983243AF298AFA191186B5142958F",
+                                                                                               "go_paralelo/go.mod":  "836C05C923C08FAF8687FABDD7762DC06A38E8DD02F310A83E5BBC0049AC0994",
+                                                                                               "go_paralelo/granularity_clock_other_test.go":  "CFA78C69278F1B845E92BE502D07B4AAEF0FBE587F174A4EC9B23BCB0C4570D5",
+                                                                                               "go_paralelo/granularity_clock_windows_test.go":  "48ACB7DED21A7E8B1B6CEC26523A71E33AB4994C38966D26FE8C11EFB7992828",
+                                                                                               "go_paralelo/granularity_test.go":  "43D6D8F56844F8847088F022E1FBE0B4CEA2EADBBCC573CB777BA54FAFD0EDDA",
+                                                                                               "go_paralelo/input.go":  "84C84AD6A60635C152114C2A1B5F64424609CF04C0218B38E70CBC787C24E933",
+                                                                                               "go_paralelo/input_test.go":  "0051CA62862C15E4C73CD4E3ABD27DBD0B6171FBD57F22E7DBE14842142FFDBA",
+                                                                                               "go_paralelo/main.go":  "B74F5DA14901614DFC4675D7D0646078613FC9F06BFE908AC71D7996DE835FD3",
+                                                                                               "go_paralelo/main_test.go":  "5B4D3C939A0A1710B62925FDCD54ED0E307573801E1647E7AC4C1452AD3A634E",
+                                                                                               "go_paralelo/matrix.go":  "40F59CCF3B4D1387CF457C69309CBA41BAC66FB3EDE7C27428EF12E738E9F5C5",
+                                                                                               "go_paralelo/matrix_test.go":  "E1EFC5BD7F64DF21A9C973320EDB3D6E7C5A9B6952E67D00FD9A6BE146A3A0A2",
+                                                                                               "go_paralelo/sprint06_test.go":  "A38F834B94DADC97F51118517D8F31B963ED79D7B644D5CF6304AD74E47E5CEF",
+                                                                                               "go_paralelo/status.json":  "4A42E98DE3008EFFAE2DD28498BF09C31EFB1767BB563016B1509DD27F66CD27",
+                                                                                               "go_paralelo/test_output.txt":  "A95F7435B3F178B07D389AE42D764AD0BF786148C2C963C5B0CEF386F6432CA5",
+                                                                                               "go_paralelo/workers.go":  "05AACFE085C2229D7527AE0A900E5EC1A059BF60DFE776D34FD7AF2630874BE7",
+                                                                                               "go_paralelo/workers_core_test.go":  "E116FC4A4ECDFDA8BECEBC5199E43629679AE2D1F6E678031BC2C36D4F919C57",
+                                                                                               "go_paralelo/workers_stability_test.go":  "2E00FD8B138B6157F747DE18BBCC31465C0A89CC89D8C457503D9AB5CA592144",
+                                                                                               "go_paralelo/workers_test.go":  "D2C4011AE2B38EA4A30E3F6D647D1CD39F2FD1B1F281955F718D10715604685C",
+                                                                                               "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                                                                                               "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                                                                                           },
+                                                                         "build_environment":  {
+                                                                                                   "CL":  null,
+                                                                                                   "_CL_":  null,
+                                                                                                   "LINK":  null,
+                                                                                                   "GOFLAGS":  null,
+                                                                                                   "GOEXPERIMENT":  null
+                                                                                               }
+                                                                     }
+                                                    },
+                                    "c_paralelo":  {
+                                                       "executable":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s08-candidata-97ccc98\\c_paralelo\\build\\Release\\c_paralelo.exe",
+                                                       "sha256":  "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+                                                       "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                       "manifest":  {
+                                                                        "version":  "c_paralelo",
+                                                                        "configuration":  "Release",
+                                                                        "target":  "x64",
+                                                                        "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                                                                        "dirty":  false,
+                                                                        "built_at_utc":  "2026-11-17T14:22:54.3184251Z",
+                                                                        "sha256":  "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+                                                                        "arguments":  [
+                                                                                          "/nologo",
+                                                                                          "/TC",
+                                                                                          "/std:c11",
+                                                                                          "/W4",
+                                                                                          "/WX",
+                                                                                          "/fp:precise",
+                                                                                          "/I",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\include",
+                                                                                          "/O2",
+                                                                                          "/MD",
+                                                                                          "/D_WIN32_WINNT=0x0600",
+                                                                                          "/I",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\build\\Release",
+                                                                                          "/openmp",
+                                                                                          "/I",
+                                                                                          "C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Include",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\input.c",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\main.c",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\matrix.c",
+                                                                                          "D:\\Escritorio\\Proyectos\\MatricesParalelas\\c_paralelo\\src\\partition.c",
+                                                                                          "/Fe:c_paralelo.exe",
+                                                                                          "/link",
+                                                                                          "/MACHINE:X64",
+                                                                                          "advapi32.lib",
+                                                                                          "/LIBPATH:C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Lib\\x64",
+                                                                                          "msmpi.lib"
+                                                                                      ],
+                                                                        "tools":  {
+                                                                                      "msvc":  "19.44.35230.0",
+                                                                                      "windows_sdk":  "10.0.26100.0",
+                                                                                      "msmpi_runtime":  "10.1.12498.52",
+                                                                                      "msmpi_sdk":  {
+                                                                                                        "mpi_h_sha256":  "CC23825FAEE71FFACF666300C375F4C73D605E72CD04310CE5EFAE778244FD7B",
+                                                                                                        "msmpi_lib_sha256":  "B68E974D63EAADCBC77BB07F388F06BE4B7066E2FC5D1B8743AFA56E6D16AD1B"
+                                                                                                    }
+                                                                                  },
+                                                                        "source_sha256":  {
+                                                                                              "c_paralelo/README.md":  "E0C6156B73BC16D8280BBD451D1E6967D0697DB46D5287639C50A758A6953656",
+                                                                                              "c_paralelo/include/input.h":  "914907A7FD65EB698122C522A19D6744711D97E2458B4349F722501C0F4889A9",
+                                                                                              "c_paralelo/include/matrix.h":  "BB782856F70307E887462BAD6761B0DA09F70D26999448E3488971A4F1E30FB8",
+                                                                                              "c_paralelo/include/partition.h":  "4ED2F4FE8A192482F164400E90F0615FA587895F374CAF911E1F193DFC7207FC",
+                                                                                              "c_paralelo/src/input.c":  "8BB30AA5BFEC92541E42D22318D9FC59BAF69EE721A1762991ED415E06719283",
+                                                                                              "c_paralelo/src/main.c":  "4A479461808B882FF360DFFF56160FFFCEBEF7E839D19D59AA1CBAE58F745DE9",
+                                                                                              "c_paralelo/src/matrix.c":  "9CA0B3B867E2F1CC492EF77B7BA266690DD61DFD143826ACA9F9CD7897CF5FF5",
+                                                                                              "c_paralelo/src/partition.c":  "6E95E5BB57D53273DE45DEB7F5C5AC2FEF07C103162E292A5A6720AAFF2AC810",
+                                                                                              "c_paralelo/status.json":  "4E0F8CF163DF447405B44C5E7276F5EBE595BAA3B630099C62296B69E37BE64B",
+                                                                                              "c_paralelo/tests/partition_test.c":  "01B6CC07187728378EDC28724CDE5A786C023CC8E2EB4124D44AC9AABB6449FC",
+                                                                                              "c_paralelo/tests/pending_test.c":  "385F4496819FDC79A58989236D21AD3B36754925D2D2F549CE2FED7C4373D895",
+                                                                                              "c_paralelo/tests/registro_fallos.md":  "F02239ABD4AE09CE87B6367DF9D46732CAA74F30DFB68F13615997BBD5564664",
+                                                                                              "c_paralelo/tests/reporte_particionado.md":  "1D9C2D86163F0F8970BE0CAAE163ED4ADCEE7816FA7B118F37AD40CF162561D4",
+                                                                                              "scripts/build_windows.ps1":  "7D80565B31B36A89F94886B7636035956585921CFE1D1FC0DC1A90CEF8623BA1",
+                                                                                              "scripts/common_windows.ps1":  "5B5B4C6699DAA266A2EFC906918963176681DA3BF9A891DF4D1438A2F7C145DD"
+                                                                                          },
+                                                                        "build_environment":  {
+                                                                                                  "CL":  null,
+                                                                                                  "_CL_":  null,
+                                                                                                  "LINK":  null,
+                                                                                                  "GOFLAGS":  null,
+                                                                                                  "GOEXPERIMENT":  null
+                                                                                              }
+                                                                    }
+                                                   }
+                                },
+                  "configuration":  "Release"
+              },
+    "experiment":  {
+                       "campaign_machine_time_budget_seconds":  178200,
+                       "measured_repetitions":  5,
+                       "gomaxprocs_by_configuration":  {
+                                                           "go_secuencial":  1,
+                                                           "go_paralelo_W1":  1,
+                                                           "go_paralelo_W2":  2,
+                                                           "go_paralelo_W4":  4
+                                                       },
+                       "plan_file":  "plan.csv",
+                       "matrix_sizes":  [
+                                            512,
+                                            1024,
+                                            2048
+                                        ],
+                       "seed":  42,
+                       "log_file":  "bitacora.txt",
+                       "estimated_matrix_peak_bytes":  301989888,
+                       "enabled_budgets":  [
+                                               1,
+                                               2,
+                                               4
+                                           ],
+                       "warmups_per_combination":  1,
+                       "excluded_combinations_and_reasons":  [
+
+                                                             ],
+                       "observations_file":  "mediciones.csv",
+                       "omp_dynamic":  "FALSE",
+                       "timeout_per_run_seconds":  900,
+                       "ordered_configurations":  [
+                                                      "c_secuencial",
+                                                      "go_secuencial",
+                                                      "c_paralelo_P1_T1",
+                                                      "go_paralelo_W1",
+                                                      "c_paralelo_P1_T2",
+                                                      "c_paralelo_P2_T1",
+                                                      "go_paralelo_W2",
+                                                      "c_paralelo_P1_T4",
+                                                      "c_paralelo_P2_T2",
+                                                      "c_paralelo_P4_T1",
+                                                      "go_paralelo_W4"
+                                                  ],
+                       "maximum_matrix_fraction_of_available_ram":  0.5,
+                       "omp_num_threads_by_configuration":  {
+                                                                "c_paralelo_P1_T1":  1,
+                                                                "c_paralelo_P1_T2":  2,
+                                                                "c_paralelo_P2_T1":  1,
+                                                                "c_paralelo_P1_T4":  4,
+                                                                "c_paralelo_P2_T2":  2,
+                                                                "c_paralelo_P4_T1":  1
+                                                            },
+                       "order_policy":  "N ascending, protocol table order; odd rounds forward, even rounds reverse"
+                   }
+}
