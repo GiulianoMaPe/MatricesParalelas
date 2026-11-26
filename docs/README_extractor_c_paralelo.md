@@ -1,40 +1,32 @@
-# Guion de exposición: extractor de C paralelo
+# Guiones de exposición: extractor de C paralelo
 
-Material breve para explicar `scripts/extract_s08_c_paralelo.ps1`. Los guiones
-describen la herramienta y distinguen el diagnóstico de la campaña oficial.
+Dos exposiciones individuales para presentar `scripts/extract_s08_c_paralelo.ps1`.
 
-## Diálogo 1: ¿Qué problema resuelve?
+## Exposición 1: Propósito y funcionamiento
 
-**Expositor:** En Sprint 8 teníamos una campaña integrada con resultados de las
-cuatro versiones. ¿Cómo aislamos las mediciones del híbrido C sin copiar filas
-equivocadas?
+En Sprint 8 necesitábamos separar las mediciones del híbrido C de una campaña
+integrada que también contiene resultados de las otras versiones. Para eso
+preparamos `extract_s08_c_paralelo.ps1`.
 
-**Compañero:** Con `extract_s08_c_paralelo.ps1`. Lee los archivos de la campaña y
-selecciona únicamente las filas cuya versión es `c_paralelo`.
+El extractor lee la evidencia de una campaña y selecciona únicamente las filas
+cuya versión es `c_paralelo`. No vuelve a ejecutar la multiplicación ni calcula
+de nuevo los tiempos: valida la información y copia las filas originales byte a
+byte.
 
-**Expositor:** ¿El script vuelve a ejecutar la multiplicación o calcula de nuevo
-los tiempos?
+Antes de aceptar el lote, revisa el formato CSV, el plan y las repeticiones.
+También contrasta la cantidad de procesos y los hilos solicitados y observados;
+verifica `OMP_NUM_THREADS`, `OMP_DYNAMIC=FALSE`, el comando `mpiexec -n P`, la
+participación de los ranks, la bitácora y la coherencia entre la salida de cada
+proceso y el CSV integrado.
 
-**Compañero:** No. Solo revisa la evidencia y copia las filas originales byte a
-byte. No reconstruye ni modifica las mediciones.
+Como resultado, genera una vista CSV solo de C paralelo y un manifiesto con
+hashes, estado y anomalías. Esto permite rastrear qué se extrajo y de qué
+campaña procede.
 
-**Expositor:** ¿Qué revisa antes de aceptar el lote?
+## Exposición 2: Demostración y alcance
 
-**Compañero:** Comprueba el formato CSV, el plan y las repeticiones; contrasta P,
-T y los hilos observados; verifica `OMP_NUM_THREADS`, `OMP_DYNAMIC=FALSE`, el
-comando `mpiexec -n P`, la participación de los ranks, la bitácora y la
-coherencia entre la salida de cada proceso y el CSV integrado.
-
-**Expositor:** ¿Qué entrega?
-
-**Compañero:** Una vista CSV solo de C paralelo y un manifiesto con hashes,
-estado y anomalías. Así podemos revisar qué se extrajo y de qué campaña procede.
-
-## Diálogo 2: Demostración y límites
-
-**Expositor:** Voy a mostrar primero el uso de diagnóstico con un piloto
-preservado. Este comando sirve para verificar una extracción y no la convierte
-en resultado oficial:
+Voy a mostrar el uso de diagnóstico con un piloto preservado. Este comando
+verifica una extracción, pero no convierte el piloto en resultado oficial:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\extract_s08_c_paralelo.ps1 `
@@ -44,33 +36,25 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\extract_s08_c_
     -ManifestPath .\resultados\diagnostico\s08_i02_piloto_s07\revision_i02.json
 ```
 
-**Compañero:** ¿Qué resultado esperamos de esa ejecución?
+La salida esperada es una extracción identificada como piloto. El registro de
+Sprint 8 conserva 108 filas, 18 grupos y cero anomalías críticas en ese
+diagnóstico. Esas mediciones proceden del piloto S7, por lo que no sustituyen el
+CSV oficial de S8.
 
-**Expositor:** Una extracción identificada como piloto. La evidencia de Sprint 8
-registra 108 filas, 18 grupos y cero anomalías críticas para ese diagnóstico.
-Esas filas vienen del piloto S7, no sustituyen el CSV oficial de S8.
+Para la campaña oficial, el extractor se ejecuta en la PC oficial después de
+completar la campaña integrada y conservar sus registros. En esa fase también
+valida que la candidata esté limpia, que se hayan medido las dimensiones 512,
+1024 y 2048 y que los grupos estén completos. Si las verificaciones pasan, el
+resultado va a `resultados/raw/c_paralelo.csv`.
 
-**Compañero:** ¿Y cómo se ejecutará para la campaña oficial?
+Si falta un proceso, un hilo o una repetición, el manifiesto registra la
+anomalía y una falla crítica impide acreditar el lote oficial. La opción
+`-AllowIncomplete` conserva una vista marcada `INCOMPLETE` para diagnóstico,
+pero termina con error y no certifica una campaña válida.
 
-**Expositor:** En la PC oficial, después de completar la campaña integrada con la
-fase `oficial` y conservar los registros. El extractor valida también que la
-candidata esté limpia, que las dimensiones sean 512, 1024 y 2048 y que los
-grupos estén completos. Si todo pasa, el destino acordado es
-`resultados/raw/c_paralelo.csv`.
-
-**Compañero:** ¿Qué ocurre si falta un proceso, un hilo o una repetición?
-
-**Expositor:** El manifiesto registra la anomalía y una falla crítica impide
-acreditar el lote oficial. `-AllowIncomplete` permite conservar una vista
-marcada `INCOMPLETE` para diagnóstico, pero termina con error y no certifica una
-campaña válida.
-
-**Compañero:** ¿Ya tenemos el CSV oficial de Sprint 8?
-
-**Expositor:** No. El registro del sprint indica que el extractor y sus pruebas
-están entregados, y que existe una extracción de diagnóstico del piloto S7. La
-campaña oficial y `resultados/raw/c_paralelo.csv` siguen pendientes de ejecución
-en la PC oficial.
+Actualmente están entregados el extractor, sus pruebas y una extracción de
+diagnóstico del piloto S7. La campaña oficial y
+`resultados/raw/c_paralelo.csv` siguen pendientes de ejecución en la PC oficial.
 
 ## Referencias
 
