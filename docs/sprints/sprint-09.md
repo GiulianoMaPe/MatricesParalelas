@@ -44,7 +44,7 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 
 - **Participantes y horas reales:** Eva Moreno (I4). El plan contempla 3 h de análisis del speedup de Go según workers y dimensión, 3 h para explicar granularidad, sincronización y sobrecostes, 1 h de revisión cruzada a I5 (Fernando, `resultados/graficos/`) y 1 h de coordinación (coordina I1 en S9). Las horas reales quedan pendientes de confirmar.
 
-- **Issues y pull requests:** rama de trabajo `feature/s09-i04-analisis-go-paralelo`. La revisión corresponde a I3 (Giuliano) según la rotación.
+- **Issues y pull requests:** rama de trabajo `feature/s09-i04-analisis-go-paralelo`; [PR #66](https://github.com/GiulianoMaPe/MatricesParalelas/pull/66). La revisión corresponde a I3 (Giuliano) según la rotación.
 
 - **Entregable:** [Sección de rendimiento Go paralelo](../analisis_go_paralelo.md).
   - **Datos.** Usa la campaña integrada `s08_oficial_integrada_03` como fuente principal, igual que el resumen de I7 y el análisis de Go secuencial de I3, y el lote `s08_i04_go_paralelo_01` como reproducción. Las dos son de la PC oficial y de la candidata `97ccc98`. Los speedups se calculan siempre dentro de una misma campaña.
