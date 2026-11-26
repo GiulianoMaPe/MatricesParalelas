@@ -1,0 +1,11 @@
+{
+    "status":  "VERIFIED",
+    "campaign_id":  "s08_oficial_integrada_03",
+    "verified_at_utc":  "2026-11-26T03:59:52Z",
+    "observations":  198,
+    "groups":  33,
+    "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+    "native_execution_required":  "La procedencia Windows se acredita con entorno y logs; esta verificacion no ejecuta los binarios.",
+    "human_environment_review":  "Confirmar PC oficial, carga/temperatura/alimentacion y reproduccion antes de cerrar S7.",
+    "data_sha256":  "AFBBBD38C4EE54C3FE8194501538CA542E19A7F5F2F62FC315B3517E960FBD58"
+}

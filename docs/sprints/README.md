@@ -97,3 +97,5 @@ Los dos lotes finales nativos Windows registraron 198 observaciones OK y 33
 grupos completos cada uno, con la misma candidata limpia
 `97ccc981e9068d8ec0753cd8a4b7572a6bece34d` y binarios. La reserva de S8 es
 provisional para el 18/11/2026, 09:00–12:00 (Lima). Véase [acta S7](sprint-07.md).
+
+El [acta S8](sprint-08.md) registra la campaña oficial integrada: 198 corridas válidas, 33 grupos, auditoría y congelación de los datos crudos. El resumen se calcula con las referencias de la misma campaña.

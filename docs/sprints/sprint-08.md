@@ -1,6 +1,6 @@
 # Sprint 8 Ejecutar la campaña oficial
 
-Estado: entregas parciales integradas. C secuencial, Go secuencial y Go paralelo tienen datos oficiales. La campaña integrada de las cuatro versiones está en curso en PCG1UL14N0.
+Estado: cierre técnico completado. Campaña oficial verificada, datos crudos congelados y cuatro versiones auditadas.
 
 Semana 8 · 64 horas de equipo · 8 horas por integrante
 
@@ -36,6 +36,16 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Verificación de integración: 13/13 pruebas del extractor de C paralelo, 23/23 pruebas del arnés híbrido, 72/72 corridas verificadas en la subcampaña de Go secuencial y hashes verificados del lote de C secuencial y su control.
 - El primer intento de campaña integrada se interrumpió durante la corrida 61. Se conserva para diagnóstico y se repite el plan completo en `s08_oficial_integrada_02`, conforme al protocolo. Los dictámenes individuales de abajo describen las entregas en la fecha de sus PR.
 - El [control independiente de C secuencial](../../resultados/control/s08_i01_c_secuencial_control/c_secuencial_control.manifest.json) aporta 18 corridas en otra PC. Usó el commit `5a54ede1dc6371fc570ee12fa4560d78df7f4b0d`. Su evidencia se conserva como control separado y su resumen no interviene en las comparaciones oficiales. El [inventario de I6](../entorno/6-gerardo.md) documenta una tercera PC.
+
+### Cierre técnico
+
+- [Campaña integrada](../../resultados/raw/s08_oficial_integrada_03/mediciones.csv) en `PCG1UL14N0`, semilla 42 y candidata `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`. Las 198 corridas terminaron OK: 33 calentamientos y 165 mediciones, cinco por configuración habilitada. Cero exclusiones del plan.
+- I2 · [Lote oficial C paralelo](../../resultados/raw/c_paralelo.csv) y [manifiesto](../../resultados/raw/c_paralelo.manifest.json). Se verificaron las seis combinaciones P/T por tamaño, 18 calentamientos y 90 mediciones.
+- I5 · [Dictamen de calidad](../calidad_datos.md) de las cuatro versiones. Las extracciones anteriores conservan sus fuentes e identificadores.
+- I6 · [Metadatos de la campaña](../../resultados/raw/s08_oficial_integrada_03/entorno.json), carga y memoria por corrida en la bitácora del arnés, e [inventario y control independiente de C secuencial](../entorno/6-gerardo.md#control-independiente-disponible). La temperatura de CPU queda sin lectura.
+- I7 · [Resumen integrado](../../resultados/resumen/s08_oficial_integrada_03/resumen_estadistico.csv) y [auditoría de dispersión](../../resultados/resumen/s08_oficial_integrada_03/auditoria_dispersion.md) de las cuatro versiones. Los speedups se calculan con las referencias del mismo intento.
+- I8 · [Manifiesto SHA-256](../../resultados/raw/manifiesto_s08.json) y [bitácora de cierre](../bitacora_experimentos.md). El archivo fuente y los logs del arnés se preservaron byte por byte.
+- Codex ejecutó la campaña y la verificación técnica de cierre por encargo del responsable. Las revisiones personales y horas declaradas se documentan según los registros disponibles.
 
 ### Horas del equipo
 
@@ -203,11 +213,6 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\extract_s08_c_
 
 - **Participantes y horas reales.** Roberto (I8) declaró **8 h** en total: 3 h de verificación de trazabilidad commit→CSV y cálculo/cotejo de hashes SHA-256, 3 h de congelación de lotes verificados en `resultados/raw/` y elaboración de `docs/bitacora_experimentos.md`, 1 h de revisión cruzada a I1 (Yessly) y 1 h de coordinación de equipo.
 - **Rama y entregable.** Rama `feature/s08-i08-bitacora-experimentos`; entregable principal en [`docs/bitacora_experimentos.md`](../bitacora_experimentos.md) con el Manifiesto de resultados, cadena de trazabilidad, inventario SHA-256, separación de control/resúmenes y protocolo de sellado final.
-- **Resumen cuantitativo y estado de congelación parcial.**
-  - **Cadena verificada:** commit congelado oficial (candidata S7→S8) `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, host oficial `PCG1UL14N0`, semilla `42`, esquema de **20 columnas**, `validation_status=OK` y `0 < kernel_s <= total_s` en el **100%** de las filas auditadas (0 violaciones). Ambas subcampañas fuente (`s08_i03_go_secuencial_03` y `s08_i04_go_paralelo_01`) comparten los mismos **170 archivos fuente** en `source-hashes.json` (SHA-256 `f7f593eb329a83af5c86d08d1fdae545dfe92a9a78635d30591d9de3d59692d6`) y `entorno.json` con `git.dirty=false`, `phase=oficial` y `dry_run=false`.
-  - **Congelación parcial en `resultados/raw/` (3 de 4 CSV):** quedan congelados de forma inmutable [`c_secuencial.csv`](../../resultados/raw/c_secuencial.csv) (4487 bytes, 18 filas, SHA-256 `0f82f9fde140c6e928afb0476392e22181dedee534f42d7d20b3271973b3c854`) con [`c_secuencial.manifest.json`](../../resultados/raw/c_secuencial.manifest.json) (3224 bytes, `VERIFIED_OFFICIAL`), [`go_secuencial.csv`](../../resultados/raw/go_secuencial.csv) (4270 bytes, 18 filas, SHA-256 `581fb5db9f78a2790f519473d791886ad18beb02adbbfbe0711e088abb494fd5`), [`go_paralelo.csv`](../../resultados/raw/go_paralelo.csv) (12370 bytes, 54 filas, SHA-256 `11b68f7ee37979ee35b621f0e03433b3635a1e01c3bad87f756dc62d0f14bd4c`) con [`go_paralelo.manifest.json`](../../resultados/raw/go_paralelo.manifest.json) (12504 bytes, `VERIFIED`), y sus carpetas fuente `s08_i03_go_secuencial_03/` (72/72 corridas `COMPLETE`/`VERIFIED`) y `s08_i04_go_paralelo_01/` (108/108 corridas `COMPLETE`/`VERIFIED`).
-  - **Pendiente explícito:** `resultados/raw/c_paralelo.csv` **no existe aún**; su extracción y sellado quedan pendientes de la finalización y verificación de `s08_oficial_integrada_02` en `PCG1UL14N0`.
-  - **Separación verificada:** el control independiente permanece aislado en `resultados/control/s08_i01_c_secuencial_control/` y los resúmenes provisionales en `resultados/resumen/` (cubriendo solo 9 grupos de `go_paralelo`).
 
 ##### Revisión cruzada de I8 a I1 (Yessly) · 25/11/2026
 
