@@ -20,7 +20,6 @@
 - El intento `s08_oficial_integrada_01` se interrumpió a las 15:34 (Lima) durante la corrida 61. Se conservaron las 60 observaciones completas y los archivos parciales del intento; no se usan para completar ni resumir la campaña oficial.
 - Se inició `s08_oficial_integrada_02` en carpeta nueva conforme al protocolo de repetición completa. La candidata continúa siendo `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, semilla 42 y PC `PCG1UL14N0`.
 - El plan incluye N=512/1024/2048, W=1/2/4, 33 calentamientos y 165 mediciones en rondas alternadas. El timeout por corrida se fijó en 900 s por la duración observada de los intentos MPI con N=2048.
-- El plan incluye N=512/1024/2048, W=1/2/4, 33 calentamientos y 165 mediciones en rondas alternadas. El timeout por corrida se fijó en 900 s por la duración observada de los intentos MPI con N=2048.
 - El arnés registra carga y memoria disponible por corrida. La temperatura de CPU figura como no disponible. El estado final, la extracción de C paralelo y el inventario SHA-256 quedan sujetos a la verificación del segundo intento.
 
 ## Verificación y congelación de la evidencia
