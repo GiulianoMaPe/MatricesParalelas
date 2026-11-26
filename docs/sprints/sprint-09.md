@@ -37,3 +37,9 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Pruebas y evidencias: pendiente.
 - Bloqueos y decisiones: pendiente.
 - Revision y criterio de aceptacion: pendiente.
+
+### Integrante 5 · Fernando Saire
+
+- Se generaron [cuatro gráficos reproducibles y sus pies](../../resultados/graficos/s08_oficial_integrada_03/README.md) con el resumen oficial de los 33 grupos. Los gráficos de tiempos muestran mediana, cuartiles y rango en segundos con la misma escala logarítmica. Aceleración y eficiencia usan ejes lineales desde cero y una referencia en 1.
+- El resumen regenerado desde las mediciones preservadas coincidió con el CSV publicado. El [script](../../scripts/graficar_resultados_s09.py) reproduce las cuatro figuras.
+- Queda pendiente la revisión de Eva (I4) y la revisión de la comparación de Gerardo (I6) cuando esté disponible. Las horas reales están pendientes de confirmación.
