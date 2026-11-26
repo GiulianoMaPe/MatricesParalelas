@@ -50,7 +50,7 @@ Cada integrante tiene asignadas 6 h de trabajo técnico, 1 h de revisión y 1 h 
 | I5 · Fernando | 8 | Pendiente de confirmación |
 | I6 · Gerardo | 8 | Pendiente de confirmación |
 | I7 · Andrés | 8 | 8 |
-| I8 · Roberto | 8 | Pendiente de confirmación |
+| I8 · Roberto | 8 | 8 |
 
 ## Registros individuales
 
@@ -198,3 +198,22 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\extract_s08_c_
 - Duración de los controles N=2048 superior al timeout inicial: revisar presupuesto de máquina y reserva de la campaña integral con I5/I6.
 - El alcance es I3 con controles: el resto de combinaciones, la auditoría y la
   congelación del equipo y su cierre de sprint siguen pendientes.
+
+#### Integrante 8 (Roberto)
+
+- **Participantes y horas reales.** Roberto (I8) declaró **8 h** en total: 3 h de verificación de trazabilidad commit→CSV y cálculo/cotejo de hashes SHA-256, 3 h de congelación de lotes verificados en `resultados/raw/` y elaboración de `docs/bitacora_experimentos.md`, 1 h de revisión cruzada a I1 (Yessly) y 1 h de coordinación de equipo.
+- **Rama y entregable.** Rama `feature/s08-i08-bitacora-experimentos`; entregable principal en [`docs/bitacora_experimentos.md`](../bitacora_experimentos.md) con el Manifiesto de resultados, cadena de trazabilidad, inventario SHA-256, separación de control/resúmenes y protocolo de sellado final.
+- **Resumen cuantitativo y estado de congelación parcial.**
+  - **Cadena verificada:** commit congelado oficial (candidata S7→S8) `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, host oficial `PCG1UL14N0`, semilla `42`, esquema de **20 columnas**, `validation_status=OK` y `0 < kernel_s <= total_s` en el **100%** de las filas auditadas (0 violaciones). Ambas subcampañas fuente (`s08_i03_go_secuencial_03` y `s08_i04_go_paralelo_01`) comparten los mismos **170 archivos fuente** en `source-hashes.json` (SHA-256 `f7f593eb329a83af5c86d08d1fdae545dfe92a9a78635d30591d9de3d59692d6`) y `entorno.json` con `git.dirty=false`, `phase=oficial` y `dry_run=false`.
+  - **Congelación parcial en `resultados/raw/` (3 de 4 CSV):** quedan congelados de forma inmutable [`c_secuencial.csv`](../../resultados/raw/c_secuencial.csv) (4487 bytes, 18 filas, SHA-256 `0f82f9fde140c6e928afb0476392e22181dedee534f42d7d20b3271973b3c854`) con [`c_secuencial.manifest.json`](../../resultados/raw/c_secuencial.manifest.json) (3224 bytes, `VERIFIED_OFFICIAL`), [`go_secuencial.csv`](../../resultados/raw/go_secuencial.csv) (4270 bytes, 18 filas, SHA-256 `581fb5db9f78a2790f519473d791886ad18beb02adbbfbe0711e088abb494fd5`), [`go_paralelo.csv`](../../resultados/raw/go_paralelo.csv) (12370 bytes, 54 filas, SHA-256 `11b68f7ee37979ee35b621f0e03433b3635a1e01c3bad87f756dc62d0f14bd4c`) con [`go_paralelo.manifest.json`](../../resultados/raw/go_paralelo.manifest.json) (12504 bytes, `VERIFIED`), y sus carpetas fuente `s08_i03_go_secuencial_03/` (72/72 corridas `COMPLETE`/`VERIFIED`) y `s08_i04_go_paralelo_01/` (108/108 corridas `COMPLETE`/`VERIFIED`).
+  - **Pendiente explícito:** `resultados/raw/c_paralelo.csv` **no existe aún**; su extracción y sellado quedan pendientes de la finalización y verificación de `s08_oficial_integrada_02` en `PCG1UL14N0`.
+  - **Separación verificada:** el control independiente permanece aislado en `resultados/control/s08_i01_c_secuencial_control/` y los resúmenes provisionales en `resultados/resumen/` (cubriendo solo 9 grupos de `go_paralelo`).
+
+##### Revisión cruzada de I8 a I1 (Yessly) · 25/11/2026
+
+Se cierra la revisión pendiente declarada por I1 sobre el lote oficial de C secuencial y su control independiente:
+
+- **Integridad y procedencia de `resultados/raw/c_secuencial.csv`:** verificado archivo de **4487 bytes** (UTF-8 sin BOM, CRLF) con **18 de 18 filas idénticas** a `resultados/raw/s08_i04_go_paralelo_01/mediciones.csv` (3 warmups + 15 mediciones para `N=512/1024/2048`, semilla `42`, host `PCG1UL14N0`, commit `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`, esquema de 20 columnas, `validation_status=OK` y `0 < kernel_s <= total_s` en todas las filas).
+- **Coincidencia exacta de SHA-256 y estadísticas por `N`:** el SHA-256 de `c_secuencial.csv` (`0f82f9fde140c6e928afb0476392e22181dedee534f42d7d20b3271973b3c854`) coincide exactamente con [`resultados/raw/c_secuencial.manifest.json`](../../resultados/raw/c_secuencial.manifest.json) (3224 bytes, SHA-256 `dd4820268cf373c33c45e384508d125f5d06ad13f267fe542314e58077840bac`, `status=VERIFIED_OFFICIAL`), así como las medianas y dispersiones por tamaño (`N=512`: mediana total `0.0239321` s, dispersión `0.84%`; `N=1024`: mediana total `0.1950226` s, dispersión `3.06%`; `N=2048`: mediana total `3.7929924` s, dispersión `3.04%`).
+- **Observación de `os_version`:** se confirma que el valor `Windows 10 Pro build 26300.9711` corresponde al kernel NT de Windows 11 reportado por el entorno en `PCG1UL14N0` y se preserva sin alterar el CSV crudo.
+- **Separación del control independiente:** se verificó el aislamiento de `resultados/control/s08_i01_c_secuencial_control/` fuera de `resultados/raw/`, integrado por `c_secuencial_control.csv` (9084 bytes, SHA-256 `8d7de5634677d04605839096a6785a02aa6604fe527edc4b559b3dcf02ae7c75`, 18 filas ejecutadas en `YESSLY-TB14G9` bajo el commit `5a54ede1dc6371fc570ee12fa4560d78df7f4b0d`, codificación UTF-16 LE con BOM por redirección de PowerShell 5.1) y `c_secuencial_control.manifest.json` (3401 bytes, SHA-256 `1da80d3f37c25cfe4c354ab106aa57ecc788bedb9c399a1c960e08b33709e05e`). Dictamen: **APROBADO**.
