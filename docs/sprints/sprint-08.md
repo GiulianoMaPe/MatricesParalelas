@@ -1,6 +1,6 @@
 # Sprint 8 Ejecutar la campaña oficial
 
-Estado: entregas parciales integradas. C secuencial, Go secuencial y Go paralelo tienen datos oficiales. La campaña integrada de las cuatro versiones está en curso en PCG1UL14N0.
+Estado: cierre técnico completado. Campaña oficial verificada, datos crudos congelados y cuatro versiones auditadas.
 
 Semana 8 · 64 horas de equipo · 8 horas por integrante
 
@@ -36,6 +36,16 @@ Cada integrante añade 1 h de revisión cruzada y 1 h de coordinación: 8 h en t
 - Verificación de integración: 13/13 pruebas del extractor de C paralelo, 23/23 pruebas del arnés híbrido, 72/72 corridas verificadas en la subcampaña de Go secuencial y hashes verificados del lote de C secuencial y su control.
 - El primer intento de campaña integrada se interrumpió durante la corrida 61. Se conserva para diagnóstico y se repite el plan completo en `s08_oficial_integrada_02`, conforme al protocolo. Los dictámenes individuales de abajo describen las entregas en la fecha de sus PR.
 - El [control independiente de C secuencial](../../resultados/control/s08_i01_c_secuencial_control/c_secuencial_control.manifest.json) aporta 18 corridas en otra PC. Usó el commit `5a54ede1dc6371fc570ee12fa4560d78df7f4b0d`. Su evidencia se conserva como control separado y su resumen no interviene en las comparaciones oficiales. El [inventario de I6](../entorno/6-gerardo.md) documenta una tercera PC.
+
+### Cierre técnico
+
+- [Campaña integrada](../../resultados/raw/s08_oficial_integrada_03/mediciones.csv) en `PCG1UL14N0`, semilla 42 y candidata `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`. Las 198 corridas terminaron OK: 33 calentamientos y 165 mediciones, cinco por configuración habilitada. Cero exclusiones del plan.
+- I2 · [Lote oficial C paralelo](../../resultados/raw/c_paralelo.csv) y [manifiesto](../../resultados/raw/c_paralelo.manifest.json). Se verificaron las seis combinaciones P/T por tamaño, 18 calentamientos y 90 mediciones.
+- I5 · [Dictamen de calidad](../calidad_datos.md) de las cuatro versiones. Las extracciones anteriores conservan sus fuentes e identificadores.
+- I6 · [Metadatos de la campaña](../../resultados/raw/s08_oficial_integrada_03/entorno.json), carga y memoria por corrida en la bitácora del arnés, e [inventario y control independiente de C secuencial](../entorno/6-gerardo.md#control-independiente-disponible). La temperatura de CPU queda sin lectura.
+- I7 · [Resumen integrado](../../resultados/resumen/s08_oficial_integrada_03/resumen_estadistico.csv) y [auditoría de dispersión](../../resultados/resumen/s08_oficial_integrada_03/auditoria_dispersion.md) de las cuatro versiones. Los speedups se calculan con las referencias del mismo intento.
+- I8 · [Manifiesto SHA-256](../../resultados/raw/manifiesto_s08.json) y [bitácora de cierre](../bitacora_experimentos.md). El archivo fuente y los logs del arnés se preservaron byte por byte.
+- Codex ejecutó la campaña y la verificación técnica de cierre por encargo del responsable. Las revisiones personales y horas declaradas se documentan según los registros disponibles.
 
 ### Horas del equipo
 

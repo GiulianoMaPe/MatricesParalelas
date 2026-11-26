@@ -22,3 +22,10 @@
 - El plan incluye N=512/1024/2048, W=1/2/4, 33 calentamientos y 165 mediciones en rondas alternadas. El timeout por corrida se fijó en 900 s por la duración observada de los intentos MPI con N=2048.
 - El plan incluye N=512/1024/2048, W=1/2/4, 33 calentamientos y 165 mediciones en rondas alternadas. El timeout por corrida se fijó en 900 s por la duración observada de los intentos MPI con N=2048.
 - El arnés registra carga y memoria disponible por corrida. La temperatura de CPU figura como no disponible. El estado final, la extracción de C paralelo y el inventario SHA-256 quedan sujetos a la verificación del segundo intento.
+
+## Verificación y congelación de la evidencia
+
+- Campaña [s08_oficial_integrada_03](../resultados/raw/s08_oficial_integrada_03/mediciones.csv) finalizada a las 2026-11-26T03:59:08Z, con 198 corridas OK en 315.4 min de pared. Se conservaron el plan, los metadatos, la bitácora, las salidas de proceso y los manifiestos de compilación.
+- [Inventario SHA-256](../resultados/raw/manifiesto_s08.json) de 1460 archivos bajo `resultados/raw/`, con rutas relativas a ese directorio. El CSV integrado y los lotes previos permanecen junto a sus manifiestos de procedencia.
+- [Intento 01](../resultados/diagnostico/s08_oficial_integrada_01_interrumpida/README.md) y [intento 02](../resultados/diagnostico/s08_oficial_integrada_02_interrumpida/README.md) conservados como diagnósticos; ninguno aporta filas a los resúmenes oficiales.
+- [Resumen, dispersión y dictamen](../resultados/resumen/s08_oficial_integrada_03/auditoria_dispersion.md) generados a partir del CSV integrado. Los archivos del control independiente permanecen bajo `resultados/control/`.

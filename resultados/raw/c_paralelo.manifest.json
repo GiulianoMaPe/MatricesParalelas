@@ -1,0 +1,301 @@
+{
+    "status":  "VERIFIED",
+    "phase":  "oficial",
+    "campaign_phase":  "oficial",
+    "generated_at_utc":  "2026-11-26T04:00:01Z",
+    "tool":  {
+                 "name":  "scripts/extract_s08_c_paralelo.ps1",
+                 "sha256":  "0A82CEBC7D8FF42F893F99A7770A54FD3F7E19902906BDFEE8E3120CB61726B5",
+                 "protocol_version":  "1.3"
+             },
+    "campaign":  {
+                     "campaign_id":  "s08_oficial_integrada_03",
+                     "directory":  "D:\\Escritorio\\Proyectos\\MatricesParalelas\\.cache\\s8c\\resultados\\raw\\s08_oficial_integrada_03",
+                     "hostname":  "PCG1UL14N0",
+                     "operator":  "giuli",
+                     "started_at_utc":  "2026-11-25T22:43:42Z",
+                     "commit":  "97ccc981e9068d8ec0753cd8a4b7572a6bece34d",
+                     "dirty":  false,
+                     "executable_sha256":  {
+                                               "c_secuencial":  "1FB82C33D0A17B266DABB281B4CB37794227AB524DB685E285B48607DAF96187",
+                                               "c_paralelo":  "DCBA45091FDB781C8B853A7CAD51FD02C849F3D997DCF16E34C273065F6C776E",
+                                               "go_secuencial":  "3C4071ACB70DD028DC808F25EB43600014D36E336D652D2D0544473F8F0C5E11",
+                                               "go_paralelo":  "101754DD3CB898F84C08799803CC27B8E14D096E348EC0371FFF8418D8E5907A"
+                                           }
+                 },
+    "selection":  {
+                      "version":  "c_paralelo",
+                      "sizes":  [
+                                    512,
+                                    1024,
+                                    2048
+                                ],
+                      "seed":  42,
+                      "configurations":  [
+                                             "c_paralelo_P1_T1",
+                                             "c_paralelo_P1_T2",
+                                             "c_paralelo_P1_T4",
+                                             "c_paralelo_P2_T1",
+                                             "c_paralelo_P2_T2",
+                                             "c_paralelo_P4_T1"
+                                         ],
+                      "warmups_per_group":  1,
+                      "measurements_per_group":  5,
+                      "rows":  108,
+                      "ignored_non_c_rows":  90
+                  },
+    "verification":  {
+                         "schema_20_fields":  true,
+                         "plan_order_and_rounds":  true,
+                         "plan_matches_protocol_and_capacity":  true,
+                         "source_and_state_complete":  true,
+                         "csv_matches_stdout":  true,
+                         "processes_observed":  108,
+                         "ranks_observed":  198,
+                         "omp_threads_requested_and_observed":  true,
+                         "omp_dynamic_false":  true,
+                         "bitacora_status_ok":  true,
+                         "critical_anomalies":  0,
+                         "anomalies_total":  1
+                     },
+    "resources":  {
+                      "cpu_max_load_percent":  30,
+                      "free_memory_min_kib":  9113108,
+                      "temperature":  "unavailable: no se inventan lecturas"
+                  },
+    "groups":  [
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P1_T1",
+                       "processes":  1,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.057866800",
+                       "median_total_s":  "0.058818700",
+                       "min_total_s":  "0.058569000",
+                       "max_total_s":  "0.058907100"
+                   },
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P1_T2",
+                       "processes":  1,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.029230300",
+                       "median_total_s":  "0.030147200",
+                       "min_total_s":  "0.030064500",
+                       "max_total_s":  "0.034408100"
+                   },
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P1_T4",
+                       "processes":  1,
+                       "threads":  4,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.015556000",
+                       "median_total_s":  "0.016608200",
+                       "min_total_s":  "0.016065200",
+                       "max_total_s":  "0.018395200"
+                   },
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P2_T1",
+                       "processes":  2,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.029074700",
+                       "median_total_s":  "0.030477100",
+                       "min_total_s":  "0.030364600",
+                       "max_total_s":  "0.030705000"
+                   },
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P2_T2",
+                       "processes":  2,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.015274600",
+                       "median_total_s":  "0.016879000",
+                       "min_total_s":  "0.016333200",
+                       "max_total_s":  "0.022522200"
+                   },
+                   {
+                       "n":  512,
+                       "configuration":  "c_paralelo_P4_T1",
+                       "processes":  4,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.015473200",
+                       "median_total_s":  "0.017172600",
+                       "min_total_s":  "0.016821400",
+                       "max_total_s":  "0.017586500"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P1_T1",
+                       "processes":  1,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.446648200",
+                       "median_total_s":  "0.450073300",
+                       "min_total_s":  "0.443006900",
+                       "max_total_s":  "0.502802500"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P1_T2",
+                       "processes":  1,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.273213600",
+                       "median_total_s":  "0.276510100",
+                       "min_total_s":  "0.248973200",
+                       "max_total_s":  "0.291592900"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P1_T4",
+                       "processes":  1,
+                       "threads":  4,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.139293200",
+                       "median_total_s":  "0.142717700",
+                       "min_total_s":  "0.118512400",
+                       "max_total_s":  "0.152359600"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P2_T1",
+                       "processes":  2,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.300949700",
+                       "median_total_s":  "0.306335300",
+                       "min_total_s":  "0.284014400",
+                       "max_total_s":  "0.308057300"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P2_T2",
+                       "processes":  2,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.157900600",
+                       "median_total_s":  "0.162847100",
+                       "min_total_s":  "0.161844200",
+                       "max_total_s":  "0.207825900"
+                   },
+                   {
+                       "n":  1024,
+                       "configuration":  "c_paralelo_P4_T1",
+                       "processes":  4,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "0.195153200",
+                       "median_total_s":  "0.202204600",
+                       "min_total_s":  "0.188581600",
+                       "max_total_s":  "0.218650800"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P1_T1",
+                       "processes":  1,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "5.063522800",
+                       "median_total_s":  "5.077603500",
+                       "min_total_s":  "4.901795700",
+                       "max_total_s":  "5.292778600"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P1_T2",
+                       "processes":  1,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "2.515321600",
+                       "median_total_s":  "2.528857900",
+                       "min_total_s":  "2.433795300",
+                       "max_total_s":  "2.642779100"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P1_T4",
+                       "processes":  1,
+                       "threads":  4,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "1.799021600",
+                       "median_total_s":  "1.813955300",
+                       "min_total_s":  "1.788094100",
+                       "max_total_s":  "1.834793200"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P2_T1",
+                       "processes":  2,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "2.850907200",
+                       "median_total_s":  "2.871511400",
+                       "min_total_s":  "2.792241300",
+                       "max_total_s":  "3.045367900"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P2_T2",
+                       "processes":  2,
+                       "threads":  2,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "2.037532100",
+                       "median_total_s":  "2.058840100",
+                       "min_total_s":  "1.990460600",
+                       "max_total_s":  "2.112769300"
+                   },
+                   {
+                       "n":  2048,
+                       "configuration":  "c_paralelo_P4_T1",
+                       "processes":  4,
+                       "threads":  1,
+                       "warmups":  1,
+                       "measurements":  5,
+                       "median_kernel_s":  "2.221399900",
+                       "median_total_s":  "2.248152600",
+                       "min_total_s":  "2.200189500",
+                       "max_total_s":  "2.330194900"
+                   }
+               ],
+    "anomalies":  [
+                      {
+                          "severity":  "warning",
+                          "code":  "os_heredado",
+                          "detail":  "La etiqueta de sistema de la fila es \u0027Windows 10 Pro build 26300.9711\u0027 y entorno declara \u0027Microsoft Windows 11 Pro build 26300\u0027; se conserva el valor original."
+                      }
+                  ],
+    "hashes":  {
+                   "source":  {
+                                  "mediciones.csv":  "AFBBBD38C4EE54C3FE8194501538CA542E19A7F5F2F62FC315B3517E960FBD58",
+                                  "entorno.json":  "9A6CC401BF1A491CDA0AB447D7AE4358F303EED20DB5A0929691EDF0057695FB",
+                                  "plan.csv":  "F49B2ECCC022C2AFEB5FF4E79F6E66FFE883C59EFB393F9975B41B0783ED5660",
+                                  "bitacora.txt":  "4465D28307BFF1BA01302E922E4ED56EB34DFEBE88AE1E3B99A2F7E285591968",
+                                  "estado.json":  "AFC9A3754082BC150A863E1A0821C2155F9190976EA511E0D80825C662D290C2"
+                              },
+                   "output":  "C411746AD542335D5A8C5BD95F0222164BF49A47B193B090C9C5CB1919B220FD"
+               }
+}

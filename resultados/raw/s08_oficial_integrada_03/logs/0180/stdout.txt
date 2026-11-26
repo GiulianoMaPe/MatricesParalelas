@@ -1,0 +1,2 @@
+timestamp,version,commit,hostname,cpu_model,ram_gb,os_version,configuration,n,seed,processes,threads,observed_threads,workers,gomaxprocs,repetition,is_warmup,kernel_s,total_s,validation_status
+2026-11-26T03:07:33Z,go_paralelo,97ccc981e9068d8ec0753cd8a4b7572a6bece34d,PCG1UL14N0,AMD Ryzen 5 3600 6-Core Processor,15.912,Windows 11 Pro build 26300.9711,go_paralelo_W1,1024,42,1,1,1,1,1,5,false,1.044726900,1.046013800,OK

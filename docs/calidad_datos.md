@@ -1,17 +1,21 @@
-# Reporte parcial de calidad de datos — Sprint 8
+# Reporte de calidad de datos — Sprint 8
 
-Estado: tres lotes oficiales verificados. La campaña integrada completa se está repitiendo en un nuevo intento tras interrumpirse el primero.
+Dictamen final: **33 grupos completos, 198 corridas OK y cero exclusiones** en [la campaña integrada](../resultados/raw/s08_oficial_integrada_03/mediciones.csv). Se verificaron el host `PCG1UL14N0`, la candidata congelada, la semilla 42, las 20 columnas canónicas y las repeticiones únicas 0 a 5 por configuración.
 
-## Inventario de entregables
+| Versión | Grupos | Calentamientos | Mediciones válidas |
+| --- | ---: | ---: | ---: |
+| C secuencial | 3 | 3 | 15 |
+| C paralelo | 18 | 18 | 90 |
+| Go secuencial | 3 | 3 | 15 |
+| Go paralelo | 9 | 9 | 45 |
+| **Total** | **33** | **33** | **165** |
 
-| Entregable | Estado | Observaciones |
-|---|---|---|
-| [C secuencial](../resultados/raw/c_secuencial.csv) | Verificado · `s08_i04_go_paralelo_01` | 18 filas: 3 calentamientos y 15 mediciones |
-| C paralelo | Campaña integrada en curso | 18 grupos previstos: 18 calentamientos y 90 mediciones |
-| [Go secuencial](../resultados/raw/go_secuencial.csv) | Verificado · `s08_i03_go_secuencial_03` | 18 filas: 3 calentamientos y 15 mediciones |
-| [Go paralelo](../resultados/raw/go_paralelo.csv) | Verificado · `s08_i04_go_paralelo_01` | 54 filas: 9 calentamientos y 45 mediciones |
+El verificador cruzó los datos con el plan, el stdout preservado, los códigos de salida, los ranks y los manifiestos Release. La [extracción de C paralelo](../resultados/raw/c_paralelo.manifest.json) comprueba procesos, hilos observados, entorno OpenMP y reparto de filas. El entorno hijo de Go coincide con los workers de cada grupo.
 
-## Auditoría de Go paralelo
+El [resumen](../resultados/resumen/s08_oficial_integrada_03/resumen_estadistico.csv) usa únicamente los datos de esta campaña. La [auditoría de dispersión](../resultados/resumen/s08_oficial_integrada_03/auditoria_dispersion.md) registra 3 grupos por encima del 10 % de IQR/mediana y conserva las cinco mediciones de cada grupo. Los intentos parciales de Go secuencial se conservan en [diagnóstico](../resultados/diagnostico/).
+
+
+## Auditoría previa de Go paralelo
 
 - Origen: `PCG1UL14N0`.
 - Commit registrado: `97ccc981e9068d8ec0753cd8a4b7572a6bece34d`.
@@ -38,7 +42,3 @@ Estos avisos no justifican descartar observaciones. Cada advertencia debe conser
 - Los lotes de C y Go secuenciales coinciden con las filas correspondientes de sus campañas fuente y con los SHA-256 publicados. Cada uno contiene un calentamiento y cinco mediciones válidas por N.
 - El verificador común confirmó las 72 corridas y los 12 grupos de la subcampaña I3, incluidos plan, orden, logs, procesos, ranks y manifiestos de compilación.
 - El [control de C secuencial](entorno/6-gerardo.md#control-independiente-disponible) se conserva en otra carpeta. Los speedups del cierre se calcularán con la referencia secuencial del mismo lenguaje y de la misma campaña integrada.
-
-## Pendientes para dictamen final
-
-Verificar el estado de `s08_oficial_integrada_01`, sus 33 grupos y la trazabilidad de procesos e hilos de C paralelo. El resumen y los dictámenes de dispersión abarcarán las cuatro versiones dentro de esa campaña.
